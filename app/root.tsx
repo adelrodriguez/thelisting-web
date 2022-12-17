@@ -6,6 +6,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useCatch,
 } from "@remix-run/react"
 
 import tailwind from "~/styles/tailwind.css"
@@ -23,6 +24,27 @@ export const links: LinksFunction = () => [
   },
   { href: tailwind, rel: "stylesheet" },
 ]
+
+export function CatchBoundary() {
+  const caught = useCatch()
+
+  return (
+    <html>
+      <head>
+        <title>Oops!</title>
+        <Meta />
+        <Links />
+      </head>
+      <body>
+        <h1 className="text-3xl">There was an error</h1>
+        <p>
+          {caught.status} {caught.statusText}
+        </p>
+        <Scripts />
+      </body>
+    </html>
+  )
+}
 
 export default function App() {
   return (

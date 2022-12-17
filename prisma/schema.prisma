@@ -8,13 +8,13 @@ datasource db {
 }
 
 model Listing {
-  id        String   @id @default(uuid())
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   closedAt    DateTime?
-  commerceId  String        @db.VarChar(255)
-  eventData   DateTime
+  commerceId  String?       @db.VarChar(255)
+  eventDate   DateTime
   path        String        @db.VarChar(255)
   publishedAt DateTime?
   status      ListingStatus @default(Draft)
@@ -28,7 +28,7 @@ enum ListingStatus {
 }
 
 model User {
-  id        String   @id @default(uuid())
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
