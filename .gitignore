@@ -32,3 +32,6 @@ yarn-error.log*
 
 # cache
 /.cache
+
+# db
+/postgres-data
