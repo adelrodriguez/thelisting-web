@@ -5,10 +5,12 @@
     "build:css": "npm run generate:css -- --minify",
     "build:remix": "remix build",
     "build": "run-s build:*",
+    "deploy": "railway up",
     "dev:css": "npm run generate:css -- --watch",
     "dev:remix": "remix dev",
     "dev": "run-p dev:*",
     "generate:css": "tailwindcss -o app/styles/tailwind.css",
+    "logs": "railway logs",
     "start": "remix-serve build",
     "typecheck": "tsc -b"
   },
@@ -22,6 +24,7 @@
   },
   "devDependencies": {
     "@headlessui/tailwindcss": "^0.1.2",
+    "@railway/cli": "^2.0.13",
     "@remix-run/dev": "^1.9.0",
     "@remix-run/eslint-config": "^1.9.0",
     "@tailwindcss/forms": "^0.5.3",
