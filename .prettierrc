@@ -2,9 +2,5 @@
   "trailingComma": "es5",
   "semi": false,
   "importOrderSeparation": true,
-  "importOrder": [
-    "<THIRD_PARTY_MODULES>",
-    "@(components||config|framework|helpers|services|typings|styles)/(.*)$",
-    "^[./]"
-  ]
+  "importOrder": ["<THIRD_PARTY_MODULES>", "^[~/]", "^[./]"]
 }
