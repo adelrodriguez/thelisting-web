@@ -1,13 +1,10 @@
-import {
-  CheckIcon as CheckIconMini,
-  ChevronDownIcon,
-} from "@heroicons/react/20/solid"
-import { CheckIcon as CheckIconOutline } from "@heroicons/react/24/outline"
+import { ChevronDownIcon } from "@heroicons/react/20/solid"
 import { Link, Outlet } from "@remix-run/react"
 import type { ReactElement, SVGProps } from "react"
 
 const headerNavigation = [
   { href: "/pricing", name: "Planes" },
+  { href: "/about", name: "Nosotros" },
   { href: "#", name: "Ejemplos" },
   { href: "#", name: "FAQ" },
   { href: "#", name: "Contáctanos" },
@@ -127,10 +124,10 @@ export default function MarketingLayout(): ReactElement {
             </div>
             <div className="ml-10 space-x-4">
               <Link
-                to="/dashboard"
+                to="/login"
                 className="inline-block rounded-md border border-transparent bg-indigo-500 py-2 px-4 text-base font-medium text-white hover:bg-opacity-75"
               >
-                Dashboard
+                Login
               </Link>
             </div>
           </div>

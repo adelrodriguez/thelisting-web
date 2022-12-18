@@ -2,8 +2,9 @@
 module.exports = {
   content: ["./app/**/*.{js,ts,jsx,tsx}"],
   plugins: [
-    require("@tailwindcss/forms"),
     require("@headlessui/tailwindcss")({ prefix: "ui" }),
+    require("@tailwindcss/forms"),
+    require("@tailwindcss/typography"),
   ],
   theme: {
     extend: {},

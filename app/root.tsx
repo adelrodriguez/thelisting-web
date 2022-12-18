@@ -48,12 +48,12 @@ export function CatchBoundary() {
 
 export default function App() {
   return (
-    <html lang="en" className="h-full bg-gray-100">
+    <html lang="en" className="h-full">
       <head>
         <Meta />
         <Links />
       </head>
-      <body className="h-full">
+      <body className="h-full bg-white">
         <Outlet />
         <ScrollRestoration />
         <Scripts />
