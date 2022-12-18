@@ -2,7 +2,6 @@ import { Transition } from "@headlessui/react"
 import type { ActionArgs, LoaderArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { useLoaderData, useNavigate, useSubmit } from "@remix-run/react"
-import { useEffect, useState } from "react"
 import { z } from "zod"
 
 import { Logo } from "~/components/branding"

@@ -115,13 +115,12 @@ export default function DashboardLayout() {
                       <div>
                         <Menu.Button className="flex max-w-xs items-center rounded-full bg-indigo-600 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-indigo-600">
                           <span className="sr-only">Open user menu</span>
-                          <img
-                            width={32}
-                            height={32}
-                            className="h-8 w-8 rounded-full"
-                            src={profile.imageUrl}
-                            alt=""
-                          />
+                          <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gray-500">
+                            <span className="text-sm font-medium leading-none text-white">
+                              {user.firstName[0]}
+                              {user.lastName[0]}
+                            </span>
+                          </span>
                         </Menu.Button>
                       </div>
                       <Transition
