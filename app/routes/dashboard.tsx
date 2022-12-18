@@ -7,11 +7,16 @@ import {
   WrenchIcon,
   BellIcon,
 } from "@heroicons/react/24/outline"
-import { Link, NavLink, Outlet } from "@remix-run/react"
+import type { User } from "@prisma/client"
+import type { LoaderArgs } from "@remix-run/node"
+import { json } from "@remix-run/node"
+import { Link, NavLink, Outlet, useLoaderData } from "@remix-run/react"
 import classNames from "classnames"
 import { Fragment } from "react"
 
 import { Logo } from "~/components/branding"
+import { auth } from "~/helpers/auth.server"
+import type { LoaderResult } from "~/types/remix"
 
 const navigation = [
   {
@@ -37,17 +42,29 @@ const navigation = [
 const userNavigation = [
   { href: "/#", name: "Your Profile" },
   { href: "/#", name: "Settings" },
-  { href: "/sign-out", name: "Sign out" },
+  { href: "/logout", name: "Logout" },
 ]
 
-const user = {
-  email: "tom@example.com",
+const profile = {
   imageUrl:
     "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+
   name: "Tom Cook",
 }
 
+export const loader = async ({
+  request,
+}: LoaderArgs): LoaderResult<{ user: User }> => {
+  const user = await auth.isAuthenticated(request, {
+    failureRedirect: "/login",
+  })
+
+  return json({ user })
+}
+
 export default function DashboardLayout() {
+  const { user } = useLoaderData<typeof loader>()
+
   return (
     <>
       <Disclosure as="nav" className="bg-indigo-600">
@@ -102,7 +119,7 @@ export default function DashboardLayout() {
                             width={32}
                             height={32}
                             className="h-8 w-8 rounded-full"
-                            src={user.imageUrl}
+                            src={profile.imageUrl}
                             alt=""
                           />
                         </Menu.Button>
@@ -180,13 +197,13 @@ export default function DashboardLayout() {
                       width={40}
                       height={40}
                       className="h-10 w-10 rounded-full"
-                      src={user.imageUrl}
+                      src={profile.imageUrl}
                       alt=""
                     />
                   </div>
                   <div className="ml-3">
                     <div className="text-base font-medium text-white">
-                      {user.name}
+                      {user.firstName} {user.lastName}
                     </div>
                     <div className="text-sm font-medium text-indigo-300">
                       {user.email}
