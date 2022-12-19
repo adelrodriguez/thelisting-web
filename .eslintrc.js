@@ -8,9 +8,9 @@ module.exports = {
   plugins: ["sort-keys"],
   rules: {
     "@typescript-eslint/no-unused-vars": "warn",
+    "no-console": "warn",
     "no-unused-vars": "off",
     "sort-keys/sort-keys-fix": "warn",
-
     "spaced-comment": [
       "error",
       "always",
