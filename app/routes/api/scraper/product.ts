@@ -8,6 +8,8 @@ import type { LoaderResult } from "~/types/remix"
 export const loader = async ({
   request,
 }: LoaderArgs): Promise<LoaderResult<ScraperProductResponse>> => {
+  // TODO(adelrodriguez): Add authentication
+
   const requestUrl = new URL(request.url)
   const id = requestUrl.searchParams.get("id")
   const url = requestUrl.searchParams.get("url")
