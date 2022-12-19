@@ -1,4 +1,17 @@
+import { Dropzone } from "~/components/file"
+import useCSVParser from "~/utils/hooks/use-csv-parser"
+
+type Data = {
+  url: string
+}
+
 export default function AdminToolsScraperPage() {
+  const { parse, results } = useCSVParser<Data>({
+    header: true,
+  })
+
+  console.log({ results })
+
   return (
     <div className="bg-white">
       <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
@@ -13,6 +26,12 @@ export default function AdminToolsScraperPage() {
             Import a CSV file with URLs to scrape product from, and export the
             results to a CSV file or to your Shopify store.
           </p>
+        </div>
+        <div className="mt-8">
+          <Dropzone
+            fileTypes={{ "text/csv": [".csv"] }}
+            onDrop={(files) => parse(files[0])}
+          />
         </div>
       </div>
     </div>
