@@ -3,8 +3,6 @@ import { cleanAmount, cleanText } from "~/utils/scraper"
 import { BaseScraper } from "./base"
 
 export default class BuybuyBaby extends BaseScraper {
-  waitForSelector?: string | undefined = ".dom-loaded"
-
   static domain = "buybuybaby.com"
 
   public get store(): string | null {
@@ -39,6 +37,7 @@ export default class BuybuyBaby extends BaseScraper {
       .catch((err) => this.logError("currency: " + err.message))
   }
 
+  // TODO(adelrodriguez): This is not working
   public get amount(): Promise<number | null> {
     return this.page
       .$eval('[itemprop="price"]', (element) => element.getAttribute("content"))
