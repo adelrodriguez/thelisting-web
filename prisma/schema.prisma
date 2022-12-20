@@ -10,7 +10,7 @@ datasource db {
 model Listing {
   id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime @default(now()) @updatedAt
 
   closedAt    DateTime?
   publishedAt DateTime?
@@ -18,7 +18,7 @@ model Listing {
   commerceId String? @db.VarChar(255)
 
   eventDate DateTime
-  path      String        @db.VarChar(255)
+  path      String        @unique @db.VarChar(255)
   status    ListingStatus @default(Draft)
   title     String        @db.VarChar(255)
 }
@@ -32,7 +32,7 @@ enum ListingStatus {
 model User {
   id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime @default(now()) @updatedAt
 
   firstName String
   lastName  String
@@ -44,4 +44,22 @@ model User {
 enum UserRole {
   Admin
   User
+}
+
+model ScrapedProduct {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  url String
+
+  time     Float
+  duration Float
+
+  title       String?
+  store       String?
+  description String?
+  image       String?
+  amount      Float?
+  currency    String?
 }

@@ -1,6 +1,7 @@
 import type { LoaderArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
 
+import db from "~/helpers/db.server"
 import { productScraper } from "~/helpers/scraper.server"
 import type { LoaderResult } from "~/types/remix"
 import type { ScrapedProductResult } from "~/types/scraper"
@@ -39,6 +40,15 @@ export async function loader({
   } else {
     logger.success(`${url} scrapped successfully`)
   }
+
+  await db.scrapedProduct.create({
+    data: {
+      duration: payload.duration,
+      time: payload.time,
+      url,
+      ...payload.fields,
+    },
+  })
 
   return json(payload)
 }
