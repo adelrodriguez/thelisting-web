@@ -1,12 +1,10 @@
-import chalk from "chalk"
-
 /* eslint-disable no-console */
 export const logger = {
   error: (message: string, data?: Record<string, unknown>) => {
     if (data) {
-      console.log(chalk.bgRed(message), data)
+      console.error(message, data)
     } else {
-      console.log(message)
+      console.error(message)
     }
   },
   info: (message: string, data?: Record<string, unknown>) => {
@@ -18,9 +16,9 @@ export const logger = {
   },
   success: (message: string, data?: Record<string, unknown>) => {
     if (data) {
-      console.log(chalk.bgGreen.black(message), data)
+      console.log(message, data)
     } else {
-      console.log(chalk.bgGreen.black(message))
+      console.log(message)
     }
   },
   table: (...args: Parameters<typeof console.table>) => {
@@ -28,9 +26,9 @@ export const logger = {
   },
   warn: (message: string, data?: Record<string, unknown>) => {
     if (data) {
-      console.log(chalk.yellow(message), data)
+      console.warn(message, data)
     } else {
-      console.log(chalk.yellow(message))
+      console.warn(message)
     }
   },
 }
