@@ -2,12 +2,12 @@ import type { LoaderArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
 
 import { productScraper } from "~/helpers/scraper.server"
-import type { ScraperProductResponse } from "~/helpers/scraper.server"
 import type { LoaderResult } from "~/types/remix"
+import type { ScraperProductResponse } from "~/types/scraper"
 
-export const loader = async ({
+export async function loader({
   request,
-}: LoaderArgs): Promise<LoaderResult<ScraperProductResponse>> => {
+}: LoaderArgs): Promise<LoaderResult<ScraperProductResponse>> {
   // TODO(adelrodriguez): Add authentication
 
   const requestUrl = new URL(request.url)

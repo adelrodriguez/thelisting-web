@@ -1,6 +1,6 @@
+import Papa from "papaparse"
 import { useEffect, useState } from "react"
 
-import { parseCSVFile } from "~/utils/csv"
 import { FileError } from "~/utils/errors"
 
 export default function useCSVParser<T>({
@@ -14,22 +14,24 @@ export default function useCSVParser<T>({
 }): {
   filename: string | null
   parse: (file: File) => void
-  results: Papa.ParseResult<T> | null
+  result: Papa.ParseResult<T> | null
 } {
   const [file, setFile] = useState<File | null>(null)
-  const [results, setResults] = useState<Papa.ParseResult<T> | null>(null)
+  const [result, setResult] = useState<Papa.ParseResult<T> | null>(null)
 
   useEffect(() => {
     if (!file) return
 
-    parseCSVFile<T>(file, {
-      header,
-      onComplete: (results) => {
-        setResults(results)
+    Papa.parse<T, File>(file, {
+      complete: (results) => {
+        setResult(results)
       },
-      onError: (error) => {
+      dynamicTyping: true,
+      error: (error) => {
         throw new FileError(error.message, "unable_to_parse_file")
       },
+      header,
+      skipEmptyLines: "greedy",
       transform,
       transformHeader,
     })
@@ -38,6 +40,6 @@ export default function useCSVParser<T>({
   return {
     filename: file ? file.name.split(".")[0] : null,
     parse: setFile,
-    results,
+    result,
   }
 }

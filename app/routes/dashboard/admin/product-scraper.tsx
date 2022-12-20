@@ -3,22 +3,29 @@ import { ScrapeProductsTable } from "~/components/admin"
 import { Dropzone } from "~/components/file"
 import useCSVParser from "~/utils/hooks/use-csv-parser"
 
-function transformHeader(header: string, index: number) {
-  if (index === 0) return "id"
-  if (index === 1) return "url"
-  if (index === 2) return "quantity"
+const headers = [
+  "id",
+  "url",
+  "quantity",
+  "title",
+  "description",
+  "image",
+  "amount",
+  "currency",
+] as const
 
-  return header.toLocaleLowerCase()
+function transformHeader(_: string, index: number) {
+  return headers[index]
 }
 
 export default function AdminToolsProductScraperPage() {
-  const { parse, results } = useCSVParser<ScrapeProductsTableRow>({
+  const { parse, result } = useCSVParser<ScrapeProductsTableRow>({
     header: true,
     transformHeader,
   })
 
-  if (results) {
-    return <ScrapeProductsTable data={results.data} />
+  if (result) {
+    return <ScrapeProductsTable data={result.data} />
   }
 
   return (

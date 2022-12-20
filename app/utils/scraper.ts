@@ -1,3 +1,5 @@
+import type { ScraperProductResponse } from "~/types/scraper"
+
 export function cleanAmount(amount?: string | null): number {
   if (!amount) {
     throw new Error("There was no specified amount for this property")
@@ -12,4 +14,15 @@ export function cleanText(text?: string | null): string {
   }
 
   return text.trim().replaceAll("\n", " ")
+}
+
+export async function scrapeProduct(
+  url: string,
+  id: string
+): Promise<ScraperProductResponse> {
+  const res = await fetch(
+    "/api/scraper/product?" + new URLSearchParams({ id, url })
+  )
+
+  return res.json()
 }
