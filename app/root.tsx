@@ -1,4 +1,5 @@
 import type { MetaFunction, LinksFunction } from "@remix-run/node"
+import { json } from "@remix-run/node"
 import {
   Links,
   LiveReload,
@@ -7,8 +8,10 @@ import {
   Scripts,
   ScrollRestoration,
   useCatch,
+  useLoaderData,
 } from "@remix-run/react"
 
+import { XSTATE_VISUALIZER } from "~/config/vars.server"
 import tailwind from "~/styles/tailwind.css"
 
 export const meta: MetaFunction = () => ({
@@ -46,7 +49,17 @@ export function CatchBoundary() {
   )
 }
 
+export async function loader() {
+  return json({
+    ENV: {
+      XSTATE_VISUALIZER,
+    },
+  })
+}
+
 export default function App() {
+  const data = useLoaderData<typeof loader>()
+
   return (
     <html lang="en" className="h-full">
       <head>
@@ -55,6 +68,11 @@ export default function App() {
       </head>
       <body className="h-full bg-white">
         <Outlet />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.ENV = ${JSON.stringify(data.ENV)}`,
+          }}
+        />
         <ScrollRestoration />
         <Scripts />
         <LiveReload />

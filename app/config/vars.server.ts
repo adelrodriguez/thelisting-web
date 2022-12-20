@@ -23,3 +23,5 @@ export const SENDGRID_SENDER_EMAIL = assertEnvironmentVariable(
   "SENDGRID_SENDER_EMAIL",
   process.env.SENDGRID_SENDER_EMAIL
 )
+
+export const XSTATE_VISUALIZER = process.env.XSTATE_VISUALIZER === "true"

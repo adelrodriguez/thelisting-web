@@ -2,7 +2,7 @@ import { performance } from "perf_hooks"
 import type { Browser, Page } from "playwright"
 import { chromium } from "playwright"
 
-import { isProduction } from "~/config/vars"
+import { isProduction } from "~/config/vars.server"
 import { logger } from "~/utils/log"
 import { cleanAmount, cleanText } from "~/utils/scraper"
 

@@ -2,7 +2,7 @@ import type { User } from "@prisma/client"
 import { Authenticator } from "remix-auth"
 import { EmailLinkStrategy } from "remix-auth-email-link"
 
-import { REMIX_AUTH_SECRET } from "~/config/vars"
+import { REMIX_AUTH_SECRET } from "~/config/vars.server"
 import db from "~/helpers/db.server"
 import { sendLoginEmail } from "~/helpers/email.server"
 import sessionStorage from "~/helpers/session.server"

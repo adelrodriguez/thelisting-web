@@ -1,7 +1,6 @@
 import { createCookieSessionStorage } from "@remix-run/node"
 
-import { REMIX_AUTH_SECRET } from "~/config/vars"
-import { isProduction } from "~/config/vars"
+import { REMIX_AUTH_SECRET, isProduction } from "~/config/vars.server"
 
 const sessionStorage = createCookieSessionStorage({
   cookie: {

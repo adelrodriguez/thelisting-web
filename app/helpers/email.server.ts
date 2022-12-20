@@ -1,7 +1,7 @@
 import type { User } from "@prisma/client"
 import type { SendEmailOptions } from "remix-auth-email-link"
 
-import { SENDGRID_SENDER_EMAIL } from "~/config/vars"
+import { SENDGRID_SENDER_EMAIL } from "~/config/vars.server"
 import sendgrid from "~/services/sendgrid.server"
 
 export async function sendLoginEmail({
