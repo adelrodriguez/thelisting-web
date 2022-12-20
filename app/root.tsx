@@ -10,6 +10,7 @@ import {
   useCatch,
   useLoaderData,
 } from "@remix-run/react"
+import remixImageStyles from "remix-image/remix-image.css"
 
 import { XSTATE_VISUALIZER } from "~/config/vars.server"
 import tailwind from "~/styles/tailwind.css"
@@ -26,6 +27,7 @@ export const links: LinksFunction = () => [
     rel: "icon",
   },
   { href: tailwind, rel: "stylesheet" },
+  { href: remixImageStyles, rel: "stylesheet" },
 ]
 
 export function CatchBoundary() {

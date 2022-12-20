@@ -1,6 +1,8 @@
 import { InboxIcon, SparklesIcon } from "@heroicons/react/24/outline"
 import type { ReactElement } from "react"
 
+import { Image } from "~/components/common"
+
 export default function Features(): ReactElement {
   return (
     <section className="relative bg-white pt-16 pb-32 overflow-hidden">
@@ -28,7 +30,7 @@ export default function Features(): ReactElement {
                 </p>
                 <div className="mt-6">
                   <a
-                    href="#"
+                    href="/login"
                     className="inline-flex px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700"
                   >
                     Get started
@@ -48,10 +50,11 @@ export default function Features(): ReactElement {
                 <footer className="mt-3">
                   <div className="flex items-center space-x-3">
                     <div className="flex-shrink-0">
-                      <img
-                        className="h-6 w-6 rounded-full"
+                      <Image
+                        className="rounded-full"
                         src="https://images.unsplash.com/photo-1509783236416-c9ad59bae472?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=1024&h=1024&q=80"
                         alt=""
+                        responsive={[{ size: { height: 24, width: 24 } }]}
                       />
                     </div>
                     <div className="text-base font-medium text-gray-700">
@@ -97,7 +100,7 @@ export default function Features(): ReactElement {
                 </p>
                 <div className="mt-6">
                   <a
-                    href="#"
+                    href="/login"
                     className="inline-flex px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700"
                   >
                     Get started

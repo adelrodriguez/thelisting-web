@@ -1,6 +1,8 @@
 import { Link } from "@remix-run/react"
 import type { ReactElement } from "react"
 
+import { Image } from "~/components/common"
+
 export default function Hero(): ReactElement {
   return (
     <section className="relative overflow-hidden bg-white">
@@ -52,7 +54,7 @@ export default function Hero(): ReactElement {
         </div>
       </div>
       <div className="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
-        <img
+        <Image
           className="h-56 w-full object-cover sm:h-72 md:h-96 lg:h-full lg:w-full"
           src="https://images.unsplash.com/photo-1520854221256-17451cc331bf?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80"
           alt=""

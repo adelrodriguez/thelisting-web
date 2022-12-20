@@ -2,7 +2,7 @@ import { performance } from "perf_hooks"
 import type { Browser, Page } from "playwright"
 import { chromium } from "playwright"
 
-import { isProduction } from "~/config/vars.server"
+import { isDev } from "~/config/vars.server"
 import { logger } from "~/utils/log"
 import { cleanAmount, cleanText } from "~/utils/scraper"
 
@@ -120,7 +120,7 @@ export class BaseScraper implements ScraperInterface {
       // Change to `headless: false` when testing
       // TODO: replace with environment variable
       this.browser = await chromium.launch({
-        headless: isProduction,
+        headless: !isDev,
       })
       this.page = await this.browser.newPage()
 
