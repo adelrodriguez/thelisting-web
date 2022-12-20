@@ -16,17 +16,20 @@ import { Form, FormField } from "~/components/form"
 import { Spinner } from "~/components/loading"
 import { isDev } from "~/config/vars.server"
 import { scraperMachine } from "~/helpers/machines"
-import type { ScrapedFields, ScraperProductRequest } from "~/types/scraper"
+import type { ScrapedFields } from "~/types/scraper"
 import { downloadAsCSVFile } from "~/utils/csv"
 
 declare module "@tanstack/react-table" {
   interface TableMeta<TData extends unknown> {
-    updateData: (rowId: string | number, value: TData) => void
+    updateData: (value: TData) => void
   }
 }
 
-export type ScrapeProductsTableRow = ScraperProductRequest &
-  ScrapedFields & { quantity: number }
+export type ScrapeProductsTableRow = ScrapedFields & {
+  id: string
+  quantity: number
+  url: string
+}
 
 const columnHelper = createColumnHelper<ScrapeProductsTableRow>()
 
@@ -134,12 +137,10 @@ export default function ScrapeProductsTable({
     data,
     getCoreRowModel: getCoreRowModel(),
     meta: {
-      updateData: (rowId, value) => {
+      updateData: (value) => {
         setData((rows) =>
           rows.map((row) => {
-            // We are using double equals because the id can be a string or a
-            // number, depending on how it was parsed.
-            if (row.id == rowId) {
+            if (row.id === value.id) {
               return {
                 ...row,
                 ...value,
@@ -169,18 +170,22 @@ export default function ScrapeProductsTable({
 
       if (event.type === "FINISHED") {
         const payload = event.payload
+        const dataMap = new Map(data.map((row) => [row.url, row]))
+        const product = dataMap.get(payload.url)
 
-        table.options.meta.updateData(payload.id, {
-          id: payload.id,
-          url: payload.url,
+        if (!product) return
+        table.options.meta.updateData({
+          ...product,
           ...payload.fields,
-          // Same as above, we are using double equals because the id can be a
-          // string or a number, depending on how it was parsed.
-          quantity: data.filter((row) => row.id == payload.id)[0].quantity,
         })
       }
     })
-  }, [data, scraperService, table.options.meta])
+
+    // return () => {
+    //   scraperService.stop()
+    // }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   function handleExport(filename: string) {
     const rowsToExport = selected.map((row) => ({
@@ -200,7 +205,9 @@ export default function ScrapeProductsTable({
   }
 
   function handleScrape() {
-    const rowsToScrape = data.filter((_, index) => rowSelection[index])
+    const rowsToScrape = data
+      .filter((_, index) => rowSelection[index])
+      .map((row) => row.url)
     scraperService.send({ payload: rowsToScrape, type: "START" })
   }
 

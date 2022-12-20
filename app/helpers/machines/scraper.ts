@@ -1,23 +1,20 @@
 import { assign, send } from "xstate"
 import { createModel } from "xstate/lib/model"
 
-import type {
-  ScraperProductRequest,
-  ScraperProductResponse,
-} from "~/types/scraper"
+import type { ScrapedProductResult } from "~/types/scraper"
 import { scrapeProduct } from "~/utils/scraper"
 
 const scraperModel = createModel(
   {
-    completed: [] as ScraperProductResponse[],
-    pending: [] as ScraperProductRequest[],
+    completed: [] as ScrapedProductResult[],
+    pending: [] as string[],
   },
   {
     events: {
       CANCEL: () => ({}),
-      FINISHED: (payload: ScraperProductResponse) => ({ payload }),
+      FINISHED: (payload: ScrapedProductResult) => ({ payload }),
       RESET: () => ({}),
-      START: (payload: ScraperProductRequest[]) => ({ payload }),
+      START: (payload: string[]) => ({ payload }),
     },
   }
 )
@@ -78,8 +75,8 @@ const scraperMachine = scraperModel.createMachine(
             },
           ],
           src: async (context) => {
-            const [payload] = context.pending
-            const data = await scrapeProduct(payload.url, `${payload.id}`)
+            const [url] = context.pending
+            const data = await scrapeProduct(url)
             return data
           },
         },

@@ -1,20 +1,17 @@
-import type {
-  ScraperProductRequest,
-  ScraperProductResponse,
-} from "~/types/scraper"
+import type { ScrapedProductResult } from "~/types/scraper"
 import { UnknownError } from "~/utils/errors"
 import { logger } from "~/utils/log"
 
 import createScraper from "./scraper.server"
 
 export default async function scraper(
-  request: ScraperProductRequest
-): Promise<ScraperProductResponse> {
-  logger.info(`Scrapping product ${request.id}`, {
-    url: request.url,
+  requestUrl: string
+): Promise<ScrapedProductResult> {
+  logger.info(`Scrapping product ${requestUrl}`, {
+    url: requestUrl,
   })
 
-  const url = new URL(request.url)
+  const url = new URL(requestUrl)
 
   const scraper = await createScraper(url)
 
@@ -33,7 +30,7 @@ export default async function scraper(
     // Close the browser window
     await scraper.stop()
 
-    const payload = {
+    const payload: ScrapedProductResult = {
       duration: scraper.duration,
       fields: {
         amount,
@@ -43,27 +40,8 @@ export default async function scraper(
         store,
         title,
       },
-      id: request.id,
       time: new Date().getTime(),
-      url: request.url,
-    }
-
-    // Check if there are errors in the payload
-    const errors = Object.entries(payload.fields).reduce(
-      (acc: Record<string, unknown>, [key, value]) => {
-        if (value === null) {
-          acc[key] = value
-        }
-        return acc
-      },
-      {}
-    )
-
-    if (Object.keys(errors).length > 0) {
-      logger.warn(`Product ${request.id} scrapped with errors`)
-      logger.table(errors)
-    } else {
-      logger.success(`Product ${request.id} scrapped successfully`)
+      url: requestUrl,
     }
 
     return payload

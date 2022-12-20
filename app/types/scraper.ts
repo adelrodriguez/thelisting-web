@@ -7,12 +7,9 @@ export type ScrapedFields = {
   currency: string | null
 }
 
-export type ScraperProductRequest = {
-  id: string | number
+export type ScrapedProductResult = {
   url: string
-}
 
-export type ScraperProductResponse = ScraperProductRequest & {
   /** The start time the function was executed */
   time: number
   /** The duration for the function execution (in milliseconds)  */
