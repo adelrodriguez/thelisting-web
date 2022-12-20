@@ -1,8 +1,8 @@
-import type { LoaderFunction } from "@remix-run/node"
+import type { LoaderArgs } from "@remix-run/node"
 
 import { auth } from "~/helpers/auth.server"
 
-export let loader: LoaderFunction = async ({ request }) => {
+export async function loader({ request }: LoaderArgs) {
   await auth.authenticate("email-link", request, {
     // If something failed we take them back to the login page
     // This redirect is optional, if not defined any error will be throw and

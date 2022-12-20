@@ -14,7 +14,7 @@ const LoginSchema = z.object({
   email: z.string().email(),
 })
 
-export let loader = async ({ request }: LoaderArgs) => {
+export async function loader({ request }: LoaderArgs) {
   const url = new URL(request.url)
 
   await auth.isAuthenticated(request, { successRedirect: "/dashboard" })
@@ -30,7 +30,7 @@ export let loader = async ({ request }: LoaderArgs) => {
   })
 }
 
-export let action = async ({ request }: ActionArgs) => {
+export async function action({ request }: ActionArgs) {
   // The success redirect is required in this action, this is where the user is
   // going to be redirected after the magic link is sent, note that here the
   // user is not yet authenticated, so you can't send it to a private page.
@@ -115,7 +115,7 @@ export default function LoginPage() {
                 placeholder="Enter your email"
               />
               <Button type="submit" className="w-full justify-center">
-                Sign in
+                Log in
               </Button>
             </Form>
           </div>

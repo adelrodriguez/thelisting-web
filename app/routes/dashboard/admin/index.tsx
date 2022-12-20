@@ -21,15 +21,14 @@ const tools = [
   },
   {
     description: "Coming soon",
-    href: "#",
+    href: "#coming-soon5",
     icon: PhoneIcon,
     iconBackground: "bg-purple-50",
     iconForeground: "text-purple-700",
-    id: "coming-soon5",
     title: "WhatsApp Broadcast",
   },
   {
-    href: "#",
+    href: "#coming-soon4",
     icon: UsersIcon,
     iconBackground: "bg-sky-50",
     iconForeground: "text-sky-700",
@@ -37,27 +36,24 @@ const tools = [
     title: "Download Images",
   },
   {
-    href: "#",
+    href: "#coming-soon3",
     icon: BanknotesIcon,
     iconBackground: "bg-yellow-50",
     iconForeground: "text-yellow-700",
-    id: "coming-soon3",
     title: "Coming Soon",
   },
   {
-    href: "#",
+    href: "#coming-soon2",
     icon: ReceiptRefundIcon,
     iconBackground: "bg-rose-50",
     iconForeground: "text-rose-700",
-    id: "coming-soon2",
     title: "Coming Soon",
   },
   {
-    href: "#",
+    href: "#coming-soon1",
     icon: AcademicCapIcon,
     iconBackground: "bg-indigo-50",
     iconForeground: "text-indigo-700",
-    id: "coming-soon1",
     title: "Coming Soon",
   },
 ]
@@ -67,7 +63,7 @@ export default function AdminToolsPage() {
     <div className="divide-y divide-gray-200 overflow-hidden rounded-lg bg-gray-200 shadow sm:grid sm:grid-cols-2 sm:gap-px sm:divide-y-0">
       {tools.map((tool, toolIdx) => (
         <div
-          key={tool.id}
+          key={tool.href}
           className={classNames(
             toolIdx === 0
               ? "rounded-tl-lg rounded-tr-lg sm:rounded-tr-none"

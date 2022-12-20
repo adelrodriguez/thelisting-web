@@ -52,9 +52,9 @@ const profile = {
   name: "Tom Cook",
 }
 
-export const loader = async ({
+export async function loader({
   request,
-}: LoaderArgs): LoaderResult<{ user: User }> => {
+}: LoaderArgs): LoaderResult<{ user: User }> {
   const user = await auth.isAuthenticated(request, {
     failureRedirect: "/login",
   })

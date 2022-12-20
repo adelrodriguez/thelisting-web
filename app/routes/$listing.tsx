@@ -8,7 +8,7 @@ import db from "~/helpers/db.server"
 
 type LoaderResult<T> = Promise<TypedResponse<T>>
 
-export const loader = async ({ params }: LoaderArgs): LoaderResult<Listing> => {
+export async function loader({ params }: LoaderArgs): LoaderResult<Listing> {
   const { listing } = params
 
   if (!listing) return redirect("/")
