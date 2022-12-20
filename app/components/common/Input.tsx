@@ -3,7 +3,7 @@ import classNames from "classnames"
 import type { InputHTMLAttributes, ReactElement, Ref } from "react"
 import { forwardRef } from "react"
 
-function InputField(
+function Input(
   {
     className,
     description,
@@ -92,4 +92,4 @@ function InputField(
   )
 }
 
-export default forwardRef(InputField)
+export default forwardRef(Input)

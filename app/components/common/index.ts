@@ -1,4 +1,6 @@
 export { default as Alert } from "./Alert"
 export { default as Button } from "./Button"
-export { default as InputField } from "./InputField"
+export { default as Checkbox } from "./Checkbox"
+export { default as FormattedNumber } from "./FormattedNumber"
+export { default as Input } from "./Input"
 export { default as SelectField } from "./SelectField"

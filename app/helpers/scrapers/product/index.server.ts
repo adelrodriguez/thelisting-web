@@ -68,16 +68,22 @@ export default async function scraper(
       url: request.url,
     }
 
-    const hasErrors = Object.values(payload.product).some((el) => el === null)
+    // Check if there are errors in the payload
+    const errors = Object.entries(payload.product).reduce(
+      (acc: Record<string, unknown>, [key, value]) => {
+        if (value === null) {
+          acc[key] = value
+        }
+        return acc
+      },
+      {}
+    )
 
-    if (hasErrors) {
-      logger.warn(`Product ${request.id} scrapped with errors`, {
-        payload,
-      })
+    if (Object.keys(errors).length > 0) {
+      logger.warn(`Product ${request.id} scrapped with errors`)
+      logger.table(errors)
     } else {
-      logger.info(`Product ${request.id} scrapped successfully`, {
-        payload,
-      })
+      logger.success(`Product ${request.id} scrapped successfully`)
     }
 
     return payload

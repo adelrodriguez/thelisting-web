@@ -13,7 +13,7 @@ const tools = [
   {
     description:
       "Import a CSV file with URLs to scrape product from, and export the results to a CSV file or to your Shopify store.",
-    href: "/dashboard/admin/scraper",
+    href: "/dashboard/admin/product-scraper",
     icon: MagnifyingGlassIcon,
     iconBackground: "bg-teal-50",
     iconForeground: "text-teal-700",

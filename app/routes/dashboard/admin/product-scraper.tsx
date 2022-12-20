@@ -1,16 +1,25 @@
+import type { ScrapeProductsTableRow } from "~/components/admin"
+import { ScrapeProductsTable } from "~/components/admin"
 import { Dropzone } from "~/components/file"
 import useCSVParser from "~/utils/hooks/use-csv-parser"
 
-type Data = {
-  url: string
+function transformHeader(header: string, index: number) {
+  if (index === 0) return "id"
+  if (index === 1) return "url"
+  if (index === 2) return "quantity"
+
+  return header.toLocaleLowerCase()
 }
 
-export default function AdminToolsScraperPage() {
-  const { parse, results } = useCSVParser<Data>({
+export default function AdminToolsProductScraperPage() {
+  const { parse, results } = useCSVParser<ScrapeProductsTableRow>({
     header: true,
+    transformHeader,
   })
 
-  console.log({ results })
+  if (results) {
+    return <ScrapeProductsTable data={results.data} />
+  }
 
   return (
     <div className="bg-white">

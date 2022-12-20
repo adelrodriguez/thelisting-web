@@ -42,6 +42,7 @@
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
     "react-hook-form": "^7.41.0",
+    "react-number-format": "^5.1.2",
     "remix-auth": "^3.4.0",
     "remix-auth-email-link": "^1.5.0",
     "tldts": "^5.7.102",

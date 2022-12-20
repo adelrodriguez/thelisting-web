@@ -31,7 +31,6 @@ export let loader = async ({ request }: LoaderArgs) => {
 }
 
 export let action = async ({ request }: ActionArgs) => {
-  console.log({ request })
   // The success redirect is required in this action, this is where the user is
   // going to be redirected after the magic link is sent, note that here the
   // user is not yet authenticated, so you can't send it to a private page.
