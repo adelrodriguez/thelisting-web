@@ -1,9 +1,9 @@
-import { PassThrough } from "stream"
 import type { EntryContext } from "@remix-run/node"
 import { Response } from "@remix-run/node"
 import { RemixServer } from "@remix-run/react"
 import isbot from "isbot"
 import { renderToPipeableStream } from "react-dom/server"
+import { PassThrough } from "stream"
 
 const ABORT_DELAY = 5000
 
@@ -54,13 +54,14 @@ function handleBotRequest(
 
           pipe(body)
         },
-        onShellError(error: unknown) {
-          reject(error)
-        },
         onError(error: unknown) {
           didError = true
 
+          // eslint-disable-next-line no-console
           console.error(error)
+        },
+        onShellError(error: unknown) {
+          reject(error)
         },
       }
     )
@@ -81,6 +82,15 @@ function handleBrowserRequest(
     const { pipe, abort } = renderToPipeableStream(
       <RemixServer context={remixContext} url={request.url} />,
       {
+        onError(error: unknown) {
+          didError = true
+
+          // eslint-disable-next-line no-console
+          console.error(error)
+        },
+        onShellError(err: unknown) {
+          reject(err)
+        },
         onShellReady() {
           const body = new PassThrough()
 
@@ -94,14 +104,6 @@ function handleBrowserRequest(
           )
 
           pipe(body)
-        },
-        onShellError(err: unknown) {
-          reject(err)
-        },
-        onError(error: unknown) {
-          didError = true
-
-          console.error(error)
         },
       }
     )

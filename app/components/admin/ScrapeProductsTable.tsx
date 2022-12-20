@@ -52,6 +52,22 @@ const columns = [
     header: "ID",
   }),
   columnHelper.accessor("url", {
+    cell: (props) => {
+      const value = props.getValue()
+
+      if (!value) return null
+
+      return (
+        <a
+          href={value}
+          target="_blank"
+          rel="noreferrer"
+          className="hover:underline"
+        >
+          {value}
+        </a>
+      )
+    },
     header: "URL",
   }),
   columnHelper.accessor("quantity", {
