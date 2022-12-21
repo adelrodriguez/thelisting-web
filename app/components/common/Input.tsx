@@ -5,23 +5,25 @@ import { forwardRef } from "react"
 
 function Input(
   {
+    addOn,
     className,
     description,
     disabled = false,
     error = false,
-    id,
     label,
     name,
+    id = name,
     placeholder,
     type = "text",
     ...props
   }: {
+    addOn?: string
     className?: string
     description?: string
+    disabled?: boolean
+    error?: boolean
     label?: string
     name?: string
-    error?: boolean
-    disabled?: boolean
   } & InputHTMLAttributes<HTMLInputElement>,
   ref: Ref<HTMLInputElement>
 ): ReactElement {
@@ -34,34 +36,34 @@ function Input(
       )}
 
       <div
-        className={classNames("relative", "rounded-md", {
+        className={classNames("relative", "rounded-md", "flex", {
           "mt-1": !!label,
           "shadow-sm": error,
         })}
       >
+        {addOn && (
+          <span className="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 bg-gray-50 px-3 text-gray-500 sm:text-sm">
+            {addOn}
+          </span>
+        )}
+
         <input
           type={type}
           name={name}
           id={id}
           ref={ref}
-          className={classNames(
-            "block",
-            "w-full",
-            "rounded-md",
-            "shadow-sm",
-            "sm:text-sm",
-            {
-              "border-gray-300": !error,
-              "border-gray-300 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500":
-                disabled,
-              "border-red-300": error,
-              "focus:border-indigo-500 focus:ring-indigo-500": !error,
-              "focus:border-red-500 focus:outline-none focus:ring-red-500":
-                error,
-              "pr-10": error,
-              "text-red-900 placeholder-red-300": error,
-            }
-          )}
+          className={classNames("block", "w-full", "shadow-sm", "sm:text-sm", {
+            "border-gray-300": !error,
+            "border-gray-300 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500":
+              disabled,
+            "border-red-300": error,
+            "focus:border-indigo-500 focus:ring-indigo-500": !error,
+            "focus:border-red-500 focus:outline-none focus:ring-red-500": error,
+            "pr-10": error,
+            "rounded-md": !addOn,
+            "rounded-r-md": addOn,
+            "text-red-900 placeholder-red-300": error,
+          })}
           placeholder={placeholder}
           aria-invalid={error}
           aria-describedby={error ? `${id}-error` : undefined}

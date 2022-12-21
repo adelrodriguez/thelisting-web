@@ -2,25 +2,24 @@ import type { ReactElement, ComponentProps } from "react"
 import type { Path, FieldValues } from "react-hook-form"
 import { useController } from "react-hook-form"
 
-import { Select } from "~/components/common"
+import TextArea from "~/components/common/TextArea"
 
 /**
  * This component should only be used within a Form component.
  */
-export default function SelectInput<FormData extends FieldValues>({
+export default function TextAreaInput<FormData extends FieldValues>({
   name,
   description,
   ...props
 }: {
   name: Path<FormData>
-} & ComponentProps<typeof Select>): ReactElement {
+} & ComponentProps<typeof TextArea>): ReactElement {
   const { field, fieldState } = useController({ name })
 
   return (
-    <Select
+    <TextArea
       {...field}
       {...props}
-      onChange={field.onChange}
       error={!!fieldState.error}
       description={fieldState.error?.message || description}
     />

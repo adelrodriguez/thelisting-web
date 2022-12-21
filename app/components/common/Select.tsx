@@ -11,6 +11,7 @@ import { forwardRef, Fragment } from "react"
 type Option = {
   label: string
   value: string | number
+  disabled?: boolean
 }
 
 function SelectField(
@@ -23,10 +24,8 @@ function SelectField(
     required,
     placeholder,
     options,
-    defaultValue,
     ...props
   }: {
-    defaultValue?: Option
     description?: string
     disabled?: boolean
     error?: boolean
@@ -42,14 +41,8 @@ function SelectField(
   ref: Ref<HTMLDivElement>
 ): ReactElement {
   return (
-    <>
-      <Listbox
-        {...props}
-        name={name}
-        defaultValue={defaultValue}
-        disabled={disabled}
-        by="value"
-      >
+    <div>
+      <Listbox {...props} name={name} disabled={disabled} by="value">
         {({ open }) => (
           <>
             <Listbox.Label className="block text-sm font-medium text-gray-700">
@@ -80,7 +73,9 @@ function SelectField(
               >
                 {({ value }: { value: Option }) => (
                   <>
-                    <span className="block truncate">{value.label}</span>
+                    <span className="block truncate">
+                      {value ? value.label : placeholder}
+                    </span>
                     <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                       <ChevronUpDownIcon
                         className="h-5 w-5 text-gray-400"
@@ -107,12 +102,13 @@ function SelectField(
                 <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                   {options.map((option) => (
                     <Listbox.Option
-                      key={option.value}
+                      key={option.value || ""}
                       className="ui-active:bg-indigo-600 ui-active:text-white ui-not-active:text-gray-900 relative cursor-default select-none py-2 pl-3 pr-9"
                       value={option}
+                      disabled={option.disabled}
                     >
                       <span className="ui-selected::font-semibold ui-not-selected::font-normal block truncate">
-                        {option.label}
+                        {option ? option.label : placeholder}
                       </span>
 
                       <span className="ui-active:text-white ui-not-active:text-indigo-600 absolute inset-y-0 right-0 items-center pr-4 hidden ui-selected:flex">
@@ -137,7 +133,7 @@ function SelectField(
           {description}
         </p>
       )}
-    </>
+    </div>
   )
 }
 

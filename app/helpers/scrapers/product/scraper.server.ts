@@ -33,7 +33,7 @@ export default async function createScraper(
 
   const scraperFactory = createScraperFactory(url)
 
-  const availableStores = {
+  const AvailableStores = {
     [AmazonScraper.domain]: AmazonScraper,
     [BabylistScraper.domain]: BabylistScraper,
     [BebeMundoScraper.domain]: BebeMundoScraper,
@@ -56,13 +56,13 @@ export default async function createScraper(
     [ZaraHomeScraper.domain]: ZaraHomeScraper,
   } as const
 
-  const store = Object.keys(availableStores).find(
+  const store = Object.keys(AvailableStores).find(
     (storeDomain) => storeDomain === domain
   )
 
   const storeScraper = store
     ? // If store is not found, use default scraper
-      availableStores[store] || BaseScraper
+      AvailableStores[store] || BaseScraper
     : BaseScraper
 
   return scraperFactory(storeScraper)
