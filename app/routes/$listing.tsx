@@ -3,9 +3,9 @@ import type { LoaderArgs, TypedResponse } from "@remix-run/node"
 import { redirect } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { useLoaderData } from "@remix-run/react"
-import { ReasonPhrases, StatusCodes } from "http-status-codes"
 
 import db from "~/helpers/db.server"
+import { ReasonPhrases, StatusCodes } from "~/utils/http"
 
 type LoaderResult<T> = Promise<TypedResponse<T>>
 

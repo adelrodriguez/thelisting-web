@@ -15,7 +15,6 @@
 
 # environment
 .env
-.env.*
 
 # misc
 .DS_Store

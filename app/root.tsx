@@ -12,7 +12,7 @@ import {
 } from "@remix-run/react"
 import remixImageStyles from "remix-image/remix-image.css"
 
-import { XSTATE_VISUALIZER } from "~/config/vars.server"
+import { xStateVisualizer } from "~/config/vars.server"
 import tailwind from "~/styles/tailwind.css"
 
 export const meta: MetaFunction = () => ({
@@ -53,8 +53,8 @@ export function CatchBoundary() {
 
 export async function loader() {
   return json({
-    ENV: {
-      XSTATE_VISUALIZER,
+    env: {
+      xStateVisualizer,
     },
   })
 }
@@ -72,7 +72,7 @@ export default function App() {
         <Outlet />
         <script
           dangerouslySetInnerHTML={{
-            __html: `window.ENV = ${JSON.stringify(data.ENV)}`,
+            __html: `window.env = ${JSON.stringify(data.env)}`,
           }}
         />
         <ScrollRestoration />

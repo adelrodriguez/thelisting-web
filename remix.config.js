@@ -1,3 +1,5 @@
+require("./app/config/env.server.js")
+
 /** @type {import('@remix-run/dev').AppConfig} */
 module.exports = {
   ignoredRouteFiles: ["**/.*"],
