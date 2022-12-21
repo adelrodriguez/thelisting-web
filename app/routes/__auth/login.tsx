@@ -1,18 +1,23 @@
 import { Transition } from "@headlessui/react"
 import type { ActionArgs, LoaderArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
-import { useLoaderData, useNavigate, useSubmit } from "@remix-run/react"
+import { useLoaderData, useNavigate } from "@remix-run/react"
+import { withZod } from "@remix-validated-form/with-zod"
+import { ValidatedForm, validationError } from "remix-validated-form"
 import { z } from "zod"
 
 import { Logo } from "~/components/branding"
 import { Alert, Button } from "~/components/common"
-import { Form, FormField } from "~/components/form"
+import { FormInput } from "~/components/form"
 import auth from "~/helpers/auth.server"
 import sessionStorage from "~/helpers/session.server"
+import { getFormData } from "~/utils/http"
 
-const LoginSchema = z.object({
-  email: z.string().email(),
-})
+const validator = withZod(
+  z.object({
+    email: z.string().email("Please enter a valid email address"),
+  })
+)
 
 export async function loader({ request }: LoaderArgs) {
   const url = new URL(request.url)
@@ -31,6 +36,11 @@ export async function loader({ request }: LoaderArgs) {
 }
 
 export async function action({ request }: ActionArgs) {
+  const formData = await getFormData(request)
+  const result = await validator.validate(formData)
+
+  if (result.error) return validationError(result.error)
+
   // The success redirect is required in this action, this is where the user is
   // going to be redirected after the magic link is sent, note that here the
   // user is not yet authenticated, so you can't send it to a private page.
@@ -45,19 +55,10 @@ export async function action({ request }: ActionArgs) {
 export default function LoginPage() {
   const { success, error } = useLoaderData<typeof loader>()
   const navigate = useNavigate()
-  const submit = useSubmit()
 
   const isSuccess = typeof success === "string"
   const isError = typeof error === "string"
   const show = isSuccess || isError
-
-  function handleSubmit(data: z.infer<typeof LoginSchema>) {
-    const formData = new FormData()
-
-    formData.append("email", data.email)
-
-    submit(formData, { method: "post" })
-  }
 
   return (
     <div className="flex min-h-full bg-white">
@@ -100,14 +101,14 @@ export default function LoginPage() {
           </Transition>
 
           <div className="mt-8">
-            <Form
-              defaultValues={{ email: "" }}
-              resetOnSubmit
-              onSubmit={handleSubmit}
-              schema={LoginSchema}
+            <ValidatedForm
+              validator={validator}
+              method="post"
+              resetAfterSubmit
               className="space-y-6"
+              defaultValues={{ email: "" }}
             >
-              <FormField.Text
+              <FormInput
                 name="email"
                 required
                 type="email"
@@ -117,7 +118,7 @@ export default function LoginPage() {
               <Button type="submit" className="w-full justify-center">
                 Log in
               </Button>
-            </Form>
+            </ValidatedForm>
           </div>
         </main>
       </div>

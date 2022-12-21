@@ -1,32 +1,31 @@
 import type { ReactElement, ComponentProps } from "react"
-import type { Path, FieldValues } from "react-hook-form"
-import { useController } from "react-hook-form"
+import { useField } from "remix-validated-form"
 
 import { Input } from "~/components/common"
 
 /**
  * This component should only be used within a Form component.
  */
-export default function DateInput<FormData extends FieldValues>({
+export default function FormDate({
   name,
   description,
   min,
   max,
   ...props
 }: {
-  name: Path<FormData>
+  name: string
 } & ComponentProps<typeof Input>): ReactElement {
-  const { field, fieldState } = useController({ name })
+  const { error, getInputProps } = useField(name)
 
   return (
     <Input
-      {...field}
+      {...getInputProps({ id: name })}
       {...props}
       type="date"
       min={min}
       max={max}
-      error={!!fieldState.error}
-      description={fieldState.error?.message || description}
+      error={!!error}
+      description={error || description}
     />
   )
 }

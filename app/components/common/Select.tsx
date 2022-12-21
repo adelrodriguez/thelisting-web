@@ -1,29 +1,33 @@
-import { Listbox, Transition } from "@headlessui/react"
-import {
-  CheckIcon,
-  ChevronUpDownIcon,
-  ExclamationCircleIcon,
-} from "@heroicons/react/20/solid"
+import { ExclamationCircleIcon } from "@heroicons/react/20/solid"
 import classNames from "classnames"
-import type { ReactElement, Ref, SelectHTMLAttributes } from "react"
-import { forwardRef, Fragment } from "react"
+import type {
+  OptionHTMLAttributes,
+  ReactElement,
+  Ref,
+  SelectHTMLAttributes,
+} from "react"
+import { forwardRef } from "react"
 
-type Option = {
+type OptionValue = OptionHTMLAttributes<HTMLOptionElement>["value"]
+
+export type SelectOption<T> = {
   label: string
-  value: string | number
+  value: T
   disabled?: boolean
 }
 
-function SelectField(
+function Select<T extends OptionValue>(
   {
+    className,
+    description,
+    disabled,
+    error,
     label,
     name,
-    description,
-    error,
-    disabled,
-    required,
-    placeholder,
+    id = name,
     options,
+    placeholder,
+    required,
     ...props
   }: {
     description?: string
@@ -31,104 +35,75 @@ function SelectField(
     error?: boolean
     label?: string
     name?: string
-    options: Option[]
+    options: SelectOption<T>[]
     placeholder?: string
     required?: boolean
-    onChange?: (value: string | number | readonly string[]) => void
   } & SelectHTMLAttributes<HTMLSelectElement>,
-  // TODO(adelrodriguez): Figure out how to correctly pass the ref into the
-  // Listbox component
-  ref: Ref<HTMLDivElement>
+  ref: Ref<HTMLSelectElement>
 ): ReactElement {
   return (
-    <div>
-      <Listbox {...props} name={name} disabled={disabled} by="value">
-        {({ open }) => (
-          <>
-            <Listbox.Label className="block text-sm font-medium text-gray-700">
-              {label}
-            </Listbox.Label>
-            <div className="relative mt-1">
-              <Listbox.Button
-                className={classNames(
-                  "relative",
-                  "w-full",
-                  "cursor-default",
-                  "rounded-md",
-                  "border",
-                  "bg-white",
-                  "focus:outline-none focus:ring-1",
-                  "sm:text-sm",
-                  "py-2 pl-3 pr-10 text-left shadow-sm",
-                  {
-                    "border-gray-300": !error,
-                    "border-gray-300 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500":
-                      disabled,
-                    "border-red-300": error,
-                    "focus:border-indigo-500  focus:ring-indigo-500": !error,
-                    "focus:border-red-500 focus:ring-red-500": error,
-                    "text-red-900 placeholder-red-300": error,
-                  }
-                )}
-              >
-                {({ value }: { value: Option }) => (
-                  <>
-                    <span className="block truncate">
-                      {value ? value.label : placeholder}
-                    </span>
-                    <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                      <ChevronUpDownIcon
-                        className="h-5 w-5 text-gray-400"
-                        aria-hidden="true"
-                      />
-                      {error && (
-                        <ExclamationCircleIcon
-                          className="h-5 w-5 text-red-500 ml-2"
-                          aria-hidden="true"
-                        />
-                      )}
-                    </span>
-                  </>
-                )}
-              </Listbox.Button>
-
-              <Transition
-                show={open}
-                as={Fragment}
-                leave="transition ease-in duration-100"
-                leaveFrom="opacity-100"
-                leaveTo="opacity-0"
-              >
-                <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                  {options.map((option) => (
-                    <Listbox.Option
-                      key={option.value || ""}
-                      className="ui-active:bg-indigo-600 ui-active:text-white ui-not-active:text-gray-900 relative cursor-default select-none py-2 pl-3 pr-9"
-                      value={option}
-                      disabled={option.disabled}
-                    >
-                      <span className="ui-selected::font-semibold ui-not-selected::font-normal block truncate">
-                        {option ? option.label : placeholder}
-                      </span>
-
-                      <span className="ui-active:text-white ui-not-active:text-indigo-600 absolute inset-y-0 right-0 items-center pr-4 hidden ui-selected:flex">
-                        <CheckIcon className="h-5 w-5" aria-hidden="true" />
-                      </span>
-                    </Listbox.Option>
-                  ))}
-                </Listbox.Options>
-              </Transition>
-            </div>
-          </>
+    <div className={className}>
+      {label && (
+        <label htmlFor={id} className="block text-sm font-medium text-gray-700">
+          {label}
+        </label>
+      )}
+      <div
+        className={classNames("relative", "rounded-md", "flex", {
+          "mt-1": !!label,
+          "shadow-sm": error,
+        })}
+      >
+        <select
+          {...props}
+          name={name}
+          id={id}
+          ref={ref}
+          className={classNames(
+            "block",
+            "w-full",
+            "shadow-sm",
+            "sm:text-sm",
+            "rounded-md",
+            {
+              "border-gray-300": !error,
+              "border-gray-300 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500":
+                disabled,
+              "border-red-300": error,
+              "focus:border-indigo-500 focus:ring-indigo-500": !error,
+              "focus:border-red-500 focus:outline-none focus:ring-red-500":
+                error,
+              "pr-10": error,
+              "text-red-900 placeholder-red-300": error,
+            }
+          )}
+        >
+          {options.map((option) => (
+            <option
+              key={`${option.value}`}
+              value={option.value}
+              disabled={option.disabled}
+            >
+              {option.label}
+            </option>
+          ))}
+        </select>
+        {error && (
+          <div className="pointer-events-none absolute inset-y-0 right-4 flex items-center pr-3">
+            <ExclamationCircleIcon
+              className="h-5 w-5 text-red-500"
+              aria-hidden="true"
+            />
+          </div>
         )}
-      </Listbox>
+      </div>
       {description && (
         <p
           className={classNames("mt-2 text-sm", {
             "text-gray-500": !error,
             "text-red-600": error,
           })}
-          id={error ? `${name}-error` : `${name}-description`}
+          id={error ? `${id}-error` : `${id}-description`}
         >
           {description}
         </p>
@@ -137,4 +112,4 @@ function SelectField(
   )
 }
 
-export default forwardRef(SelectField)
+export default forwardRef(Select)

@@ -9,10 +9,8 @@ import {
 } from "@tanstack/react-table"
 import { useInterpret, useSelector } from "@xstate/react"
 import { Fragment, useEffect, useState } from "react"
-import { z } from "zod"
 
-import { Button, Checkbox, FormattedNumber } from "~/components/common"
-import { Form, FormField } from "~/components/form"
+import { Button, Checkbox, FormattedNumber, Input } from "~/components/common"
 import { Spinner } from "~/components/loading"
 import { isDev } from "~/config/vars.server"
 import { scraperMachine } from "~/helpers/machines"
@@ -120,10 +118,6 @@ const columns = [
   }),
 ]
 
-const FilenameFormSchema = z.object({
-  filename: z.string().min(1),
-})
-
 export default function ScrapeProductsTable({
   data: initialData,
 }: {
@@ -168,6 +162,7 @@ export default function ScrapeProductsTable({
     scraperService.onTransition((_, event) => {
       if (!table.options.meta) return
 
+      // TODO(adelrodriguez): Add message when each product is finished
       if (event.type === "FINISHED") {
         const payload = event.payload
         const dataMap = new Map(data.map((row) => [row.url, row]))
@@ -181,9 +176,6 @@ export default function ScrapeProductsTable({
       }
     })
 
-    // return () => {
-    //   scraperService.stop()
-    // }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -315,9 +307,11 @@ function FilenameModal({
   onClose: () => void
   onExport: (filename: string) => void
 }) {
-  function handleSubmit(values: z.infer<typeof FilenameFormSchema>) {
+  const [filename, setFilename] = useState("")
+
+  function handleSubmit() {
     onClose()
-    onExport(values.filename)
+    onExport(filename)
   }
 
   return (
@@ -347,35 +341,30 @@ function FilenameModal({
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
               <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6">
-                <Form
-                  onSubmit={handleSubmit}
-                  schema={FilenameFormSchema}
-                  defaultValues={{ filename: "" }}
-                >
-                  <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
-                    <ArrowDownTrayIcon className="h-6 w-6" aria-hidden="true" />
+                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
+                  <ArrowDownTrayIcon className="h-6 w-6" aria-hidden="true" />
+                </div>
+                <div className="mt-3 sm:mt-5">
+                  <Dialog.Title
+                    as="h3"
+                    className="text-lg text-center font-medium leading-6 text-gray-900"
+                  >
+                    Export your CSV file
+                  </Dialog.Title>
+                  <div className="mt-2">
+                    <Input
+                      name="filename"
+                      label="Filename"
+                      placeholder="my-csv-file.csv"
+                      onChange={(e) => setFilename(e.target.value)}
+                    />
                   </div>
-                  <div className="mt-3 sm:mt-5">
-                    <Dialog.Title
-                      as="h3"
-                      className="text-lg text-center font-medium leading-6 text-gray-900"
-                    >
-                      Export your CSV file
-                    </Dialog.Title>
-                    <div className="mt-2">
-                      <FormField.Text
-                        name="filename"
-                        label="Filename"
-                        placeholder="my-csv-file.csv"
-                      />
-                    </div>
-                  </div>
-                  <div className="mt-4 sm:mt-5">
-                    <Button type="submit" className="w-full">
-                      Download
-                    </Button>
-                  </div>
-                </Form>
+                </div>
+                <div className="mt-4 sm:mt-5">
+                  <Button onClick={handleSubmit} className="w-full">
+                    Download
+                  </Button>
+                </div>
               </Dialog.Panel>
             </Transition.Child>
           </div>
