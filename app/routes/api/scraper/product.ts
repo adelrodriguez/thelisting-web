@@ -17,6 +17,7 @@ export async function loader({
   if (!user) {
     throw new Response(ReasonPhrases.UNAUTHORIZED, {
       status: StatusCodes.UNAUTHORIZED,
+      statusText: "You must be logged in to access this resource",
     })
   }
 

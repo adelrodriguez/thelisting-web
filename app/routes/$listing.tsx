@@ -21,7 +21,7 @@ export async function loader({ params }: LoaderArgs): LoaderResult<Listing> {
   if (!data) {
     throw new Response(ReasonPhrases.NOT_FOUND, {
       status: StatusCodes.NOT_FOUND,
-      statusText: `No listing found for path ${listing}`,
+      statusText: "Sorry, we couldn’t find the page you’re looking for.",
     })
   }
 

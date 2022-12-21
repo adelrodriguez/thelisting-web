@@ -157,7 +157,7 @@ export default function MarketingLayout(): ReactElement {
                   <h3 className="text-base font-medium text-white">
                     Solutions
                   </h3>
-                  <ul role="list" className="mt-4 space-y-4">
+                  <ul className="mt-4 space-y-4">
                     {footerNavigation.solutions.map((item) => (
                       <li key={item.name}>
                         <a
@@ -172,7 +172,7 @@ export default function MarketingLayout(): ReactElement {
                 </div>
                 <div className="mt-12 md:mt-0">
                   <h3 className="text-base font-medium text-white">Support</h3>
-                  <ul role="list" className="mt-4 space-y-4">
+                  <ul className="mt-4 space-y-4">
                     {footerNavigation.support.map((item) => (
                       <li key={item.name}>
                         <a
@@ -189,7 +189,7 @@ export default function MarketingLayout(): ReactElement {
               <div className="md:grid md:grid-cols-2 md:gap-8">
                 <div>
                   <h3 className="text-base font-medium text-white">Company</h3>
-                  <ul role="list" className="mt-4 space-y-4">
+                  <ul className="mt-4 space-y-4">
                     {footerNavigation.company.map((item) => (
                       <li key={item.name}>
                         <a
@@ -204,7 +204,7 @@ export default function MarketingLayout(): ReactElement {
                 </div>
                 <div className="mt-12 md:mt-0">
                   <h3 className="text-base font-medium text-white">Legal</h3>
-                  <ul role="list" className="mt-4 space-y-4">
+                  <ul className="mt-4 space-y-4">
                     {footerNavigation.legal.map((item) => (
                       <li key={item.name}>
                         <a
@@ -316,14 +316,14 @@ export default function MarketingLayout(): ReactElement {
           <div className="mt-8 border-t border-gray-700 pt-8 md:flex md:items-center md:justify-between">
             <div className="flex space-x-6 md:order-2">
               {footerNavigation.social.map((item) => (
-                <a
+                <Link
                   key={item.name}
-                  href="#"
+                  to={item.href}
                   className="text-gray-400 hover:text-gray-300"
                 >
                   <span className="sr-only">{item.name}</span>
                   <item.icon className="h-6 w-6" aria-hidden="true" />
-                </a>
+                </Link>
               ))}
             </div>
             <p className="mt-8 text-base text-gray-400 md:order-1 md:mt-0">
