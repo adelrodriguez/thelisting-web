@@ -3,6 +3,7 @@ import type { LoaderArgs, TypedResponse } from "@remix-run/node"
 import { redirect } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { useLoaderData } from "@remix-run/react"
+import { ReasonPhrases, StatusCodes } from "http-status-codes"
 
 import db from "~/helpers/db.server"
 
@@ -18,9 +19,9 @@ export async function loader({ params }: LoaderArgs): LoaderResult<Listing> {
   })
 
   if (!data) {
-    throw new Response("Not Found", {
-      status: 404,
-      statusText: "No listing found",
+    throw new Response(ReasonPhrases.NOT_FOUND, {
+      status: StatusCodes.NOT_FOUND,
+      statusText: `No listing found for path ${listing}`,
     })
   }
 

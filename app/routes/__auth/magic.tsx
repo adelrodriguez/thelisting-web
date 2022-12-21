@@ -1,6 +1,6 @@
 import type { LoaderArgs } from "@remix-run/node"
 
-import { auth } from "~/helpers/auth.server"
+import auth from "~/helpers/auth.server"
 
 export async function loader({ request }: LoaderArgs) {
   await auth.authenticate("email-link", request, {

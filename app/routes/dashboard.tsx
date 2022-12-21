@@ -15,7 +15,7 @@ import classNames from "classnames"
 import { Fragment } from "react"
 
 import { Logo } from "~/components/branding"
-import { auth } from "~/helpers/auth.server"
+import auth from "~/helpers/auth.server"
 import type { LoaderResult } from "~/types/remix"
 
 const navigation = [

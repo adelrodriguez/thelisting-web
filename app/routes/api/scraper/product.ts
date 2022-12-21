@@ -1,6 +1,8 @@
 import type { LoaderArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
+import { ReasonPhrases, StatusCodes } from "http-status-codes"
 
+import auth from "~/helpers/auth.server"
 import db from "~/helpers/db.server"
 import { productScraper } from "~/helpers/scraper.server"
 import type { LoaderResult } from "~/types/remix"
@@ -10,14 +12,20 @@ import { logger } from "~/utils/log"
 export async function loader({
   request,
 }: LoaderArgs): Promise<LoaderResult<ScrapedProductResult>> {
-  // TODO(adelrodriguez): Add authentication
+  const user = await auth.isAuthenticated(request)
+
+  if (!user) {
+    throw new Response(ReasonPhrases.UNAUTHORIZED, {
+      status: StatusCodes.UNAUTHORIZED,
+    })
+  }
 
   const requestUrl = new URL(request.url)
   const url = requestUrl.searchParams.get("url")
 
   if (!url) {
-    throw new Response("Bad Request", {
-      status: 400,
+    throw new Response(ReasonPhrases.BAD_REQUEST, {
+      status: StatusCodes.BAD_REQUEST,
     })
   }
 

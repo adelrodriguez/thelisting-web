@@ -7,7 +7,7 @@ import db from "~/helpers/db.server"
 import { sendLoginEmail } from "~/helpers/email.server"
 import sessionStorage from "~/helpers/session.server"
 
-export const auth = new Authenticator<User>(sessionStorage)
+const auth = new Authenticator<User>(sessionStorage)
 
 const secret = REMIX_AUTH_SECRET
 
@@ -26,3 +26,5 @@ auth.use(
     }
   )
 )
+
+export default auth

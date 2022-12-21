@@ -7,7 +7,7 @@ import { z } from "zod"
 import { Logo } from "~/components/branding"
 import { Alert, Button } from "~/components/common"
 import { Form, FormField } from "~/components/form"
-import { auth } from "~/helpers/auth.server"
+import auth from "~/helpers/auth.server"
 import sessionStorage from "~/helpers/session.server"
 
 const LoginSchema = z.object({

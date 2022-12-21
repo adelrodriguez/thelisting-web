@@ -36,6 +36,7 @@
     "@xstate/inspect": "^0.7.0",
     "@xstate/react": "^3.0.1",
     "classnames": "^2.3.2",
+    "http-status-codes": "^2.2.0",
     "isbot": "^3.6.5",
     "papaparse": "^5.3.2",
     "playwright": "^1.29.0",
