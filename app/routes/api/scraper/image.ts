@@ -44,7 +44,6 @@ export async function loader({ request }: LoaderArgs) {
       reader.releaseLock()
     },
   })
-  // const imageObjectURL = URL.createObjectURL(blob)
 
   return new Response(response, {
     headers: {

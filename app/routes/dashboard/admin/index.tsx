@@ -2,9 +2,9 @@ import {
   AcademicCapIcon,
   BanknotesIcon,
   ReceiptRefundIcon,
-  MagnifyingGlassIcon,
   PhoneIcon,
-  ArrowDownCircleIcon,
+  PhotoIcon,
+  GiftIcon,
 } from "@heroicons/react/24/outline"
 import { Link } from "@remix-run/react"
 import classNames from "classnames"
@@ -12,12 +12,21 @@ import classNames from "classnames"
 const tools = [
   {
     description:
-      "Import a CSV file with URLs to scrape product from, and export the results to a CSV file or to your Shopify store.",
+      "Import a CSV file with URLs to scrape product from, and export the results to a CSV file or to your Shopify store (coming soon).",
     href: "./product-scraper",
-    icon: MagnifyingGlassIcon,
+    icon: GiftIcon,
     iconBackground: "bg-teal-50",
     iconForeground: "text-teal-700",
     title: "Scrape Products",
+  },
+  {
+    description:
+      "Import a CSV file with filenames and URLs to scrape images from, and the results will be downloaded to your computer.",
+    href: "./image-scraper",
+    icon: PhotoIcon,
+    iconBackground: "bg-sky-50",
+    iconForeground: "text-sky-700",
+    title: "Scrape Images",
   },
   {
     description: "Coming soon",
@@ -27,14 +36,7 @@ const tools = [
     iconForeground: "text-purple-700",
     title: "WhatsApp Broadcast",
   },
-  {
-    href: "./image-scraper",
-    icon: ArrowDownCircleIcon,
-    iconBackground: "bg-sky-50",
-    iconForeground: "text-sky-700",
-    id: "coming-soon4",
-    title: "Download Images",
-  },
+
   {
     href: "#coming-soon3",
     icon: BanknotesIcon,
