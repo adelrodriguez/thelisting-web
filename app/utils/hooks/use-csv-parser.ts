@@ -1,7 +1,7 @@
 import Papa from "papaparse"
 import { useEffect, useState } from "react"
 
-import { FileError } from "~/utils/errors"
+import { FileError } from "~/utils/error"
 
 export default function useCSVParser<T>({
   header,

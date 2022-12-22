@@ -34,19 +34,8 @@ export async function loader({
   const payload = await productScraper(url)
 
   // Check if there are errors in the payload
-  const errors = Object.entries(payload.fields).reduce(
-    (acc: Record<string, unknown>, [key, value]) => {
-      if (value === null) {
-        acc[key] = value
-      }
-      return acc
-    },
-    {}
-  )
-
-  if (Object.keys(errors).length > 0) {
-    logger.warn(`${url} scrapped with errors`)
-    logger.table(errors)
+  if (payload.errors.length > 0) {
+    logger.warn(`${url} scrapped with errors: ${payload.errors.join(", ")}`)
   } else {
     logger.success(`${url} scrapped successfully`)
   }
@@ -54,6 +43,7 @@ export async function loader({
   await db.scrapedProduct.create({
     data: {
       duration: payload.duration,
+      errors: payload.errors,
       time: payload.time,
       url,
       ...payload.fields,

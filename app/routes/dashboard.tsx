@@ -12,6 +12,7 @@ import type { LoaderArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { Link, NavLink, Outlet, useLoaderData } from "@remix-run/react"
 import classNames from "classnames"
+import { SnackbarProvider } from "notistack"
 import { Fragment } from "react"
 
 import { Logo } from "~/components/branding"
@@ -241,7 +242,9 @@ export default function DashboardLayout() {
         </div>
       </header>
       <main className="h-auto mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
-        <Outlet />
+        <SnackbarProvider>
+          <Outlet />
+        </SnackbarProvider>
       </main>
     </>
   )

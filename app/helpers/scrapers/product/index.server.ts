@@ -1,5 +1,5 @@
 import type { ScrapedProductResult } from "~/types/scraper"
-import { UnknownError } from "~/utils/errors"
+import { UnknownError } from "~/utils/error"
 import { logger } from "~/utils/log"
 
 import createScraper from "./scraper.server"
@@ -32,6 +32,7 @@ export default async function scraper(
 
     const payload: ScrapedProductResult = {
       duration: scraper.duration,
+      errors: [],
       fields: {
         amount,
         currency,
@@ -43,6 +44,10 @@ export default async function scraper(
       time: new Date().getTime(),
       url: requestUrl,
     }
+
+    Object.entries(payload.fields).forEach(([key, value]) => {
+      if (value === null) payload.errors.push(key)
+    })
 
     return payload
   } catch (error) {

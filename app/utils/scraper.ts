@@ -1,3 +1,5 @@
+import currency from "currency.js"
+
 import type { ScrapedProductResult } from "~/types/scraper"
 
 export function cleanAmount(amount?: string | null): number {
@@ -5,7 +7,7 @@ export function cleanAmount(amount?: string | null): number {
     throw new Error("There was no specified amount for this property")
   }
 
-  return parseFloat(amount.replace(/[^0-9.,]/g, "") || "0")
+  return currency(amount).value
 }
 
 export function cleanText(text?: string | null): string {

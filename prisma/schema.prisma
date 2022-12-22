@@ -55,6 +55,7 @@ model ScrapedProduct {
 
   time     Float
   duration Float
+  errors   String[]
 
   title       String?
   store       String?

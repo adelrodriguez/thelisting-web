@@ -15,4 +15,5 @@ export type ScrapedProductResult = {
   /** The duration for the function execution (in milliseconds)  */
   duration: number
   fields: ScrapedFields
+  errors: string[]
 }

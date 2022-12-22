@@ -8,14 +8,16 @@ import {
   flexRender,
 } from "@tanstack/react-table"
 import { useInterpret, useSelector } from "@xstate/react"
+import { useSnackbar } from "notistack"
 import { Fragment, useEffect, useState } from "react"
 
 import { Button, Checkbox, FormattedNumber, Input } from "~/components/common"
 import { Spinner } from "~/components/loading"
 import { isDev } from "~/config/vars.server"
 import { scraperMachine } from "~/helpers/machines"
-import type { ScrapedFields } from "~/types/scraper"
+import type { ScrapedFields, ScrapedProductResult } from "~/types/scraper"
 import { downloadAsCSVFile } from "~/utils/csv"
+import { round } from "~/utils/number"
 
 declare module "@tanstack/react-table" {
   interface TableMeta<TData extends unknown> {
@@ -156,6 +158,8 @@ export default function ScrapeProductsTable({
     scraperService,
     (state) => state.context.completed
   )
+  const { enqueueSnackbar } = useSnackbar()
+
   const selected = data.filter((_, index) => rowSelection[index])
 
   useEffect(() => {
@@ -173,11 +177,33 @@ export default function ScrapeProductsTable({
           ...product,
           ...payload.fields,
         })
+
+        showResultMessage(product.id, payload.duration, payload.errors)
       }
     })
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  function showResultMessage(
+    id: string,
+    duration: ScrapedProductResult["duration"],
+    errors: ScrapedProductResult["errors"]
+  ) {
+    if (errors.length) {
+      enqueueSnackbar(
+        `Fetched product ${id} with errors in fields: ${errors.join(", ")}`,
+        { variant: "warning" }
+      )
+    } else {
+      enqueueSnackbar(
+        `Fetched product ${id} successfully in ${round(duration / 1000)}s`,
+        {
+          variant: "success",
+        }
+      )
+    }
+  }
 
   function handleExport(filename: string) {
     const rowsToExport = selected.map((row) => ({
