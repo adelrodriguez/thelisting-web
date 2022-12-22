@@ -24,10 +24,6 @@ export default function AdminToolsProductScraperPage() {
     transformHeader,
   })
 
-  if (result) {
-    return <ScrapeProductsTable data={result.data} />
-  }
-
   return (
     <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
       <div className="lg:text-center">
@@ -43,10 +39,14 @@ export default function AdminToolsProductScraperPage() {
         </p>
       </div>
       <div className="mt-8">
-        <Dropzone
-          fileTypes={{ "text/csv": [".csv"] }}
-          onDrop={(files) => parse(files[0])}
-        />
+        {result ? (
+          <ScrapeProductsTable data={result.data} />
+        ) : (
+          <Dropzone
+            fileTypes={{ "text/csv": [".csv"] }}
+            onDrop={(files) => parse(files[0])}
+          />
+        )}
       </div>
     </div>
   )

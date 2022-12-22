@@ -234,12 +234,10 @@ export default function ScrapeProductsTable({
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="sm:flex sm:items-center">
           <div className="sm:flex-auto">
-            <h1 className="text-xl font-semibold text-gray-900">
-              Scrape Products
-            </h1>
-            <p className="mt-2 text-sm text-gray-700">
-              Select products to scrape: {selected.length} selected
-            </p>
+            <h3 className="text-lg text-gray-700">
+              Products to scrape:{" "}
+              <span className="font-bold">{selected.length}</span> selected
+            </h3>
           </div>
           <div className="mt-4 flex gap-4 sm:mt-0 sm:ml-16 sm:flex-none">
             <Button type="button" onClick={() => setOpen(true)} size="sm">
