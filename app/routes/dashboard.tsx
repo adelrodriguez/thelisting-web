@@ -16,6 +16,7 @@ import { SnackbarProvider } from "notistack"
 import { Fragment } from "react"
 
 import { Logo } from "~/components/branding"
+import { Notification } from "~/components/common"
 import auth from "~/helpers/auth.server"
 import type { LoaderResult } from "~/types/remix"
 
@@ -242,7 +243,19 @@ export default function DashboardLayout() {
         </div>
       </header>
       <main className="h-auto mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
-        <SnackbarProvider>
+        <SnackbarProvider
+          Components={{
+            error: Notification,
+            info: Notification,
+            success: Notification,
+            warning: Notification,
+          }}
+          anchorOrigin={{
+            horizontal: "right",
+            vertical: "top",
+          }}
+          autoHideDuration={60000}
+        >
           <Outlet />
         </SnackbarProvider>
       </main>

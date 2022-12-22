@@ -191,17 +191,17 @@ export default function ScrapeProductsTable({
     errors: ScrapedProductResult["errors"]
   ) {
     if (errors.length) {
-      enqueueSnackbar(
-        `Fetched product ${id} with errors in fields: ${errors.join(", ")}`,
-        { variant: "warning" }
-      )
+      enqueueSnackbar(`Fetched product ${id} with errors`, {
+        description: `In ${round(duration / 1000)}s. Errors: ${errors.join(
+          ", "
+        )}`,
+        variant: "warning",
+      })
     } else {
-      enqueueSnackbar(
-        `Fetched product ${id} successfully in ${round(duration / 1000)}s`,
-        {
-          variant: "success",
-        }
-      )
+      enqueueSnackbar(`Fetched product ${id} successfully `, {
+        description: `In ${round(duration / 1000)}s`,
+        variant: "success",
+      })
     }
   }
 
