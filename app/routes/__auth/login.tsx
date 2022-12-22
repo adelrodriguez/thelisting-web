@@ -11,7 +11,7 @@ import { Alert, Button } from "~/components/common"
 import { FormInput } from "~/components/form"
 import auth from "~/helpers/auth.server"
 import sessionStorage from "~/helpers/session.server"
-import { getFormData } from "~/utils/http"
+import { getFormData } from "~/utils/http.server"
 
 const validator = withZod(
   z.object({

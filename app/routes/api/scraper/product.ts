@@ -6,7 +6,7 @@ import db from "~/helpers/db.server"
 import { productScraper } from "~/helpers/scraper.server"
 import type { LoaderResult } from "~/types/remix"
 import type { ScrapedProductResult } from "~/types/scraper"
-import { ReasonPhrases, StatusCodes } from "~/utils/http"
+import { ReasonPhrases, StatusCodes } from "~/utils/http.server"
 import { logger } from "~/utils/log"
 
 export async function loader({
@@ -15,9 +15,9 @@ export async function loader({
   const user = await auth.isAuthenticated(request)
 
   if (!user) {
-    throw new Response(ReasonPhrases.UNAUTHORIZED, {
+    throw new Response("You must be logged in to access this resource", {
       status: StatusCodes.UNAUTHORIZED,
-      statusText: "You must be logged in to access this resource",
+      statusText: ReasonPhrases.UNAUTHORIZED,
     })
   }
 
@@ -25,8 +25,9 @@ export async function loader({
   const url = requestUrl.searchParams.get("url")
 
   if (!url) {
-    throw new Response(ReasonPhrases.BAD_REQUEST, {
+    throw new Response("Missing url parameter", {
       status: StatusCodes.BAD_REQUEST,
+      statusText: ReasonPhrases.BAD_REQUEST,
     })
   }
 

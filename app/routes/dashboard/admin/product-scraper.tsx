@@ -1,7 +1,7 @@
 import type { ScrapeProductsTableRow } from "~/components/admin"
 import { ScrapeProductsTable } from "~/components/admin"
 import { Dropzone } from "~/components/file"
-import useCSVParser from "~/utils/hooks/use-csv-parser"
+import { useCSVParser } from "~/utils/hooks"
 
 const Headers = [
   "id",

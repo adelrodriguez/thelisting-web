@@ -13,7 +13,7 @@ import {
   META_GRAPH_API_VERSION,
   WHATSAPP_PHONE_NUMBER_ID,
 } from "~/config/env.server"
-import { getFormData } from "~/utils/http"
+import { getFormData } from "~/utils/http.server"
 import { logger } from "~/utils/log"
 
 const WhatsAppBroadcastFormSchema = z.object({

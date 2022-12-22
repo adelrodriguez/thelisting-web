@@ -2,9 +2,9 @@ import {
   AcademicCapIcon,
   BanknotesIcon,
   ReceiptRefundIcon,
-  UsersIcon,
   MagnifyingGlassIcon,
   PhoneIcon,
+  ArrowDownCircleIcon,
 } from "@heroicons/react/24/outline"
 import { Link } from "@remix-run/react"
 import classNames from "classnames"
@@ -28,8 +28,8 @@ const tools = [
     title: "WhatsApp Broadcast",
   },
   {
-    href: "#coming-soon4",
-    icon: UsersIcon,
+    href: "./image-scraper",
+    icon: ArrowDownCircleIcon,
     iconBackground: "bg-sky-50",
     iconForeground: "text-sky-700",
     id: "coming-soon4",

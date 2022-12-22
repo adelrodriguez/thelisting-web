@@ -5,7 +5,7 @@ import { json } from "@remix-run/node"
 import { useLoaderData } from "@remix-run/react"
 
 import db from "~/helpers/db.server"
-import { ReasonPhrases, StatusCodes } from "~/utils/http"
+import { ReasonPhrases, StatusCodes } from "~/utils/http.server"
 
 type LoaderResult<T> = Promise<TypedResponse<T>>
 
@@ -19,9 +19,9 @@ export async function loader({ params }: LoaderArgs): LoaderResult<Listing> {
   })
 
   if (!data) {
-    throw new Response(ReasonPhrases.NOT_FOUND, {
+    throw new Response("Sorry, we couldn’t find the page you’re looking for.", {
       status: StatusCodes.NOT_FOUND,
-      statusText: "Sorry, we couldn’t find the page you’re looking for.",
+      statusText: ReasonPhrases.NOT_FOUND,
     })
   }
 

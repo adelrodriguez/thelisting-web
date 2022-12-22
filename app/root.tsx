@@ -37,7 +37,7 @@ export function CatchBoundary() {
   return (
     <html className="h-full">
       <head>
-        <title>The Listing | {caught.status}</title>
+        <title>The Listing | An error ocurred</title>
         <Meta />
         <Links />
       </head>
@@ -61,11 +61,9 @@ export function CatchBoundary() {
                     {caught.status}
                   </p>
                   <h1 className="mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
-                    {caught.data}
-                  </h1>
-                  <p className="mt-2 text-base text-gray-500">
                     {caught.statusText}
-                  </p>
+                  </h1>
+                  <p className="mt-2 text-base text-gray-500">{caught.data}</p>
                   <div className="mt-6">
                     <Link
                       to="/"
