@@ -38,7 +38,8 @@ model User {
   lastName  String
   email     String @unique
 
-  role UserRole @default(User)
+  role        UserRole  @default(User)
+  lastLoginAt DateTime?
 }
 
 enum UserRole {

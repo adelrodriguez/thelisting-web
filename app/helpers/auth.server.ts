@@ -22,6 +22,11 @@ auth.use(
         where: { email },
       })
 
+      await db.user.update({
+        data: { lastLoginAt: new Date() },
+        where: { id: user.id },
+      })
+
       return user
     }
   )
