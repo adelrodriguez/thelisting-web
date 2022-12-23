@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "Listing"
+ADD COLUMN "sku" SERIAL NOT NULL;
+ALTER SEQUENCE "Listing_sku_seq" RESTART WITH 10001;

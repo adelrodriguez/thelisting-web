@@ -1496,10 +1496,6 @@ select {
   width: 0px;
 }
 
-.w-96 {
-  width: 24rem;
-}
-
 .min-w-0 {
   min-width: 0px;
 }
@@ -1964,14 +1960,14 @@ select {
   background-color: rgb(240 253 250 / var(--tw-bg-opacity));
 }
 
-.bg-purple-50 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(250 245 255 / var(--tw-bg-opacity));
-}
-
 .bg-sky-50 {
   --tw-bg-opacity: 1;
   background-color: rgb(240 249 255 / var(--tw-bg-opacity));
+}
+
+.bg-purple-50 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(250 245 255 / var(--tw-bg-opacity));
 }
 
 .bg-yellow-50 {
@@ -2174,6 +2170,14 @@ select {
   padding-right: 0.75rem;
 }
 
+.pt-0\.5 {
+  padding-top: 0.125rem;
+}
+
+.pt-0 {
+  padding-top: 0px;
+}
+
 .pt-16 {
   padding-top: 4rem;
 }
@@ -2210,14 +2214,6 @@ select {
   padding-top: 3rem;
 }
 
-.pt-0\.5 {
-  padding-top: 0.125rem;
-}
-
-.pt-0 {
-  padding-top: 0px;
-}
-
 .text-left {
   text-align: left;
 }
@@ -2250,11 +2246,6 @@ select {
   line-height: 1.75rem;
 }
 
-.text-xl {
-  font-size: 1.25rem;
-  line-height: 1.75rem;
-}
-
 .text-xs {
   font-size: 0.75rem;
   line-height: 1rem;
@@ -2263,6 +2254,11 @@ select {
 .text-3xl {
   font-size: 1.875rem;
   line-height: 2.25rem;
+}
+
+.text-xl {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
 }
 
 .text-2xl {
@@ -2408,6 +2404,16 @@ select {
   color: rgb(220 38 38 / var(--tw-text-opacity));
 }
 
+.text-yellow-400 {
+  --tw-text-opacity: 1;
+  color: rgb(250 204 21 / var(--tw-text-opacity));
+}
+
+.text-blue-400 {
+  --tw-text-opacity: 1;
+  color: rgb(96 165 250 / var(--tw-text-opacity));
+}
+
 .text-indigo-700 {
   --tw-text-opacity: 1;
   color: rgb(67 56 202 / var(--tw-text-opacity));
@@ -2443,14 +2449,14 @@ select {
   color: rgb(15 118 110 / var(--tw-text-opacity));
 }
 
-.text-purple-700 {
-  --tw-text-opacity: 1;
-  color: rgb(126 34 206 / var(--tw-text-opacity));
-}
-
 .text-sky-700 {
   --tw-text-opacity: 1;
   color: rgb(3 105 161 / var(--tw-text-opacity));
+}
+
+.text-purple-700 {
+  --tw-text-opacity: 1;
+  color: rgb(126 34 206 / var(--tw-text-opacity));
 }
 
 .text-yellow-700 {
@@ -2461,16 +2467,6 @@ select {
 .text-rose-700 {
   --tw-text-opacity: 1;
   color: rgb(190 18 60 / var(--tw-text-opacity));
-}
-
-.text-yellow-400 {
-  --tw-text-opacity: 1;
-  color: rgb(250 204 21 / var(--tw-text-opacity));
-}
-
-.text-blue-400 {
-  --tw-text-opacity: 1;
-  color: rgb(96 165 250 / var(--tw-text-opacity));
 }
 
 .placeholder-gray-500::-moz-placeholder {
@@ -2881,12 +2877,12 @@ select {
     width: 100%;
   }
 
-  .sm\:w-\[500px\] {
-    width: 500px;
-  }
-
   .sm\:w-96 {
     width: 24rem;
+  }
+
+  .sm\:w-\[500px\] {
+    width: 500px;
   }
 
   .sm\:max-w-xs {

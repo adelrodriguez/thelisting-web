@@ -17,5 +17,8 @@
     "javascriptreact",
     "typescript",
     "typescriptreact"
-  ]
+  ],
+  "[sql]": {
+    "editor.defaultFormatter": "mtxr.sqltools"
+  }
 }

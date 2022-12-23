@@ -15,6 +15,7 @@ model Listing {
   closedAt    DateTime?
   publishedAt DateTime?
 
+  sku        Int     @default(autoincrement())
   commerceId String? @db.VarChar(255)
 
   eventDate DateTime
