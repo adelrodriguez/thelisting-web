@@ -7,7 +7,8 @@ import { Button } from "~/components/common"
 import type { SelectOption } from "~/components/form"
 import { FormTextArea } from "~/components/form"
 import { FormInput, FormSelect } from "~/components/form"
-import { WhatsAppMessageTemplate } from "~/config/consts"
+import type { WhatsAppMessageTemplate } from "~/config/consts"
+import { WHATSAPP_MESSAGE_TEMPLATE } from "~/config/consts"
 import {
   META_GRAPH_API_USER_ACCESS_TOKEN,
   META_GRAPH_API_VERSION,
@@ -29,8 +30,8 @@ const WhatsAppBroadcastFormSchema = z.object({
   sender: z.string().min(1),
   template: z.enum(
     [
-      WhatsAppMessageTemplate.BabyShowerGuestNotification,
-      WhatsAppMessageTemplate.WeddingGuestNotification,
+      WHATSAPP_MESSAGE_TEMPLATE.BabyShowerGuestNotification,
+      WHATSAPP_MESSAGE_TEMPLATE.WeddingGuestNotification,
     ],
     {
       errorMap: () => ({ message: "Please select a template" }),
@@ -47,12 +48,12 @@ const options: Array<SelectOption<WhatsAppMessageTemplate | undefined>> = [
   },
   {
     label: "Wedding Guest Notification",
-    value: WhatsAppMessageTemplate.WeddingGuestNotification,
+    value: WHATSAPP_MESSAGE_TEMPLATE.WeddingGuestNotification,
   },
   {
     disabled: true,
     label: "Baby Shower Guest Notification",
-    value: WhatsAppMessageTemplate.BabyShowerGuestNotification,
+    value: WHATSAPP_MESSAGE_TEMPLATE.BabyShowerGuestNotification,
   },
 ]
 
@@ -130,6 +131,7 @@ export async function action({ request }: ActionArgs) {
             method: "POST",
           }
         )
+
         logger.info("Broadcast Response:", { res })
       } catch (error) {
         logger.error((error as Error).message)

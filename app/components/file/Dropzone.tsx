@@ -7,13 +7,7 @@ import type { ReactElement } from "react"
 import type { DropzoneOptions } from "react-dropzone"
 import { useDropzone } from "react-dropzone"
 
-const FileTypes = {
-  CSV: "text/csv",
-  JPEG: "image/jpeg",
-  PNG: "image/png",
-} as const
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-type FileTypes = typeof FileTypes[keyof typeof FileTypes]
+import type { FileTypes } from "~/config/consts"
 
 export default function Dropzone({
   maxFiles = 1,
