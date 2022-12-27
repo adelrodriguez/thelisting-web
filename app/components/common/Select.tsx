@@ -1,5 +1,5 @@
 import { ExclamationCircleIcon } from "@heroicons/react/20/solid"
-import classNames from "classnames"
+import clsx from "clsx"
 import type {
   OptionHTMLAttributes,
   ReactElement,
@@ -49,7 +49,7 @@ function Select<T extends OptionValue>(
         </label>
       )}
       <div
-        className={classNames("relative", "rounded-md", "flex", {
+        className={clsx("relative", "rounded-md", "flex", {
           "mt-1": !!label,
           "shadow-sm": error,
         })}
@@ -59,7 +59,7 @@ function Select<T extends OptionValue>(
           name={name}
           id={id}
           ref={ref}
-          className={classNames(
+          className={clsx(
             "block",
             "w-full",
             "shadow-sm",
@@ -70,7 +70,7 @@ function Select<T extends OptionValue>(
               "border-gray-300 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500":
                 disabled,
               "border-red-300": error,
-              "focus:border-indigo-500 focus:ring-indigo-500": !error,
+              "focus:border-gray-500 focus:ring-gray-500": !error,
               "focus:border-red-500 focus:outline-none focus:ring-red-500":
                 error,
               "pr-10": error,
@@ -99,7 +99,7 @@ function Select<T extends OptionValue>(
       </div>
       {description && (
         <p
-          className={classNames("mt-2 text-sm", {
+          className={clsx("mt-2 text-sm", {
             "text-gray-500": !error,
             "text-red-600": error,
           })}

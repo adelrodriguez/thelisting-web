@@ -3,7 +3,7 @@ import type { ReactElement } from "react"
 export default function Testimonials(): ReactElement {
   return (
     <section className="bg-white pt-16 lg:py-24">
-      <div className="pb-16 bg-indigo-600 lg:pb-0 lg:z-10 lg:relative">
+      <div className="pb-16 bg-gray-600 lg:pb-0 lg:z-10 lg:relative">
         <div className="lg:mx-auto lg:max-w-7xl lg:px-8 lg:grid lg:grid-cols-3 lg:gap-8">
           <div className="relative lg:-my-8">
             <div
@@ -42,7 +42,7 @@ export default function Testimonials(): ReactElement {
                   <p className="text-base font-medium text-white">
                     Judith Black
                   </p>
-                  <p className="text-base font-medium text-indigo-100">
+                  <p className="text-base font-medium text-gray-100">
                     CEO at PureInsights
                   </p>
                 </footer>

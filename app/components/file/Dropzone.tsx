@@ -2,7 +2,7 @@ import {
   DocumentArrowUpIcon,
   DocumentArrowDownIcon,
 } from "@heroicons/react/24/outline"
-import classNames from "classnames"
+import clsx from "clsx"
 import type { ReactElement } from "react"
 import type { DropzoneOptions } from "react-dropzone"
 import { useDropzone } from "react-dropzone"
@@ -31,8 +31,8 @@ export default function Dropzone({
       <div className="mx-auto max-w-3xl">
         <button
           type="button"
-          className={classNames(
-            "relative block w-full rounded-lg border-2 border-dashed border-gray-300 p-12 text-center hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2",
+          className={clsx(
+            "relative block w-full rounded-lg border-2 border-dashed border-gray-300 p-12 text-center hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2",
             { "bg-gray-300": isDragActive }
           )}
           {...getRootProps()}

@@ -1,4 +1,4 @@
-import classNames from "classnames"
+import clsx from "clsx"
 import type { ReactElement, Ref, TextareaHTMLAttributes } from "react"
 import { forwardRef } from "react"
 
@@ -31,7 +31,7 @@ function TextArea(
 
       <div className="mt-1">
         <textarea
-          className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+          className="block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm"
           defaultValue={defaultValue}
           id={id}
           name={name}
@@ -42,7 +42,7 @@ function TextArea(
       </div>
       {description && (
         <p
-          className={classNames("mt-2 text-sm", {
+          className={clsx("mt-2 text-sm", {
             "text-gray-500": !error,
             "text-red-600": error,
           })}

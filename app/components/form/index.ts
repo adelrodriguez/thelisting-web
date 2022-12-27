@@ -1,5 +1,6 @@
 export { default as FormDate } from "./FormDate"
 export { default as FormInput } from "./FormInput"
 export { default as FormSelect } from "./FormSelect"
+export { default as FormSubmit } from "./FormSubmit"
 export { default as FormTextArea } from "./FormTextArea"
 export type { SelectOption } from "./FormSelect"

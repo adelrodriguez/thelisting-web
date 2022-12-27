@@ -11,14 +11,14 @@ import type { User } from "@prisma/client"
 import type { LoaderArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { Link, NavLink, Outlet, useLoaderData } from "@remix-run/react"
-import classNames from "classnames"
+import clsx from "clsx"
 import { SnackbarProvider } from "notistack"
 import { Fragment } from "react"
 
 import { Logo } from "~/components/branding"
 import { Notification } from "~/components/common"
 import auth from "~/helpers/auth.server"
-import type { LoaderResult } from "~/types/remix"
+import type { LoaderResult } from "~/utils/remix"
 
 const navigation = [
   {
@@ -69,14 +69,18 @@ export default function DashboardLayout() {
 
   return (
     <>
-      <Disclosure as="nav" className="bg-indigo-600">
+      <Disclosure as="nav" className="bg-gray-600">
         {({ open }) => (
           <>
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
               <div className="flex h-16 items-center justify-between">
                 <div className="flex items-center">
                   <div className="flex-shrink-0">
-                    <Logo width={32} height={32} className="h-8 w-8" />
+                    <Logo
+                      width={32}
+                      height={32}
+                      className="h-8 w-8 fill-white"
+                    />
                   </div>
                   <div className="hidden md:block">
                     <div className="ml-10 flex items-baseline space-x-4">
@@ -85,10 +89,10 @@ export default function DashboardLayout() {
                           key={item.name}
                           to={item.href}
                           className={({ isActive }) =>
-                            classNames(
+                            clsx(
                               {
-                                "bg-indigo-700 text-white": isActive,
-                                "text-white hover:bg-indigo-500 hover:bg-opacity-75":
+                                "bg-gray-700 text-white": isActive,
+                                "text-white hover:bg-gray-500 hover:bg-opacity-75":
                                   !isActive,
                               },
                               "rounded-md px-3 py-2 text-sm font-medium"
@@ -106,7 +110,7 @@ export default function DashboardLayout() {
                   <div className="ml-4 flex items-center md:ml-6">
                     <button
                       type="button"
-                      className="rounded-full bg-indigo-600 p-1 text-indigo-200 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-indigo-600"
+                      className="rounded-full bg-gray-600 p-1 text-gray-200 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-600"
                     >
                       <span className="sr-only">View notifications</span>
                       <BellIcon className="h-6 w-6" aria-hidden="true" />
@@ -115,7 +119,7 @@ export default function DashboardLayout() {
                     {/* Profile dropdown */}
                     <Menu as="div" className="relative ml-3">
                       <div>
-                        <Menu.Button className="flex max-w-xs items-center rounded-full bg-indigo-600 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-indigo-600">
+                        <Menu.Button className="flex max-w-xs items-center rounded-full bg-gray-600 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-600">
                           <span className="sr-only">Open user menu</span>
                           <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gray-500">
                             <span className="text-sm font-medium leading-none text-white">
@@ -140,7 +144,7 @@ export default function DashboardLayout() {
                               {({ active }) => (
                                 <Link
                                   to={item.href}
-                                  className={classNames(
+                                  className={clsx(
                                     active ? "bg-gray-100" : "",
                                     "block px-4 py-2 text-sm text-gray-700"
                                   )}
@@ -157,7 +161,7 @@ export default function DashboardLayout() {
                 </div>
                 <div className="-mr-2 flex md:hidden">
                   {/* Mobile menu button */}
-                  <Disclosure.Button className="inline-flex items-center justify-center rounded-md bg-indigo-600 p-2 text-indigo-200 hover:bg-indigo-500 hover:bg-opacity-75 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-indigo-600">
+                  <Disclosure.Button className="inline-flex items-center justify-center rounded-md bg-gray-600 p-2 text-gray-200 hover:bg-gray-500 hover:bg-opacity-75 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-600">
                     <span className="sr-only">Open main menu</span>
                     {open ? (
                       <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
@@ -175,10 +179,10 @@ export default function DashboardLayout() {
                   <NavLink to={item.href} key={item.name}>
                     {({ isActive }) => (
                       <Disclosure.Button
-                        className={classNames(
+                        className={clsx(
                           {
-                            "bg-indigo-700 text-white": isActive,
-                            "text-white hover:bg-indigo-500 hover:bg-opacity-75":
+                            "bg-gray-700 text-white": isActive,
+                            "text-white hover:bg-gray-500 hover:bg-opacity-75":
                               !isActive,
                           },
                           "block rounded-md px-3 py-2 text-base font-medium"
@@ -191,7 +195,7 @@ export default function DashboardLayout() {
                   </NavLink>
                 ))}
               </div>
-              <div className="border-t border-indigo-700 pt-4 pb-3">
+              <div className="border-t border-gray-700 pt-4 pb-3">
                 <div className="flex items-center px-5">
                   <div className="flex-shrink-0">
                     <img
@@ -206,13 +210,13 @@ export default function DashboardLayout() {
                     <div className="text-base font-medium text-white">
                       {user.firstName} {user.lastName}
                     </div>
-                    <div className="text-sm font-medium text-indigo-300">
+                    <div className="text-sm font-medium text-gray-300">
                       {user.email}
                     </div>
                   </div>
                   <button
                     type="button"
-                    className="ml-auto flex-shrink-0 rounded-full bg-indigo-600 p-1 text-indigo-200 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-indigo-600"
+                    className="ml-auto flex-shrink-0 rounded-full bg-gray-600 p-1 text-gray-200 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-600"
                   >
                     <span className="sr-only">View notifications</span>
                     <BellIcon className="h-6 w-6" aria-hidden="true" />
@@ -224,7 +228,7 @@ export default function DashboardLayout() {
                       key={item.name}
                       as="a"
                       href={item.href}
-                      className="block rounded-md px-3 py-2 text-base font-medium text-white hover:bg-indigo-500 hover:bg-opacity-75"
+                      className="block rounded-md px-3 py-2 text-base font-medium text-white hover:bg-gray-500 hover:bg-opacity-75"
                     >
                       {item.name}
                     </Disclosure.Button>
@@ -254,7 +258,7 @@ export default function DashboardLayout() {
             horizontal: "right",
             vertical: "top",
           }}
-          autoHideDuration={60000}
+          autoHideDuration={5000}
         >
           <Outlet />
         </SnackbarProvider>

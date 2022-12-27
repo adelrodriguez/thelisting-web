@@ -1,5 +1,5 @@
 import { ExclamationCircleIcon } from "@heroicons/react/24/solid"
-import classNames from "classnames"
+import clsx from "clsx"
 import type { InputHTMLAttributes, ReactElement, Ref } from "react"
 import { forwardRef } from "react"
 
@@ -36,7 +36,7 @@ function Input(
       )}
 
       <div
-        className={classNames("relative", "rounded-md", "flex", {
+        className={clsx("relative", "rounded-md", "flex", {
           "mt-1": !!label,
           "shadow-sm": error,
         })}
@@ -52,12 +52,12 @@ function Input(
           name={name}
           id={id}
           ref={ref}
-          className={classNames("block", "w-full", "shadow-sm", "sm:text-sm", {
+          className={clsx("block", "w-full", "shadow-sm", "sm:text-sm", {
             "border-gray-300": !error,
             "border-gray-300 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500":
               disabled,
             "border-red-300": error,
-            "focus:border-indigo-500 focus:ring-indigo-500": !error,
+            "focus:border-gray-500 focus:ring-gray-500": !error,
             "focus:border-red-500 focus:outline-none focus:ring-red-500": error,
             "pr-10": error,
             "rounded-md": !addOn,
@@ -81,7 +81,7 @@ function Input(
       </div>
       {description && (
         <p
-          className={classNames("mt-2 text-sm", {
+          className={clsx("mt-2 text-sm", {
             "text-gray-500": !error,
             "text-red-600": error,
           })}

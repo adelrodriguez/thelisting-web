@@ -57,8 +57,8 @@ export default function AboutPage() {
                   src="https://images.unsplash.com/photo-1521510895919-46920266ddb3?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&fp-x=0.5&fp-y=0.6&fp-z=3&width=1440&height=1440&sat=-100"
                   alt=""
                 />
-                <div className="absolute inset-0 bg-indigo-500 mix-blend-multiply" />
-                <div className="absolute inset-0 bg-gradient-to-t from-indigo-600 via-indigo-600 opacity-90" />
+                <div className="absolute inset-0 bg-gray-500 mix-blend-multiply" />
+                <div className="absolute inset-0 bg-gradient-to-t from-gray-600 via-gray-600 opacity-90" />
                 <div className="relative px-8">
                   <div>
                     <img
@@ -70,7 +70,7 @@ export default function AboutPage() {
                   <blockquote className="mt-8">
                     <div className="relative text-lg font-medium text-white md:flex-grow">
                       <svg
-                        className="absolute top-0 left-0 h-8 w-8 -translate-x-3 -translate-y-2 transform text-indigo-400"
+                        className="absolute top-0 left-0 h-8 w-8 -translate-x-3 -translate-y-2 transform text-gray-400"
                         fill="currentColor"
                         viewBox="0 0 32 32"
                         aria-hidden="true"
@@ -85,7 +85,7 @@ export default function AboutPage() {
                     </div>
 
                     <footer className="mt-4">
-                      <p className="text-base font-semibold text-indigo-200">
+                      <p className="text-base font-semibold text-gray-200">
                         Sarah Williams, CEO at Workcation
                       </p>
                     </footer>
@@ -145,7 +145,7 @@ export default function AboutPage() {
                 ))}
               </dl>
               <div className="mt-10">
-                <a href="#" className="text-base font-medium text-indigo-600">
+                <a href="#" className="text-base font-medium text-gray-600">
                   Learn more about how we're changing the world
                   <span aria-hidden="true"> &rarr;</span>
                 </a>
@@ -167,7 +167,7 @@ export default function AboutPage() {
         <div className="relative px-4 pt-12 pb-16 sm:px-6 sm:pt-16 lg:mx-auto lg:grid lg:max-w-7xl lg:grid-cols-2 lg:px-8">
           <div className="lg:col-start-2 lg:pl-8">
             <div className="mx-auto max-w-prose text-base lg:ml-auto lg:mr-0 lg:max-w-lg">
-              <h2 className="font-semibold leading-6 text-indigo-600">
+              <h2 className="font-semibold leading-6 text-gray-600">
                 Work with us
               </h2>
               <h3 className="mt-2 text-3xl font-bold leading-8 tracking-tight text-gray-900 sm:text-4xl">
@@ -178,7 +178,7 @@ export default function AboutPage() {
                 Dictum urna sed consectetur neque tristique pellentesque.
                 Blandit amet, sed aenean erat arcu morbi.
               </p>
-              <div className="prose prose-indigo mt-5 text-gray-500">
+              <div className="prose prose-gray mt-5 text-gray-500">
                 <p>
                   Sollicitudin tristique eros erat odio sed vitae, consequat
                   turpis elementum. Lorem nibh vel, eget pretium arcu vitae.

@@ -1,4 +1,4 @@
-import classNames from "classnames"
+import clsx from "clsx"
 import type { ReactElement, ReactNode, ButtonHTMLAttributes } from "react"
 
 export default function Button({
@@ -15,8 +15,8 @@ export default function Button({
   return (
     <button
       type={type}
-      className={classNames(
-        "inline-flex items-center justify-center border border-transparent bg-indigo-600 font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2",
+      className={clsx(
+        "inline-flex items-center justify-center border border-transparent bg-gray-600 font-medium text-white shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2",
         {
           "rounded px-2.5 py-1.5 text-xs": size === "xs",
           "rounded-md px-3 py-2 text-sm leading-4": size === "sm",

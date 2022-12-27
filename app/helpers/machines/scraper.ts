@@ -1,7 +1,7 @@
 import { assign, send } from "xstate"
 import { createModel } from "xstate/lib/model"
 
-import type { ScrapedProductResult } from "~/types/scraper"
+import type { ScrapedProductResult } from "~/utils/scraper"
 import { scrapeProduct } from "~/utils/scraper"
 
 const scraperModel = createModel(

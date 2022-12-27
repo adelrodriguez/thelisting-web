@@ -1,6 +1,6 @@
-import type { ScrapedProductResult } from "~/types/scraper"
 import { UnknownError } from "~/utils/error"
 import { logger } from "~/utils/log"
+import type { ScrapedProductResult } from "~/utils/scraper"
 
 import createScraper from "./scraper.server"
 

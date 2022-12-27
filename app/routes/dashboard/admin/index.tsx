@@ -7,7 +7,7 @@ import {
   GiftIcon,
 } from "@heroicons/react/24/outline"
 import { Link } from "@remix-run/react"
-import classNames from "classnames"
+import clsx from "clsx"
 
 const tools = [
   {
@@ -29,7 +29,8 @@ const tools = [
     title: "Scrape Images",
   },
   {
-    description: "Coming soon",
+    description:
+      "Send a pre-defined template message to multiple phone numbers.",
     href: "./whatsapp-broadcast",
     icon: PhoneIcon,
     iconBackground: "bg-purple-50",
@@ -54,8 +55,8 @@ const tools = [
   {
     href: "#coming-soon1",
     icon: AcademicCapIcon,
-    iconBackground: "bg-indigo-50",
-    iconForeground: "text-indigo-700",
+    iconBackground: "bg-gray-50",
+    iconForeground: "text-gray-700",
     title: "Coming Soon",
   },
 ]
@@ -66,7 +67,7 @@ export default function AdminToolsPage() {
       {tools.map((tool, toolIdx) => (
         <div
           key={tool.href}
-          className={classNames(
+          className={clsx(
             toolIdx === 0
               ? "rounded-tl-lg rounded-tr-lg sm:rounded-tr-none"
               : "",
@@ -75,12 +76,12 @@ export default function AdminToolsPage() {
             toolIdx === tools.length - 1
               ? "rounded-bl-lg rounded-br-lg sm:rounded-bl-none"
               : "",
-            "group relative bg-white p-6 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-500"
+            "group relative bg-white p-6 focus-within:ring-2 focus-within:ring-inset focus-within:ring-gray-500"
           )}
         >
           <div>
             <span
-              className={classNames(
+              className={clsx(
                 tool.iconBackground,
                 tool.iconForeground,
                 "inline-flex rounded-lg p-3 ring-4 ring-white"

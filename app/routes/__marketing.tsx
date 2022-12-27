@@ -103,19 +103,19 @@ const footerNavigation = {
 export default function MarketingLayout(): ReactElement {
   return (
     <>
-      <header className="bg-indigo-600">
+      <header className="bg-gray-600">
         <nav
           className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"
           aria-label="Top"
         >
-          <div className="flex w-full items-center justify-between border-b border-indigo-500 py-6 lg:border-none">
+          <div className="flex w-full items-center justify-between border-b border-gray-500 py-6 lg:border-none">
             <div className="flex items-center">
               <div className="ml-10 hidden space-x-8 lg:block">
                 {headerNavigation.map((link) => (
                   <Link
                     key={link.name}
                     to={link.href}
-                    className="text-base font-medium text-white hover:text-indigo-50"
+                    className="text-base font-medium text-white hover:text-gray-50"
                   >
                     {link.name}
                   </Link>
@@ -125,7 +125,7 @@ export default function MarketingLayout(): ReactElement {
             <div className="ml-10 space-x-4">
               <Link
                 to="/login"
-                className="inline-block rounded-md border border-transparent bg-indigo-500 py-2 px-4 text-base font-medium text-white hover:bg-opacity-75"
+                className="inline-block rounded-md border border-transparent bg-gray-500 py-2 px-4 text-base font-medium text-white hover:bg-opacity-75"
               >
                 Login
               </Link>
@@ -136,7 +136,7 @@ export default function MarketingLayout(): ReactElement {
               <a
                 key={link.name}
                 href={link.href}
-                className="text-base font-medium text-white hover:text-indigo-50"
+                className="text-base font-medium text-white hover:text-gray-50"
               >
                 {link.name}
               </a>
@@ -306,7 +306,7 @@ export default function MarketingLayout(): ReactElement {
               <div className="mt-3 rounded-md sm:mt-0 sm:ml-3 sm:flex-shrink-0">
                 <button
                   type="submit"
-                  className="flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-800"
+                  className="flex w-full items-center justify-center rounded-md border border-transparent bg-gray-600 py-2 px-4 text-base font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-800"
                 >
                   Subscribe
                 </button>

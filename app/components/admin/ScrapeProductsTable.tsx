@@ -15,9 +15,9 @@ import { Button, Checkbox, FormattedNumber, Input } from "~/components/common"
 import { Spinner } from "~/components/loading"
 import { isDev } from "~/config/vars.server"
 import { scraperMachine } from "~/helpers/machines"
-import type { ScrapedFields, ScrapedProductResult } from "~/types/scraper"
 import { downloadAsCSVFile } from "~/utils/csv"
 import { round } from "~/utils/number"
+import type { ScrapedFields, ScrapedProductResult } from "~/utils/scraper"
 
 declare module "@tanstack/react-table" {
   interface TableMeta<TData extends unknown> {
@@ -259,7 +259,7 @@ export default function ScrapeProductsTable({
               // TODO(adelrodriguez): Use a button component instead
               <button
                 type="button"
-                className="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                className="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
                 onClick={() => scraperService.send("CANCEL")}
               >
                 Stop
