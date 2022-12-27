@@ -16,6 +16,8 @@ import remixImageStyles from "remix-image/remix-image.css"
 import { xStateVisualizer } from "~/config/vars.server"
 import tailwind from "~/styles/tailwind.css"
 
+import { Logo } from "./components/branding"
+
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
   description: "Coming soon",
@@ -47,18 +49,14 @@ export function CatchBoundary() {
           <div className="flex flex-grow flex-col">
             <main className="flex flex-grow flex-col bg-white">
               <div className="mx-auto flex w-full max-w-7xl flex-grow flex-col px-4 sm:px-6 lg:px-8">
-                <div className="flex-shrink-0 pt-10 sm:pt-16">
+                <div className="absolute pt-10 sm:pt-16">
                   <a href="/" className="inline-flex">
                     <span className="sr-only">The Listing</span>
-                    <img
-                      className="h-12 w-auto"
-                      src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-                      alt=""
-                    />
+                    <Logo />
                   </a>
                 </div>
                 <div className="my-auto flex-shrink-0 py-16 sm:py-32">
-                  <p className="text-base font-semibold text-indigo-600">
+                  <p className="text-base font-semibold text-gray-600">
                     {caught.status}
                   </p>
                   <h1 className="mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
@@ -68,7 +66,7 @@ export function CatchBoundary() {
                   <div className="mt-6">
                     <Link
                       to="/"
-                      className="text-base font-medium text-indigo-600 hover:text-indigo-500"
+                      className="text-base font-medium text-gray-600 hover:text-gray-500"
                     >
                       Go back home
                       <span aria-hidden="true"> &rarr;</span>
