@@ -78,7 +78,7 @@ const config: PlaywrightTestConfig = {
   reporter: "html",
   /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
-  testDir: "./tests",
+  testDir: "./playwright",
   /* Maximum time one test can run for. */
   timeout: 30 * 1000,
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
