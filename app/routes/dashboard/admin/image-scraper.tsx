@@ -1,3 +1,7 @@
+import { enqueueSnackbar } from "notistack"
+import type { ReactElement } from "react"
+import invariant from "tiny-invariant"
+
 import { Button } from "~/components/common"
 import { Dropzone } from "~/components/file"
 import { useCSVParser } from "~/utils/hooks"
@@ -10,11 +14,18 @@ type ImagesToScrape = {
 
 const Headers = ["filename", "url"] as const
 
-function transformHeader(_: string, index: number) {
-  return Headers[index]
+function transformHeader(_: string, index: number): string {
+  const header = Headers[index]
+
+  invariant(header, () => {
+    enqueueSnackbar(`Column ${index + 1} must be empty`, { variant: "error" })
+    return `Column ${index + 1} must be empty`
+  })
+
+  return header
 }
 
-export default function DownloadImagesPage() {
+export default function AdminToolsScrapeImagesPage(): ReactElement {
   const { parse, result } = useCSVParser<ImagesToScrape>({
     header: true,
     transformHeader,
@@ -65,7 +76,11 @@ export default function DownloadImagesPage() {
         ) : (
           <Dropzone
             fileTypes={{ "text/csv": [".csv"] }}
-            onDrop={(files) => parse(files[0])}
+            onDrop={(files) => {
+              invariant(files[0], "You must provide a file")
+
+              parse(files[0])
+            }}
           />
         )}
       </div>

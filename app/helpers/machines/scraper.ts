@@ -1,3 +1,4 @@
+import invariant from "tiny-invariant"
 import { assign, send } from "xstate"
 import { createModel } from "xstate/lib/model"
 
@@ -12,6 +13,7 @@ const scraperModel = createModel(
   {
     events: {
       CANCEL: () => ({}),
+      ERROR: (payload: Error) => ({ payload }),
       FINISHED: (payload: ScrapedProductResult) => ({ payload }),
       RESET: () => ({}),
       START: (payload: string[]) => ({ payload }),
@@ -59,29 +61,39 @@ const scraperMachine = scraperModel.createMachine(
       scraping: {
         invoke: {
           id: "fetchProducts",
-          onDone: [
-            {
-              actions: [
-                send((_, event) => ({ payload: event.data, type: "FINISHED" })),
-                assign({
-                  completed: (context, event) => [
-                    ...context.completed,
-                    event.data,
-                  ],
-                  pending: (context) => context.pending.slice(1),
-                }),
-              ],
-              target: "finished",
-            },
-          ],
+          onDone: {
+            actions: [
+              send((_, event) => ({ payload: event.data, type: "FINISHED" })),
+              assign({
+                completed: (context, event) => [
+                  ...context.completed,
+                  event.data,
+                ],
+                pending: (context) => context.pending.slice(1),
+              }),
+            ],
+            target: "finished",
+          },
+          onError: {
+            actions: send((_, event) => ({
+              payload: event.data,
+              type: "ERROR",
+            })),
+          },
           src: async (context) => {
             const [url] = context.pending
+            invariant(url, "URL is required")
+
             const data = await scrapeProduct(url)
+
             return data
           },
         },
         on: {
           CANCEL: {
+            target: "idle",
+          },
+          ERROR: {
             target: "idle",
           },
         },

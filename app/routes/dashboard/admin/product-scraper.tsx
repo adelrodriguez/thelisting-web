@@ -1,3 +1,7 @@
+import { enqueueSnackbar } from "notistack"
+import type { ReactElement } from "react"
+import invariant from "tiny-invariant"
+
 import type { ScrapeProductsTableRow } from "~/components/admin"
 import { ScrapeProductsTable } from "~/components/admin"
 import { Dropzone } from "~/components/file"
@@ -14,11 +18,18 @@ const Headers = [
   "currency",
 ] as const
 
-function transformHeader(_: string, index: number) {
-  return Headers[index]
+function transformHeader(_: string, index: number): string {
+  const header = Headers[index]
+
+  invariant(header, () => {
+    enqueueSnackbar(`Column ${index + 1} must be empty`, { variant: "error" })
+    return `Column ${index + 1} must be empty`
+  })
+
+  return header
 }
 
-export default function AdminToolsProductScraperPage() {
+export default function AdminToolsProductScraperPage(): ReactElement {
   const { parse, result } = useCSVParser<ScrapeProductsTableRow>({
     header: true,
     transformHeader,
@@ -44,7 +55,11 @@ export default function AdminToolsProductScraperPage() {
         ) : (
           <Dropzone
             fileTypes={{ "text/csv": [".csv"] }}
-            onDrop={(files) => parse(files[0])}
+            onDrop={(files) => {
+              invariant(files[0], "You must provide a file")
+
+              parse(files[0])
+            }}
           />
         )}
       </div>

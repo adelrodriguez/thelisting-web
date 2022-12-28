@@ -180,6 +180,13 @@ export default function ScrapeProductsTable({
 
         showResultMessage(product.id, payload.duration, payload.errors)
       }
+
+      if (event.type === "ERROR") {
+        enqueueSnackbar("An error occurred while scraping", {
+          description: event.payload.message,
+          variant: "error",
+        })
+      }
     })
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

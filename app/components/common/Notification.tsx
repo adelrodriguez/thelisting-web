@@ -17,14 +17,13 @@ function Notification(
     message,
     description,
     variant,
-    ...props
   }: { description?: string } & CustomContentProps,
   ref: Ref<HTMLDivElement>
 ) {
   const { closeSnackbar } = useSnackbar()
 
   return (
-    <SnackbarContent key={id} ref={ref} {...props}>
+    <SnackbarContent key={id} ref={ref}>
       <div className="pointer-events-auto w-full sm:w-96 overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5">
         <div className="p-4">
           <div className="flex items-start">
