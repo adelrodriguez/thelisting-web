@@ -1,10 +1,10 @@
 import type { LoaderArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
-import { ReasonPhrases, StatusCodes } from "http-status-codes"
 
 import auth from "~/helpers/auth.server"
 import db from "~/helpers/db.server"
 import { productScraper } from "~/helpers/scraper.server"
+import { ReasonPhrases, StatusCodes } from "~/utils/http.server"
 import { logger } from "~/utils/log"
 import type { LoaderResult } from "~/utils/remix"
 import type { ScrapedProductResult } from "~/utils/scraper"
