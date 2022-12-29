@@ -1,10 +1,13 @@
 import { performance } from "perf_hooks"
 import type { Browser, Page } from "playwright"
 import { chromium } from "playwright"
+import UserAgent from "user-agents"
 
 import { isDev } from "~/config/vars.server"
 import { logger } from "~/utils/log"
 import { cleanAmount, cleanText } from "~/utils/scraper"
+
+const userAgent = new UserAgent()
 
 interface ScraperConstructor {
   new (url: URL): ScraperInterface
@@ -124,7 +127,9 @@ export class BaseScraper implements ScraperInterface {
         headless: !isDev,
         timeout: 30 * 1000, // 30 seconds
       })
-      this.page = await this.browser.newPage()
+      this.page = await this.browser.newPage({
+        userAgent: userAgent.toString(),
+      })
 
       await this.page.goto(this.url)
 
