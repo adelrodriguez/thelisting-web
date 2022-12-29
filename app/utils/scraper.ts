@@ -25,7 +25,13 @@ export function cleanAmount(amount?: string | null): number {
     throw new Error("There was no specified amount for this property")
   }
 
-  return currency(amount).value
+  const value = currency(amount).value
+
+  if (isNaN(value)) {
+    throw new Error(`The amount "${amount}" is not a valid number`)
+  }
+
+  return value
 }
 
 export function cleanText(text?: string | null): string {

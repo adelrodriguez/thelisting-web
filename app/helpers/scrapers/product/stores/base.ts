@@ -35,6 +35,7 @@ export default function createScraperFactory(url: URL) {
   }
 }
 
+// TODO(adelrodriguez): Turn into an abstract class
 export class BaseScraper implements ScraperInterface {
   private readonly _url: URL
 
@@ -42,6 +43,8 @@ export class BaseScraper implements ScraperInterface {
   protected page!: Page
   private _start?: number
   private _duration?: number
+
+  protected waitFor?(): Promise<void>
 
   readonly waitForSelector?: string
 
@@ -117,10 +120,9 @@ export class BaseScraper implements ScraperInterface {
       logger.info(`Initializing scraper for store: ${this.store}`)
       this._start = performance.now()
 
-      // Change to `headless: false` when testing
-      // TODO: replace with environment variable
       this.browser = await chromium.launch({
         headless: !isDev,
+        timeout: 30 * 1000, // 30 seconds
       })
       this.page = await this.browser.newPage()
 
@@ -132,14 +134,8 @@ export class BaseScraper implements ScraperInterface {
       this.logError(error.message)
     }
 
-    if (this.waitForSelector) {
-      try {
-        await this.page.waitForSelector(this.waitForSelector)
-      } catch (error) {
-        this.logError(
-          `Timeout while waiting for selector "${this.waitForSelector}"`
-        )
-      }
+    if (this.waitFor) {
+      await this.waitFor()
     }
   }
 

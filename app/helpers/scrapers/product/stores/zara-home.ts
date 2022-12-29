@@ -3,10 +3,11 @@ import { cleanAmount, cleanText } from "~/utils/scraper"
 import { BaseScraper } from "./base"
 
 export default class ZaraHome extends BaseScraper {
-  // TODO: Replace with a better selector
-  waitForSelector = "h2"
-
   static domain = "zarahome.com"
+
+  protected async waitFor() {
+    await this.page.waitForLoadState("networkidle")
+  }
 
   public get store(): string | null {
     return "Zara Home"

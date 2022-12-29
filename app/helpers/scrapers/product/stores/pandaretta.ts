@@ -3,9 +3,11 @@ import { cleanText } from "~/utils/scraper"
 import { BaseScraper } from "./base"
 
 export default class Pandaretta extends BaseScraper {
-  waitForSelector = "h1"
-
   static domain = "panderettabordados.com"
+
+  protected async waitFor() {
+    this.page.waitForSelector("h1")
+  }
 
   public get store(): string | null {
     return "Panderetta Bordados"

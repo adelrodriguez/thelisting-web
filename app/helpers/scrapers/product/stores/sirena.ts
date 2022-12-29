@@ -3,9 +3,11 @@ import { cleanAmount, cleanText } from "~/utils/scraper"
 import { BaseScraper } from "./base"
 
 export default class SirenaScraper extends BaseScraper {
-  waitForSelector = "h2"
-
   static domain = "sirena.do"
+
+  protected async waitFor() {
+    this.page.waitForSelector("h2")
+  }
 
   public get store(): string | null {
     return "Sirena"

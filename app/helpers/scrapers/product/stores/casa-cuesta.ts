@@ -1,9 +1,11 @@
 import { BaseScraper } from "./base"
 
 export default class CasaCuestaScraper extends BaseScraper {
-  waitForSelector = "img.fotorama__img"
-
   static domain = "casacuesta.com"
+
+  protected async waitFor() {
+    await this.page.waitForSelector("img.fotorama__img")
+  }
 
   public get store(): string {
     return "Casa Cuesta"

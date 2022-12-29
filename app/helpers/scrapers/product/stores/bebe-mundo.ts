@@ -1,9 +1,11 @@
 import { BaseScraper } from "./base"
 
 export default class BebeMundoScraper extends BaseScraper {
-  waitForSelector = "img.fotorama__img"
-
   static domain = "bebemundo.com.do"
+
+  protected async waitFor() {
+    this.page.waitForSelector("img.fotorama__img")
+  }
 
   public get store(): string | null {
     return "Bebe Mundo"
