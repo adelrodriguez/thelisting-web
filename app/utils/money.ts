@@ -9,20 +9,20 @@ import currency from "currency.js"
 export function calculateFees(
   total: number,
   transaction: number,
-  markup: number
+  shipping: number
 ): {
-  markupFee: number
+  shippingFee: number
   transactionFee: number
   subtotal: number
 } {
-  const subtotal = calculateSubtotal(total, transaction, markup)
-  const markupFee = currency(subtotal).multiply(markup).value
+  const subtotal = calculateSubtotal(total, transaction, shipping)
+  const shippingFee = currency(subtotal).multiply(shipping).value
   const transactionFee = currency(subtotal)
-    .add(markupFee)
+    .add(shippingFee)
     .multiply(transaction).value
 
   return {
-    markupFee,
+    shippingFee,
     subtotal,
     transactionFee,
   }
@@ -31,9 +31,9 @@ export function calculateFees(
 function calculateSubtotal(
   total: number,
   transaction: number,
-  markup: number
+  shipping: number
 ): number {
   return currency(total)
     .divide(1 + transaction)
-    .divide(1 + markup).value
+    .divide(1 + shipping).value
 }

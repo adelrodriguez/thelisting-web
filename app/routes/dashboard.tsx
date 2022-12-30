@@ -258,7 +258,7 @@ export default function DashboardLayout() {
             horizontal: "right",
             vertical: "top",
           }}
-          autoHideDuration={5000}
+          autoHideDuration={15 * 1000}
         >
           <Outlet />
         </SnackbarProvider>

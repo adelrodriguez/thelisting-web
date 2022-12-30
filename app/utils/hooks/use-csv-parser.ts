@@ -37,8 +37,10 @@ export default function useCSVParser<T>({
     })
   }, [file, header, transform, transformHeader])
 
+  const filename = file?.name ?? null
+
   return {
-    filename: file ? file.name.split(".")[0] : null,
+    filename,
     parse: setFile,
     result,
   }

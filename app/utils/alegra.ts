@@ -37,12 +37,15 @@ export const createInvoiceRequestSchema = z.object({
   client: z.string(),
   comments: z.array(z.string()),
   date: z.string(),
-  dueData: z.string(),
+  dueDate: z.string(),
   items: z.array(
     z.object({
       id: z.string(),
+      price: z.number(),
+      quantity: z.number(),
     })
   ),
+  status: z.enum(["open", "draft"]),
 })
 export type CreateInvoiceRequest = z.infer<typeof createInvoiceRequestSchema>
 
@@ -61,7 +64,7 @@ export const sendInvoiceRequestSchema = z.object({
 export type SendInvoiceRequest = z.infer<typeof sendInvoiceRequestSchema>
 
 export const sendInvoiceResponseSchema = z.object({
-  code: z.string(),
+  code: z.number(),
   message: z.string(),
 })
 export type SendInvoiceResponse = z.infer<typeof sendInvoiceResponseSchema>

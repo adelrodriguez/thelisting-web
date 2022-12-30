@@ -7,10 +7,10 @@ import type {
 } from "msw"
 import { rest } from "msw"
 
-import type { SendInvoiceRequest } from "~/utils/alegra"
 import {
   createInvoiceResponseSchema,
   getCurrencyResponseSchema,
+  sendInvoiceResponseSchema,
 } from "~/utils/alegra"
 
 export const alegraHandlers: Array<
@@ -35,11 +35,11 @@ export const alegraHandlers: Array<
     return res(ctx.json(response))
   }),
   rest.post(
-    "https://app.alegra.com/api/v1/invoices/:id/send",
+    "https://app.alegra.com/api/v1/invoices/:id/email",
     async (req, res, ctx) => {
-      const body = await req.json<SendInvoiceRequest>()
+      const response = generateMock(sendInvoiceResponseSchema)
 
-      return res(ctx.json(body))
+      return res(ctx.json(response))
     }
   ),
 ]
