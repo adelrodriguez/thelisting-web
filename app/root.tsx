@@ -11,6 +11,7 @@ import {
   useCatch,
   useLoaderData,
 } from "@remix-run/react"
+import { withSentry } from "@sentry/remix"
 import remixImageStyles from "remix-image/remix-image.css"
 
 import { xStateVisualizer } from "~/config/vars.server"
@@ -98,7 +99,7 @@ export async function loader() {
   })
 }
 
-export default function App() {
+function App() {
   const data = useLoaderData<typeof loader>()
 
   return (
@@ -121,3 +122,5 @@ export default function App() {
     </html>
   )
 }
+
+export default withSentry(App)

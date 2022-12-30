@@ -5,6 +5,12 @@ const z = require("zod")
  * This way we can ensure that the app is not built with invalid env vars.
  */
 module.exports = z.object({
+  ALEGRA_API_TOKEN: z.string(),
+  ALEGRA_API_USERNAME: z.string(),
+
+  ALEGRA_INVOICE_BACKUP_EMAIL: z.string(),
+  ALEGRA_SERVICE_ITEM_ID: z.string(),
+
   COOKIE_SIGNING_SECRET: z.string(),
 
   DATABASE_URL: z.string().url(),
@@ -15,9 +21,9 @@ module.exports = z.object({
   NODE_ENV: z.enum(["development", "test", "production"]),
 
   REMIX_AUTH_SECRET: z.string(),
-
   SENDGRID_API_KEY: z.string(),
   SENDGRID_SENDER_EMAIL: z.string(),
-
+  SENTRY_DSN: z.string(),
+  SHOPIFY_WEBHOOK_SECRET: z.string(),
   WHATSAPP_PHONE_NUMBER_ID: z.string(),
 })

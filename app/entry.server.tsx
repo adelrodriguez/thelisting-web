@@ -1,9 +1,14 @@
 import type { EntryContext } from "@remix-run/node"
 import { Response } from "@remix-run/node"
 import { RemixServer } from "@remix-run/react"
+import * as Sentry from "@sentry/remix"
 import isbot from "isbot"
 import { renderToPipeableStream } from "react-dom/server"
 import { PassThrough } from "stream"
+
+import db from "~/helpers/db.server"
+
+import { SENTRY_DSN } from "./config/env.server"
 
 const ABORT_DELAY = 5000
 
@@ -111,3 +116,9 @@ function handleBrowserRequest(
     setTimeout(abort, ABORT_DELAY)
   })
 }
+
+Sentry.init({
+  dsn: SENTRY_DSN,
+  integrations: [new Sentry.Integrations.Prisma({ client: db })],
+  tracesSampleRate: 1,
+})
