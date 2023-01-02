@@ -1,5 +1,3 @@
-import { ZodError } from "zod"
-
 import { ALEGRA_API_TOKEN, ALEGRA_API_USERNAME } from "~/config/env.server"
 import type {
   CreateContactRequest,
@@ -17,7 +15,7 @@ import {
   getCurrencyResponseSchema,
   createContactResponseSchema,
 } from "~/utils/alegra"
-import { AlegraError, SchemaValidationError } from "~/utils/error"
+import { AlegraError } from "~/utils/error"
 
 export class Alegra {
   private baseUrl: string
@@ -96,10 +94,6 @@ export class Alegra {
 
           return getCurrencyResponseSchema.parse(data)
         } catch (error) {
-          if (error instanceof ZodError) {
-            throw new SchemaValidationError(error.message)
-          }
-
           throw new AlegraError((error as Error).message, "get_currency_error")
         }
       },
@@ -117,10 +111,6 @@ export class Alegra {
 
           return createInvoiceResponseSchema.parse(data)
         } catch (error) {
-          if (error instanceof ZodError) {
-            throw new SchemaValidationError(error.message)
-          }
-
           throw new AlegraError(
             (error as Error).message,
             "create_invoice_error"
@@ -133,18 +123,12 @@ export class Alegra {
         try {
           const response = await this.postRequest(
             `invoices/${request.id}/email`,
-            {
-              emails: request.emails,
-            }
+            request
           )
           const data = await response.json()
 
           return sendInvoiceResponseSchema.parse(data)
         } catch (error) {
-          if (error instanceof ZodError) {
-            throw new SchemaValidationError(error.message)
-          }
-
           throw new AlegraError((error as Error).message, "send_invoice_error")
         }
       },
