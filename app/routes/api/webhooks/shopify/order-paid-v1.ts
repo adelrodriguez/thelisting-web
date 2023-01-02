@@ -18,7 +18,8 @@ import { orderPaymentWebhookPayloadSchema } from "~/utils/shopify"
 import { verifyWebhook } from "~/utils/shopify.server"
 
 export async function action({ request }: ActionArgs): Promise<Response> {
-  const verified = await verifyWebhook(request)
+  const clone = await request.clone()
+  const verified = await verifyWebhook(clone)
 
   if (!verified) {
     return Unauthorized
@@ -27,6 +28,8 @@ export async function action({ request }: ActionArgs): Promise<Response> {
   const body = await request.json()
 
   try {
+    logger.info("Received order paid webhook", { body })
+
     const order = orderPaymentWebhookPayloadSchema.parse(body)
 
     const contactRequest = createContactRequestSchema.parse({
