@@ -138,6 +138,7 @@ export class Alegra {
             }
           )
           const data = await response.json()
+
           return sendInvoiceResponseSchema.parse(data)
         } catch (error) {
           if (error instanceof ZodError) {

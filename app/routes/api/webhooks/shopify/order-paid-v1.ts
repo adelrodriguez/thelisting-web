@@ -79,9 +79,9 @@ export async function action({ request }: ActionArgs): Promise<Response> {
 
     const emails = [contact.email, ALEGRA_INVOICE_BACKUP_EMAIL]
 
-    const response = await alegra.invoices.send({ emails, id: invoice.id })
+    await alegra.invoices.send({ emails, id: invoice.id })
 
-    logger.info(`Invoice ${invoiceNumber}: ${response.message}`)
+    logger.info(`Invoice ${invoiceNumber} sent to ${emails.join(", ")}`)
 
     return OK
   } catch (error) {
