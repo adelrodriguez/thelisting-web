@@ -6,7 +6,7 @@ import isbot from "isbot"
 import { renderToPipeableStream } from "react-dom/server"
 import { PassThrough } from "stream"
 
-import db from "~/helpers/db.server"
+import prisma from "~/helpers/prisma.server"
 
 import { SENTRY_DSN } from "./config/env.server"
 
@@ -119,6 +119,6 @@ function handleBrowserRequest(
 
 Sentry.init({
   dsn: SENTRY_DSN,
-  integrations: [new Sentry.Integrations.Prisma({ client: db })],
+  integrations: [new Sentry.Integrations.Prisma({ client: prisma })],
   tracesSampleRate: 1,
 })

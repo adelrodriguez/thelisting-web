@@ -2,7 +2,7 @@ import type { LoaderArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
 
 import auth from "~/helpers/auth.server"
-import db from "~/helpers/db.server"
+import prisma from "~/helpers/prisma.server"
 import { productScraper } from "~/helpers/scraper.server"
 import { ReasonPhrases, StatusCodes } from "~/utils/http.server"
 import { logger } from "~/utils/log"
@@ -40,7 +40,7 @@ export async function loader({
     logger.success(`${url} scrapped successfully`)
   }
 
-  await db.scrapedProduct.create({
+  await prisma.scrapedProduct.create({
     data: {
       duration: payload.duration,
       errors: payload.errors,

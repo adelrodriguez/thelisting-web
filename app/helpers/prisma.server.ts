@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client"
 
 import { isProduction } from "~/config/vars.server"
 
-let db: PrismaClient
+let prisma: PrismaClient
 
 declare global {
   var __db: PrismaClient | undefined
@@ -11,14 +11,14 @@ declare global {
 // This are precautions put into place above that prevent live-reloads from
 // saturating the database with connections while developing.
 if (isProduction) {
-  db = new PrismaClient()
-  db.$connect()
+  prisma = new PrismaClient()
+  prisma.$connect()
 } else {
   if (!global.__db) {
     global.__db = new PrismaClient()
     global.__db.$connect()
   }
-  db = global.__db
+  prisma = global.__db
 }
 
-export default db
+export default prisma

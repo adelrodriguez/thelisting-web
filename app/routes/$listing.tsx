@@ -4,7 +4,7 @@ import { redirect } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { useLoaderData } from "@remix-run/react"
 
-import db from "~/helpers/db.server"
+import prisma from "~/helpers/prisma.server"
 import { ReasonPhrases, StatusCodes } from "~/utils/http.server"
 
 type LoaderResult<T> = Promise<TypedResponse<T>>
@@ -14,7 +14,7 @@ export async function loader({ params }: LoaderArgs): LoaderResult<Listing> {
 
   if (!listing) return redirect("/")
 
-  const data = await db.listing.findFirst({
+  const data = await prisma.listing.findFirst({
     where: { path: listing },
   })
 
