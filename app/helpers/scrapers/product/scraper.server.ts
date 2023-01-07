@@ -22,6 +22,7 @@ import {
   PricesmartScraper,
   SirenaScraper,
   ZaraHomeScraper,
+  TwinkleRDScraper,
 } from "./stores"
 import type { ScraperInterface } from "./stores/base"
 import createScraperFactory, { BaseScraper } from "./stores/base"
@@ -53,6 +54,7 @@ export default async function createScraper(
     [PlazaLamaScraper.domain]: PlazaLamaScraper,
     [PricesmartScraper.domain]: PricesmartScraper,
     [SirenaScraper.domain]: SirenaScraper,
+    [TwinkleRDScraper.domain]: TwinkleRDScraper,
     [ZaraHomeScraper.domain]: ZaraHomeScraper,
   } as const
 
