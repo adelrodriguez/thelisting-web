@@ -39,3 +39,7 @@ yarn-error.log*
 /test-results/
 /playwright-report/
 /playwright/.cache/
+
+# redis
+/redis-data
+dump.rdb

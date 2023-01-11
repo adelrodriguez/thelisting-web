@@ -1,5 +1,5 @@
 version: "3.8"
-name: the-listing
+name: thelisting
 services:
   postgres:
     image: postgres:latest
@@ -12,3 +12,10 @@ services:
       - "5432:5432"
     volumes:
       - ./postgres-data:/var/lib/postgresql/data
+  redis:
+    image: redis:latest
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis-data:/data

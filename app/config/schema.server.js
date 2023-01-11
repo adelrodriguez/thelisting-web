@@ -16,9 +16,11 @@ module.exports = z.object({
   DATABASE_URL: z.string().url(),
 
   META_GRAPH_API_USER_ACCESS_TOKEN: z.string(),
-  META_GRAPH_API_VERSION: z.string(),
 
+  META_GRAPH_API_VERSION: z.string(),
   NODE_ENV: z.enum(["development", "test", "production"]),
+
+  REDIS_URL: z.string().url(),
 
   REMIX_AUTH_SECRET: z.string(),
   SENDGRID_API_KEY: z.string(),
