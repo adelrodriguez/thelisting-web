@@ -1,10 +1,9 @@
-export const WHATSAPP_MESSAGE_TEMPLATE = {
+export const WHATSAPP_MESSAGE_TEMPLATES = {
   BabyShowerGuestNotification: "baby_shower_guest_notification",
   WeddingGuestNotification: "wedding_guest_notification",
 } as const
-
 export type WhatsAppMessageTemplate =
-  typeof WHATSAPP_MESSAGE_TEMPLATE[keyof typeof WHATSAPP_MESSAGE_TEMPLATE]
+  typeof WHATSAPP_MESSAGE_TEMPLATES[keyof typeof WHATSAPP_MESSAGE_TEMPLATES]
 
 export const MIME_TYPES = {
   csv: "text/csv",

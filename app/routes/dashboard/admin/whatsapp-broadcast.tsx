@@ -12,7 +12,7 @@ import { FormSubmit } from "~/components/form"
 import { FormTextArea } from "~/components/form"
 import { FormInput, FormSelect } from "~/components/form"
 import type { WhatsAppMessageTemplate } from "~/config/consts"
-import { WHATSAPP_MESSAGE_TEMPLATE } from "~/config/consts"
+import { WHATSAPP_MESSAGE_TEMPLATES } from "~/config/consts"
 import type { SendMessageResult } from "~/services/whatsapp.server"
 import whatsapp from "~/services/whatsapp.server"
 import { getFormData } from "~/utils/http.server"
@@ -29,8 +29,8 @@ const whatsAppBroadcastFormSchema = z.object({
     }),
   template: z.enum(
     [
-      WHATSAPP_MESSAGE_TEMPLATE.BabyShowerGuestNotification,
-      WHATSAPP_MESSAGE_TEMPLATE.WeddingGuestNotification,
+      WHATSAPP_MESSAGE_TEMPLATES.BabyShowerGuestNotification,
+      WHATSAPP_MESSAGE_TEMPLATES.WeddingGuestNotification,
     ],
     {
       errorMap: () => ({ message: "Please select a template" }),
@@ -47,11 +47,11 @@ const options: Array<SelectOption<WhatsAppMessageTemplate | undefined>> = [
   },
   {
     label: "Wedding Guest Notification",
-    value: WHATSAPP_MESSAGE_TEMPLATE.WeddingGuestNotification,
+    value: WHATSAPP_MESSAGE_TEMPLATES.WeddingGuestNotification,
   },
   {
     label: "Baby Shower Guest Notification",
-    value: WHATSAPP_MESSAGE_TEMPLATE.BabyShowerGuestNotification,
+    value: WHATSAPP_MESSAGE_TEMPLATES.BabyShowerGuestNotification,
   },
 ]
 
