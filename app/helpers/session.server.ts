@@ -6,7 +6,7 @@ import { isProduction } from "~/config/vars.server"
 const sessionStorage = createCookieSessionStorage({
   cookie: {
     httpOnly: true,
-    name: "the-listing", // use any name you want here
+    name: "thelisting", // use any name you want here
     path: "/", // remember to add this so the cookie will work in all routes
     sameSite: "lax", // this helps with CSRF
     secrets: [REMIX_AUTH_SECRET],

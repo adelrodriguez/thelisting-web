@@ -6,6 +6,7 @@ export const createContactRequestSchema = z.object({
     city: z.string(),
   }),
   email: z.string().email(),
+  ignoreRepeated: z.boolean(),
   name: z.string().max(90),
   phonePrimary: z.string(),
   type: z.enum(["client", "provider"]),

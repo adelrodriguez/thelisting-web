@@ -1,12 +1,14 @@
 import { z } from "zod"
 
+import { CURRENCIES } from "~/config/consts"
+
 export const orderPaymentWebhookPayloadSchema = z.object({
   billing_address: z.object({
     address1: z.string(),
     city: z.string(),
     phone: z.string(),
   }),
-  currency: z.string(),
+  currency: z.enum([CURRENCIES.dop, CURRENCIES.usd]),
   customer: z.object({
     email: z.string(),
     first_name: z.string(),
@@ -15,7 +17,7 @@ export const orderPaymentWebhookPayloadSchema = z.object({
   email: z.string(),
   number: z.number(),
   processed_at: z.preprocess(
-    (value) => value ?? new Date().toString(),
+    (value) => value ?? new Date().toISOString(),
     z.string()
   ),
   shipping_lines: z.array(
