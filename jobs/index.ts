@@ -8,7 +8,7 @@ import express from "express"
 import { invoicingQueue, testingQueue } from "~/helpers/queues"
 import { logger } from "~/utils/log"
 
-const port = process.env.BULL_BOARD_PORT || 3001
+const port = process.env.BULL_BOARD_PORT || process.env.PORT || 3001
 
 const serverAdapter = new ExpressAdapter()
 
