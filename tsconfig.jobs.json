@@ -1,0 +1,18 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./lib",
+    "noEmit": false,
+    "target": "ES6",
+    "module": "commonjs",
+  },
+  "include": [
+    "jobs/index.ts",
+    "jobs/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "public",
+  ]
+}

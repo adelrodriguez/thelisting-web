@@ -12,6 +12,8 @@
 # production
 /build
 /public/build
+/dist
+/lib
 
 # environment
 .env
