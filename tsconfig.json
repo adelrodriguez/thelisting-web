@@ -2,7 +2,7 @@
   "include": [
     "remix.env.d.ts",
     "**/*.ts",
-    "**/*.tsx"
+    "**/*.tsx", "jobs/index.js", "jobs/index.js",
   ],
   "compilerOptions": {
     "lib": [
