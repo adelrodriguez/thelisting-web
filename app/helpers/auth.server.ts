@@ -3,9 +3,9 @@ import { Authenticator } from "remix-auth"
 import { EmailLinkStrategy } from "remix-auth-email-link"
 
 import { REMIX_AUTH_SECRET } from "~/config/env.server"
-import { sendLoginEmail } from "~/helpers/email.server"
 import prisma from "~/helpers/prisma.server"
 import sessionStorage from "~/helpers/session.server"
+import { sendLoginEmail } from "~/utils/email.server"
 
 const auth = new Authenticator<User>(sessionStorage)
 

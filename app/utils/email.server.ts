@@ -8,7 +8,7 @@ export async function sendLoginEmail({
   emailAddress,
   magicLink,
   user,
-}: SendEmailOptions<User>) {
+}: SendEmailOptions<User>): Promise<void> {
   // TODO(adelrodriguez): If user exists, send login template
   // TODO(adelrodriguez): If user doesn't exist, send signup template
   const subject = "Here's your login link"
