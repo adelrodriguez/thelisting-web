@@ -4,6 +4,7 @@ import {
   BullMQAdapter,
 } from "@bull-board/express"
 import express from "express"
+import basicAuth from "express-basic-auth"
 
 import { invoicingQueue, testingQueue } from "~/helpers/queues"
 import { logger } from "~/utils/log"
@@ -31,7 +32,14 @@ createBullBoard({
 
 const app = express()
 
-app.use("/", serverAdapter.getRouter())
+app.use(
+  "/",
+  basicAuth({
+    challenge: true,
+    users: { admin: process.env.BULL_BOARD_PASSWORD ?? "admin" },
+  }),
+  serverAdapter.getRouter()
+)
 
 app.listen(port, () => {
   logger.info(`Bull Board is listening on port ${port}`)
