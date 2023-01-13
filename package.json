@@ -27,7 +27,6 @@
     "generate:css": "tailwindcss -o app/styles/tailwind.css",
     "lint": "eslint .",
     "logs": "railway logs",
-    "postinstall": "npx playwright install --with-deps chromium",
     "start": "npm run database:deploy && remix-serve build",
     "start:jobs": "cross-env NODE_ENV=production node lib/jobs",
     "test:coverage": "vitest run --coverage",

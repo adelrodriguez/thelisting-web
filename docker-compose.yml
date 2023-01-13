@@ -19,3 +19,11 @@ services:
       - "6379:6379"
     volumes:
       - ./redis-data:/data
+  browserless:
+    image: browserless/chrome:latest
+    restart: always
+    ports:
+      - "8080:3000"
+    environment:
+      - MAX_CONCURRENCY=10
+      - TOKEN=browserless-token

@@ -3,7 +3,7 @@ import type { Browser, Page } from "playwright"
 import { chromium } from "playwright"
 import UserAgent from "user-agents"
 
-import { isDev } from "~/config/vars.server"
+import { BROWSERLESS_TOKEN, BROWSERLESS_URL } from "~/config/env.server"
 import { logger } from "~/utils/log"
 import { cleanAmount, cleanText } from "~/utils/scraper"
 
@@ -123,10 +123,9 @@ export class BaseScraper implements ScraperInterface {
       logger.info(`Initializing scraper for store: ${this.store}`)
       this._start = performance.now()
 
-      this.browser = await chromium.launch({
-        headless: !isDev,
-        timeout: 30 * 1000, // 30 seconds
-      })
+      this.browser = await chromium.connectOverCDP(
+        `${BROWSERLESS_URL}?token=${BROWSERLESS_TOKEN}`
+      )
       this.page = await this.browser.newPage({
         userAgent: userAgent.toString(),
       })

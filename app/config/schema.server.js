@@ -11,6 +11,9 @@ module.exports = z.object({
   ALEGRA_INVOICE_BACKUP_EMAIL: z.string(),
   ALEGRA_SERVICE_ITEM_ID: z.string(),
 
+  BROWSERLESS_TOKEN: z.string(),
+  BROWSERLESS_URL: z.string(),
+
   COOKIE_SIGNING_SECRET: z.string(),
 
   DATABASE_URL: z.string().url(),
