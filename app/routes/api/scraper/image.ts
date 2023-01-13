@@ -1,4 +1,5 @@
 import type { LoaderArgs } from "@remix-run/node"
+import { json } from "@remix-run/node"
 
 import auth from "~/helpers/auth.server"
 import { ReasonPhrases, StatusCodes } from "~/utils/http.server"
@@ -7,7 +8,7 @@ export async function loader({ request }: LoaderArgs) {
   const user = await auth.isAuthenticated(request)
 
   if (!user) {
-    throw new Response("Must be logged in to access this resource", {
+    throw json("Must be logged in to access this resource", {
       status: StatusCodes.UNAUTHORIZED,
       statusText: ReasonPhrases.UNAUTHORIZED,
     })
@@ -17,7 +18,7 @@ export async function loader({ request }: LoaderArgs) {
   const imageUrl = url.searchParams.get("url")
 
   if (!imageUrl) {
-    throw new Response("Missing url parameter", {
+    throw json("Missing url parameter", {
       status: StatusCodes.BAD_REQUEST,
       statusText: ReasonPhrases.BAD_REQUEST,
     })

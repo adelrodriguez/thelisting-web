@@ -19,7 +19,7 @@ export async function loader({ params }: LoaderArgs): LoaderResult<Listing> {
   })
 
   if (!data) {
-    throw new Response("Sorry, we couldn’t find the page you’re looking for.", {
+    throw json("Sorry, we couldn’t find the page you’re looking for.", {
       status: StatusCodes.NOT_FOUND,
       statusText: ReasonPhrases.NOT_FOUND,
     })

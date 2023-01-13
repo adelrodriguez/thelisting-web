@@ -15,7 +15,7 @@ export async function loader({
   const user = await auth.isAuthenticated(request)
 
   if (!user) {
-    throw new Response("You must be logged in to access this resource", {
+    throw json("You must be logged in to access this resource", {
       status: StatusCodes.UNAUTHORIZED,
       statusText: ReasonPhrases.UNAUTHORIZED,
     })
@@ -25,7 +25,7 @@ export async function loader({
   const url = requestUrl.searchParams.get("url")
 
   if (!url) {
-    throw new Response("Missing url parameter", {
+    throw json("Missing url parameter", {
       status: StatusCodes.BAD_REQUEST,
       statusText: ReasonPhrases.BAD_REQUEST,
     })
