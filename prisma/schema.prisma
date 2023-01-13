@@ -22,12 +22,31 @@ model Listing {
   path      String        @unique @db.VarChar(255)
   status    ListingStatus @default(Draft)
   title     String        @db.VarChar(255)
+
+  items Item[]
 }
 
 enum ListingStatus {
   Draft
   Published
   Closed
+}
+
+model Item {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  commerceId String? @db.VarChar(255)
+
+  listing   Listing @relation(fields: [listingId], references: [id])
+  listingId String  @db.Uuid
+
+  title       String
+  description String?
+
+  quantity  Int @default(0)
+  available Int @default(0)
 }
 
 model User {

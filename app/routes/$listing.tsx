@@ -1,4 +1,4 @@
-import type { Listing } from "@prisma/client"
+import type { Listing, Item } from "@prisma/client"
 import type { LoaderArgs, TypedResponse } from "@remix-run/node"
 import { redirect } from "@remix-run/node"
 import { json } from "@remix-run/node"
@@ -9,13 +9,18 @@ import { ReasonPhrases, StatusCodes } from "~/utils/http.server"
 
 type LoaderResult<T> = Promise<TypedResponse<T>>
 
-export async function loader({ params }: LoaderArgs): LoaderResult<Listing> {
+export async function loader({ params }: LoaderArgs): LoaderResult<
+  Listing & {
+    items: Item[]
+  }
+> {
   const { listing } = params
 
   if (!listing) return redirect("/")
 
   const data = await prisma.listing.findFirst({
-    where: { path: listing },
+    include: { items: true },
+    where: { path: listing, status: "Published" },
   })
 
   if (!data) {
@@ -36,6 +41,13 @@ export default function ListingPage() {
       <h1>Listing</h1>
       <div>This the listing: {listing.title}</div>
       <div>Listing data: {listing.eventDate}</div>
+      <ul>
+        {listing.items.map((item) => (
+          <li key={item.id}>
+            {item.title}: {item.description}
+          </li>
+        ))}
+      </ul>
     </div>
   )
 }
