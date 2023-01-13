@@ -4,7 +4,7 @@ import {
   Features,
   Hero,
   Testimonials,
-} from "~/components/landing"
+} from "~/components/marketing"
 
 export default function MarketingIndex() {
   return (
