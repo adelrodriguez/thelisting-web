@@ -18,6 +18,7 @@ export type ScrapedProductResult = {
   duration: number
   fields: ScrapedFields
   errors: string[]
+  cached?: true
 }
 
 export function cleanAmount(amount?: string | null): number {

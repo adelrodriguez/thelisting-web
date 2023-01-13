@@ -171,14 +171,12 @@ export default function ScrapeProductsTable({
         const payload = event.payload
         const dataMap = new Map(data.map((row) => [row.url, row]))
         const product = dataMap.get(payload.url)
+        const { fields, duration, errors, cached } = payload
 
         if (!product) return
-        table.options.meta.updateData({
-          ...product,
-          ...payload.fields,
-        })
+        table.options.meta.updateData({ ...product, ...fields })
 
-        showResultMessage(product.id, payload.duration, payload.errors)
+        showResultMessage(product.id, duration, errors, cached)
       }
 
       if (event.type === "ERROR") {
@@ -195,7 +193,8 @@ export default function ScrapeProductsTable({
   function showResultMessage(
     id: string,
     duration: ScrapedProductResult["duration"],
-    errors: ScrapedProductResult["errors"]
+    errors: ScrapedProductResult["errors"],
+    cached: ScrapedProductResult["cached"]
   ) {
     if (errors.length) {
       enqueueSnackbar(`Fetched product ${id} with errors`, {
@@ -206,7 +205,9 @@ export default function ScrapeProductsTable({
       })
     } else {
       enqueueSnackbar(`Fetched product ${id} successfully `, {
-        description: `In ${round(duration / 1000)}s`,
+        description: cached
+          ? "Recovered from cache"
+          : `In ${round(duration / 1000)}s`,
         variant: "success",
       })
     }

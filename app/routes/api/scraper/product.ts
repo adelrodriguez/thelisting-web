@@ -1,11 +1,14 @@
 import type { LoaderArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
 
+import { ONE_DAY, REDIS_KEYS } from "~/config/consts"
 import auth from "~/helpers/auth.server"
 import prisma from "~/helpers/prisma.server"
+import redis from "~/helpers/redis.server"
 import { productScraper } from "~/helpers/scraper.server"
 import { ReasonPhrases, StatusCodes } from "~/utils/http.server"
 import { logger } from "~/utils/log"
+import { generateKey } from "~/utils/redis"
 import type { LoaderResult } from "~/utils/remix"
 import type { ScrapedProductResult } from "~/utils/scraper"
 
@@ -31,6 +34,16 @@ export async function loader({
     })
   }
 
+  const key = generateKey(REDIS_KEYS.productScraper, url)
+
+  const cachedPayload = await redis.get(key)
+
+  if (cachedPayload) {
+    const payload = JSON.parse(cachedPayload) as ScrapedProductResult
+
+    return json({ ...payload, cached: true })
+  }
+
   const payload = await productScraper(url)
 
   // Check if there are errors in the payload
@@ -40,6 +53,7 @@ export async function loader({
     logger.success(`${url} scrapped successfully`)
   }
 
+  // Save the scraped product to the database
   await prisma.scrapedProduct.create({
     data: {
       duration: payload.duration,
@@ -49,6 +63,12 @@ export async function loader({
       ...payload.fields,
     },
   })
+
+  // If there are no errors, store the payload in Redis
+  if (payload.errors.length === 0) {
+    // Store for 24 hours
+    await redis.set(key, JSON.stringify(payload), "EX", ONE_DAY)
+  }
 
   return json(payload)
 }

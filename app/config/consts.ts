@@ -17,3 +17,11 @@ export const CURRENCIES = {
   usd: "USD",
 } as const
 export type Currency = typeof CURRENCIES[keyof typeof CURRENCIES]
+
+export const REDIS_KEYS = {
+  productScraper: "scraper:product",
+} as const
+export type RedisKey = typeof REDIS_KEYS[keyof typeof REDIS_KEYS]
+
+// Durations in seconds
+export const ONE_DAY = 60 * 60 * 24
