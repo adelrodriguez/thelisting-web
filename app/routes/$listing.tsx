@@ -2,8 +2,9 @@ import type { Listing, Item } from "@prisma/client"
 import type { LoaderArgs, TypedResponse } from "@remix-run/node"
 import { redirect } from "@remix-run/node"
 import { json } from "@remix-run/node"
-import { useLoaderData } from "@remix-run/react"
+import { Link, Outlet, useLoaderData } from "@remix-run/react"
 
+import { ListingItem } from "~/components/listing"
 import prisma from "~/helpers/prisma.server"
 import { ReasonPhrases, StatusCodes } from "~/utils/http.server"
 
@@ -44,10 +45,14 @@ export default function ListingPage() {
       <ul>
         {listing.items.map((item) => (
           <li key={item.id}>
-            {item.title}: {item.description}
+            <ListingItem {...item} />
           </li>
         ))}
       </ul>
+      <Link to="cart" prefetch="intent">
+        <button>Go to cart</button>
+      </Link>
+      <Outlet />
     </div>
   )
 }
