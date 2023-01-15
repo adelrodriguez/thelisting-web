@@ -1,6 +1,9 @@
 import type { Item } from "@prisma/client"
 import type { ReactNode, ReactElement } from "react"
+import { useEffect } from "react"
 import { createContext, useState, useContext } from "react"
+
+import Storage from "~/helpers/storage"
 
 type CartItem = Pick<Item, "id" | "title" | "commerceId"> & {
   quantity: number
@@ -38,6 +41,25 @@ export function CartProvider({
     (total, item) => total + item.price * item.quantity,
     0
   )
+
+  useEffect(() => {
+    if (carts.size > 0) return
+
+    const storage = new Storage("local")
+    const storedCarts = storage.get("carts")
+
+    if (!storedCarts) return
+
+    setCarts((storedCarts as Map<string, { items: CartItems }>) ?? new Map())
+  }, [carts.size])
+
+  useEffect(() => {
+    if (carts.size === 0) return
+
+    const storage = new Storage("local")
+
+    storage.set("carts", carts)
+  }, [carts])
 
   function addItemToCart(item: CartItem, quantity: number) {
     const newItems = new Map(currentCart.items)
