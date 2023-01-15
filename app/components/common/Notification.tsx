@@ -11,6 +11,23 @@ import { SnackbarContent } from "notistack"
 import type { Ref } from "react"
 import { forwardRef } from "react"
 
+declare module "notistack" {
+  interface VariantOverrides {
+    warning: {
+      description?: string
+    }
+    success: {
+      description?: string
+    }
+    error: {
+      description?: string
+    }
+    info: {
+      description?: string
+    }
+  }
+}
+
 function Notification(
   {
     id,

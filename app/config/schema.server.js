@@ -26,9 +26,17 @@ module.exports = z.object({
   REDIS_URL: z.string().url(),
 
   REMIX_AUTH_SECRET: z.string(),
+
   SENDGRID_API_KEY: z.string(),
   SENDGRID_SENDER_EMAIL: z.string(),
+
   SENTRY_DSN: z.string(),
+
+  SHOPIFY_ADMIN_ACCESS_TOKEN: z.string(),
+  SHOPIFY_API_VERSION: z.string(),
+  SHOPIFY_STOREFRONT_ACCESS_TOKEN: z.string(),
+  SHOPIFY_STORE_DOMAIN: z.string(),
   SHOPIFY_WEBHOOK_SECRET: z.string(),
+
   WHATSAPP_PHONE_NUMBER_ID: z.string(),
 })

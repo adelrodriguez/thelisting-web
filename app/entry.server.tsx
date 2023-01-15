@@ -119,6 +119,7 @@ function handleBrowserRequest(
 
 Sentry.init({
   dsn: SENTRY_DSN,
+  environment: process.env.NODE_ENV,
   integrations: [new Sentry.Integrations.Prisma({ client: prisma })],
   tracesSampleRate: 1,
 })

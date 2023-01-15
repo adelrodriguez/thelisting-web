@@ -17,6 +17,7 @@ function hydrate() {
 
 Sentry.init({
   dsn: "https://0477a064aae041fcb5241599ca5b8935:715c0c4d64f441ce8f2a0f1a60ce40c5@o4504418880782336.ingest.sentry.io/4504418883338240",
+  environment: process.env.NODE_ENV,
   integrations: [
     new Sentry.BrowserTracing({
       routingInstrumentation: Sentry.remixRouterInstrumentation(
