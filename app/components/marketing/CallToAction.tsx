@@ -1,3 +1,4 @@
+import { Link } from "@remix-run/react"
 import type { ReactElement } from "react"
 
 export default function CallToAction(): ReactElement {
@@ -10,20 +11,20 @@ export default function CallToAction(): ReactElement {
         </h2>
         <div className="mt-8 flex justify-center">
           <div className="inline-flex rounded-md shadow">
-            <a
-              href="#"
+            <Link
+              to="#"
               className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-gray-600 hover:bg-gray-700"
             >
               Get started
-            </a>
+            </Link>
           </div>
           <div className="ml-3 inline-flex">
-            <a
-              href="#"
+            <Link
+              to="#"
               className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-gray-700 bg-gray-100 hover:bg-gray-200"
             >
               Learn more
-            </a>
+            </Link>
           </div>
         </div>
       </div>

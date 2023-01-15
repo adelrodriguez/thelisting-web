@@ -1,8 +1,6 @@
 import type { Processor } from "bullmq"
 import { Queue, Worker } from "bullmq"
 
-import { logger } from "~/utils/log"
-
 import redis from "./redis.server"
 
 export type RegisteredQueue = {

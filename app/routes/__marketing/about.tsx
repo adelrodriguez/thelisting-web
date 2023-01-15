@@ -1,3 +1,5 @@
+import { Link } from "@remix-run/react"
+
 const stats = [
   { label: "Founded", value: "2021" },
   { label: "Employees", value: "5" },
@@ -145,10 +147,10 @@ export default function AboutPage() {
                 ))}
               </dl>
               <div className="mt-10">
-                <a href="#" className="text-base font-medium text-gray-600">
+                <Link to="#" className="text-base font-medium text-gray-600">
                   Learn more about how we're changing the world
                   <span aria-hidden="true"> &rarr;</span>
-                </a>
+                </Link>
               </div>
             </div>
           </div>
