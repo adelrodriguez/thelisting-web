@@ -12,9 +12,11 @@ import {
   useLoaderData,
 } from "@remix-run/react"
 import { withSentry } from "@sentry/remix"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 import remixImageStyles from "remix-image/remix-image.css"
 
-import { xStateVisualizer } from "~/config/vars.server"
+import { Logo } from "~/components/branding"
 import { PublicEnv } from "~/components/utils"
 import type { PublicEnvs } from "~/components/utils"
 import { SHOPIFY_STOREFRONT_ACCESS_TOKEN } from "~/config/env.server"
@@ -25,7 +27,7 @@ import {
 import tailwind from "~/styles/tailwind.css"
 import type { LoaderResult } from "~/utils/remix"
 
-import { Logo } from "./components/branding"
+const client = new QueryClient()
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
@@ -119,6 +121,10 @@ function App() {
         <Links />
       </head>
       <body className="h-full bg-white">
+        <QueryClientProvider client={client}>
+          <Outlet />
+          <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
         <PublicEnv {...data.env} />
         <ScrollRestoration />
         <Scripts />

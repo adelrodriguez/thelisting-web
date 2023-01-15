@@ -1,7 +1,13 @@
-export default function Spinner() {
+import clsx from "clsx"
+
+export default function Spinner({
+  className = "text-white h-5 w-5",
+}: {
+  className?: string
+}) {
   return (
     <svg
-      className="-ml-1 mr-3 h-5 w-5 animate-spin text-white"
+      className={clsx("-ml-1 mr-3 animate-spin", className)}
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"

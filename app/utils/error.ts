@@ -57,7 +57,7 @@ export class ProductError extends GenericError {
   constructor(code: ProductErrorCode) {
     super({
       code,
-      message: "An error ocurred while associating the product",
+      message: "An error ocurred while getting the product",
       name: "ProductError",
     })
   }
@@ -119,11 +119,11 @@ export type ItemFrameworkErrorCode =
   | "update_item_error"
 
 export type ProductErrorCode =
+  | "no_product_image"
+  | "no_product_price"
+  | "no_product_variant"
   | "no_product"
   | "product_id_mismatch"
-  | "no_product_image"
-  | "no_product_price_amount"
-  | "no_product_price_currency_code"
 
 export type DraftOrderErrorCode = "draft_order_error"
 
