@@ -1,5 +1,7 @@
 import currency from "currency.js"
 
+import { CURRENCIES } from "~/config/consts"
+
 /**
  *
  * @param total The order total
@@ -36,4 +38,15 @@ function calculateSubtotal(
   return currency(total)
     .divide(1 + transaction)
     .divide(1 + shipping).value
+}
+
+export function getPriceSymbol(currencyCode: string): string {
+  switch (currencyCode) {
+    case CURRENCIES.dop:
+      return "RD$"
+    case CURRENCIES.usd:
+      return "$"
+    default:
+      return currencyCode
+  }
 }

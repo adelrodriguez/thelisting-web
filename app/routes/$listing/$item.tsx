@@ -5,13 +5,14 @@ import type { LoaderArgs } from "@remix-run/node"
 import { redirect } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { useLoaderData, useNavigate } from "@remix-run/react"
-import currency from "currency.js"
 import { Fragment, useState } from "react"
 
 import { Button } from "~/components/common"
-import QuantityInput from "~/components/listing/QuantityInput"
+import { FormattedNumber } from "~/components/common"
+import { QuantityInput } from "~/components/registry"
 import prisma from "~/helpers/prisma.server"
-import { useProduct } from "~/utils/hooks"
+import { useCart, useProduct } from "~/utils/hooks"
+import { getPriceSymbol } from "~/utils/money"
 import type { LoaderResult } from "~/utils/remix"
 
 export async function loader({
@@ -37,15 +38,18 @@ export function CatchBoundary() {
 }
 
 export default function ListingItemDetailPage() {
+  const { add } = useCart()
   const item = useLoaderData<typeof loader>()
   const navigate = useNavigate()
   const { data, isLoading, isError } = useProduct(item.commerceId ?? "")
   const [open, setOpen] = useState(true)
   const [quantity, setQuantity] = useState(1)
 
+  // TODO(adelrodriguez): Handle loading and error states
   if (isLoading) return <div>Loading...</div>
-
   if (isError) return <div>Error!</div>
+
+  const price = data.product?.variants.nodes[0]?.price!
 
   return (
     <Transition.Root appear show={open} as={Fragment}>
@@ -110,14 +114,13 @@ export default function ListingItemDetailPage() {
                         </h3>
 
                         <p className="text-2xl text-gray-900">
-                          {currency(
-                            data?.product?.variants.nodes[0]?.price.amount,
-                            {
-                              symbol:
-                                data?.product?.variants.nodes[0]?.price
-                                  .currencyCode,
-                            }
-                          ).format()}
+                          <FormattedNumber
+                            prefix={getPriceSymbol(price.currencyCode)}
+                            thousands
+                            decimals={2}
+                          >
+                            {price.amount}
+                          </FormattedNumber>
                         </p>
 
                         <div className="mt-6">
@@ -137,7 +140,14 @@ export default function ListingItemDetailPage() {
                         </div>
                       </section>
 
-                      <Button size="lg" className="mt-6 w-full">
+                      <Button
+                        size="lg"
+                        className="mt-6 w-full"
+                        onClick={() => {
+                          add({ ...item, price: price.amount }, quantity)
+                          setOpen(false)
+                        }}
+                      >
                         Add to cart
                       </Button>
                     </div>

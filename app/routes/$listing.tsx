@@ -4,8 +4,9 @@ import { redirect } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { Link, Outlet, useLoaderData } from "@remix-run/react"
 
-import { ListingItem } from "~/components/listing"
+import { ListingItem } from "~/components/registry"
 import prisma from "~/helpers/prisma.server"
+import { CartProvider } from "~/utils/hooks"
 import { ReasonPhrases, StatusCodes } from "~/utils/http.server"
 
 type LoaderResult<T> = Promise<TypedResponse<T>>
@@ -38,7 +39,7 @@ export default function ListingPage() {
   const listing = useLoaderData<typeof loader>()
 
   return (
-    <div>
+    <CartProvider>
       <h1>Listing</h1>
       <div>This the listing: {listing.title}</div>
       <div>Listing data: {listing.eventDate}</div>
@@ -60,6 +61,6 @@ export default function ListingPage() {
         <button>Go to cart</button>
       </Link>
       <Outlet />
-    </div>
+    </CartProvider>
   )
 }

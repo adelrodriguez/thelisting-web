@@ -1,9 +1,10 @@
 import type { Item } from "@prisma/client"
 import { Link } from "@remix-run/react"
-import currency from "currency.js"
 
+import { FormattedNumber } from "~/components/common"
 import { Spinner } from "~/components/loading"
 import { useProduct } from "~/utils/hooks"
+import { getPriceSymbol } from "~/utils/money"
 
 export default function ListingItem({
   id,
@@ -16,6 +17,7 @@ export default function ListingItem({
 }) {
   const { data, isLoading, isError } = useProduct(commerceId)
 
+  // TODO(adelrodriguez): Handle loading and error states
   if (isLoading) {
     return (
       <div className="h-48 w-full aspect-w-1">
@@ -25,6 +27,8 @@ export default function ListingItem({
   }
 
   if (isError) return <div>Error!</div>
+
+  const price = data.product?.variants.nodes[0]?.price!
 
   return (
     <Link className="group" to={id}>
@@ -37,9 +41,13 @@ export default function ListingItem({
       </div>
       <h3 className="mt-4 text-sm text-gray-700">{title}</h3>
       <p className="mt-1 text-lg font-medium text-gray-900">
-        {currency(data?.product?.variants.nodes[0]?.price.amount, {
-          symbol: data?.product?.variants.nodes[0]?.price.currencyCode,
-        }).format()}
+        <FormattedNumber
+          prefix={getPriceSymbol(price.currencyCode)}
+          thousands
+          decimals={2}
+        >
+          {price.amount}
+        </FormattedNumber>
       </p>
     </Link>
   )
