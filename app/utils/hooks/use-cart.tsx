@@ -9,58 +9,69 @@ type CartItem = Pick<Item, "id" | "title" | "commerceId"> & {
 
 type CartItems = Map<string, CartItem>
 
-type CartContext = {
+type Cart = {
   items: CartItems
   add: (item: CartItem, quantity: number) => void
   remove: (item: string) => void
-  empty: () => void
   subtotal: number
 }
 
-const Context = createContext<CartContext | undefined>(undefined)
+const Context = createContext<Cart | undefined>(undefined)
 
 Context.displayName = "Cart"
 
 export function CartProvider({
   children,
+  listing,
 }: {
   children: ReactNode
+  listing: string
 }): ReactElement {
-  const [items, setItems] = useState<CartItems>(new Map())
-
-  const subtotal = Array.from(items.values()).reduce(
+  // We use a Map to store the carts for each listing
+  const [carts, setCarts] = useState<Map<string, { items: CartItems }>>(
+    new Map()
+  )
+  const currentCart = carts.get(listing) ?? {
+    items: new Map<string, CartItem>(),
+  }
+  const subtotal = Array.from(currentCart.items.values()).reduce(
     (total, item) => total + item.price * item.quantity,
     0
   )
 
   function addItemToCart(item: CartItem, quantity: number) {
-    const newItems = new Map(items)
+    const newItems = new Map(currentCart.items)
+
     newItems.set(item.id, {
       ...item,
       quantity,
     })
 
-    setItems(newItems)
+    saveCart(newItems)
   }
 
   function removeItemFromCart(id: string) {
-    const newItems = new Map(items)
+    const newItems = new Map(currentCart.items)
 
     newItems.delete(id)
 
-    setItems(newItems)
+    saveCart(newItems)
   }
 
-  function emptyCart() {
-    setItems(new Map())
+  function saveCart(items: CartItems) {
+    const newCart = {
+      ...currentCart,
+      items,
+    }
+
+    setCarts((prev) => new Map(prev).set(listing, newCart))
   }
 
   return (
     <Context.Provider
       value={{
         add: addItemToCart,
-        empty: emptyCart,
-        items,
+        items: currentCart.items,
         remove: removeItemFromCart,
         subtotal,
       }}
@@ -70,7 +81,7 @@ export function CartProvider({
   )
 }
 
-export default function useCart(): CartContext {
+export default function useCart(): Cart {
   const context = useContext(Context)
 
   if (context === undefined) {

@@ -39,7 +39,7 @@ export default function ListingPage() {
   const listing = useLoaderData<typeof loader>()
 
   return (
-    <CartProvider>
+    <CartProvider listing={listing.id}>
       <h1>Listing</h1>
       <div>This the listing: {listing.title}</div>
       <div>Listing data: {listing.eventDate}</div>
@@ -59,6 +59,12 @@ export default function ListingPage() {
       </div>
       <Link to="cart" prefetch="intent">
         <button>Go to cart</button>
+      </Link>
+      <Link to="/testing" prefetch="intent">
+        <button>Go to /testing</button>
+      </Link>
+      <Link to="/hello" prefetch="intent">
+        <button>Go to /hello</button>
       </Link>
       <Outlet />
     </CartProvider>
