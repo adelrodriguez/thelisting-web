@@ -7,7 +7,7 @@ import type { ReactElement } from "react"
 import type { DropzoneOptions } from "react-dropzone"
 import { useDropzone } from "react-dropzone"
 
-import type { FileTypes } from "~/config/consts"
+import type { FileType } from "~/config/consts"
 
 export default function Dropzone({
   maxFiles = 1,
@@ -15,7 +15,7 @@ export default function Dropzone({
   onDrop,
 }: {
   maxFiles?: number
-  fileTypes: { [key in FileTypes]?: string[] }
+  fileTypes: { [key in FileType]?: string[] }
   onDrop: DropzoneOptions["onDrop"]
 }): ReactElement {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -24,7 +24,7 @@ export default function Dropzone({
     onDrop,
   })
 
-  const acceptedFileTypes = Object.values(fileTypes).join(", ")
+  const acceptedFileType = Object.values(fileTypes).join(", ")
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -47,7 +47,7 @@ export default function Dropzone({
           <span className="mt-2 block text-sm font-medium text-gray-900">
             {isDragActive
               ? "Drop the files here"
-              : `Drag and drop your files, or click to select. Accepted file types: ${acceptedFileTypes}`}
+              : `Drag and drop your files, or click to select. Accepted file types: ${acceptedFileType}`}
           </span>
         </button>
       </div>

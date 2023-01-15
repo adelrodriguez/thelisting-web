@@ -10,7 +10,7 @@ export const MIME_TYPES = {
   jpeg: "image/jpeg",
   png: "image/png",
 } as const
-export type FileTypes = typeof MIME_TYPES[keyof typeof MIME_TYPES]
+export type FileType = typeof MIME_TYPES[keyof typeof MIME_TYPES]
 
 export const CURRENCIES = {
   dop: "DOP",
