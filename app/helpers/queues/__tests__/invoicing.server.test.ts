@@ -3,9 +3,12 @@ import { faker } from "@faker-js/faker"
 import { Job } from "bullmq"
 import { beforeEach, expect, test, vi } from "vitest"
 
+import prisma from "~/helpers/prisma.server"
 import { Alegra } from "~/services/alegra.server"
 import {
+  createContactResponseSchema,
   createInvoiceResponseSchema,
+  getContactResponseSchema,
   getCurrencyResponseSchema,
   sendInvoiceResponseSchema,
 } from "~/utils/alegra"
@@ -30,20 +33,49 @@ beforeEach(() => {
 })
 
 test("calls the POST /contacts endpoint", async () => {
-  const spy = vi
-    .spyOn(Alegra.prototype, "contacts", "get")
-    .mockImplementation(() => ({
-      create: vi.fn(() =>
-        Promise.resolve({
-          email: faker.internet.email(),
-          id: faker.datatype.uuid(),
-        })
-      ),
-    }))
+  const mockCreate = vi.fn(() =>
+    Promise.resolve(generateMock(createContactResponseSchema))
+  )
+  const mockGet = vi.fn(() =>
+    Promise.resolve(generateMock(getContactResponseSchema))
+  )
+
+  vi.spyOn(Alegra.prototype, "contacts", "get").mockImplementation(() => ({
+    create: mockCreate,
+    get: mockGet,
+  }))
 
   await processor(job)
 
-  expect(spy).toHaveBeenCalled()
+  expect(mockCreate).toHaveBeenCalled()
+  expect(mockGet).not.toHaveBeenCalled()
+})
+
+test("calls the GET /contacts/:id endpoint if the contact already exists", async () => {
+  const mockCreate = vi.fn(() =>
+    Promise.resolve(generateMock(createContactResponseSchema))
+  )
+  const mockGet = vi.fn(() =>
+    Promise.resolve(generateMock(getContactResponseSchema))
+  )
+
+  // Create a customer with the same email as the job
+  await prisma.customer.create({
+    data: {
+      alegraId: faker.datatype.uuid(),
+      email: job.data.email,
+    },
+  })
+
+  vi.spyOn(Alegra.prototype, "contacts", "get").mockImplementation(() => ({
+    create: mockCreate,
+    get: mockGet,
+  }))
+
+  await processor(job)
+
+  expect(mockGet).toHaveBeenCalled()
+  expect(mockCreate).not.toHaveBeenCalled()
 })
 
 test("calls the GET /currencies/:code endpoint", async () => {

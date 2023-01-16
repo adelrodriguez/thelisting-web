@@ -45,8 +45,8 @@ model Item {
   title       String
   description String?
 
-  quantity  Int @default(0)
-  available Int @default(0)
+  quantity  Int @default(0) // How many items the owner wants
+  available Int @default(0) // How many items are available
 }
 
 model User {
@@ -84,4 +84,14 @@ model ScrapedProduct {
   image       String?
   amount      Float?
   currency    String?
+}
+
+model Customer {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  email String @unique
+
+  alegraId String
 }

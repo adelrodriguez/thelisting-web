@@ -8,11 +8,14 @@ import {
 } from "~/config/env.server"
 import { createQueue } from "~/helpers/queue.server"
 import alegra from "~/services/alegra.server"
+import type { CreateContactResponse, GetContactResponse } from "~/utils/alegra"
 import {
   createContactRequestSchema,
   createInvoiceRequestSchema,
 } from "~/utils/alegra"
 import { logger } from "~/utils/log"
+
+import prisma from "../prisma.server"
 
 export type QueueData = {
   address: string
@@ -39,10 +42,28 @@ export const processor: Processor<QueueData> = async (job) => {
     type: "client",
   })
 
-  // Create the contact
-  // TODO(adelrodriguez): Check if the contact already exists (by email). If
-  // it already exists, then grab the id from there.
-  const contact = await alegra.contacts.create(contactRequest)
+  let contact: CreateContactResponse | GetContactResponse
+
+  // Check if the contact already exists (by email). If it already exists, then
+  // grab the id from there.
+  const savedContact = await prisma.customer.findUnique({
+    where: { email: job.data.email },
+  })
+
+  if (savedContact) {
+    // Get the contact
+    contact = await alegra.contacts.get({ id: savedContact.alegraId })
+  } else {
+    // Create the contact
+    contact = await alegra.contacts.create(contactRequest)
+
+    await prisma.customer.create({
+      data: {
+        alegraId: contact.id,
+        email: job.data.email,
+      },
+    })
+  }
 
   const { exchangeRate } = await alegra.currencies.get({
     code: job.data.currencyCode,

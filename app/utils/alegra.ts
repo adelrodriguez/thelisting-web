@@ -1,5 +1,16 @@
 import { z } from "zod"
 
+export const getContactRequestSchema = z.object({
+  id: z.string(),
+})
+export type GetContactRequest = z.infer<typeof getContactRequestSchema>
+
+export const getContactResponseSchema = z.object({
+  email: z.string().email(),
+  id: z.string(),
+})
+export type GetContactResponse = z.infer<typeof getContactResponseSchema>
+
 export const createContactRequestSchema = z.object({
   address: z.object({
     address: z.string(),

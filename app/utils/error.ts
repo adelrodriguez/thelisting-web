@@ -92,6 +92,7 @@ export type StockErrorCode = "out_of_stock" | "insufficient_stock"
 export type ValidationErrorCode = "schema_validation_error"
 
 export type AlegraErrorCode =
+  | "get_contact_error"
   | "create_contact_error"
   | "create_invoice_error"
   | "get_currency_error"

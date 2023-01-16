@@ -4,11 +4,14 @@ import type {
   CreateContactResponse,
   CreateInvoiceRequest,
   CreateInvoiceResponse,
+  GetContactRequest,
+  GetContactResponse,
   GetCurrencyRequest,
   GetCurrencyResponse,
   SendInvoiceRequest,
   SendInvoiceResponse,
 } from "~/utils/alegra"
+import { getContactResponseSchema } from "~/utils/alegra"
 import { sendInvoiceResponseSchema } from "~/utils/alegra"
 import { createInvoiceResponseSchema } from "~/utils/alegra"
 import {
@@ -67,6 +70,16 @@ export class Alegra {
             (error as Error).message,
             "create_contact_error"
           )
+        }
+      },
+      get: async (request: GetContactRequest): Promise<GetContactResponse> => {
+        try {
+          const response = await this.getRequest(`contacts/${request.id}`)
+          const data = await response.json()
+
+          return getContactResponseSchema.parse(data)
+        } catch (error) {
+          throw new AlegraError((error as Error).message, "get_contact_error")
         }
       },
     }
