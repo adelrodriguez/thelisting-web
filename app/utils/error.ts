@@ -87,6 +87,16 @@ export class AlegraError extends GenericError {
   }
 }
 
+export class ShopifyError extends GenericError {
+  constructor(message: string, code: ShopifyErrorCode) {
+    super({
+      code,
+      message,
+      name: "ShopifyError",
+    })
+  }
+}
+
 export type StockErrorCode = "out_of_stock" | "insufficient_stock"
 
 export type ValidationErrorCode = "schema_validation_error"
@@ -134,6 +144,8 @@ export type ItemErrorCode = "no_markup" | "no_transaction_fee"
 
 export type GenericErrorCode = "unknown_error" | "no_code_provided"
 
+export type ShopifyErrorCode = "draft_order_create_error"
+
 export type FileErrorCode =
   | "no_file_selected"
   | "file_type_not_supported"
@@ -150,6 +162,7 @@ export type ErrorCode =
   | ListingFrameworkErrorCode
   | ProductErrorCode
   | PurchaseErrorCode
+  | ShopifyErrorCode
   | StockErrorCode
   | UserFrameworkErrorCode
   | ValidationErrorCode

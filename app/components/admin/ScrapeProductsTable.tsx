@@ -166,7 +166,6 @@ export default function ScrapeProductsTable({
     scraperService.onTransition((_, event) => {
       if (!table.options.meta) return
 
-      // TODO(adelrodriguez): Add message when each product is finished
       if (event.type === "FINISHED") {
         const payload = event.payload
         const dataMap = new Map(data.map((row) => [row.url, row]))

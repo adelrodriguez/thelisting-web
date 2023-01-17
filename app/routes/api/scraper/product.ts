@@ -46,14 +46,12 @@ export async function loader({
 
   const payload = await productScraper(url)
 
-  // Check if there are errors in the payload
   if (payload.errors.length > 0) {
     logger.warn(`${url} scrapped with errors: ${payload.errors.join(", ")}`)
   } else {
     logger.success(`${url} scrapped successfully`)
   }
 
-  // Save the scraped product to the database
   await prisma.scrapedProduct.create({
     data: {
       duration: payload.duration,
@@ -64,9 +62,7 @@ export async function loader({
     },
   })
 
-  // If there are no errors, store the payload in Redis
   if (payload.errors.length === 0) {
-    // Store for 24 hours
     await redis.set(key, JSON.stringify(payload), "EX", ONE_DAY)
   }
 

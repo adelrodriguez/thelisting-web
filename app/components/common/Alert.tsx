@@ -1,19 +1,20 @@
 import {
-  CheckCircleIcon,
   XCircleIcon,
   XMarkIcon,
-} from "@heroicons/react/24/outline"
+  CheckCircleIcon,
+} from "@heroicons/react/20/solid"
+import type { ReactElement, ReactNode } from "react"
 
 // TODO(adelrodriguez): Clean up this component
 export default function Alert({
-  type,
+  children,
   onClose,
-  description,
+  type,
 }: {
+  children: ReactNode
   type: "error" | "success"
   onClose: () => void
-  description: string
-}) {
+}): ReactElement {
   if (type === "success") {
     return (
       <div className="rounded-md bg-green-50 p-4">
@@ -25,9 +26,7 @@ export default function Alert({
             />
           </div>
           <div className="ml-3">
-            <p className="text-sm font-medium text-green-800">
-              Check your email for a link to sign in.
-            </p>
+            <div className="text-sm font-medium text-green-800">{children}</div>
           </div>
           <div className="ml-auto pl-3">
             <div className="-mx-1.5 -my-1.5">
@@ -54,7 +53,7 @@ export default function Alert({
             <XCircleIcon className="h-5 w-5 text-red-400" aria-hidden="true" />
           </div>
           <div className="ml-3">
-            <p className="text-sm font-medium text-red-800">{description}</p>
+            <div className="text-sm font-medium text-red-800">{children}</div>
           </div>
           <div className="ml-auto pl-3">
             <div className="-mx-1.5 -my-1.5">

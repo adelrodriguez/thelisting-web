@@ -79,10 +79,11 @@ export default function LoginPage() {
             show={show && isSuccess}
           >
             <Alert
-              description="Check your email for a link to log in."
               onClose={() => navigate("/login", { replace: true })}
               type="success"
-            />
+            >
+              We sent you a magic link to your email. Please check your inbox.
+            </Alert>
           </Transition>
           <Transition
             enter="transition-opacity duration-150"
@@ -94,10 +95,11 @@ export default function LoginPage() {
             show={show && isError}
           >
             <Alert
-              description="We ran into an error. Please try again."
               onClose={() => navigate("/login", { replace: true })}
               type="error"
-            />
+            >
+              We ran into an error. Please try again.
+            </Alert>
           </Transition>
 
           <div className="mt-8">

@@ -1,8 +1,6 @@
-import currency from "currency.js"
 import { z } from "zod"
 
 import { CURRENCIES } from "~/config/consts"
-import type { MoneyV2 } from "~/services/shopify/storefront"
 
 export const orderPaymentWebhookPayloadSchema = z.object({
   billing_address: z.object({

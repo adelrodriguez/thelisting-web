@@ -21,7 +21,7 @@ import { PublicEnv } from "~/components/utils"
 import type { PublicEnvs } from "~/components/utils"
 import { SHOPIFY_STOREFRONT_ACCESS_TOKEN } from "~/config/env.server"
 import {
-  shopifyStorefrontEndpoint,
+  shopifyStorefrontAPIEndpoint,
   xStateVisualizer,
 } from "~/config/vars.server"
 import tailwind from "~/styles/tailwind.css"
@@ -105,7 +105,7 @@ export async function loader(): LoaderResult<{ env: PublicEnvs }> {
   return json({
     env: {
       shopifyStorefrontAccessToken: SHOPIFY_STOREFRONT_ACCESS_TOKEN,
-      shopifyStorefrontEndpoint,
+      shopifyStorefrontAPIEndpoint,
       xStateVisualizer,
     },
   })

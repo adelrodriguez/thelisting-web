@@ -6,6 +6,7 @@ export default function Button({
   type,
   className,
   size = "md",
+  disabled,
   ...props
 }: {
   children: ReactNode
@@ -24,8 +25,10 @@ export default function Button({
           "rounded-md px-4 py-2 text-sm": size === "md",
           "rounded-md px-6 py-3 text-base": size === "xl",
         },
+        { "opacity-50 cursor-not-allowed": disabled },
         className
       )}
+      disabled={disabled}
       {...props}
     >
       {children}

@@ -25,3 +25,7 @@ export type RedisKey = typeof REDIS_KEYS[keyof typeof REDIS_KEYS]
 
 // Durations in seconds
 export const ONE_DAY = 60 * 60 * 24
+
+export const PAYMENT_FEE = 0.065
+export const MARKUP_FEE = 0.1
+export const SHIPPING_METHOD = "Gestión y Entrega"

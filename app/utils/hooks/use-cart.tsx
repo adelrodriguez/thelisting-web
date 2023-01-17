@@ -1,14 +1,11 @@
-import type { Item } from "@prisma/client"
+import currency from "currency.js"
 import type { ReactNode, ReactElement } from "react"
 import { useEffect } from "react"
 import { createContext, useState, useContext } from "react"
 
 import Storage from "~/helpers/storage"
-
-type CartItem = Pick<Item, "id" | "title" | "commerceId"> & {
-  quantity: number
-  price: number
-}
+import type { CartItem } from "~/utils/cart"
+import { calculateSubtotal } from "~/utils/cart"
 
 type CartItems = Map<string, CartItem>
 
@@ -17,6 +14,7 @@ type Cart = {
   add: (item: CartItem, quantity: number) => void
   remove: (item: string) => void
   subtotal: number
+  listingId: string
 }
 
 const Context = createContext<Cart | undefined>(undefined)
@@ -37,10 +35,7 @@ export function CartProvider({
   const currentCart = carts.get(listing) ?? {
     items: new Map<string, CartItem>(),
   }
-  const subtotal = Array.from(currentCart.items.values()).reduce(
-    (total, item) => total + item.price * item.quantity,
-    0
-  )
+  const subtotal = calculateSubtotal([...currentCart.items.values()])
 
   useEffect(() => {
     if (carts.size > 0) return
@@ -65,8 +60,12 @@ export function CartProvider({
     const newItems = new Map(currentCart.items)
 
     newItems.set(item.id, {
-      ...item,
+      commerceId: item.commerceId,
+      id: item.id,
+      price: currency(item.price).value,
       quantity,
+      title: item.title,
+      variantId: item.variantId,
     })
 
     saveCart(newItems)
@@ -94,6 +93,7 @@ export function CartProvider({
       value={{
         add: addItemToCart,
         items: currentCart.items,
+        listingId: listing,
         remove: removeItemFromCart,
         subtotal,
       }}

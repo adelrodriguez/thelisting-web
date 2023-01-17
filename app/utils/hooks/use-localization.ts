@@ -1,31 +1,15 @@
+import type { UseQueryResult } from "@tanstack/react-query"
 import { useQuery } from "@tanstack/react-query"
 import request from "graphql-request"
 
-import { graphql } from "~/services/shopify/storefront"
+import type { GetLocalizationQuery } from "~/services/shopify/storefront"
+import { getLocalization } from "~/services/shopify/storefront"
 
-const localization = graphql(`
-  query getLocalization {
-    localization {
-      availableLanguages {
-        isoCode
-        name
-        endonymName
-      }
-      country {
-        currency {
-          isoCode
-          symbol
-        }
-      }
-    }
-  }
-`)
-
-export default function useLocalization() {
+export default function useLocalization(): UseQueryResult<GetLocalizationQuery> {
   return useQuery(["localization"], async () =>
     request(
-      window.env.shopifyStorefrontEndpoint,
-      localization,
+      window.env.shopifyStorefrontAPIEndpoint,
+      getLocalization,
       {},
       {
         "X-Shopify-Storefront-Access-Token":

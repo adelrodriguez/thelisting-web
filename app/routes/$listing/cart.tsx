@@ -1,17 +1,40 @@
 import { Dialog, Transition } from "@headlessui/react"
 import { XMarkIcon } from "@heroicons/react/24/outline"
-import { Link, useNavigate } from "@remix-run/react"
+import type { Listing } from "@prisma/client"
+import {
+  Outlet,
+  useNavigate,
+  useOutletContext,
+  useSubmit,
+} from "@remix-run/react"
 import { Fragment, useState } from "react"
 
-import { FormattedNumber } from "~/components/common"
+import { Button, FormattedNumber } from "~/components/common"
 import { CartItem } from "~/components/registry"
-import { useCart } from "~/utils/hooks"
+import { useCart, useCurrentRouteMatch } from "~/utils/hooks"
 import { getPriceSymbol } from "~/utils/money"
 
 export default function ListingCartPage() {
   const navigate = useNavigate()
   const [open, setOpen] = useState(true)
   const cart = useCart()
+  const submit = useSubmit()
+  const currentRouteMatch = useCurrentRouteMatch()
+  const listing = useOutletContext<Listing>()
+
+  function handleSubmit() {
+    const formData = new FormData()
+    const items = JSON.stringify([...cart.items.values()])
+
+    formData.append("items", items)
+    formData.append("listing", listing.id)
+    formData.append("sku", `${listing.sku}`)
+
+    submit(formData, {
+      action: `${currentRouteMatch.params.listing}/cart/checkout`,
+      method: "post",
+    })
+  }
 
   return (
     <Transition.Root
@@ -64,6 +87,8 @@ export default function ListingCartPage() {
                         </div>
                       </div>
 
+                      <Outlet />
+
                       <div className="mt-8">
                         <div className="flow-root">
                           <ul className="-my-6 divide-y divide-gray-200">
@@ -94,12 +119,13 @@ export default function ListingCartPage() {
                         Shipping and taxes calculated at checkout.
                       </p>
                       <div className="mt-6">
-                        <Link
-                          to="#"
-                          className="flex items-center justify-center rounded-md border border-transparent bg-gray-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-gray-700"
+                        <Button
+                          size="xl"
+                          className="w-full"
+                          onClick={handleSubmit}
                         >
                           Checkout
-                        </Link>
+                        </Button>
                       </div>
                       <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
                         <p>

@@ -2,7 +2,7 @@ import type { ReactElement } from "react"
 
 export type PublicEnvs = {
   shopifyStorefrontAccessToken: string
-  shopifyStorefrontEndpoint: string
+  shopifyStorefrontAPIEndpoint: string
   xStateVisualizer: boolean
 }
 

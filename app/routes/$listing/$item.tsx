@@ -2,7 +2,6 @@ import { Dialog, Transition } from "@headlessui/react"
 import { XMarkIcon } from "@heroicons/react/24/outline"
 import type { Item } from "@prisma/client"
 import type { LoaderArgs } from "@remix-run/node"
-import { redirect } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { useLoaderData, useNavigate } from "@remix-run/react"
 import { Fragment, useState } from "react"
@@ -14,23 +13,26 @@ import prisma from "~/helpers/prisma.server"
 import { useCart, useProduct } from "~/utils/hooks"
 import { getPriceSymbol } from "~/utils/money"
 import type { LoaderResult } from "~/utils/remix"
+import { goBack } from "~/utils/remix"
 
 export async function loader({
   params,
 }: LoaderArgs): Promise<LoaderResult<Item>> {
   const id = params.item
 
-  const item = await prisma.item.findFirst({
-    where: { id },
-  })
+  try {
+    const item = await prisma.item.findFirst({
+      where: { id },
+    })
 
-  // If the item doesn't exist...
-  if (!item) {
-    // ...redirect to the listing page
-    return redirect("..")
+    if (!item) {
+      return goBack()
+    }
+
+    return json(item)
+  } catch (error) {
+    return goBack()
   }
-
-  return json(item)
 }
 
 export function CatchBoundary() {
@@ -43,13 +45,14 @@ export default function ListingItemDetailPage() {
   const navigate = useNavigate()
   const { data, isLoading, isError } = useProduct(item.commerceId ?? "")
   const [open, setOpen] = useState(true)
-  const [quantity, setQuantity] = useState(1)
+  const [quantity, setQuantity] = useState(!item.available ? 0 : 1)
 
   // TODO(adelrodriguez): Handle loading and error states
   if (isLoading) return <div>Loading...</div>
   if (isError) return <div>Error!</div>
 
   const price = data.product?.variants.nodes[0]?.price!
+  const variantId = data.product?.variants.nodes[0]?.id!
 
   return (
     <Transition.Root appear show={open} as={Fragment}>
@@ -144,11 +147,15 @@ export default function ListingItemDetailPage() {
                         size="lg"
                         className="mt-6 w-full"
                         onClick={() => {
-                          add({ ...item, price: price.amount }, quantity)
+                          add(
+                            { ...item, price: price.amount, variantId },
+                            quantity
+                          )
                           setOpen(false)
                         }}
+                        disabled={item.available === 0}
                       >
-                        Add to cart
+                        {item.available === 0 ? "Out of stock" : "Add to cart"}
                       </Button>
                     </div>
                   </div>

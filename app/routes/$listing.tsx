@@ -66,7 +66,7 @@ export default function ListingPage() {
       <Link to="/hello" prefetch="intent">
         <button>Go to /hello</button>
       </Link>
-      <Outlet />
+      <Outlet context={listing} />
     </CartProvider>
   )
 }

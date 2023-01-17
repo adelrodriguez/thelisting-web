@@ -713,26 +713,6 @@ select {
   }
 }
 
-.aspect-w-1 {
-  position: relative;
-  padding-bottom: calc(var(--tw-aspect-h) / var(--tw-aspect-w) * 100%);
-  --tw-aspect-w: 1;
-}
-
-.aspect-w-1 > * {
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-}
-
-.aspect-h-1 {
-  --tw-aspect-h: 1;
-}
-
 .aspect-w-10 {
   position: relative;
   padding-bottom: calc(var(--tw-aspect-h) / var(--tw-aspect-w) * 100%);
@@ -751,6 +731,26 @@ select {
 
 .aspect-h-6 {
   --tw-aspect-h: 6;
+}
+
+.aspect-w-1 {
+  position: relative;
+  padding-bottom: calc(var(--tw-aspect-h) / var(--tw-aspect-w) * 100%);
+  --tw-aspect-w: 1;
+}
+
+.aspect-w-1 > * {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.aspect-h-1 {
+  --tw-aspect-h: 1;
 }
 
 .prose {
@@ -1266,6 +1266,10 @@ select {
   pointer-events: auto;
 }
 
+.visible {
+  visibility: visible;
+}
+
 .static {
   position: static;
 }
@@ -1405,6 +1409,11 @@ select {
   margin-bottom: 1.5rem;
 }
 
+.my-2 {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
 .mt-2 {
   margin-top: 0.5rem;
 }
@@ -1457,14 +1466,6 @@ select {
   margin-left: auto;
 }
 
-.mb-2 {
-  margin-bottom: 0.5rem;
-}
-
-.-ml-px {
-  margin-left: -1px;
-}
-
 .-ml-1 {
   margin-left: -0.25rem;
 }
@@ -1497,6 +1498,14 @@ select {
   margin-top: 1.25rem;
 }
 
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+
+.-ml-px {
+  margin-left: -1px;
+}
+
 .mt-0\.5 {
   margin-top: 0.125rem;
 }
@@ -1519,6 +1528,10 @@ select {
 
 .inline-block {
   display: inline-block;
+}
+
+.inline {
+  display: inline;
 }
 
 .flex {
@@ -1589,10 +1602,6 @@ select {
   height: 1.25rem;
 }
 
-.h-48 {
-  height: 12rem;
-}
-
 .h-56 {
   height: 14rem;
 }
@@ -1601,12 +1610,16 @@ select {
   height: 50%;
 }
 
-.h-7 {
-  height: 1.75rem;
-}
-
 .h-24 {
   height: 6rem;
+}
+
+.h-48 {
+  height: 12rem;
+}
+
+.h-7 {
+  height: 1.75rem;
 }
 
 .min-h-full {
@@ -1649,12 +1662,12 @@ select {
   width: 0px;
 }
 
-.w-screen {
-  width: 100vw;
-}
-
 .w-24 {
   width: 6rem;
+}
+
+.w-screen {
+  width: 100vw;
 }
 
 .min-w-0 {
@@ -1784,6 +1797,10 @@ select {
 
 .cursor-pointer {
   cursor: pointer;
+}
+
+.cursor-not-allowed {
+  cursor: not-allowed;
 }
 
 .grid-cols-1 {
@@ -2489,6 +2506,10 @@ select {
   text-transform: uppercase;
 }
 
+.lowercase {
+  text-transform: lowercase;
+}
+
 .leading-none {
   line-height: 1;
 }
@@ -2685,6 +2706,10 @@ select {
 
 .opacity-90 {
   opacity: 0.9;
+}
+
+.opacity-50 {
+  opacity: 0.5;
 }
 
 .mix-blend-multiply {
