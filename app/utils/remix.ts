@@ -7,4 +7,6 @@ export type ErrorBoundaryProps = {
   error: Error
 }
 
-export const goBack = () => redirect("..")
+export const goToParent = () => redirect("..")
+
+export const goHome = () => redirect("/")

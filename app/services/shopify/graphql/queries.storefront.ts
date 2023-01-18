@@ -1,6 +1,6 @@
-import { graphql } from "app/services/shopify/storefront"
+import { graphql } from "../storefront/gql"
 
-export const getProduct = graphql(`
+export const getProductQuery = graphql(`
   query getProduct($id: ID!) {
     product(id: $id) {
       id
@@ -24,7 +24,7 @@ export const getProduct = graphql(`
   }
 `)
 
-export const getLocalization = graphql(`
+export const getLocalizationQuery = graphql(`
   query getLocalization {
     localization {
       availableLanguages {

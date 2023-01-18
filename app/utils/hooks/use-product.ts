@@ -2,7 +2,7 @@ import type { UseQueryResult } from "@tanstack/react-query"
 import { useQuery } from "@tanstack/react-query"
 import request from "graphql-request"
 
-import { getProduct } from "~/services/shopify/storefront"
+import { getProductQuery } from "~/services/shopify/storefront"
 import type { GetProductQuery } from "~/services/shopify/storefront"
 
 export default function useProduct(
@@ -11,7 +11,7 @@ export default function useProduct(
   return useQuery(["products", id], async () =>
     request(
       window.env.shopifyStorefrontAPIEndpoint,
-      getProduct,
+      getProductQuery,
       {
         id,
       },

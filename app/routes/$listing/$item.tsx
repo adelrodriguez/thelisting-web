@@ -13,7 +13,7 @@ import prisma from "~/helpers/prisma.server"
 import { useCart, useProduct } from "~/utils/hooks"
 import { getPriceSymbol } from "~/utils/money"
 import type { LoaderResult } from "~/utils/remix"
-import { goBack } from "~/utils/remix"
+import { goToParent } from "~/utils/remix"
 
 export async function loader({
   params,
@@ -26,12 +26,12 @@ export async function loader({
     })
 
     if (!item) {
-      return goBack()
+      return goToParent()
     }
 
     return json(item)
   } catch (error) {
-    return goBack()
+    return goToParent()
   }
 }
 

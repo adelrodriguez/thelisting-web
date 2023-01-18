@@ -14,6 +14,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  */
 const documents = {
     "\n  mutation draftOrderCreate($input: DraftOrderInput!) {\n    draftOrderCreate(input: $input) {\n      draftOrder {\n        id\n        invoiceUrl\n      }\n      userErrors {\n        field\n        message\n      }\n    }\n  }\n": types.DraftOrderCreateDocument,
+    "\n  query getOrder($id: ID!) {\n    order(id: $id) {\n      id\n      tags\n    }\n  }\n": types.GetOrderDocument,
 };
 
 /**
@@ -34,6 +35,10 @@ export function graphql(source: string): unknown;
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  mutation draftOrderCreate($input: DraftOrderInput!) {\n    draftOrderCreate(input: $input) {\n      draftOrder {\n        id\n        invoiceUrl\n      }\n      userErrors {\n        field\n        message\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation draftOrderCreate($input: DraftOrderInput!) {\n    draftOrderCreate(input: $input) {\n      draftOrder {\n        id\n        invoiceUrl\n      }\n      userErrors {\n        field\n        message\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query getOrder($id: ID!) {\n    order(id: $id) {\n      id\n      tags\n    }\n  }\n"): (typeof documents)["\n  query getOrder($id: ID!) {\n    order(id: $id) {\n      id\n      tags\n    }\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

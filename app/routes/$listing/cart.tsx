@@ -10,24 +10,26 @@ import {
 import { Fragment, useState } from "react"
 
 import { Button, FormattedNumber } from "~/components/common"
-import { CartItem } from "~/components/registry"
+import { CartItem, CartNote } from "~/components/registry"
 import { useCart, useCurrentRouteMatch } from "~/utils/hooks"
 import { getPriceSymbol } from "~/utils/money"
 
 export default function ListingCartPage() {
-  const navigate = useNavigate()
   const [open, setOpen] = useState(true)
+  const [showCartNote, setShowCartNote] = useState(false)
   const cart = useCart()
-  const submit = useSubmit()
   const currentRouteMatch = useCurrentRouteMatch()
   const listing = useOutletContext<Listing>()
+  const navigate = useNavigate()
+  const submit = useSubmit()
 
   function handleSubmit() {
     const formData = new FormData()
-    const items = JSON.stringify([...cart.items.values()])
+    const cartItems = JSON.stringify([...cart.items.values()])
 
-    formData.append("items", items)
-    formData.append("listing", listing.id)
+    formData.append("cartItems", cartItems)
+    formData.append("listingId", listing.id)
+    formData.append("note", cart.note || "")
     formData.append("sku", `${listing.sku}`)
 
     submit(formData, {
@@ -116,8 +118,18 @@ export default function ListingCartPage() {
                         </p>
                       </div>
                       <p className="mt-0.5 text-sm text-gray-500">
-                        Shipping and taxes calculated at checkout.
+                        Shipping and handling to the recipient calculated at
+                        checkout.
                       </p>
+                      <div className="mt-4 flex justify-center text-center text-sm text-gray-500">
+                        <button
+                          type="button"
+                          className="font-medium text-gray-600 hover:text-gray-500"
+                          onClick={() => setShowCartNote(true)}
+                        >
+                          Add a special message ✉️
+                        </button>
+                      </div>
                       <div className="mt-6">
                         <Button
                           size="xl"
@@ -127,19 +139,6 @@ export default function ListingCartPage() {
                           Checkout
                         </Button>
                       </div>
-                      <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
-                        <p>
-                          or{" "}
-                          <button
-                            type="button"
-                            className="font-medium text-gray-600 hover:text-gray-500"
-                            onClick={() => setOpen(false)}
-                          >
-                            Continue Shopping
-                            <span aria-hidden="true"> &rarr;</span>
-                          </button>
-                        </p>
-                      </div>
                     </div>
                   </div>
                 </Dialog.Panel>
@@ -147,6 +146,7 @@ export default function ListingCartPage() {
             </div>
           </div>
         </div>
+        <CartNote open={showCartNote} onClose={() => setShowCartNote(false)} />
       </Dialog>
     </Transition.Root>
   )

@@ -9,12 +9,17 @@ import { calculateSubtotal } from "~/utils/cart"
 
 type CartItems = Map<string, CartItem>
 
-type Cart = {
+type BaseCart = {
   items: CartItems
-  add: (item: CartItem, quantity: number) => void
-  remove: (item: string) => void
+  note?: string
   subtotal: number
+}
+
+type Cart = BaseCart & {
+  add: (item: CartItem, quantity: number) => void
   listingId: string
+  remove: (item: string) => void
+  setNote: (note: string) => void
 }
 
 const Context = createContext<Cart | undefined>(undefined)
@@ -29,11 +34,12 @@ export function CartProvider({
   listing: string
 }): ReactElement {
   // We use a Map to store the carts for each listing
-  const [carts, setCarts] = useState<Map<string, { items: CartItems }>>(
-    new Map()
-  )
-  const currentCart = carts.get(listing) ?? {
+  const [carts, setCarts] = useState<Map<string, BaseCart>>(new Map())
+  const currentCart = carts.get(listing) || {
     items: new Map<string, CartItem>(),
+    listingId: listing,
+    note: undefined,
+    subtotal: 0,
   }
   const subtotal = calculateSubtotal([...currentCart.items.values()])
 
@@ -45,7 +51,7 @@ export function CartProvider({
 
     if (!storedCarts) return
 
-    setCarts((storedCarts as Map<string, { items: CartItems }>) ?? new Map())
+    setCarts((storedCarts as Map<string, BaseCart>) ?? new Map())
   }, [carts.size])
 
   useEffect(() => {
@@ -68,7 +74,7 @@ export function CartProvider({
       variantId: item.variantId,
     })
 
-    saveCart(newItems)
+    saveCart("items", newItems)
   }
 
   function removeItemFromCart(id: string) {
@@ -76,13 +82,13 @@ export function CartProvider({
 
     newItems.delete(id)
 
-    saveCart(newItems)
+    saveCart("items", newItems)
   }
 
-  function saveCart(items: CartItems) {
+  function saveCart<T extends keyof BaseCart>(key: T, value: BaseCart[T]) {
     const newCart = {
       ...currentCart,
-      items,
+      [key]: value,
     }
 
     setCarts((prev) => new Map(prev).set(listing, newCart))
@@ -94,7 +100,9 @@ export function CartProvider({
         add: addItemToCart,
         items: currentCart.items,
         listingId: listing,
+        note: currentCart.note,
         remove: removeItemFromCart,
+        setNote: (note) => saveCart("note", note),
         subtotal,
       }}
     >

@@ -5,13 +5,16 @@ import request from "graphql-request"
 import { SHIPPING_METHOD } from "~/config/consts"
 import { SHOPIFY_WEBHOOK_SECRET } from "~/config/env.server"
 import {
-  SHOPIFY_WEBHOOK_SECRET,
-  SHOPIFY_ADMIN_ACCESS_TOKEN,
-} from "~/config/env.server"
-import { shopifyAdminAPIEndpoint } from "~/config/vars.server"
-import { CreateDraftOrder } from "~/services/shopify"
+  shopifyAdminAPInHeaders,
+  shopifyAdminAPIEndpoint,
+} from "~/config/vars.server"
+import type { DraftOrderLineItemInput } from "~/services/shopify/admin"
+import {
+  draftOrderCreateMutation,
+  getOrderQuery,
+} from "~/services/shopify/admin"
 import type { CartItem } from "~/utils/cart"
-import { Base64, hmacSHA256 } from "~/utils/crypto.server"
+import { ShopifyError } from "~/utils/error"
 
 export async function verifyWebhook(request: Request): Promise<boolean> {
   const body = await request.text()
@@ -42,31 +45,35 @@ export function getWebhookHeaders(
 export async function createCheckout(
   cartItems: CartItem[],
   shipping: number,
-  sku: string
+  note: string,
+  meta: {
+    sku: string
+    listingId: string
+  }
 ) {
-  const lineItems = cartItems.map((cartItem) => ({
+  const lineItems: DraftOrderLineItemInput[] = cartItems.map((cartItem) => ({
     quantity: cartItem.quantity,
     variantId: cartItem.variantId,
   }))
 
+  // Add the shipping item
+  lineItems.push({
+    originalUnitPrice: shipping,
+    quantity: 1,
+    title: SHIPPING_METHOD,
+  })
+
   const response = await request(
     shopifyAdminAPIEndpoint,
-    CreateDraftOrder,
+    draftOrderCreateMutation,
     {
       input: {
         lineItems,
-        note: "This is a test order", // TODO(adelrodriguez): Add a cart note
-        shippingLine: {
-          price: shipping,
-          shippingRateHandle: "shopify-Standard%20Shipping",
-          title: SHIPPING_METHOD,
-        },
-        tags: [`listing-${sku}`], // TODO(adelrodriguez): Replace with Listing SKU
+        note,
+        tags: [`listing-${meta.sku}`, meta.listingId],
       },
     },
-    {
-      "X-Shopify-Access-Token": SHOPIFY_ADMIN_ACCESS_TOKEN,
-    }
+    shopifyAdminAPInHeaders
   )
 
   const id = response.draftOrderCreate?.draftOrder?.id
@@ -80,4 +87,21 @@ export async function createCheckout(
   }
 
   return { id, url }
+}
+
+export async function getOrder(id: string) {
+  const { order } = await request(
+    shopifyAdminAPIEndpoint,
+    getOrderQuery,
+    {
+      id,
+    },
+    shopifyAdminAPInHeaders
+  )
+
+  if (!order) {
+    throw new ShopifyError("Unable to get order", "order_get_error")
+  }
+
+  return order
 }
