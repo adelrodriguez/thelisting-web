@@ -29,6 +29,7 @@ export type QueueData = {
   date: string
 }
 
+// TODO(adelrodriguez): Split up this processor into smaller processors
 export const processor: Processor<QueueData> = async (job) => {
   try {
     const contactRequest = createContactRequestSchema.parse({

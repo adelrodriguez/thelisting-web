@@ -95,3 +95,20 @@ model Customer {
 
   alegraId String
 }
+
+model Webhook {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  service   WebhookService
+  serviceId String
+
+  event String
+
+  payload Json?
+}
+
+enum WebhookService {
+  Shopify
+}

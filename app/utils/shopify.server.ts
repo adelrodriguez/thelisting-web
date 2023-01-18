@@ -1,6 +1,9 @@
+import Base64 from "crypto-js/enc-base64"
+import hmacSHA256 from "crypto-js/hmac-sha256"
 import request from "graphql-request"
 
 import { SHIPPING_METHOD } from "~/config/consts"
+import { SHOPIFY_WEBHOOK_SECRET } from "~/config/env.server"
 import {
   SHOPIFY_WEBHOOK_SECRET,
   SHOPIFY_ADMIN_ACCESS_TOKEN,
@@ -10,12 +13,9 @@ import { CreateDraftOrder } from "~/services/shopify"
 import type { CartItem } from "~/utils/cart"
 import { Base64, hmacSHA256 } from "~/utils/crypto.server"
 
-import { ShopifyError } from "./error"
-
-export async function verifyWebhook(request: Request) {
-  const cloned = request.clone()
-  const body = await cloned.text()
-  const headers = cloned.headers
+export async function verifyWebhook(request: Request): Promise<boolean> {
+  const body = await request.text()
+  const headers = request.headers
   const hmac = headers.get("X-Shopify-Hmac-Sha256")
 
   const hmacPayload = encodeWebhookSignature(body, SHOPIFY_WEBHOOK_SECRET)
@@ -23,8 +23,20 @@ export async function verifyWebhook(request: Request) {
   return hmac === hmacPayload
 }
 
-export function encodeWebhookSignature(payload: string, secret: string) {
+export function encodeWebhookSignature(
+  payload: string,
+  secret: string
+): string {
   return Base64.stringify(hmacSHA256(payload, secret))
+}
+
+export function getWebhookHeaders(
+  headers: Headers
+): Record<"event" | "id", string | null> {
+  const id = headers.get("X-Shopify-Webhook-Id")
+  const event = headers.get("X-Shopify-Topic")
+
+  return { event, id }
 }
 
 export async function createCheckout(
