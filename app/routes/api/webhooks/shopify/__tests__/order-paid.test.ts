@@ -1,20 +1,23 @@
 import { generateMock } from "@anatine/zod-mock"
 import { expect, test, vi } from "vitest"
 
-import { SHOPIFY_WEBHOOK_SECRET } from "~/config/env.server"
+import { HOOKDECK_SIGNING_SECRET } from "~/config/env.server"
 import { invoicingQueue } from "~/helpers/queues"
 import { StatusCodes } from "~/utils/http.server"
 import { orderPaymentWebhookPayloadSchema } from "~/utils/shopify"
-import { encodeWebhookSignature } from "~/utils/shopify.server"
+import { encodeWebhookSignature } from "~/utils/webhook.server"
 
 import { action } from "../order-paid-v1"
 
 vi.mock("~/helpers/queues")
 invoicingQueue.add = vi.fn()
 
-test("returns Unauthorized if no auth headers are provided", async () => {
+test("returns Unauthorized if x-hookdeck-verified is 'false'", async () => {
   const request = new Request("https://shopify.com", {
     body: JSON.stringify(generateMock(orderPaymentWebhookPayloadSchema)),
+    headers: {
+      "x-hookdeck-verified": "false",
+    },
     method: "POST",
   })
 
@@ -29,12 +32,13 @@ test("returns Unauthorized if no auth headers are provided", async () => {
 
 test("returns OK if the webhook is processed successfully", async () => {
   const body = JSON.stringify(generateMock(orderPaymentWebhookPayloadSchema))
-  const signature = encodeWebhookSignature(body, SHOPIFY_WEBHOOK_SECRET)
+  const signature = encodeWebhookSignature(body, HOOKDECK_SIGNING_SECRET)
 
   const request = new Request("https://shopify.com", {
     body,
     headers: {
-      "X-Shopify-Hmac-Sha256": signature,
+      "x-hookdeck-signature": signature,
+      "x-hookdeck-verified": "true",
     },
     method: "POST",
   })
@@ -50,12 +54,13 @@ test("returns OK if the webhook is processed successfully", async () => {
 
 test("calls the invoicing queue", async () => {
   const body = JSON.stringify(generateMock(orderPaymentWebhookPayloadSchema))
-  const signature = encodeWebhookSignature(body, SHOPIFY_WEBHOOK_SECRET)
+  const signature = encodeWebhookSignature(body, HOOKDECK_SIGNING_SECRET)
 
   const request = new Request("https://shopify.com", {
     body,
     headers: {
-      "X-Shopify-Hmac-Sha256": signature,
+      "x-hookdeck-signature": signature,
+      "x-hookdeck-verified": "true",
     },
     method: "POST",
   })

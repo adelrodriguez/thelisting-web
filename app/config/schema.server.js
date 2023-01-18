@@ -18,6 +18,8 @@ module.exports = z.object({
 
   DATABASE_URL: z.string().url(),
 
+  HOOKDECK_SIGNING_SECRET: z.string(),
+
   META_GRAPH_API_USER_ACCESS_TOKEN: z.string(),
 
   META_GRAPH_API_VERSION: z.string(),

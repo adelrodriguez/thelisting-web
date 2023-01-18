@@ -19,6 +19,7 @@ import {
   createContactResponseSchema,
 } from "~/utils/alegra"
 import { AlegraError } from "~/utils/error"
+import { logger } from "~/utils/log"
 
 export class Alegra {
   private baseUrl: string
@@ -64,6 +65,8 @@ export class Alegra {
           const response = await this.postRequest("contacts", request)
           const data = await response.json()
 
+          logger.info("contacts.create response", { data })
+
           return createContactResponseSchema.parse(data)
         } catch (error) {
           throw new AlegraError(
@@ -76,6 +79,8 @@ export class Alegra {
         try {
           const response = await this.getRequest(`contacts/${request.id}`)
           const data = await response.json()
+
+          logger.info("contacts.get response", { data })
 
           return getContactResponseSchema.parse(data)
         } catch (error) {
@@ -105,6 +110,8 @@ export class Alegra {
           const response = await this.getRequest(`currencies/${request.code}`)
           const data = await response.json()
 
+          logger.info("currencies.get response", { data })
+
           return getCurrencyResponseSchema.parse(data)
         } catch (error) {
           throw new AlegraError((error as Error).message, "get_currency_error")
@@ -121,6 +128,8 @@ export class Alegra {
         try {
           const response = await this.postRequest("invoices", request)
           const data = await response.json()
+
+          logger.info("invoices.create response", { data })
 
           return createInvoiceResponseSchema.parse(data)
         } catch (error) {
@@ -139,6 +148,8 @@ export class Alegra {
             request
           )
           const data = await response.json()
+
+          logger.info("invoices.send response", { data })
 
           return sendInvoiceResponseSchema.parse(data)
         } catch (error) {

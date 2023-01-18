@@ -1,9 +1,6 @@
-import Base64 from "crypto-js/enc-base64"
-import hmacSHA256 from "crypto-js/hmac-sha256"
 import request from "graphql-request"
 
 import { SHIPPING_METHOD } from "~/config/consts"
-import { SHOPIFY_WEBHOOK_SECRET } from "~/config/env.server"
 import {
   shopifyAdminAPInHeaders,
   shopifyAdminAPIEndpoint,
@@ -15,32 +12,6 @@ import {
 } from "~/services/shopify/admin"
 import type { CartItem } from "~/utils/cart"
 import { ShopifyError } from "~/utils/error"
-
-export async function verifyWebhook(request: Request): Promise<boolean> {
-  const body = await request.text()
-  const headers = request.headers
-  const hmac = headers.get("X-Shopify-Hmac-Sha256")
-
-  const hmacPayload = encodeWebhookSignature(body, SHOPIFY_WEBHOOK_SECRET)
-
-  return hmac === hmacPayload
-}
-
-export function encodeWebhookSignature(
-  payload: string,
-  secret: string
-): string {
-  return Base64.stringify(hmacSHA256(payload, secret))
-}
-
-export function getWebhookHeaders(
-  headers: Headers
-): Record<"event" | "id", string | null> {
-  const id = headers.get("X-Shopify-Webhook-Id")
-  const event = headers.get("X-Shopify-Topic")
-
-  return { event, id }
-}
 
 export async function createCheckout(
   cartItems: CartItem[],

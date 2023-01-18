@@ -2,42 +2,46 @@ import type { ActionArgs } from "@remix-run/node"
 import * as Sentry from "@sentry/remix"
 import { z } from "zod"
 
-import prisma from "~/helpers/prisma.server"
 import { invoicingQueue } from "~/helpers/queues"
-import { OK, Unauthorized } from "~/utils/http.server"
+import { InternalServerError, OK, Unauthorized } from "~/utils/http.server"
 import { logger } from "~/utils/log"
 import { orderPaymentWebhookPayloadSchema } from "~/utils/shopify"
-import { getWebhookHeaders, verifyWebhook } from "~/utils/shopify.server"
+import { checkIfWebhookIsRepeated, verifyWebhook } from "~/utils/webhook.server"
 
 export async function action({ request }: ActionArgs): Promise<Response> {
-  const verification = await request.clone()
-  const verified = await verifyWebhook(verification)
+  const verificationClone = request.clone()
+  const verified = await verifyWebhook(verificationClone)
 
   if (!verified) {
     return Unauthorized
   }
 
-  const headers = await request.clone()
+  const headers = await request.clone().headers
   const body = await request.json()
 
-  const { id, event } = await getWebhookHeaders(headers.headers)
+  const webhookId = headers.get("X-Shopify-Webhook-Id")
+  const event = headers.get("X-Shopify-Topic")
 
-  if (id && event) {
-    // Check if we have already received this webhook call
-    const webhook = await prisma.webhook.findFirst({
-      where: { serviceId: id },
-    })
+  if (!webhookId || !event) {
+    return InternalServerError
+  }
 
-    if (webhook) return OK
+  const isRepeated = await checkIfWebhookIsRepeated(
+    webhookId,
+    event,
+    "Shopify",
+    body
+  )
 
-    // If not, save it
-    await prisma.webhook.create({
-      data: { event, payload: body, service: "Shopify", serviceId: id },
-    })
+  // If we have already received this webhook call, return OK
+  if (isRepeated) {
+    logger.info("Webhook already received. Ignoring...", { webhookId })
+
+    return OK
   }
 
   try {
-    logger.info(`Received ${event} webhook`, { id })
+    logger.info(`Received ${event} webhook`, { webhookId })
 
     const order = orderPaymentWebhookPayloadSchema.parse(body)
 
@@ -62,7 +66,6 @@ export async function action({ request }: ActionArgs): Promise<Response> {
       logger.error(error.message, { error })
     }
 
-    // Return OK so Shopify doesn't retry the webhook
-    return OK
+    return InternalServerError
   }
 }
