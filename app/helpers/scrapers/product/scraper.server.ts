@@ -23,6 +23,7 @@ import {
   SirenaScraper,
   ZaraHomeScraper,
   TwinkleRDScraper,
+  JumboScraper,
 } from "./stores"
 import type { ScraperInterface } from "./stores/base"
 import createScraperFactory, { BaseScraper } from "./stores/base"
@@ -48,6 +49,7 @@ export default async function createScraper(
     [IkeaScraper.domain]: IkeaScraper,
     [IlumelOutletScraper.domain]: IlumelOutletScraper,
     [IlumelScraper.domain]: IlumelScraper,
+    [JumboScraper.domain]: JumboScraper,
     [LaNoviaDeVillaScraper.domain]: LaNoviaDeVillaScraper,
     [LeTavoleScraper.domain]: LeTavoleScraper,
     [PandarettaScraper.domain]: PandarettaScraper,
