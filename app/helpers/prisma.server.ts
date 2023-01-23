@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client"
 
-import { isProduction } from "~/config/vars.server"
+import { isProduction } from "~/config/vars"
 
 let prisma: PrismaClient
 

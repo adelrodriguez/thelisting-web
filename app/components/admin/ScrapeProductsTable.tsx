@@ -13,7 +13,7 @@ import { Fragment, useEffect, useState } from "react"
 
 import { Button, Checkbox, FormattedNumber, Input } from "~/components/common"
 import { Spinner } from "~/components/loading"
-import { isDev } from "~/config/vars.server"
+import { isDev } from "~/config/vars"
 import { scraperMachine } from "~/helpers/machines"
 import { downloadAsCSVFile } from "~/utils/csv"
 import { round } from "~/utils/number"

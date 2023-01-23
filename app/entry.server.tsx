@@ -9,6 +9,7 @@ import { PassThrough } from "stream"
 import prisma from "~/helpers/prisma.server"
 
 import { SENTRY_DSN } from "./config/env.server"
+import { isProduction } from "./config/vars"
 
 const ABORT_DELAY = 5000
 
@@ -118,7 +119,7 @@ function handleBrowserRequest(
 }
 
 Sentry.init({
-  dsn: SENTRY_DSN,
+  dsn: isProduction ? SENTRY_DSN : undefined,
   environment: process.env.NODE_ENV,
   integrations: [new Sentry.Integrations.Prisma({ client: prisma })],
   tracesSampleRate: 1,

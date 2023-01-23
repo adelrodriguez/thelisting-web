@@ -2,7 +2,7 @@ import type { Redis as RedisType, RedisOptions } from "ioredis"
 import Redis from "ioredis"
 
 import { REDIS_URL } from "~/config/env.server"
-import { isProduction } from "~/config/vars.server"
+import { isProduction } from "~/config/vars"
 
 let redis: RedisType
 
