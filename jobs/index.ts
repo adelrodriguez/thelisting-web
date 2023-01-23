@@ -6,7 +6,7 @@ import {
 import express from "express"
 import basicAuth from "express-basic-auth"
 
-import { invoicingQueue } from "~/helpers/queues"
+import { saveOrderCustomerQueue, createInvoiceQueue } from "~/helpers/queues"
 import { logger } from "~/utils/log"
 
 const port = process.env.BULL_BOARD_PORT || process.env.PORT || 3001
@@ -24,7 +24,9 @@ createBullBoard({
       boardTitle: "The Listing",
     },
   },
-  queues: [invoicingQueue].map((queue) => new BullMQAdapter(queue)),
+  queues: [saveOrderCustomerQueue, createInvoiceQueue].map(
+    (queue) => new BullMQAdapter(queue)
+  ),
   serverAdapter: serverAdapter,
 })
 

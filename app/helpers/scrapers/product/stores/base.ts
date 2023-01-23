@@ -4,6 +4,7 @@ import { chromium } from "playwright"
 import UserAgent from "user-agents"
 
 import { BROWSERLESS_TOKEN, BROWSERLESS_URL } from "~/config/env.server"
+import Sentry from "~/services/sentry"
 import { logger } from "~/utils/log"
 import { cleanAmount, cleanText } from "~/utils/scraper"
 
@@ -156,6 +157,7 @@ export class BaseScraper implements ScraperInterface {
    */
   public logError(message: string): null {
     logger.error(message, { url: this.url })
+    Sentry.captureException({ message, url: this.url })
 
     return null
   }

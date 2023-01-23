@@ -1,5 +1,4 @@
 import { generateMock } from "@anatine/zod-mock"
-import { faker } from "@faker-js/faker"
 import type {
   DefaultRequestMultipartBody,
   MockedRequest,
@@ -8,7 +7,9 @@ import type {
 import { rest } from "msw"
 
 import {
+  createContactResponseSchema,
   createInvoiceResponseSchema,
+  getContactResponseSchema,
   getCurrencyResponseSchema,
   sendInvoiceResponseSchema,
 } from "~/utils/alegra"
@@ -17,10 +18,18 @@ export const alegraHandlers: Array<
   RestHandler<MockedRequest<DefaultRequestMultipartBody>>
 > = [
   rest.post("https://app.alegra.com/api/v1/contacts", async (req, res, ctx) => {
-    const body = await req.json()
+    const response = generateMock(createContactResponseSchema)
 
-    return res(ctx.json({ email: body.email, id: faker.datatype.uuid() }))
+    return res(ctx.json(response))
   }),
+  rest.get(
+    "https://app.alegra.com/api/v1/contacts/:id",
+    async (req, res, ctx) => {
+      const response = generateMock(getContactResponseSchema)
+
+      return res(ctx.json(response))
+    }
+  ),
   rest.get(
     "https://app.alegra.com/api/v1/currencies/:code",
     async (req, res, ctx) => {

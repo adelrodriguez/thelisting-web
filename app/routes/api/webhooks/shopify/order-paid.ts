@@ -2,7 +2,7 @@ import type { ActionArgs } from "@remix-run/node"
 import * as Sentry from "@sentry/remix"
 import { z } from "zod"
 
-import { invoicingQueue } from "~/helpers/queues"
+import { saveOrderCustomerQueue } from "~/helpers/queues"
 import { InternalServerError, OK, Unauthorized } from "~/utils/http.server"
 import { logger } from "~/utils/log"
 import { orderPaymentWebhookPayloadSchema } from "~/utils/shopify"
@@ -45,16 +45,8 @@ export async function action({ request }: ActionArgs): Promise<Response> {
 
     const order = orderPaymentWebhookPayloadSchema.parse(body)
 
-    await invoicingQueue.add(`${order.number}`, {
-      address: order.billing_address.address1,
-      city: order.billing_address.city,
-      currencyCode: order.currency,
-      date: order.processed_at,
-      email: order.customer.email,
-      name: `${order.customer.first_name} ${order.customer.last_name}`,
-      orderNumber: order.number,
-      phone: order.billing_address.phone,
-      shippingPrice: order.shipping_lines[0]?.price ?? 0,
+    await saveOrderCustomerQueue.add(`Order #${order.number}`, {
+      orderId: order.id,
     })
 
     return OK

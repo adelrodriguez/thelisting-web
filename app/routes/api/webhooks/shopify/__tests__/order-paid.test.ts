@@ -1,16 +1,29 @@
 import { generateMock } from "@anatine/zod-mock"
-import { expect, test, vi } from "vitest"
+import { afterEach, expect, test, vi } from "vitest"
 
 import { HOOKDECK_SIGNING_SECRET } from "~/config/env.server"
-import { invoicingQueue } from "~/helpers/queues"
+import { saveOrderCustomerQueue } from "~/helpers/queues"
 import { StatusCodes } from "~/utils/http.server"
 import { orderPaymentWebhookPayloadSchema } from "~/utils/shopify"
 import { encodeWebhookSignature } from "~/utils/webhook.server"
 
-import { action } from "../order-paid-v1"
+import { action } from "../order-paid"
 
+vi.mock("~/helpers/prisma.server")
 vi.mock("~/helpers/queues")
-invoicingQueue.add = vi.fn()
+vi.mock("~/utils/webhook.server", async () => {
+  const actual = (await vi.importActual("~/utils/webhook.server")) as {}
+
+  return {
+    ...actual,
+    checkIfWebhookIsRepeated: vi.fn().mockResolvedValue(false),
+  }
+})
+saveOrderCustomerQueue.add = vi.fn()
+
+afterEach(() => {
+  vi.resetAllMocks()
+})
 
 test("returns Unauthorized if x-hookdeck-verified is 'false'", async () => {
   const request = new Request("https://shopify.com", {
@@ -37,6 +50,8 @@ test("returns OK if the webhook is processed successfully", async () => {
   const request = new Request("https://shopify.com", {
     body,
     headers: {
+      "X-Shopify-Topic": "orders/paid",
+      "X-Shopify-Webhook-Id": "123",
       "x-hookdeck-signature": signature,
       "x-hookdeck-verified": "true",
     },
@@ -59,6 +74,8 @@ test("calls the invoicing queue", async () => {
   const request = new Request("https://shopify.com", {
     body,
     headers: {
+      "X-Shopify-Topic": "orders/paid",
+      "X-Shopify-Webhook-Id": "123",
       "x-hookdeck-signature": signature,
       "x-hookdeck-verified": "true",
     },
@@ -71,5 +88,5 @@ test("calls the invoicing queue", async () => {
     request,
   })
 
-  expect(invoicingQueue.add).toHaveBeenCalled()
+  expect(saveOrderCustomerQueue.add).toHaveBeenCalled()
 })
