@@ -1,5 +1,10 @@
+import SuperJSON from "superjson"
+
 import { isWindowDefined } from "~/utils/window"
 
+/**
+ * Storage is a wrapper around the Storage Web API.
+ */
 export default class Storage {
   private storage: globalThis.Storage
 
@@ -20,21 +25,19 @@ export default class Storage {
   }
 
   set(key: string, data: unknown): void {
-    const body = JSON.stringify(data, this.replacer)
+    const body = SuperJSON.stringify(data)
 
     this.storage.setItem(key, body)
   }
 
-  get(key: string): unknown {
+  get<T extends unknown>(key: string): T | null {
     const item = this.storage.getItem(key)
 
     if (!item) {
       return null
     }
 
-    const unsafeParsed = JSON.parse(item, this.reviver) as unknown
-
-    return unsafeParsed
+    return SuperJSON.parse<T>(item)
   }
 
   remove(key: string): void {
@@ -54,29 +57,5 @@ export default class Storage {
         }
       })
       .filter((item) => !!item)
-  }
-
-  private replacer(key: string, value: unknown): unknown {
-    if (value instanceof Map) {
-      return {
-        dataType: "Map",
-        value: Array.from(value.entries()),
-      }
-    } else {
-      return value
-    }
-  }
-
-  private reviver(key: string, value: unknown): unknown {
-    if (typeof value === "object" && value !== null) {
-      // TODO(adelrodriguez): We are casting as any because TS is not
-      // recognizing the dataType or value properties. This is probably fine but
-      // every time I encounter some casting, I'm kinda worried.
-      if ((value as any).dataType === "Map") {
-        return new Map((value as any).value)
-      }
-    }
-
-    return value
   }
 }

@@ -1,5 +1,5 @@
 import currency from "currency.js"
-import type { ReactNode, ReactElement } from "react"
+import type { ReactNode } from "react"
 import { useEffect } from "react"
 import { createContext, useState, useContext } from "react"
 
@@ -32,7 +32,7 @@ export function CartProvider({
 }: {
   children: ReactNode
   listing: string
-}): ReactElement {
+}) {
   // We use a Map to store the carts for each listing
   const [carts, setCarts] = useState<Map<string, BaseCart>>(new Map())
   const currentCart = carts.get(listing) || {
@@ -47,11 +47,11 @@ export function CartProvider({
     if (carts.size > 0) return
 
     const storage = new Storage("local")
-    const storedCarts = storage.get("carts")
+    const storedCarts = storage.get<Map<string, BaseCart>>("carts")
 
     if (!storedCarts) return
 
-    setCarts((storedCarts as Map<string, BaseCart>) ?? new Map())
+    setCarts(storedCarts)
   }, [carts.size])
 
   useEffect(() => {

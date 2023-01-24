@@ -1,6 +1,8 @@
 import type { Item } from "@prisma/client"
 import { z } from "zod"
 
+import Storage from "~/helpers/storage"
+
 export type CartItem = Pick<Item, "id" | "title" | "commerceId"> & {
   variantId: string
   quantity: number
@@ -20,4 +22,20 @@ export function calculateSubtotal(cartItems: CartItem[]): number {
   return cartItems.reduce((subtotal, cartItem) => {
     return subtotal + cartItem.price * cartItem.quantity
   }, 0)
+}
+
+export function clearCart(listingId: string): boolean {
+  const storage = new Storage("local")
+
+  const carts = storage.get<Map<string, unknown>>("carts")
+
+  if (!carts) return false
+
+  const result = carts.delete(listingId)
+
+  if (!result) return result
+
+  storage.set("carts", carts)
+
+  return true
 }

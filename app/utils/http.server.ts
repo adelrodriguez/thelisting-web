@@ -27,4 +27,9 @@ export const InternalServerError = new Response(
   }
 )
 
+export const NotFound = new Response(ReasonPhrases.NOT_FOUND, {
+  status: StatusCodes.NOT_FOUND,
+  statusText: ReasonPhrases.NOT_FOUND,
+})
+
 export { ReasonPhrases, StatusCodes }

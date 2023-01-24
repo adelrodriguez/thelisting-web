@@ -1,7 +1,10 @@
-import type { TypedResponse } from "@remix-run/node"
-import { redirect } from "react-router"
-
-export type LoaderResult<T> = Promise<TypedResponse<T>>
+import {
+  typedjson,
+  useTypedActionData,
+  useTypedFetcher,
+  useTypedLoaderData,
+  redirect,
+} from "remix-typedjson"
 
 export type ErrorBoundaryProps = {
   error: Error
@@ -10,3 +13,12 @@ export type ErrorBoundaryProps = {
 export const goToParent = () => redirect("..")
 
 export const goHome = () => redirect("/")
+
+// Export remix-typedjson
+export {
+  typedjson as json,
+  redirect,
+  useTypedActionData as useActionData,
+  useTypedFetcher as useFetcher,
+  useTypedLoaderData as useLoaderData,
+}
