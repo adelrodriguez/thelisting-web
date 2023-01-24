@@ -1,9 +1,8 @@
 import { InboxIcon, SparklesIcon } from "@heroicons/react/24/outline"
-import type { ReactElement } from "react"
 
 import { Image } from "~/components/common"
 
-export default function Features(): ReactElement {
+export default function Features() {
   return (
     <section className="relative bg-white pt-16 pb-32 overflow-hidden">
       <div className="relative">

@@ -1,7 +1,6 @@
 import { Link } from "@remix-run/react"
-import type { ReactElement } from "react"
 
-export default function CallToAction(): ReactElement {
+export default function CallToAction() {
   return (
     <section className="bg-white">
       <div className="max-w-7xl mx-auto text-center py-12 px-4 sm:px-6 lg:py-16 lg:px-8">

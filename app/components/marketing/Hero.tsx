@@ -1,9 +1,8 @@
 import { Link } from "@remix-run/react"
-import type { ReactElement } from "react"
 
 import { Image } from "~/components/common"
 
-export default function Hero(): ReactElement {
+export default function Hero() {
   return (
     <section className="relative overflow-hidden bg-white">
       <div className="mx-auto max-w-7xl">

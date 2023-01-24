@@ -1,5 +1,4 @@
 import type { Item } from "@prisma/client"
-import type { ReactElement } from "react"
 import { Link } from "react-router-dom"
 
 import { FormattedNumber } from "~/components/common"
@@ -13,7 +12,7 @@ export default function CartItem({
   quantity,
 }: Pick<Item, "id" | "commerceId" | "title"> & {
   quantity: number
-}): ReactElement {
+}) {
   const { data } = useProduct(commerceId!)
   const { remove } = useCart()
 

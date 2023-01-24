@@ -3,7 +3,7 @@ import {
   XMarkIcon,
   CheckCircleIcon,
 } from "@heroicons/react/20/solid"
-import type { ReactElement, ReactNode } from "react"
+import type { ReactNode } from "react"
 
 // TODO(adelrodriguez): Clean up this component
 export default function Alert({
@@ -14,7 +14,7 @@ export default function Alert({
   children: ReactNode
   type: "error" | "success"
   onClose: () => void
-}): ReactElement {
+}) {
   if (type === "success") {
     return (
       <div className="rounded-md bg-green-50 p-4">

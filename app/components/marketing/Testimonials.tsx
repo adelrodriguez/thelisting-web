@@ -1,6 +1,4 @@
-import type { ReactElement } from "react"
-
-export default function Testimonials(): ReactElement {
+export default function Testimonials() {
   return (
     <section className="bg-white pt-16 lg:py-24">
       <div className="pb-16 bg-gray-600 lg:pb-0 lg:z-10 lg:relative">

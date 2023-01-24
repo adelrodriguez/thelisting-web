@@ -3,7 +3,6 @@ import {
   DocumentArrowDownIcon,
 } from "@heroicons/react/24/outline"
 import clsx from "clsx"
-import type { ReactElement } from "react"
 import type { DropzoneOptions } from "react-dropzone"
 import { useDropzone } from "react-dropzone"
 
@@ -17,7 +16,7 @@ export default function Dropzone({
   maxFiles?: number
   fileTypes: { [key in FileType]?: string[] }
   onDrop: DropzoneOptions["onDrop"]
-}): ReactElement {
+}) {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: fileTypes,
     maxFiles,

@@ -4,7 +4,6 @@ import {
   BoltIcon,
   ScaleIcon,
 } from "@heroicons/react/24/outline"
-import type { ReactElement } from "react"
 
 const features = [
   {
@@ -33,7 +32,7 @@ const features = [
   },
 ]
 
-export default function About(): ReactElement {
+export default function About() {
   return (
     <section className="py-12 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

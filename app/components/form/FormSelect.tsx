@@ -1,4 +1,4 @@
-import type { ReactElement, ComponentProps } from "react"
+import type { ComponentProps } from "react"
 import { useField } from "remix-validated-form"
 
 import { Select } from "~/components/common"
@@ -15,7 +15,7 @@ export default function SelectInput({
   ...props
 }: {
   name: string
-} & ComponentProps<typeof Select>): ReactElement {
+} & ComponentProps<typeof Select>) {
   const { error, getInputProps } = useField(name)
 
   return (

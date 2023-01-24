@@ -1,5 +1,5 @@
 import clsx from "clsx"
-import type { ReactElement, ReactNode, ButtonHTMLAttributes } from "react"
+import type { ReactNode, ButtonHTMLAttributes } from "react"
 
 export default function Button({
   children,
@@ -14,7 +14,7 @@ export default function Button({
   className?: string
   size?: "xs" | "sm" | "md" | "lg" | "xl"
   variant?: "primary" | "secondary"
-} & ButtonHTMLAttributes<HTMLButtonElement>): ReactElement {
+} & ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
     <button
       type={type}

@@ -1,4 +1,3 @@
-import type { ReactElement } from "react"
 import type { NumericFormatProps } from "react-number-format"
 import { NumericFormat } from "react-number-format"
 
@@ -13,7 +12,7 @@ export default function FormattedNumber({
   thousands?: boolean
   decimals?: number
   input?: boolean
-} & NumericFormatProps): ReactElement {
+} & NumericFormatProps) {
   return (
     <NumericFormat
       {...props}
