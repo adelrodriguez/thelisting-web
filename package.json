@@ -16,12 +16,13 @@
     "database:deploy": "prisma migrate deploy",
     "database:generate": "prisma generate",
     "database:introspect": "prisma db pull",
+    "database:prototype": "prisma db push",
     "database:migration:create": "prisma migrate dev --name",
     "database:migration:reset": "prisma migrate reset",
     "database:migration": "prisma migrate dev",
     "deploy": "railway up",
     "dev:css": "npm run generate:css -- --watch",
-    "dev:jobs": "cross-env NODE_ENV=development tsx watch jobs/index.ts --clear-screen=false",
+    "dev:jobs": "cross-env NODE_ENV=development tsx watch jobs/index.ts",
     "dev:remix": "remix dev",
     "dev": "run-p dev:*",
     "docker:start": "docker compose up -d",
@@ -39,7 +40,7 @@
     "typecheck": "tsc -b"
   },
   "dependencies": {
-    "@bull-board/express": "^4.10.2",
+    "@bull-board/express": "4.11.0",
     "@headlessui/react": "^1.7.7",
     "@heroicons/react": "^2.0.13",
     "@prisma/client": "4.9.0",
