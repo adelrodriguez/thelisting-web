@@ -1,24 +1,16 @@
-import type { Listing, Item } from "@prisma/client"
-import type { LoaderArgs, TypedResponse } from "@remix-run/node"
-import { redirect } from "@remix-run/node"
-import { json } from "@remix-run/node"
-import { Link, Outlet, useLoaderData } from "@remix-run/react"
+import type { LoaderArgs } from "@remix-run/node"
+import { Link, Outlet } from "@remix-run/react"
 
-import { ListingItem } from "~/components/registry"
+import { Registry } from "~/components/registry"
 import prisma from "~/helpers/prisma.server"
 import { CartProvider } from "~/utils/hooks"
 import { ReasonPhrases, StatusCodes } from "~/utils/http.server"
+import { goHome, json, useLoaderData } from "~/utils/remix"
 
-type LoaderResult<T> = Promise<TypedResponse<T>>
-
-export async function loader({ params }: LoaderArgs): LoaderResult<
-  Listing & {
-    items: Item[]
-  }
-> {
+export async function loader({ params }: LoaderArgs) {
   const path = params.listing
 
-  if (!path) return redirect("/")
+  if (!path) return goHome()
 
   const listing = await prisma.listing.findFirst({
     include: { items: true },
@@ -26,7 +18,7 @@ export async function loader({ params }: LoaderArgs): LoaderResult<
   })
 
   if (!listing) {
-    throw json("Sorry, we couldn’t find the page you’re looking for.", {
+    throw json("Sorry, we couldn’t find the Listing you’re looking for.", {
       status: StatusCodes.NOT_FOUND,
       statusText: ReasonPhrases.NOT_FOUND,
     })
@@ -40,33 +32,24 @@ export default function ListingPage() {
 
   return (
     <CartProvider listing={listing.id}>
-      <h1>Listing</h1>
-      <div>This the listing: {listing.title}</div>
-      <div>Listing data: {listing.eventDate}</div>
-      <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
-        {listing.items.map((item) => {
-          if (!item.commerceId) return null
-
-          return (
-            <ListingItem
-              commerceId={item.commerceId}
-              id={item.id}
-              key={item.id}
-              title={item.title}
-            />
-          )
-        })}
-      </div>
-      <Link to="cart" prefetch="intent">
-        <button>Go to cart</button>
-      </Link>
-      <Link to="/testing" prefetch="intent">
-        <button>Go to /testing</button>
-      </Link>
-      <Link to="/hello" prefetch="intent">
-        <button>Go to /hello</button>
-      </Link>
-      <Outlet context={listing} />
+      <main>
+        <h1>Listing</h1>
+        <div>This the listing: {listing.title}</div>
+        <div>Listing data: {listing.eventDate.toDateString()}</div>
+        <div className="mx-16">
+          <Registry items={listing.items} />
+        </div>
+        <Link to="cart" prefetch="intent">
+          <button>Go to cart</button>
+        </Link>
+        <Link to="/testing" prefetch="intent">
+          <button>Go to /testing</button>
+        </Link>
+        <Link to="/hello" prefetch="intent">
+          <button>Go to /hello</button>
+        </Link>
+        <Outlet context={listing} />
+      </main>
     </CartProvider>
   )
 }

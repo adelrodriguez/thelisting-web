@@ -7,10 +7,8 @@ import {
   WrenchIcon,
   BellIcon,
 } from "@heroicons/react/24/outline"
-import type { User } from "@prisma/client"
 import type { LoaderArgs } from "@remix-run/node"
-import { json } from "@remix-run/node"
-import { Link, NavLink, Outlet, useLoaderData } from "@remix-run/react"
+import { Link, NavLink, Outlet } from "@remix-run/react"
 import clsx from "clsx"
 import { SnackbarProvider } from "notistack"
 import { Fragment } from "react"
@@ -18,7 +16,7 @@ import { Fragment } from "react"
 import { Logo } from "~/components/branding"
 import { Notification } from "~/components/common"
 import auth from "~/helpers/auth.server"
-import type { LoaderResult } from "~/utils/remix"
+import { json, useLoaderData } from "~/utils/remix"
 
 const navigation = [
   {
@@ -54,9 +52,7 @@ const profile = {
   name: "Tom Cook",
 }
 
-export async function loader({
-  request,
-}: LoaderArgs): LoaderResult<{ user: User }> {
+export async function loader({ request }: LoaderArgs) {
   const user = await auth.isAuthenticated(request, {
     failureRedirect: "/login",
   })

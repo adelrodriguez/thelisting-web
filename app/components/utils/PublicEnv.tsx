@@ -1,6 +1,4 @@
-import type { ReactElement } from "react"
-
-export type PublicEnvs = {
+type PublicEnvs = {
   shopifyStorefrontAccessToken: string
   shopifyStorefrontAPIEndpoint: string
   xStateVisualizer: boolean
@@ -12,7 +10,7 @@ declare global {
   }
 }
 
-export default function PublicEnv(props: PublicEnvs): ReactElement {
+export default function PublicEnv(props: PublicEnvs) {
   return (
     <script
       dangerouslySetInnerHTML={{

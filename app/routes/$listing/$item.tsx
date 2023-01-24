@@ -1,23 +1,18 @@
 import { Dialog, Transition } from "@headlessui/react"
 import { XMarkIcon } from "@heroicons/react/24/outline"
-import type { Item } from "@prisma/client"
 import type { LoaderArgs } from "@remix-run/node"
-import { json } from "@remix-run/node"
-import { useLoaderData, useNavigate } from "@remix-run/react"
+import { useNavigate } from "@remix-run/react"
 import { Fragment, useState } from "react"
 
-import { Button } from "~/components/common"
+import { Button, Image } from "~/components/common"
 import { FormattedNumber } from "~/components/common"
 import { QuantityInput } from "~/components/registry"
 import prisma from "~/helpers/prisma.server"
 import { useCart, useProduct } from "~/utils/hooks"
 import { getPriceSymbol } from "~/utils/money"
-import type { LoaderResult } from "~/utils/remix"
-import { goToParent } from "~/utils/remix"
+import { goToParent, json, useLoaderData } from "~/utils/remix"
 
-export async function loader({
-  params,
-}: LoaderArgs): Promise<LoaderResult<Item>> {
+export async function loader({ params }: LoaderArgs) {
   const id = params.item
 
   try {
@@ -48,9 +43,10 @@ export default function ListingItemDetailPage() {
   const [quantity, setQuantity] = useState(!item.available ? 0 : 1)
 
   // TODO(adelrodriguez): Handle loading and error states
-  if (isLoading) return <div>Loading...</div>
+  if (isLoading) return null
   if (isError) return <div>Error!</div>
 
+  const title = data.product?.title!
   const price = data.product?.variants.nodes[0]?.price!
   const variantId = data.product?.variants.nodes[0]?.id!
 
@@ -96,16 +92,16 @@ export default function ListingItemDetailPage() {
                   <div className="grid w-full grid-cols-1 items-start gap-y-8 gap-x-6 sm:grid-cols-12 lg:gap-x-8">
                     <div className="sm:col-span-4 lg:col-span-5">
                       <div className="aspect-w-1 aspect-h-1 overflow-hidden rounded-lg bg-gray-100">
-                        <img
+                        <Image
                           src={data?.product?.variants.nodes[0]?.image?.url}
-                          alt={data?.product?.title}
+                          alt={title}
                           className="object-cover object-center"
                         />
                       </div>
                     </div>
                     <div className="sm:col-span-8 lg:col-span-7">
                       <h2 className="text-2xl font-bold text-gray-900 sm:pr-12">
-                        {item.title}
+                        {title}
                       </h2>
 
                       <section
@@ -155,7 +151,7 @@ export default function ListingItemDetailPage() {
                         }}
                         disabled={item.available === 0}
                       >
-                        {item.available === 0 ? "Out of stock" : "Add to cart"}
+                        {item.available === 0 ? "Gifted ✨" : "Add to cart"}
                       </Button>
                     </div>
                   </div>

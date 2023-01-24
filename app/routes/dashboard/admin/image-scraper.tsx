@@ -1,5 +1,4 @@
 import { enqueueSnackbar } from "notistack"
-import type { ReactElement } from "react"
 import invariant from "tiny-invariant"
 
 import { Button } from "~/components/common"
@@ -25,7 +24,7 @@ function transformHeader(_: string, index: number): string {
   return header
 }
 
-export default function AdminToolsScrapeImagesPage(): ReactElement {
+export default function AdminToolsScrapeImagesPage() {
   const { parse, result } = useCSVParser<ImagesToScrape>({
     header: true,
     transformHeader,

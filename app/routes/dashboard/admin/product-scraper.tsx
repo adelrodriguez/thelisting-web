@@ -1,5 +1,4 @@
 import { enqueueSnackbar } from "notistack"
-import type { ReactElement } from "react"
 import invariant from "tiny-invariant"
 
 import type { ScrapeProductsTableRow } from "~/components/admin"
@@ -29,7 +28,7 @@ function transformHeader(_: string, index: number): string {
   return header
 }
 
-export default function AdminToolsProductScraperPage(): ReactElement {
+export default function AdminToolsProductScraperPage() {
   const { parse, result } = useCSVParser<ScrapeProductsTableRow>({
     header: true,
     transformHeader,

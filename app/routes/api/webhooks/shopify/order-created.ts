@@ -1,8 +1,9 @@
 import type { ActionArgs } from "@remix-run/node"
-import * as Sentry from "@sentry/remix"
+import { logger } from "@sentry/utils"
 import { z } from "zod"
 
-import { saveOrderCustomerQueue } from "~/helpers/queues"
+import { createPurchaseQueue } from "~/helpers/queues"
+import Sentry from "~/services/sentry"
 import {
   getJSON,
   InternalServerError,
@@ -10,10 +11,9 @@ import {
   OK,
   verifyMethod,
 } from "~/utils/http.server"
-import { logger } from "~/utils/log"
 import {
   getShopifyWebhookHeaders,
-  orderPaymentWebhookPayloadSchema,
+  orderCreationWebhookPayloadSchema,
 } from "~/utils/shopify"
 import {
   verifyIfWebhookIsProcessed,
@@ -37,9 +37,9 @@ export async function action({ request }: ActionArgs) {
   try {
     logger.info(`Received ${event} webhook`, { webhookId })
 
-    const order = orderPaymentWebhookPayloadSchema.parse(body)
+    const order = orderCreationWebhookPayloadSchema.parse(body)
 
-    await saveOrderCustomerQueue.add(`Order #${order.number}`, {
+    await createPurchaseQueue.add(`Order #${order.number}`, {
       orderId: order.id,
     })
 

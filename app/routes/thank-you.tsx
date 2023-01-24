@@ -4,30 +4,29 @@ import * as Sentry from "@sentry/node"
 
 import prisma from "~/helpers/prisma.server"
 import { goHome } from "~/utils/remix"
-import { getOrder } from "~/utils/shopify.server"
+import { getShopifyId } from "~/utils/shopify"
+import { getOrderTags } from "~/utils/shopify.server"
 
 export async function loader({ request }: LoaderArgs) {
   const requestUrl = new URL(request.url)
   const orderId = requestUrl.searchParams.get("order_id")
 
-  if (!orderId) {
-    return goHome()
-  }
+  if (!orderId) throw goHome()
 
   try {
-    const order = await getOrder(`gid://shopify/Order/${orderId}`)
     // The first tag always contains the listing ID
-    const listingId = order.tags[0]
+    const [listingId] = await getOrderTags(getShopifyId(orderId, "Order"))
 
-    const listing = await prisma.listing.findUnique({
+    if (!listingId) throw goHome()
+
+    const listing = await prisma.listing.findFirst({
+      select: { path: true },
       where: { id: listingId },
     })
 
-    if (!listing) {
-      return goHome()
-    }
+    if (!listing) throw goHome()
 
-    return redirect(`/${listing.path}/thankyou`)
+    return redirect(`/${listing.path}/thank-you?order_id=${orderId}`)
   } catch (error) {
     Sentry.captureException(error)
 

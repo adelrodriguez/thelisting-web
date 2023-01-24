@@ -9,12 +9,9 @@ import { productScraper } from "~/helpers/scraper.server"
 import { ReasonPhrases, StatusCodes } from "~/utils/http.server"
 import { logger } from "~/utils/log"
 import { generateKey } from "~/utils/redis"
-import type { LoaderResult } from "~/utils/remix"
 import type { ScrapedProductResult } from "~/utils/scraper"
 
-export async function loader({
-  request,
-}: LoaderArgs): Promise<LoaderResult<ScrapedProductResult>> {
+export async function loader({ request }: LoaderArgs) {
   const user = await auth.isAuthenticated(request)
 
   if (!user) {

@@ -1,11 +1,11 @@
 import request from "graphql-request"
 
-import { SHIPPING_METHOD } from "~/config/consts"
 import {
   shopifyAdminAPInHeaders,
   shopifyAdminAPIEndpoint,
 } from "~/config/vars.server"
 import type { DraftOrderLineItemInput } from "~/services/shopify/admin"
+import { getOrderTagsQuery } from "~/services/shopify/admin"
 import {
   draftOrderCreateMutation,
   getOrderQuery,
@@ -15,7 +15,6 @@ import { ShopifyError } from "~/utils/error"
 
 export async function createCheckout(
   cartItems: CartItem[],
-  shipping: number,
   note: string,
   meta: {
     sku: string
@@ -29,9 +28,8 @@ export async function createCheckout(
 
   // Add the shipping item
   lineItems.push({
-    originalUnitPrice: shipping,
     quantity: 1,
-    title: SHIPPING_METHOD,
+    variantId: "gid://shopify/ProductVariant/41558180102191",
   })
 
   const response = await request(
@@ -75,4 +73,21 @@ export async function getOrder(id: string) {
   }
 
   return order
+}
+
+export async function getOrderTags(id: string) {
+  const { order } = await request(
+    shopifyAdminAPIEndpoint,
+    getOrderTagsQuery,
+    {
+      id,
+    },
+    shopifyAdminAPInHeaders
+  )
+
+  if (!order) {
+    throw new ShopifyError("Unable to get order", "order_get_error")
+  }
+
+  return order.tags
 }

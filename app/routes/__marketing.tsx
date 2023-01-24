@@ -1,6 +1,6 @@
 import { ChevronDownIcon } from "@heroicons/react/20/solid"
 import { Link, Outlet } from "@remix-run/react"
-import type { ReactElement, SVGProps } from "react"
+import type { SVGProps } from "react"
 
 const headerNavigation = [
   { href: "/pricing", name: "Planes" },
@@ -100,7 +100,7 @@ const footerNavigation = {
   ],
 }
 
-export default function MarketingLayout(): ReactElement {
+export default function MarketingLayout() {
   return (
     <>
       <header className="bg-gray-600">

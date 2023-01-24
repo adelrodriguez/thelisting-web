@@ -4,12 +4,14 @@ import type { Listing } from "@prisma/client"
 import {
   Outlet,
   useNavigate,
+  useNavigation,
   useOutletContext,
   useSubmit,
 } from "@remix-run/react"
 import { Fragment, useState } from "react"
 
 import { Button, FormattedNumber } from "~/components/common"
+import { Spinner } from "~/components/loading"
 import { CartItem, CartNote } from "~/components/registry"
 import { useCart, useCurrentRouteMatch } from "~/utils/hooks"
 import { getPriceSymbol } from "~/utils/money"
@@ -22,6 +24,7 @@ export default function ListingCartPage() {
   const listing = useOutletContext<Listing>()
   const navigate = useNavigate()
   const submit = useSubmit()
+  const navigation = useNavigation()
 
   function handleSubmit() {
     const formData = new FormData()
@@ -135,8 +138,19 @@ export default function ListingCartPage() {
                           size="xl"
                           className="w-full"
                           onClick={handleSubmit}
+                          disabled={
+                            cart.items.size === 0 ||
+                            navigation.state === "submitting"
+                          }
                         >
-                          Checkout
+                          {navigation.state === "submitting" ? (
+                            <>
+                              <Spinner />
+                              Loading...
+                            </>
+                          ) : (
+                            "Checkout"
+                          )}
                         </Button>
                       </div>
                     </div>

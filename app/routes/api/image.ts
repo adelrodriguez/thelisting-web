@@ -6,6 +6,6 @@ const config = {
   selfUrl: "http://localhost:3000",
 }
 
-export function loader({ request }: LoaderArgs): Promise<Response> {
+export function loader({ request }: LoaderArgs) {
   return imageLoader(config, request)
 }

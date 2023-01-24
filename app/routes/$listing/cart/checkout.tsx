@@ -6,9 +6,8 @@ import * as Sentry from "@sentry/remix"
 import { z } from "zod"
 
 import { Alert } from "~/components/common"
-import { MARKUP_FEE, PAYMENT_FEE } from "~/config/consts"
-import { calculateSubtotal, cartItemsSchema } from "~/utils/cart"
-import { calculateFees, checkAvailability } from "~/utils/checkout.server"
+import { cartItemsSchema } from "~/utils/cart"
+import { checkAvailability } from "~/utils/checkout.server"
 import { getFormData } from "~/utils/http.server"
 import { goToParent } from "~/utils/remix"
 import { createCheckout } from "~/utils/shopify.server"
@@ -33,22 +32,14 @@ export async function action({ request }: ActionArgs): Promise<Response> {
     const data = Object.fromEntries(formData.entries())
     const { cartItems, sku, note, listingId } = checkoutDataSchema.parse(data)
 
-    // Check that all items are available
+    // Check that all items are available, in case someone messed with the cart
     const hasAvailability = await Promise.all(cartItems.map(checkAvailability))
 
     if (hasAvailability.some((available) => !available)) {
       throw json("Some items are no longer available.")
     }
 
-    const subtotal = calculateSubtotal(cartItems)
-    const { paymentFee, markupFee } = calculateFees(
-      subtotal,
-      MARKUP_FEE,
-      PAYMENT_FEE
-    )
-    const shippingFee = paymentFee + markupFee
-
-    const checkout = await createCheckout(cartItems, shippingFee, note, {
+    const checkout = await createCheckout(cartItems, note, {
       listingId,
       sku,
     })

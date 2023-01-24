@@ -1,21 +1,19 @@
 import type { Item } from "@prisma/client"
 import { Link } from "@remix-run/react"
 import * as Sentry from "@sentry/remix"
-import type { ReactElement } from "react"
+import { flattenConnection } from "@shopify/storefront-kit-react"
 
 import { FormattedNumber, Image } from "~/components/common"
 import { useProduct } from "~/utils/hooks"
 import { getPriceSymbol } from "~/utils/money"
 
-export default function ListingItem({
+export default function RegistryItem({
   id,
-  title,
   commerceId,
 }: {
   id: Item["id"]
-  title: Item["title"]
   commerceId: string
-}): ReactElement | null {
+}) {
   const { data, isLoading, isError, error } = useProduct(commerceId)
 
   if (isLoading) {
@@ -40,11 +38,13 @@ export default function ListingItem({
     return null
   }
 
-  const price = data?.product?.variants.nodes[0]?.price!
+  const title = data?.product?.title!
+  const variant = flattenConnection(data?.product?.variants)[0]
+  const price = variant?.price!
 
   return (
     <Link className="group" to={id}>
-      <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden sm:rounded-lg xl:aspect-w-7 xl:aspect-h-8">
+      <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg sm:rounded-lg xl:aspect-w-7 xl:aspect-h-8">
         <Image
           src={data?.product?.variants.nodes[0]?.image?.url}
           alt={title}

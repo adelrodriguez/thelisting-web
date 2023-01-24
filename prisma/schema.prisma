@@ -23,7 +23,8 @@ model Listing {
   status    ListingStatus @default(Draft)
   title     String        @db.VarChar(255)
 
-  items Item[]
+  items     Item[]
+  purchases Purchase[]
 }
 
 enum ListingStatus {
@@ -47,6 +48,40 @@ model Item {
 
   quantity  Int @default(0) // How many items the owner wants
   available Int @default(0) // How many items are available
+
+  itemPurchases ItemPurchase[]
+}
+
+model Purchase {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  commerceId String? @db.VarChar(255)
+
+  listing   Listing @relation(fields: [listingId], references: [id])
+  listingId String  @db.Uuid
+
+  amount Float
+
+  note String?
+
+  itemPurchases ItemPurchase[]
+}
+
+model ItemPurchase {
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  item   Item   @relation(fields: [itemId], references: [id])
+  itemId String @db.Uuid
+
+  purchase   Purchase @relation(fields: [purchaseId], references: [id])
+  purchaseId String   @db.Uuid
+
+  quantity Int
+
+  @@id([itemId, purchaseId])
 }
 
 model User {
@@ -102,7 +137,7 @@ model Webhook {
   updatedAt DateTime @default(now()) @updatedAt
 
   service   WebhookService
-  serviceId String
+  webhookId String
 
   event String
 

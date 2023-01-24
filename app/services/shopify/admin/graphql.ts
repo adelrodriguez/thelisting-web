@@ -19882,16 +19882,28 @@ export type Mutation = {
   /** Updates a saved search. */
   savedSearchUpdate?: Maybe<SavedSearchUpdatePayload>;
   /**
+   * <div class="note"><h4>Theme app extensions</h4>
+   *   <p>Your app might not pass App Store review if it uses script tags instead of theme app extensions. All new apps, and apps that integrate with Online Store 2.0 themes, should use theme app extensions, such as app blocks or app embed blocks. Script tags are an alternative you can use with only vintage themes. <a href="/apps/online-store#what-integration-method-should-i-use" target="_blank">Learn more</a>.</p></div>
+   *
+   *
    * Creates a new script tag.
    *
    */
   scriptTagCreate?: Maybe<ScriptTagCreatePayload>;
   /**
+   * <div class="note"><h4>Theme app extensions</h4>
+   *   <p>Your app might not pass App Store review if it uses script tags instead of theme app extensions. All new apps, and apps that integrate with Online Store 2.0 themes, should use theme app extensions, such as app blocks or app embed blocks. Script tags are an alternative you can use with only vintage themes. <a href="/apps/online-store#what-integration-method-should-i-use" target="_blank">Learn more</a>.</p></div>
+   *
+   *
    * Deletes a script tag.
    *
    */
   scriptTagDelete?: Maybe<ScriptTagDeletePayload>;
   /**
+   * <div class="note"><h4>Theme app extensions</h4>
+   *   <p>Your app might not pass App Store review if it uses script tags instead of theme app extensions. All new apps, and apps that integrate with Online Store 2.0 themes, should use theme app extensions, such as app blocks or app embed blocks. Script tags are an alternative you can use with only vintage themes. <a href="/apps/online-store#what-integration-method-should-i-use" target="_blank">Learn more</a>.</p></div>
+   *
+   *
    * Updates a script tag.
    *
    */
@@ -29060,9 +29072,23 @@ export type QueryRoot = {
   reverseDelivery?: Maybe<ReverseDelivery>;
   /** Lookup a reverse fulfillment order by ID. */
   reverseFulfillmentOrder?: Maybe<ReverseFulfillmentOrder>;
-  /** Lookup a script tag resource by ID. */
+  /**
+   * <div class="note"><h4>Theme app extensions</h4>
+   *   <p>Your app might not pass App Store review if it uses script tags instead of theme app extensions. All new apps, and apps that integrate with Online Store 2.0 themes, should use theme app extensions, such as app blocks or app embed blocks. Script tags are an alternative you can use with only vintage themes. <a href="/apps/online-store#what-integration-method-should-i-use" target="_blank">Learn more</a>.</p></div>
+   *
+   *
+   * Lookup a script tag resource by ID.
+   *
+   */
   scriptTag?: Maybe<ScriptTag>;
-  /** A list of script tags. */
+  /**
+   * <div class="note"><h4>Theme app extensions</h4>
+   *   <p>Your app might not pass App Store review if it uses script tags instead of theme app extensions. All new apps, and apps that integrate with Online Store 2.0 themes, should use theme app extensions, such as app blocks or app embed blocks. Script tags are an alternative you can use with only vintage themes. <a href="/apps/online-store#what-integration-method-should-i-use" target="_blank">Learn more</a>.</p></div>
+   *
+   *
+   * A list of script tags.
+   *
+   */
   scriptTags: ScriptTagConnection;
   /** The Customer Segment. */
   segment?: Maybe<Segment>;
@@ -32195,6 +32221,10 @@ export type ScriptDiscountApplication = DiscountApplication & {
 };
 
 /**
+ * <div class="note"><h4>Theme app extensions</h4>
+ *   <p>Your app might not pass App Store review if it uses script tags instead of theme app extensions. All new apps, and apps that integrate with Online Store 2.0 themes, should use theme app extensions, such as app blocks or app embed blocks. Script tags are an alternative you can use with only vintage themes. <a href="/apps/online-store#what-integration-method-should-i-use" target="_blank">Learn more</a>.</p></div>
+ *
+ *
  * A script tag represents remote JavaScript code that is loaded into the pages of a shop's storefront or the order status page of checkout.
  *
  */
@@ -40156,7 +40186,7 @@ export enum WebhookSubscriptionTopic {
   PaymentTermsUpdate = 'PAYMENT_TERMS_UPDATE',
   /** The webhook topic for `products/create` events. Occurs whenever a product is created. Requires the `read_products` scope. */
   ProductsCreate = 'PRODUCTS_CREATE',
-  /** The webhook topic for `products/delete` events. Occurs whenever a product publication is deleted. Requires the `read_products` scope. */
+  /** The webhook topic for `products/delete` events. Occurs whenever a product is deleted. Requires the `read_products` scope. */
   ProductsDelete = 'PRODUCTS_DELETE',
   /** The webhook topic for `products/update` events. Occurs whenever a product is updated, or whenever a product is ordered, or whenever a variant is added, removed, or updated. Requires the `read_products` scope. */
   ProductsUpdate = 'PRODUCTS_UPDATE',
@@ -40340,13 +40370,21 @@ export type DraftOrderCreateMutationVariables = Exact<{
 
 export type DraftOrderCreateMutation = { __typename?: 'Mutation', draftOrderCreate?: { __typename?: 'DraftOrderCreatePayload', draftOrder?: { __typename?: 'DraftOrder', id: string, invoiceUrl?: any | null } | null, userErrors: Array<{ __typename?: 'UserError', field?: Array<string> | null, message: string }> } | null };
 
+export type GetOrderTagsQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type GetOrderTagsQuery = { __typename?: 'QueryRoot', order?: { __typename?: 'Order', tags: Array<string> } | null };
+
 export type GetOrderQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type GetOrderQuery = { __typename?: 'QueryRoot', order?: { __typename?: 'Order', id: string, name: string, createdAt: any, processedAt: any, currencyCode: CurrencyCode, tags: Array<string>, customer?: { __typename?: 'Customer', firstName?: string | null, lastName?: string | null, displayName: string, email?: string | null } | null, billingAddress?: { __typename?: 'MailingAddress', address1?: string | null, address2?: string | null, city?: string | null, phone?: string | null } | null, transactions: Array<{ __typename?: 'OrderTransaction', createdAt: any, processedAt?: any | null }> } | null };
+export type GetOrderQuery = { __typename?: 'QueryRoot', order?: { __typename?: 'Order', id: string, name: string, createdAt: any, processedAt: any, currencyCode: CurrencyCode, tags: Array<string>, note?: string | null, customer?: { __typename?: 'Customer', firstName?: string | null, lastName?: string | null, displayName: string, email?: string | null } | null, billingAddress?: { __typename?: 'MailingAddress', address1?: string | null, address2?: string | null, city?: string | null, country?: string | null, zip?: string | null, phone?: string | null } | null, transactions: Array<{ __typename?: 'OrderTransaction', createdAt: any, processedAt?: any | null }>, lineItems: { __typename?: 'LineItemConnection', nodes: Array<{ __typename?: 'LineItem', id: string, quantity: number, product?: { __typename?: 'Product', id: string } | null }> }, totalPriceSet: { __typename?: 'MoneyBag', presentmentMoney: { __typename?: 'MoneyV2', amount: any, currencyCode: CurrencyCode }, shopMoney: { __typename?: 'MoneyV2', amount: any, currencyCode: CurrencyCode } } } | null };
 
 
 export const DraftOrderCreateDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"draftOrderCreate"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"DraftOrderInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"draftOrderCreate"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"draftOrder"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"invoiceUrl"}}]}},{"kind":"Field","name":{"kind":"Name","value":"userErrors"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"field"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]}}]} as unknown as DocumentNode<DraftOrderCreateMutation, DraftOrderCreateMutationVariables>;
-export const GetOrderDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getOrder"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"order"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"processedAt"}},{"kind":"Field","name":{"kind":"Name","value":"currencyCode"}},{"kind":"Field","name":{"kind":"Name","value":"customer"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"displayName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}},{"kind":"Field","name":{"kind":"Name","value":"billingAddress"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"address1"}},{"kind":"Field","name":{"kind":"Name","value":"address2"}},{"kind":"Field","name":{"kind":"Name","value":"city"}},{"kind":"Field","name":{"kind":"Name","value":"phone"}}]}},{"kind":"Field","name":{"kind":"Name","value":"transactions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"processedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"tags"}}]}}]}}]} as unknown as DocumentNode<GetOrderQuery, GetOrderQueryVariables>;
+export const GetOrderTagsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getOrderTags"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"order"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"tags"}}]}}]}}]} as unknown as DocumentNode<GetOrderTagsQuery, GetOrderTagsQueryVariables>;
+export const GetOrderDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getOrder"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"order"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"processedAt"}},{"kind":"Field","name":{"kind":"Name","value":"currencyCode"}},{"kind":"Field","name":{"kind":"Name","value":"customer"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"displayName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}},{"kind":"Field","name":{"kind":"Name","value":"billingAddress"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"address1"}},{"kind":"Field","name":{"kind":"Name","value":"address2"}},{"kind":"Field","name":{"kind":"Name","value":"city"}},{"kind":"Field","name":{"kind":"Name","value":"country"}},{"kind":"Field","name":{"kind":"Name","value":"zip"}},{"kind":"Field","name":{"kind":"Name","value":"phone"}}]}},{"kind":"Field","name":{"kind":"Name","value":"transactions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"processedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"tags"}},{"kind":"Field","name":{"kind":"Name","value":"lineItems"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"IntValue","value":"250"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"quantity"}},{"kind":"Field","name":{"kind":"Name","value":"product"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalPriceSet"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"presentmentMoney"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"currencyCode"}}]}},{"kind":"Field","name":{"kind":"Name","value":"shopMoney"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"currencyCode"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"note"}}]}}]}}]} as unknown as DocumentNode<GetOrderQuery, GetOrderQueryVariables>;

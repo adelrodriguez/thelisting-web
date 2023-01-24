@@ -1,5 +1,4 @@
 import type { MetaFunction, LinksFunction } from "@remix-run/node"
-import { json } from "@remix-run/node"
 import {
   Link,
   Links,
@@ -9,7 +8,6 @@ import {
   Scripts,
   ScrollRestoration,
   useCatch,
-  useLoaderData,
 } from "@remix-run/react"
 import { withSentry } from "@sentry/remix"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
@@ -18,14 +16,13 @@ import remixImageStyles from "remix-image/remix-image.css"
 
 import { Logo } from "~/components/branding"
 import { PublicEnv } from "~/components/utils"
-import type { PublicEnvs } from "~/components/utils"
 import { SHOPIFY_STOREFRONT_ACCESS_TOKEN } from "~/config/env.server"
 import {
   shopifyStorefrontAPIEndpoint,
   xStateVisualizer,
 } from "~/config/vars.server"
 import tailwind from "~/styles/tailwind.css"
-import type { LoaderResult } from "~/utils/remix"
+import { json, useLoaderData } from "~/utils/remix"
 
 const client = new QueryClient()
 
@@ -101,11 +98,11 @@ export function CatchBoundary() {
   )
 }
 
-export async function loader(): LoaderResult<{ env: PublicEnvs }> {
+export async function loader() {
   return json({
     env: {
-      shopifyStorefrontAccessToken: SHOPIFY_STOREFRONT_ACCESS_TOKEN,
       shopifyStorefrontAPIEndpoint,
+      shopifyStorefrontAccessToken: SHOPIFY_STOREFRONT_ACCESS_TOKEN,
       xStateVisualizer,
     },
   })

@@ -4,16 +4,18 @@ import hmacSHA256 from "crypto-js/hmac-sha256"
 
 import { HOOKDECK_SIGNING_SECRET } from "~/config/env.server"
 import prisma from "~/helpers/prisma.server"
+import { OK, Unauthorized } from "~/utils/http.server"
+import { logger } from "~/utils/log"
 
 /**
  * Verify that the webhook is originating from Hookdeck.
  */
-export async function verifyWebhook(request: Request): Promise<boolean> {
+export async function verifyWebhook(request: Request): Promise<void> {
   const headers = await request.clone().headers
 
-  const verified = headers.get("x-hookdeck-verified") === "true"
+  const isHookdeckVerified = headers.get("x-hookdeck-verified") === "true"
 
-  if (!verified) return false
+  if (!isHookdeckVerified) throw Unauthorized
 
   const body = await request.clone().text()
 
@@ -22,7 +24,9 @@ export async function verifyWebhook(request: Request): Promise<boolean> {
 
   const hmac = encodeWebhookSignature(body, HOOKDECK_SIGNING_SECRET)
 
-  return hmac === hmacHeader || hmac === hmacHeader2
+  const isPayloadVerified = hmac === hmacHeader || hmac === hmacHeader2
+
+  if (!isPayloadVerified) throw Unauthorized
 }
 
 export function encodeWebhookSignature(
@@ -33,31 +37,21 @@ export function encodeWebhookSignature(
 }
 
 /**
- * Check if we have already received this webhook call.
- * @returns true if we have already received this webhook call
+ * Check if we have already received this webhook call. Throws an OK if we have.
  */
-export async function checkIfWebhookIsRepeated(
+export async function verifyIfWebhookIsProcessed(
   webhookId: string,
   event: string,
   service: WebhookService,
   payload?: string
-): Promise<boolean> {
-  // Check if we have already received this webhook call
-  const webhook = await prisma.webhook.findFirst({
-    where: { serviceId: webhookId },
-  })
+) {
+  const webhook = await prisma.webhook.count({ where: { webhookId } })
 
-  if (webhook) return true
+  if (webhook) {
+    logger.info("Webhook already received. Ignoring...", { webhookId })
 
-  // If not, save it
-  await prisma.webhook.create({
-    data: {
-      event,
-      payload,
-      service,
-      serviceId: webhookId,
-    },
-  })
+    throw OK
+  }
 
-  return false
+  await prisma.webhook.create({ data: { event, payload, service, webhookId } })
 }
