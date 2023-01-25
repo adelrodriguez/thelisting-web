@@ -7,6 +7,7 @@ test:
 commit:
 	git add .
 	git commit -m "$m"
+	git push
 
 generate-shopify:
 	doppler run -- npm run generate:shopify

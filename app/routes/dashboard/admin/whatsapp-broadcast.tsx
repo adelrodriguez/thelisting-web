@@ -1,9 +1,8 @@
-import type { ActionArgs, TypedResponse } from "@remix-run/node"
+import type { ActionArgs } from "@remix-run/node"
 import { useActionData } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
 import { useSnackbar } from "notistack"
 import { useEffect } from "react"
-import type { ValidationErrorResponseData } from "remix-validated-form"
 import { ValidatedForm, validationError } from "remix-validated-form"
 import { z } from "zod"
 
@@ -13,7 +12,6 @@ import { FormTextArea } from "~/components/form"
 import { FormInput, FormSelect } from "~/components/form"
 import type { WhatsAppMessageTemplate } from "~/config/consts"
 import { WHATSAPP_MESSAGE_TEMPLATES } from "~/config/consts"
-import type { SendMessageResult } from "~/services/whatsapp.server"
 import whatsapp from "~/services/whatsapp.server"
 import { getFormData } from "~/utils/http.server"
 
@@ -55,12 +53,7 @@ const options: Array<SelectOption<WhatsAppMessageTemplate | undefined>> = [
   },
 ]
 
-export async function action({
-  request,
-}: ActionArgs): Promise<
-  | TypedResponse<ValidationErrorResponseData>
-  | PromiseSettledResult<SendMessageResult>[]
-> {
+export async function action({ request }: ActionArgs) {
   const formData = await getFormData(request)
   const { data, error } = await validator.validate(formData)
 
@@ -127,39 +120,36 @@ export default function WhatsAppBroadcastPage() {
           Send a pre-defined template message to multiple phone numbers.
         </p>
       </div>
-      <div className="mt-8">
-        <ValidatedForm
-          validator={validator}
-          className="mt-6 flex flex-col sm:w-[500px] gap-y-6 m-auto"
-          method="post"
-          // resetAfterSubmit
-        >
-          <FormSelect
-            label="Template"
-            name="template"
-            options={options}
-            placeholder="Select a template"
-            required
-          />
-          <FormInput name="path" label="Path" addOn="https://thelisting.do/" />
-          <FormInput
-            name="customer"
-            label="Customer"
-            description="The name of the customer(s) (e.g. José y María)"
-          />
-          <FormInput
-            name="mediaUrl"
-            label="Media URL"
-            description="The URL to the media to attach to the message"
-          />
-          <FormTextArea
-            name="phoneNumbers"
-            label="Phone Numbers"
-            description="Comma-separated list of phone numbers with country codes (e.g. 18091234567,18097654321)"
-          />
-          <FormSubmit />
-        </ValidatedForm>
-      </div>
+      <ValidatedForm
+        validator={validator}
+        className="mt-8 flex flex-col sm:w-[500px] gap-y-6 m-auto"
+        method="post"
+      >
+        <FormSelect
+          label="Template"
+          name="template"
+          options={options}
+          placeholder="Select a template"
+          required
+        />
+        <FormInput name="path" label="Path" addOn="https://thelisting.do/" />
+        <FormInput
+          name="customer"
+          label="Customer"
+          description="The name of the customer(s) (e.g. José y María)"
+        />
+        <FormInput
+          name="mediaUrl"
+          label="Media URL"
+          description="The URL to the media to attach to the message"
+        />
+        <FormTextArea
+          name="phoneNumbers"
+          label="Phone Numbers"
+          description="Comma-separated list of phone numbers with country codes (e.g. 18091234567,18097654321)"
+        />
+        <FormSubmit />
+      </ValidatedForm>
     </div>
   )
 }

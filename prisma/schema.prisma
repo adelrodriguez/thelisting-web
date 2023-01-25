@@ -22,9 +22,20 @@ model Listing {
   path      String        @unique @db.VarChar(255)
   status    ListingStatus @default(Draft)
   title     String        @db.VarChar(255)
+  type      ListingType   @default(Wedding)
+
+  owner   User   @relation(fields: [ownerId], references: [id])
+  ownerId String @db.Uuid
 
   items     Item[]
   purchases Purchase[]
+}
+
+enum ListingType {
+  Wedding    @map("Wedding")
+  Birthday   @map("Birthday")
+  BabyShower @map("Baby Shower")
+  Other      @map("Other")
 }
 
 enum ListingStatus {
@@ -95,6 +106,7 @@ model User {
 
   role        UserRole  @default(User)
   lastLoginAt DateTime?
+  Listing     Listing[]
 }
 
 enum UserRole {

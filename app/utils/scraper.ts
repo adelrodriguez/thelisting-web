@@ -44,10 +44,12 @@ export function cleanText(text?: string | null): string {
 }
 
 export async function scrapeProduct(
-  url: string
+  url: string,
+  init?: RequestInit
 ): Promise<ScrapedProductResult> {
   const res = await fetch(
-    "/api/scraper/product?" + new URLSearchParams({ url })
+    "/api/scraper/product?" + new URLSearchParams({ url }),
+    init
   )
 
   return res.json()
