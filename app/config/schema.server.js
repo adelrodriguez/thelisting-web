@@ -20,16 +20,22 @@ module.exports = z.object({
 
   HOOKDECK_SIGNING_SECRET: z.string(),
 
-  META_GRAPH_API_USER_ACCESS_TOKEN: z.string(),
+  LOGIN_SENDER_EMAIL: z.string(),
 
+  META_GRAPH_API_USER_ACCESS_TOKEN: z.string(),
   META_GRAPH_API_VERSION: z.string(),
+
   NODE_ENV: z.enum(["development", "test", "production"]),
+
+  RAILWAY_STATIC_URL: z.string().optional(),
 
   REDIS_URL: z.string().url(),
 
   REMIX_AUTH_SECRET: z.string(),
 
+  RESEND_API_KEY: z.string(),
   SENDGRID_API_KEY: z.string(),
+
   SENDGRID_SENDER_EMAIL: z.string(),
 
   SENTRY_DSN: z.string(),

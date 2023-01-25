@@ -98,7 +98,8 @@ export default function LoginPage() {
               onClose={() => navigate("/login", { replace: true })}
               type="error"
             >
-              We ran into an error. Please try again.
+              We can't find an account with that email address. Please contact
+              the administrator to create an account.
             </Alert>
           </Transition>
 
