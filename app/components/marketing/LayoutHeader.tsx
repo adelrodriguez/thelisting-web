@@ -3,21 +3,17 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline"
 import { Link } from "@remix-run/react"
 import clsx from "clsx"
 import { useState } from "react"
-import { useTranslation } from "react-i18next"
 
 import { THE_LISTING_LOGO_BLACK, THE_LISTING_LOGO_WHITE } from "~/config/consts"
 import { useCurrentRouteMatch } from "~/utils/hooks"
 
-const navigation = [
-  { href: "/pricing", key: "pricing" },
-  { href: "/about", key: "about" },
-  { href: "#", key: "examples" },
-  { href: "#", key: "faq" },
-  { href: "#", key: "contact" },
-]
-
-export default function LayoutHeader() {
-  const { t } = useTranslation("common")
+export default function LayoutHeader({
+  navigationItems,
+  loginText,
+}: {
+  navigationItems: Array<{ href: string; key: string }>
+  loginText: string
+}) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const currentMatch = useCurrentRouteMatch()
   const isIndex = currentMatch?.pathname === "/"
@@ -33,16 +29,16 @@ export default function LayoutHeader() {
                 isIndex ? "text-white" : "text-gray-700"
               )}
             >
-              {navigation.map((item) => (
+              {navigationItems.map((item) => (
                 <Link
                   key={item.key}
                   to={item.href}
                   className={clsx(
-                    "text-base font-medium rounded-lg py-2 px-3",
+                    "text-sm xl:text-base font-medium rounded-lg py-2 px-3",
                     isIndex ? "hover:bg-gray-700/70" : "hover:bg-gray-200"
                   )}
                 >
-                  {t(`navigation.${item.key}`)}
+                  {item.key}
                 </Link>
               ))}
             </div>
@@ -76,7 +72,7 @@ export default function LayoutHeader() {
             to="/login"
             className="text-base font-semibold leading-6 text-white bg-transparent"
           >
-            {t("login")} <span aria-hidden="true">&rarr;</span>
+            {loginText} <span aria-hidden="true">&rarr;</span>
           </Link>
         </div>
       </nav>
@@ -106,13 +102,13 @@ export default function LayoutHeader() {
           <div className="mt-6 flow-root">
             <div className="-my-6 divide-y divide-gray-500/10">
               <div className="space-y-2 py-6">
-                {navigation.map((item) => (
+                {navigationItems.map((item) => (
                   <a
                     key={item.key}
                     href={item.href}
                     className="-mx-3 block rounded-lg py-2 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-400/10"
                   >
-                    {t(`navigation.${item.key}`)}
+                    {item.key}
                   </a>
                 ))}
               </div>
@@ -121,7 +117,7 @@ export default function LayoutHeader() {
                   to="/login"
                   className="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-6 text-gray-900 hover:bg-gray-400/10"
                 >
-                  {t("login")} <span aria-hidden="true">&rarr;</span>
+                  {loginText} <span aria-hidden="true">&rarr;</span>
                 </Link>
               </div>
             </div>

@@ -20,5 +20,8 @@
   ],
   "[sql]": {
     "editor.defaultFormatter": "mtxr.sqltools"
+  },
+  "[xml]": {
+    "editor.defaultFormatter": "redhat.vscode-xml"
   }
 }

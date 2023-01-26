@@ -22,11 +22,11 @@ export default function LanguageCurrencySelector() {
               id="language"
               name="language"
               className="block w-full rounded-md border border-transparent bg-gray-800 bg-none text-base text-white focus:border-white focus:ring-white sm:text-sm"
-              defaultValue="English"
               onChange={handleLanguageChange}
+              defaultValue={i18next.language}
             >
-              <option value="en">English</option>
               <option value="es">Spanish</option>
+              <option value="en">English</option>
             </select>
             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2">
               <ChevronDownIcon

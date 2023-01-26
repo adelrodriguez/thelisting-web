@@ -15,7 +15,8 @@ export default function Hero({
 }) {
   return (
     <div className="relative isolate overflow-hidden bg-white">
-      <div className="w-full h-full position absolute -z-10 bg-[url('/assets/images/bottom-curve.svg')] bg-contain bg-bottom bg-no-repeat" />
+      {/* We're adding an extra pixel due to a bug in Safari */}
+      <div className="w-full h-[calc(100%+1px)] position absolute -z-10 bg-[url('/assets/images/bottom-curve.svg')] bg-contain bg-bottom bg-no-repeat" />
 
       <Image
         src="https://images.unsplash.com/photo-1520854221256-17451cc331bf?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80"

@@ -1355,6 +1355,18 @@ select {
   right: 1.5rem;
 }
 
+.top-2 {
+  top: 0.5rem;
+}
+
+.top-1 {
+  top: 0.25rem;
+}
+
+.-top-1 {
+  top: -0.25rem;
+}
+
 .isolate {
   isolation: isolate;
 }
@@ -1658,6 +1670,18 @@ select {
 
 .h-7 {
   height: 1.75rem;
+}
+
+.h-\[110\%\] {
+  height: 110%;
+}
+
+.h-\[calc\(100\%\+1px\)\] {
+  height: calc(100% + 1px);
+}
+
+.h-\[100\%\+20px\] {
+  height: 100%+20px;
 }
 
 .min-h-full {
@@ -2287,8 +2311,16 @@ select {
   background-size: contain;
 }
 
+.bg-cover {
+  background-size: cover;
+}
+
 .bg-bottom {
   background-position: bottom;
+}
+
+.bg-center {
+  background-position: center;
 }
 
 .bg-no-repeat {
@@ -4094,5 +4126,10 @@ select {
 
   .xl\:pr-12 {
     padding-right: 3rem;
+  }
+
+  .xl\:text-base {
+    font-size: 1rem;
+    line-height: 1.5rem;
   }
 }
