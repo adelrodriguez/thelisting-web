@@ -30,3 +30,9 @@ export const ONE_DAY = 60 * 60 * 24
 export const PAYMENT_FEE = 0.055
 export const SHIPPING_FEE = 300 // 300 DOP
 export const SHIPPING_METHOD = "Gestión y Entrega"
+
+// Public assets
+export const THE_LISTING_LOGO_BLACK =
+  "/assets/images/the-listing-logo-black.png"
+export const THE_LISTING_LOGO_WHITE =
+  "/assets/images/the-listing-logo-white.png"

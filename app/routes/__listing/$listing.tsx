@@ -3,7 +3,8 @@ import { Outlet } from "@remix-run/react"
 
 import { Image } from "~/components/common"
 import { Registry } from "~/components/registry"
-import { Header } from "~/components/sections"
+import { Hero } from "~/components/sections"
+import { THE_LISTING_LOGO_BLACK } from "~/config/consts"
 import prisma from "~/helpers/prisma.server"
 import { CartProvider } from "~/utils/hooks"
 import { ReasonPhrases, StatusCodes } from "~/utils/http.server"
@@ -34,15 +35,15 @@ export default function ListingPage() {
 
   return (
     <CartProvider listing={listing.id}>
-      <main>
-        <div className="h-16 p-3 lg:h-20 lg:p-4">
+      <main className="relative">
+        <div className="h-16 p-3 lg:h-20 w-full bg-white drop-shadow-md lg:p-4 sticky top-0 z-10">
           <Image
-            src="/assets/img/the-listing-logo.png"
+            src={THE_LISTING_LOGO_BLACK}
             alt="The Listing"
             className="h-full mx-auto"
           />
         </div>
-        <Header>{listing.title}</Header>
+        <Hero>{listing.title}</Hero>
         <div className="my-16 mx-12 sm:mx-24">
           <Registry items={listing.items} />
         </div>

@@ -9,6 +9,7 @@ import { Preview } from "@react-email/preview"
 import { Section } from "@react-email/section"
 import { Text } from "@react-email/text"
 
+import { THE_LISTING_LOGO_BLACK } from "~/config/consts"
 import { RAILWAY_STATIC_URL } from "~/config/env.server"
 
 export default function Email({
@@ -29,8 +30,7 @@ export default function Email({
       <Section style={main}>
         <Container style={container}>
           <Img
-            src={`${baseUrl}/assets/img/the-listing-logo.png`}
-            // width={200}
+            src={baseUrl + THE_LISTING_LOGO_BLACK}
             height={48}
             alt="The Listing"
             style={logo}

@@ -1,4 +1,4 @@
-import type { MetaFunction, LinksFunction } from "@remix-run/node"
+import type { MetaFunction, LinksFunction, LoaderArgs } from "@remix-run/node"
 import {
   Link,
   Links,
@@ -12,6 +12,7 @@ import {
 import { withSentry } from "@sentry/remix"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
+import { useTranslation } from "react-i18next"
 import remixImageStyles from "remix-image/remix-image.css"
 
 import { Logo } from "~/components/branding"
@@ -21,7 +22,9 @@ import {
   shopifyStorefrontAPIEndpoint,
   xStateVisualizer,
 } from "~/config/vars.server"
+import i18next from "~/helpers/i18next.server"
 import tailwind from "~/styles/tailwind.css"
+import { useChangeLanguage } from "~/utils/hooks"
 import { json, useLoaderData } from "~/utils/remix"
 
 const client = new QueryClient()
@@ -42,14 +45,14 @@ export const links: LinksFunction = () => [
     href: "https://fonts.gstatic.com",
     rel: "preconnect",
   },
-  {
-    href: "https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap",
-    rel: "stylesheet",
-  },
-  {
-    href: "https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&display=swap",
-    rel: "stylesheet",
-  },
+  // {
+  //   href: "https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap",
+  //   rel: "stylesheet",
+  // },
+  // {
+  //   href: "https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&display=swap",
+  //   rel: "stylesheet",
+  // },
 ]
 
 export function CatchBoundary() {
@@ -108,21 +111,27 @@ export function CatchBoundary() {
   )
 }
 
-export async function loader() {
+export async function loader({ request }: LoaderArgs) {
+  const locale = await i18next.getLocale(request)
+
   return json({
     env: {
       shopifyStorefrontAPIEndpoint,
       shopifyStorefrontAccessToken: SHOPIFY_STOREFRONT_ACCESS_TOKEN,
       xStateVisualizer,
     },
+    locale,
   })
 }
 
 function App() {
-  const data = useLoaderData<typeof loader>()
+  const { env, locale } = useLoaderData<typeof loader>()
+  const { i18n } = useTranslation()
+
+  useChangeLanguage(locale)
 
   return (
-    <html lang="en" className="h-full">
+    <html className="h-full" lang={locale} dir={i18n.dir()}>
       <head>
         <Meta />
         <Links />
@@ -132,7 +141,7 @@ function App() {
           <Outlet />
           <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
-        <PublicEnv {...data.env} />
+        <PublicEnv {...env} />
         <ScrollRestoration />
         <Scripts />
         <LiveReload />

@@ -1,7 +1,7 @@
 export default function Hero({ children }: { children: React.ReactNode }) {
   return (
     <section>
-      <div className="relative bg-indigo-800">
+      <div className="relative bg-gray-800">
         <div className="absolute inset-0">
           <img
             className="h-full w-full object-cover"
@@ -13,8 +13,8 @@ export default function Hero({ children }: { children: React.ReactNode }) {
             aria-hidden="true"
           />
         </div>
-        <div className="relative mx-auto max-w-7xl py-24 px-6 sm:py-32 lg:px-8">
-          <h1 className="text-4xl font-header font-bold tracking-tight text-white sm:text-5xl lg:text-6xl md:text-center">
+        <div className="relative mx-auto max-w-7xl py-24 px-6 sm:py-32 md:py-48 lg:py-64 lg:px-8">
+          <h1 className="text-4xl font-serif font-bold tracking-tight text-white sm:text-5xl lg:text-6xl md:text-center">
             {children}
           </h1>
         </div>
