@@ -51,8 +51,8 @@ export default function RegistryItem({
           className="h-full w-full object-cover object-center group-hover:opacity-75"
         />
       </div>
-      <h3 className="mt-4 text-sm text-gray-700">{title}</h3>
-      <p className="mt-1 text-md font-medium text-gray-900">
+      <h3 className="mt-4 text-sm text-gray-700 font-medium">{title}</h3>
+      <p className="mt-1 text-md text-gray-700 font-bold">
         <FormattedNumber
           prefix={getPriceSymbol(price.currencyCode)}
           thousands
