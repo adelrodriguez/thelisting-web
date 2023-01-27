@@ -18,7 +18,7 @@ export default function Registry({ items }: { items: Item[] }) {
           />
         )
       })}
-      <Link to="cart" relative="path" prefetch="intent">
+      <Link to="cart" relative="path" prefetch="intent" preventScrollReset>
         <button
           title="Go to cart"
           className="fixed z-2 bottom-8 right-8 bg-gray-600 w-16 h-16 rounded-full drop-shadow-lg flex justify-center items-center text-white text-4xl hover:bg-blue-700 hover:drop-shadow-2xl hover:animate-bounce duration-300"

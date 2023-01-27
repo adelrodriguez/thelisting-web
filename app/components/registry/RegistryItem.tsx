@@ -43,7 +43,7 @@ export default function RegistryItem({
   const price = variant?.price!
 
   return (
-    <Link className="group" to={id}>
+    <Link className="group" to={id} preventScrollReset>
       <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg sm:rounded-lg xl:aspect-w-7 xl:aspect-h-8">
         <Image
           src={data?.product?.variants.nodes[0]?.image?.url}

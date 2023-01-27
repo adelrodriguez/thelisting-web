@@ -61,7 +61,7 @@ export default function ListingItemDetailPage() {
           leave="ease-in duration-200"
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
-          afterLeave={() => navigate("../")}
+          afterLeave={() => navigate("../", { preventScrollReset: true })}
         >
           <div className="fixed inset-0 hidden bg-gray-500 bg-opacity-75 transition-opacity md:block" />
         </Transition.Child>
@@ -76,7 +76,7 @@ export default function ListingItemDetailPage() {
               leave="ease-in duration-200"
               leaveFrom="opacity-100 translate-y-0 md:scale-100"
               leaveTo="opacity-0 translate-y-4 md:translate-y-0 md:scale-95"
-              afterLeave={() => navigate("../")}
+              afterLeave={() => navigate("../", { preventScrollReset: true })}
             >
               <Dialog.Panel className="flex w-full transform text-left text-base transition md:my-8 md:max-w-2xl md:px-4 lg:max-w-4xl">
                 <div className="relative flex w-full items-center overflow-hidden bg-white px-4 pt-14 pb-8 shadow-2xl sm:px-6 sm:pt-8 md:p-6 lg:p-8">
