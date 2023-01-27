@@ -44,15 +44,17 @@ export default function RegistryItem({
 
   return (
     <Link className="group" to={id} preventScrollReset>
-      <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg sm:rounded-lg xl:aspect-w-7 xl:aspect-h-8">
+      <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-sm sm:rounded-md xl:aspect-w-7 xl:aspect-h-8">
         <Image
           src={data?.product?.variants.nodes[0]?.image?.url}
           alt={title}
           className="h-full w-full object-cover object-center group-hover:opacity-75"
         />
       </div>
-      <h3 className="mt-4 text-sm text-gray-700 font-medium">{title}</h3>
-      <p className="mt-1 text-md text-gray-700 font-bold">
+      <h3 className="mt-4 text-base text-gray-700 font-bold font-serif">
+        {title}
+      </h3>
+      <p className="mt-1 text-lg text-gray-700 font-bold">
         <FormattedNumber
           prefix={getPriceSymbol(price.currencyCode)}
           thousands

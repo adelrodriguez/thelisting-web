@@ -44,7 +44,7 @@ export default function ListingPage() {
           />
         </div>
         <Hero>{listing.title}</Hero>
-        <div className="my-16 mx-12 sm:mx-24">
+        <div className="my-16 mx-4 sm:mx-12">
           <Registry items={listing.items} />
         </div>
 

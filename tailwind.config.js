@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+const defaultTheme = require("tailwindcss/defaultTheme")
+
 module.exports = {
   content: ["./app/**/*.{js,ts,jsx,tsx}"],
   plugins: [
@@ -8,6 +10,11 @@ module.exports = {
     require("@tailwindcss/typography"),
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        headline: ["linotype-didot-headline", ...defaultTheme.fontFamily.serif],
+        serif: ["linotype-didot", ...defaultTheme.fontFamily.serif],
+      },
+    },
   },
 }

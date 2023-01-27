@@ -6,7 +6,7 @@ import { RegistryItem } from "~/components/registry"
 
 export default function Registry({ items }: { items: Item[] }) {
   return (
-    <div className="grid grid-cols-2 gap-y-10 gap-x-8 md:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
+    <div className="grid grid-cols-2 gap-y-10 gap-x-4 md:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
       {items.map((item) => {
         if (!item.commerceId) return null
 

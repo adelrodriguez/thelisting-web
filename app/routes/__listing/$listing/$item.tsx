@@ -91,7 +91,7 @@ export default function ListingItemDetailPage() {
 
                   <div className="grid w-full grid-cols-1 items-start gap-y-8 gap-x-6 sm:grid-cols-12 lg:gap-x-8">
                     <div className="sm:col-span-4 lg:col-span-5">
-                      <div className="aspect-w-1 aspect-h-1 overflow-hidden rounded-lg bg-gray-100">
+                      <div className="aspect-w-1 aspect-h-1 overflow-hidden rounded-sm sm:rounded-md bg-gray-100">
                         <Image
                           src={data?.product?.variants.nodes[0]?.image?.url}
                           alt={title}

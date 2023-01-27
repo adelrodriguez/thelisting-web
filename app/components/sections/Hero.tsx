@@ -14,7 +14,7 @@ export default function Hero({ children }: { children: React.ReactNode }) {
           />
         </div>
         <div className="relative mx-auto max-w-7xl py-24 px-6 sm:py-32 md:py-48 lg:py-64 lg:px-8">
-          <h1 className="text-4xl font-serif font-bold tracking-wide text-white sm:text-5xl lg:text-6xl md:text-center">
+          <h1 className="text-4xl font-headline font-bold tracking-wider text-white sm:text-5xl lg:text-6xl md:text-center">
             {children}
           </h1>
         </div>
