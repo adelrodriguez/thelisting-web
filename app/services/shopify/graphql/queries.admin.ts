@@ -1,9 +1,20 @@
-import { graphql } from "../admin/gql"
+import { graphql } from "~/services/shopify/admin/gql"
 
 export const getOrderTagsQuery = graphql(`
   query getOrderTags($id: ID!) {
     order(id: $id) {
       tags
+    }
+  }
+`)
+
+export const getOrderCustomAttributesQuery = graphql(`
+  query getOrderCustomAttributes($id: ID!) {
+    order(id: $id) {
+      customAttributes {
+        key
+        value
+      }
     }
   }
 `)
@@ -35,6 +46,10 @@ export const getOrderQuery = graphql(`
         processedAt
       }
       tags
+      customAttributes {
+        key
+        value
+      }
       lineItems(first: 250) {
         nodes {
           id
@@ -54,7 +69,6 @@ export const getOrderQuery = graphql(`
           currencyCode
         }
       }
-      note
     }
   }
 `)

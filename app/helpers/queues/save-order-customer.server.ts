@@ -6,7 +6,7 @@ import { createInvoiceQueue } from "~/helpers/queues"
 import alegra from "~/services/alegra.server"
 import Sentry from "~/services/sentry"
 import type { CreateContactResponse, GetContactResponse } from "~/utils/alegra"
-import { createContactRequestSchema } from "~/utils/alegra"
+import { CreateContactRequestSchema } from "~/utils/alegra"
 import { getShopifyId } from "~/utils/shopify"
 import { getOrder } from "~/utils/shopify.server"
 
@@ -31,7 +31,7 @@ export const processor: Processor<QueueData> = async (job) => {
     } else {
       job.log("Contact does not exist, creating it")
 
-      const request = createContactRequestSchema.parse({
+      const request = CreateContactRequestSchema.parse({
         address: {
           address: order.billingAddress?.address1,
           city: order.billingAddress?.city,

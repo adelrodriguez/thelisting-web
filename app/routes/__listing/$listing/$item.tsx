@@ -35,12 +35,22 @@ export function CatchBoundary() {
 }
 
 export default function ListingItemDetailPage() {
-  const { add } = useCart()
+  const cart = useCart()
   const item = useLoaderData<typeof loader>()
   const navigate = useNavigate()
   const { data, isLoading, isError } = useProduct(item.commerceId ?? "")
   const [open, setOpen] = useState(true)
-  const [quantity, setQuantity] = useState(!item.available ? 0 : 1)
+  const isAvailable = item.stock > 0
+  const [quantity, setQuantity] = useState(Number(isAvailable))
+
+  function handleAddToCart() {
+    const { id, commerceId } = item
+
+    if (!commerceId) throw new Error("Item must have a commerceId")
+
+    cart.add({ commerceId, id, price, quantity, variantId })
+    setOpen(false)
+  }
 
   // TODO(adelrodriguez): Handle loading and error states
   if (isLoading) return null
@@ -130,7 +140,7 @@ export default function ListingItemDetailPage() {
                           <div className="mt-6">
                             <QuantityInput
                               onChange={setQuantity}
-                              max={item.available}
+                              max={item.stock}
                               value={quantity}
                             />
                           </div>
@@ -140,13 +150,10 @@ export default function ListingItemDetailPage() {
                       <Button
                         size="lg"
                         className="mt-6 w-full"
-                        onClick={() => {
-                          add({ ...item, price, variantId }, quantity)
-                          setOpen(false)
-                        }}
-                        disabled={item.available === 0}
+                        onClick={handleAddToCart}
+                        disabled={item.stock === 0}
                       >
-                        {item.available === 0 ? "Gifted ✨" : "Add to cart"}
+                        {item.stock === 0 ? "Gifted ✨" : "Add to bag"}
                       </Button>
                     </div>
                   </div>

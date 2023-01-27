@@ -1559,14 +1559,6 @@ select {
   margin-bottom: 4rem;
 }
 
-.mt-0\.5 {
-  margin-top: 0.125rem;
-}
-
-.mt-0 {
-  margin-top: 0px;
-}
-
 .block {
   display: block;
 }
@@ -1937,11 +1929,6 @@ select {
 
 .gap-y-8 {
   row-gap: 2rem;
-}
-
-.gap-x-8 {
-  -moz-column-gap: 2rem;
-       column-gap: 2rem;
 }
 
 .gap-x-4 {
@@ -2546,10 +2533,6 @@ select {
 
 .pl-10 {
   padding-left: 2.5rem;
-}
-
-.pt-3 {
-  padding-top: 0.75rem;
 }
 
 .text-left {

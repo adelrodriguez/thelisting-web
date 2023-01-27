@@ -13,7 +13,7 @@ import {
 import { logger } from "~/utils/log"
 import {
   getShopifyWebhookHeaders,
-  orderPaymentWebhookPayloadSchema,
+  parseOrderPaymentWebhookPayload,
 } from "~/utils/shopify"
 import {
   verifyIfWebhookIsProcessed,
@@ -37,7 +37,7 @@ export async function action({ request }: ActionArgs) {
   try {
     logger.info(`Received ${event} webhook`, { webhookId })
 
-    const order = orderPaymentWebhookPayloadSchema.parse(body)
+    const order = parseOrderPaymentWebhookPayload(body)
 
     await saveOrderCustomerQueue.add(`Order #${order.number}`, {
       orderId: order.id,

@@ -4,7 +4,7 @@ import { afterEach, expect, test, vi } from "vitest"
 import { HOOKDECK_SIGNING_SECRET } from "~/config/env.server"
 import { saveOrderCustomerQueue } from "~/helpers/queues"
 import { StatusCodes } from "~/utils/http.server"
-import { orderPaymentWebhookPayloadSchema } from "~/utils/shopify"
+import { OrderPaymentWebhookPayloadSchema } from "~/utils/shopify"
 import { encodeWebhookSignature } from "~/utils/webhook.server"
 
 import { action } from "../order-paid"
@@ -27,7 +27,7 @@ afterEach(() => {
 
 test("returns Unauthorized if x-hookdeck-verified is 'false'", async () => {
   const request = new Request("https://shopify.com", {
-    body: JSON.stringify(generateMock(orderPaymentWebhookPayloadSchema)),
+    body: JSON.stringify(generateMock(OrderPaymentWebhookPayloadSchema)),
     headers: {
       "x-hookdeck-verified": "false",
     },
@@ -44,7 +44,7 @@ test("returns Unauthorized if x-hookdeck-verified is 'false'", async () => {
 })
 
 test("returns OK if the webhook is processed successfully", async () => {
-  const body = JSON.stringify(generateMock(orderPaymentWebhookPayloadSchema))
+  const body = JSON.stringify(generateMock(OrderPaymentWebhookPayloadSchema))
   const signature = encodeWebhookSignature(body, HOOKDECK_SIGNING_SECRET)
 
   const request = new Request("https://shopify.com", {
@@ -68,7 +68,7 @@ test("returns OK if the webhook is processed successfully", async () => {
 })
 
 test("calls the invoicing queue", async () => {
-  const body = JSON.stringify(generateMock(orderPaymentWebhookPayloadSchema))
+  const body = JSON.stringify(generateMock(OrderPaymentWebhookPayloadSchema))
   const signature = encodeWebhookSignature(body, HOOKDECK_SIGNING_SECRET)
 
   const request = new Request("https://shopify.com", {

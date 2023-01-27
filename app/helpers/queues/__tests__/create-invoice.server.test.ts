@@ -5,9 +5,9 @@ import { beforeEach, expect, test, vi } from "vitest"
 
 import { Alegra } from "~/services/alegra.server"
 import {
-  createInvoiceResponseSchema,
-  getCurrencyResponseSchema,
-  sendInvoiceResponseSchema,
+  CreateInvoiceResponseSchema,
+  GetCurrencyResponseSchema,
+  SendInvoiceResponseSchema,
 } from "~/utils/alegra"
 
 import type { QueueData } from "../create-invoice.server"
@@ -49,7 +49,7 @@ test("calls the GET /currencies/:code endpoint", async () => {
     .spyOn(Alegra.prototype, "currencies", "get")
     .mockImplementation(() => ({
       get: vi.fn(() =>
-        Promise.resolve(generateMock(getCurrencyResponseSchema))
+        Promise.resolve(generateMock(GetCurrencyResponseSchema))
       ),
     }))
 
@@ -60,12 +60,12 @@ test("calls the GET /currencies/:code endpoint", async () => {
 
 test("calls the POST /invoices endpoints", async () => {
   const mockCreate = vi.fn(() =>
-    Promise.resolve(generateMock(createInvoiceResponseSchema))
+    Promise.resolve(generateMock(CreateInvoiceResponseSchema))
   )
 
   vi.spyOn(Alegra.prototype, "invoices", "get").mockImplementation(() => ({
     create: mockCreate,
-    send: vi.fn(() => Promise.resolve(generateMock(sendInvoiceResponseSchema))),
+    send: vi.fn(() => Promise.resolve(generateMock(SendInvoiceResponseSchema))),
   }))
 
   await processor(job)
@@ -75,12 +75,12 @@ test("calls the POST /invoices endpoints", async () => {
 
 test("calls the POST /invoices/:id/email endpoints", async () => {
   const mockSend = vi.fn(() =>
-    Promise.resolve(generateMock(sendInvoiceResponseSchema))
+    Promise.resolve(generateMock(SendInvoiceResponseSchema))
   )
 
   vi.spyOn(Alegra.prototype, "invoices", "get").mockImplementation(() => ({
     create: vi.fn(() =>
-      Promise.resolve(generateMock(createInvoiceResponseSchema))
+      Promise.resolve(generateMock(CreateInvoiceResponseSchema))
     ),
     send: mockSend,
   }))

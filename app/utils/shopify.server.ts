@@ -1,15 +1,18 @@
 import request from "graphql-request"
 
+import { SHOPIFY_SHIPPING_ITEM_1_ID } from "~/config/env.server"
 import {
   shopifyAdminAPInHeaders,
   shopifyAdminAPIEndpoint,
+  shopifyStorefrontAPIEndpoint,
+  shopifyStorefrontAPInHeaders,
 } from "~/config/vars.server"
-import type { DraftOrderLineItemInput } from "~/services/shopify/admin"
-import { getOrderTagsQuery } from "~/services/shopify/admin"
 import {
-  draftOrderCreateMutation,
-  getOrderQuery,
+  getOrderCustomAttributesQuery,
+  getOrderTagsQuery,
 } from "~/services/shopify/admin"
+import { getOrderQuery } from "~/services/shopify/admin"
+import { createCheckoutMutation } from "~/services/shopify/storefront"
 import type { CartItem } from "~/utils/cart"
 import { ShopifyError } from "~/utils/error"
 
@@ -20,31 +23,39 @@ export async function createCheckout(
     listingId: string
   }
 ) {
-  const lineItems: DraftOrderLineItemInput[] = cartItems.map((cartItem) => ({
-    quantity: cartItem.quantity,
-    variantId: cartItem.variantId,
-  }))
-
-  // Add the shipping item
-  lineItems.push({
-    quantity: 1,
-    variantId: "gid://shopify/ProductVariant/41558180102191",
-  })
-
   const response = await request(
-    shopifyAdminAPIEndpoint,
-    draftOrderCreateMutation,
+    shopifyStorefrontAPIEndpoint,
+    createCheckoutMutation,
     {
       input: {
-        lineItems,
-        tags: [`listing-${meta.sku}`, meta.listingId],
+        customAttributes: [
+          {
+            key: "listing_id",
+            value: meta.listingId,
+          },
+          {
+            key: "listing_sku",
+            value: meta.sku,
+          },
+        ],
+        lineItems: [
+          ...cartItems.map(({ variantId, quantity }) => ({
+            quantity,
+            variantId,
+          })),
+          // Add the shipping item
+          {
+            quantity: 1,
+            variantId: SHOPIFY_SHIPPING_ITEM_1_ID,
+          },
+        ],
       },
     },
-    shopifyAdminAPInHeaders
+    shopifyStorefrontAPInHeaders
   )
 
-  const id = response.draftOrderCreate?.draftOrder?.id
-  const url = response.draftOrderCreate?.draftOrder?.invoiceUrl
+  const id = response.checkoutCreate?.checkout?.id
+  const url = response.checkoutCreate?.checkout?.webUrl
 
   if (!id || !url) {
     throw new ShopifyError(
@@ -88,4 +99,21 @@ export async function getOrderTags(id: string) {
   }
 
   return order.tags
+}
+
+export async function getOrderCustomAttributes(id: string) {
+  const { order } = await request(
+    shopifyAdminAPIEndpoint,
+    getOrderCustomAttributesQuery,
+    {
+      id,
+    },
+    shopifyAdminAPInHeaders
+  )
+
+  if (!order) {
+    throw new ShopifyError("Unable to get order", "order_get_error")
+  }
+
+  return order.customAttributes
 }

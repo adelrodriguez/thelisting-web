@@ -13,12 +13,14 @@ export default function Registry({ items }: { items: Item[] }) {
       {items.map((item) => {
         if (!item.commerceId) return null
 
+        const isAvailable = item.stock > 0
+
         return (
           <RegistryItem
             commerceId={item.commerceId}
             id={item.id}
             key={item.id}
-            available={!!item.available}
+            available={isAvailable}
           />
         )
       })}

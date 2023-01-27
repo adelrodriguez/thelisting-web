@@ -29,6 +29,7 @@ model Listing {
 
   items     Item[]
   purchases Purchase[]
+  notes     Note[]
 }
 
 enum ListingType {
@@ -54,11 +55,10 @@ model Item {
   listing   Listing @relation(fields: [listingId], references: [id])
   listingId String  @db.Uuid
 
-  title       String
   description String?
 
-  quantity  Int @default(0) // How many items the owner wants
-  available Int @default(0) // How many items are available
+  quantity Int @default(0)
+  stock    Int @default(0)
 
   itemPurchases ItemPurchase[]
 }
@@ -75,9 +75,35 @@ model Purchase {
 
   amount Float
 
-  note String?
+  note Note?
 
   itemPurchases ItemPurchase[]
+}
+
+model Note {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  listing   Listing @relation(fields: [listingId], references: [id])
+  listingId String  @db.Uuid
+
+  purchase   Purchase @relation(fields: [purchaseId], references: [id])
+  purchaseId String   @unique @db.Uuid
+
+  type NoteType
+
+  text     String?
+  imageUrl String?
+  audioUrl String?
+  videoUrl String?
+}
+
+enum NoteType {
+  Text
+  Image
+  Audio
+  Video
 }
 
 model ItemPurchase {
@@ -106,7 +132,8 @@ model User {
 
   role        UserRole  @default(User)
   lastLoginAt DateTime?
-  Listing     Listing[]
+
+  listings Listing[]
 }
 
 enum UserRole {

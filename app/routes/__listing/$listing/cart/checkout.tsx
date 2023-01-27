@@ -7,7 +7,7 @@ import { z } from "zod"
 
 import { Alert } from "~/components/common"
 import { CartItemsSchema } from "~/utils/cart"
-import { checkAvailability } from "~/utils/checkout.server"
+import { checkStock } from "~/utils/checkout.server"
 import { getFormData } from "~/utils/http.server"
 import { goToParent } from "~/utils/remix"
 import { createCheckout } from "~/utils/shopify.server"
@@ -32,9 +32,9 @@ export async function action({ request }: ActionArgs): Promise<Response> {
     const { cartItems, sku, listingId } = CheckoutDataSchema.parse(data)
 
     // Check that all items are available, in case someone messed with the cart
-    const hasAvailability = await Promise.all(cartItems.map(checkAvailability))
+    const hasStock = await Promise.all(cartItems.map(checkStock))
 
-    if (hasAvailability.some((available) => !available)) {
+    if (hasStock.some((isAvailable) => !isAvailable)) {
       throw json("Some items are no longer available.")
     }
 

@@ -53,14 +53,14 @@ export const processor: Processor<QueueData> = async (job) => {
 
       await prisma.item.update({
         data: {
-          available: { decrement: purchasedItem.quantity },
+          stock: { decrement: purchasedItem.quantity },
         },
         where: { id: item.id },
       })
 
       job.log(
-        `Updated item ${item.id} availability: ${item.available} → ${
-          item.available - purchasedItem.quantity
+        `Updated item ${item.id} availability: ${item.stock} → ${
+          item.stock - purchasedItem.quantity
         })`
       )
 

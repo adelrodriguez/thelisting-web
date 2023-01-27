@@ -36,3 +36,11 @@ export const THE_LISTING_LOGO_BLACK =
   "/assets/images/the-listing-logo-black.png"
 export const THE_LISTING_LOGO_WHITE =
   "/assets/images/the-listing-logo-white.png"
+
+// Shopify Custom Attributes
+export const CUSTOM_ATTRIBUTES = {
+  ListingId: "listing_id",
+  ListingSku: "listing_sku",
+} as const
+export type CustomAttribute =
+  typeof CUSTOM_ATTRIBUTES[keyof typeof CUSTOM_ATTRIBUTES]

@@ -1,7 +1,7 @@
 import { ListingType } from "@prisma/client"
 import type { ActionArgs } from "@remix-run/node"
 import { withZod } from "@remix-validated-form/with-zod"
-import { startOfToday, format, startOfTomorrow } from "date-fns"
+import { format, startOfTomorrow } from "date-fns"
 import { ValidatedForm, validationError } from "remix-validated-form"
 import { z } from "zod"
 
@@ -9,49 +9,42 @@ import { FormDate, FormInput, FormSelect, FormSubmit } from "~/components/form"
 import auth from "~/helpers/auth.server"
 import prisma from "~/helpers/prisma.server"
 import { getFormData, Unauthorized } from "~/utils/http.server"
+import {
+  EventDateSchema,
+  PathSchema,
+  TitleSchema,
+  TypeSchema,
+  verifyPathIsUnique,
+} from "~/utils/listing"
 import { redirect } from "~/utils/remix"
+import { getShopifyId } from "~/utils/shopify"
 
-const createListingSchema = z.object({
-  eventDate: z
+const CreateListingSchema = z.object({
+  commerceId: z
     .string()
-    .transform((value) => new Date(value))
-    .refine((value) => value > startOfToday(), {
-      message: "Event date must be in the future",
+    .optional()
+    .transform((value) => {
+      if (!value) return
+
+      return getShopifyId(value, "Order")
     }),
-  path: z
-    .string()
-    .min(1)
-    .trim()
-    .transform((value) => value.toLowerCase())
-    .transform((value) => value.replace(/[^a-z0-9]/g, "-"))
-    .transform((value) => value.replace(/-+/g, "-"))
-    .transform((value) => value.replace(/^-|-$/g, "")),
-  title: z.string().min(1),
-  type: z.enum(
-    [ListingType.BabyShower, ListingType.Wedding, ListingType.Birthday],
-    {
-      errorMap: () => ({ message: "Please select a type of event" }),
-    }
-  ),
+  eventDate: EventDateSchema,
+  path: PathSchema,
+  title: TitleSchema,
+  type: TypeSchema,
 })
 
-const validator = withZod(createListingSchema)
+const validator = withZod(CreateListingSchema)
 
 export async function action({ request }: ActionArgs) {
   const user = await auth.isAuthenticated(request)
 
   if (!user) throw Unauthorized
 
-  const createListingWithPathValidation = createListingSchema.refine(
+  const CreateListingSchemaWithUniquePath = CreateListingSchema.refine(
     async (data) => {
-      const listing = await prisma.listing.findUnique({
-        select: { id: true },
-        where: {
-          path: data.path,
-        },
-      })
-
-      return !listing
+      const result = await verifyPathIsUnique(data.path)
+      return result
     },
     {
       message: "This path is already taken",
@@ -59,7 +52,7 @@ export async function action({ request }: ActionArgs) {
     }
   )
 
-  const serverValidator = withZod(createListingWithPathValidation)
+  const serverValidator = withZod(CreateListingSchemaWithUniquePath)
   const formData = await getFormData(request)
 
   const result = await serverValidator.validate(formData)
@@ -97,6 +90,7 @@ export default function CreateListingsPage() {
         validator={validator}
         method="post"
         className="mt-8 flex flex-col sm:w-[500px] gap-y-6 m-auto"
+        resetAfterSubmit
       >
         <FormInput
           label="Title"
@@ -141,6 +135,12 @@ export default function CreateListingsPage() {
           label="Event Type"
           name="type"
           description="The type of event you're hosting"
+        />
+        <FormInput
+          addOn="gid://shopify/Collection/"
+          description="The Shopify collection ID"
+          label="Commerce ID"
+          name="commerceId"
         />
         <FormSubmit text="Create" loadingText="Creating..." />
       </ValidatedForm>

@@ -8,7 +8,7 @@ import {
 } from "~/config/env.server"
 import { createQueue } from "~/helpers/queue.server"
 import alegra from "~/services/alegra.server"
-import { createInvoiceRequestSchema } from "~/utils/alegra"
+import { CreateInvoiceRequestSchema } from "~/utils/alegra"
 import { logger } from "~/utils/log"
 import { getShopifyId } from "~/utils/shopify"
 import { getOrder } from "~/utils/shopify.server"
@@ -29,7 +29,7 @@ export const processor: Processor<QueueData> = async (job) => {
 
     const shippingFee = SHIPPING_FEE * exchangeRate
 
-    const request = createInvoiceRequestSchema.parse({
+    const request = CreateInvoiceRequestSchema.parse({
       anotation: `Para Order ${order.name}`,
       client: job.data.contactId,
       comments: [`Order ${order.name}`],

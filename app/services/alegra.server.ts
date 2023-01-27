@@ -11,12 +11,12 @@ import type {
   SendInvoiceRequest,
   SendInvoiceResponse,
 } from "~/utils/alegra"
-import { getContactResponseSchema } from "~/utils/alegra"
-import { sendInvoiceResponseSchema } from "~/utils/alegra"
-import { createInvoiceResponseSchema } from "~/utils/alegra"
+import { GetContactResponseSchema } from "~/utils/alegra"
+import { SendInvoiceResponseSchema } from "~/utils/alegra"
+import { CreateInvoiceResponseSchema } from "~/utils/alegra"
 import {
-  getCurrencyResponseSchema,
-  createContactResponseSchema,
+  GetCurrencyResponseSchema,
+  CreateContactResponseSchema,
 } from "~/utils/alegra"
 import { AlegraError } from "~/utils/error"
 import { logger } from "~/utils/log"
@@ -67,7 +67,7 @@ export class Alegra {
 
           logger.info("contacts.create response", { data })
 
-          return createContactResponseSchema.parse(data)
+          return CreateContactResponseSchema.parse(data)
         } catch (error) {
           throw new AlegraError(
             (error as Error).message,
@@ -82,7 +82,7 @@ export class Alegra {
 
           logger.info("contacts.get response", { data })
 
-          return getContactResponseSchema.parse(data)
+          return GetContactResponseSchema.parse(data)
         } catch (error) {
           throw new AlegraError((error as Error).message, "get_contact_error")
         }
@@ -112,7 +112,7 @@ export class Alegra {
 
           logger.info("currencies.get response", { data })
 
-          return getCurrencyResponseSchema.parse(data)
+          return GetCurrencyResponseSchema.parse(data)
         } catch (error) {
           throw new AlegraError((error as Error).message, "get_currency_error")
         }
@@ -131,7 +131,7 @@ export class Alegra {
 
           logger.info("invoices.create response", { data })
 
-          return createInvoiceResponseSchema.parse(data)
+          return CreateInvoiceResponseSchema.parse(data)
         } catch (error) {
           throw new AlegraError(
             (error as Error).message,
@@ -151,7 +151,7 @@ export class Alegra {
 
           logger.info("invoices.send response", { data })
 
-          return sendInvoiceResponseSchema.parse(data)
+          return SendInvoiceResponseSchema.parse(data)
         } catch (error) {
           throw new AlegraError((error as Error).message, "send_invoice_error")
         }

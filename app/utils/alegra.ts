@@ -1,23 +1,23 @@
 import { z } from "zod"
 
-export const getContactRequestSchema = z.object({
+export const GetContactRequestSchema = z.object({
   id: z.string(),
 })
-export type GetContactRequest = z.infer<typeof getContactRequestSchema>
+export type GetContactRequest = z.infer<typeof GetContactRequestSchema>
 export function parseGetContactRequest(data: unknown): GetContactRequest {
-  return getContactRequestSchema.parse(data)
+  return GetContactRequestSchema.parse(data)
 }
 
-export const getContactResponseSchema = z.object({
+export const GetContactResponseSchema = z.object({
   email: z.string().email(),
   id: z.string(),
 })
-export type GetContactResponse = z.infer<typeof getContactResponseSchema>
+export type GetContactResponse = z.infer<typeof GetContactResponseSchema>
 export function parseGetContactResponse(data: unknown): GetContactResponse {
-  return getContactResponseSchema.parse(data)
+  return GetContactResponseSchema.parse(data)
 }
 
-export const createContactRequestSchema = z.object({
+export const CreateContactRequestSchema = z.object({
   address: z.object({
     address: z.string(),
     city: z.string(),
@@ -27,43 +27,43 @@ export const createContactRequestSchema = z.object({
   phonePrimary: z.string(),
   type: z.enum(["client", "provider"]),
 })
-export type CreateContactRequest = z.infer<typeof createContactRequestSchema>
+export type CreateContactRequest = z.infer<typeof CreateContactRequestSchema>
 export function parseCreateContactRequest(data: unknown): CreateContactRequest {
-  return createContactRequestSchema.parse(data)
+  return CreateContactRequestSchema.parse(data)
 }
 
-export const createContactResponseSchema = z.object({
+export const CreateContactResponseSchema = z.object({
   email: z.string().email(),
   id: z.string(),
 })
-export type CreateContactResponse = z.infer<typeof createContactResponseSchema>
+export type CreateContactResponse = z.infer<typeof CreateContactResponseSchema>
 export function parseCreateContactResponse(
   data: unknown
 ): CreateContactResponse {
-  return createContactResponseSchema.parse(data)
+  return CreateContactResponseSchema.parse(data)
 }
 
-export const getCurrencyRequestSchema = z.object({
+export const GetCurrencyRequestSchema = z.object({
   code: z.string(),
 })
-export type GetCurrencyRequest = z.infer<typeof getCurrencyRequestSchema>
+export type GetCurrencyRequest = z.infer<typeof GetCurrencyRequestSchema>
 export function parseGetCurrencyRequest(data: unknown): GetCurrencyRequest {
-  return getCurrencyRequestSchema.parse(data)
+  return GetCurrencyRequestSchema.parse(data)
 }
 
-export const getCurrencyResponseSchema = z.object({
+export const GetCurrencyResponseSchema = z.object({
   code: z.string(),
   exchangeRate: z.number(),
   name: z.string(),
   status: z.string(),
   symbol: z.string(),
 })
-export type GetCurrencyResponse = z.infer<typeof getCurrencyResponseSchema>
+export type GetCurrencyResponse = z.infer<typeof GetCurrencyResponseSchema>
 export function parseGetCurrencyResponse(data: unknown): GetCurrencyResponse {
-  return getCurrencyResponseSchema.parse(data)
+  return GetCurrencyResponseSchema.parse(data)
 }
 
-export const createInvoiceRequestSchema = z.object({
+export const CreateInvoiceRequestSchema = z.object({
   anotation: z.string(),
   client: z.string(),
   comments: z.array(z.string()),
@@ -78,38 +78,38 @@ export const createInvoiceRequestSchema = z.object({
   ),
   status: z.enum(["open", "draft"]),
 })
-export type CreateInvoiceRequest = z.infer<typeof createInvoiceRequestSchema>
+export type CreateInvoiceRequest = z.infer<typeof CreateInvoiceRequestSchema>
 export function parseCreateInvoiceRequest(data: unknown): CreateInvoiceRequest {
-  return createInvoiceRequestSchema.parse(data)
+  return CreateInvoiceRequestSchema.parse(data)
 }
 
-export const createInvoiceResponseSchema = z.object({
+export const CreateInvoiceResponseSchema = z.object({
   id: z.string(),
   numberTemplate: z.object({
     fullNumber: z.string(),
   }),
 })
-export type CreateInvoiceResponse = z.infer<typeof createInvoiceResponseSchema>
+export type CreateInvoiceResponse = z.infer<typeof CreateInvoiceResponseSchema>
 export function parseCreateInvoiceResponse(
   data: unknown
 ): CreateInvoiceResponse {
-  return createInvoiceResponseSchema.parse(data)
+  return CreateInvoiceResponseSchema.parse(data)
 }
 
-export const sendInvoiceRequestSchema = z.object({
+export const SendInvoiceRequestSchema = z.object({
   emails: z.array(z.string().email()),
   id: z.string(),
 })
-export type SendInvoiceRequest = z.infer<typeof sendInvoiceRequestSchema>
+export type SendInvoiceRequest = z.infer<typeof SendInvoiceRequestSchema>
 export function parseSendInvoiceRequest(data: unknown): SendInvoiceRequest {
-  return sendInvoiceRequestSchema.parse(data)
+  return SendInvoiceRequestSchema.parse(data)
 }
 
-export const sendInvoiceResponseSchema = z.object({
+export const SendInvoiceResponseSchema = z.object({
   code: z.number(),
   message: z.string(),
 })
-export type SendInvoiceResponse = z.infer<typeof sendInvoiceResponseSchema>
+export type SendInvoiceResponse = z.infer<typeof SendInvoiceResponseSchema>
 export function parseSendInvoiceResponse(data: unknown): SendInvoiceResponse {
-  return sendInvoiceResponseSchema.parse(data)
+  return SendInvoiceResponseSchema.parse(data)
 }

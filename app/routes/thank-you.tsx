@@ -5,7 +5,7 @@ import * as Sentry from "@sentry/node"
 import prisma from "~/helpers/prisma.server"
 import { goHome } from "~/utils/remix"
 import { getShopifyId } from "~/utils/shopify"
-import { getOrderTags } from "~/utils/shopify.server"
+import { getOrderCustomAttributes } from "~/utils/shopify.server"
 
 export async function loader({ request }: LoaderArgs) {
   const requestUrl = new URL(request.url)
@@ -14,8 +14,12 @@ export async function loader({ request }: LoaderArgs) {
   if (!orderId) throw goHome()
 
   try {
-    // The first tag always contains the listing ID
-    const [listingId] = await getOrderTags(getShopifyId(orderId, "Order"))
+    const customAttributes = await getOrderCustomAttributes(
+      getShopifyId(orderId, "Order")
+    )
+    const listingId = customAttributes.find(
+      (attribute) => attribute.key === "listing_id"
+    )?.value
 
     if (!listingId) throw goHome()
 

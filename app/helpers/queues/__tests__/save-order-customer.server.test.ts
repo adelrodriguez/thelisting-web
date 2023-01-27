@@ -6,8 +6,8 @@ import { beforeEach, expect, test, vi } from "vitest"
 import prisma from "~/helpers/__mocks__/prisma.server"
 import { Alegra } from "~/services/alegra.server"
 import {
-  createContactResponseSchema,
-  getContactResponseSchema,
+  CreateContactResponseSchema,
+  GetContactResponseSchema,
 } from "~/utils/alegra"
 
 import type { QueueData } from "../save-order-customer.server"
@@ -45,10 +45,10 @@ beforeEach(() => {
 
 test("calls the POST /contacts endpoint", async () => {
   const mockCreate = vi.fn(() =>
-    Promise.resolve(generateMock(createContactResponseSchema))
+    Promise.resolve(generateMock(CreateContactResponseSchema))
   )
   const mockGet = vi.fn(() =>
-    Promise.resolve(generateMock(getContactResponseSchema))
+    Promise.resolve(generateMock(GetContactResponseSchema))
   )
 
   vi.spyOn(Alegra.prototype, "contacts", "get").mockImplementation(() => ({
@@ -64,10 +64,10 @@ test("calls the POST /contacts endpoint", async () => {
 
 test("calls the GET /contacts/:id endpoint if the contact already exists", async () => {
   const mockCreate = vi.fn(() =>
-    Promise.resolve(generateMock(createContactResponseSchema))
+    Promise.resolve(generateMock(CreateContactResponseSchema))
   )
   const mockGet = vi.fn(() =>
-    Promise.resolve(generateMock(getContactResponseSchema))
+    Promise.resolve(generateMock(GetContactResponseSchema))
   )
 
   prisma.customer.findUnique.mockResolvedValue({

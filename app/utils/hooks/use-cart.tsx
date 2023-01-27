@@ -19,7 +19,7 @@ type BaseCart = {
 }
 
 type Cart = BaseCart & {
-  add: (item: CartItem, quantity: number) => void
+  add: (item: CartItem) => void
   listingId: string
   remove: (item: string) => void
 }
@@ -73,15 +73,21 @@ export function CartProvider({
     storage.set("carts", carts)
   }, [carts])
 
-  function addItemToCart(item: CartItem, quantity: number) {
+  function addItemToCart({
+    commerceId,
+    id,
+    price,
+    quantity,
+    variantId,
+  }: CartItem) {
     const newItems = new Map(currentCart.items)
 
-    newItems.set(item.id, {
-      commerceId: item.commerceId,
-      id: item.id,
-      price: currency(item.price).value,
+    newItems.set(id, {
+      commerceId,
+      id,
+      price: currency(price).value,
       quantity,
-      variantId: item.variantId,
+      variantId,
     })
 
     saveCart("items", newItems)

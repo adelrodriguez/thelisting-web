@@ -1,4 +1,4 @@
-import { graphql } from "app/services/shopify/admin/gql"
+import { graphql } from "~/services/shopify/admin/gql"
 
 export const draftOrderCreateMutation = graphql(`
   mutation draftOrderCreate($input: DraftOrderInput!) {

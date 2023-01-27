@@ -1,4 +1,4 @@
-import { graphql } from "../storefront/gql"
+import { graphql } from "~/services/shopify/storefront/gql"
 
 export const getProductQuery = graphql(`
   query getProduct($id: ID!) {
