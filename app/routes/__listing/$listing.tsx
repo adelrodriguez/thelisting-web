@@ -43,7 +43,7 @@ export default function ListingPage() {
           />
         </div>
         <Hero>{listing.title}</Hero>
-        <div className="py-16 mx-4 sm:mx-12">
+        <div className="py-16 xl:px-32 2xl:px-64 mx-4 sm:mx-12">
           <Registry items={listing.items} />
         </div>
 
