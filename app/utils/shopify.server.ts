@@ -15,7 +15,6 @@ import { ShopifyError } from "~/utils/error"
 
 export async function createCheckout(
   cartItems: CartItem[],
-  note: string,
   meta: {
     sku: string
     listingId: string
@@ -38,7 +37,6 @@ export async function createCheckout(
     {
       input: {
         lineItems,
-        note,
         tags: [`listing-${meta.sku}`, meta.listingId],
       },
     },

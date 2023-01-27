@@ -46,7 +46,7 @@ export default function RegistryItem({
   const price = variant?.price!
 
   return (
-    <Link className="group" to={id} preventScrollReset>
+    <Link className="group font-body" to={id} preventScrollReset>
       <div className="relative">
         <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-sm sm:rounded-md xl:aspect-w-7 xl:aspect-h-8">
           <Image
@@ -65,7 +65,7 @@ export default function RegistryItem({
         )}
       </div>
 
-      <h3 className="mt-4 text-base text-gray-700 font-serif">{title}</h3>
+      <h3 className="mt-4 text-base text-gray-700">{title}</h3>
       <p className="mt-1 text-lg text-gray-700 font-medium">
         <FormattedNumber
           prefix={getPriceSymbol(price.currencyCode)}

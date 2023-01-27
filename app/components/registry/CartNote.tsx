@@ -1,9 +1,8 @@
 import { Dialog, Transition } from "@headlessui/react"
 import { EnvelopeIcon } from "@heroicons/react/24/solid"
-import { Fragment } from "react"
+import { Fragment, useState } from "react"
 
 import { Button, TextArea } from "~/components/common"
-import { useCart } from "~/utils/hooks"
 
 export default function CartNote({
   open,
@@ -12,7 +11,7 @@ export default function CartNote({
   open: boolean
   onClose: () => void
 }) {
-  const cart = useCart()
+  const [note, setNote] = useState("")
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -58,8 +57,8 @@ export default function CartNote({
                     <div className="mt-2 w-full">
                       <TextArea
                         className="w-full"
-                        value={cart.note}
-                        onChange={(e) => cart.setNote(e.target.value)}
+                        value={note}
+                        onChange={(e) => setNote(e.target.value)}
                       />
                     </div>
                   </div>

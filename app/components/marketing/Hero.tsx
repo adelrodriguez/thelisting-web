@@ -28,10 +28,10 @@ export default function Hero({
       <div className="px-6 lg:px-8">
         <div className="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
           <div className="text-center">
-            <h1 className="text-4xl font-bold tracking-tight text-white sm:text-6xl font-serif">
+            <h1 className="text-6xl font-bold tracking-tight text-white sm:text-6xl font-header">
               {title}
             </h1>
-            <p className="mt-6 text-xl leading-8 font-light tracking-wide text-gray-300">
+            <p className="mt-6 text-xl leading-8 font-light font-body text-gray-300">
               {subtitle}
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">

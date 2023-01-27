@@ -12,8 +12,9 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
+        body: ["basic-sans", ...defaultTheme.fontFamily.sans],
+        header: ["linotype-didot", ...defaultTheme.fontFamily.serif],
         headline: ["linotype-didot-headline", ...defaultTheme.fontFamily.serif],
-        serif: ["linotype-didot", ...defaultTheme.fontFamily.serif],
       },
     },
   },

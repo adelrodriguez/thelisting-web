@@ -16,13 +16,12 @@ export function loader() {
   return goToParent()
 }
 
-const checkoutDataSchema = z.object({
+const CheckoutDataSchema = z.object({
   cartItems: z
     .string()
     .transform((items) => JSON.parse(items))
     .transform(cartItemsSchema.parse),
   listingId: z.string(),
-  note: z.string(),
   sku: z.string(),
 })
 
@@ -30,7 +29,7 @@ export async function action({ request }: ActionArgs): Promise<Response> {
   try {
     const formData = await getFormData(request)
     const data = Object.fromEntries(formData.entries())
-    const { cartItems, sku, note, listingId } = checkoutDataSchema.parse(data)
+    const { cartItems, sku, listingId } = CheckoutDataSchema.parse(data)
 
     // Check that all items are available, in case someone messed with the cart
     const hasAvailability = await Promise.all(cartItems.map(checkAvailability))
@@ -39,7 +38,7 @@ export async function action({ request }: ActionArgs): Promise<Response> {
       throw json("Some items are no longer available.")
     }
 
-    const checkout = await createCheckout(cartItems, note, {
+    const checkout = await createCheckout(cartItems, {
       listingId,
       sku,
     })

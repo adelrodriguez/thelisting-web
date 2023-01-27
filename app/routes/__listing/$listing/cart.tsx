@@ -12,13 +12,12 @@ import { Fragment, useState } from "react"
 
 import { Button, FormattedNumber } from "~/components/common"
 import { Spinner } from "~/components/loading"
-import { CartItem, CartNote } from "~/components/registry"
+import { CartItem } from "~/components/registry"
 import { useCart, useCurrentRouteMatch } from "~/utils/hooks"
 import { getPriceSymbol } from "~/utils/money"
 
 export default function ListingCartPage() {
   const [open, setOpen] = useState(true)
-  const [showCartNote, setShowCartNote] = useState(false)
   const cart = useCart()
   const currentRouteMatch = useCurrentRouteMatch()
   const listing = useOutletContext<Listing>()
@@ -32,7 +31,6 @@ export default function ListingCartPage() {
 
     formData.append("cartItems", cartItems)
     formData.append("listingId", listing.id)
-    formData.append("note", cart.note || "")
     formData.append("sku", `${listing.sku}`)
 
     submit(formData, {
@@ -48,7 +46,7 @@ export default function ListingCartPage() {
       as={Fragment}
       afterLeave={() => navigate("../")}
     >
-      <Dialog as="div" className="relative z-10" onClose={() => setOpen(false)}>
+      <Dialog as="div" className="relative z-20" onClose={() => setOpen(false)}>
         <Transition.Child
           as={Fragment}
           enter="ease-in-out duration-500"
@@ -60,7 +58,6 @@ export default function ListingCartPage() {
         >
           <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
         </Transition.Child>
-
         <div className="fixed inset-0 overflow-hidden">
           <div className="absolute inset-0 overflow-hidden">
             <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
@@ -128,9 +125,8 @@ export default function ListingCartPage() {
                         <button
                           type="button"
                           className="font-medium text-gray-600 hover:text-gray-500"
-                          onClick={() => setShowCartNote(true)}
                         >
-                          Add a special message ✉️
+                          ✨ Add a special message to your gift ✨
                         </button>
                       </div>
                       <div className="mt-6">
@@ -160,7 +156,6 @@ export default function ListingCartPage() {
             </div>
           </div>
         </div>
-        <CartNote open={showCartNote} onClose={() => setShowCartNote(false)} />
       </Dialog>
     </Transition.Root>
   )

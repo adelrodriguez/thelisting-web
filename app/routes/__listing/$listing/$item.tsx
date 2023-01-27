@@ -52,7 +52,7 @@ export default function ListingItemDetailPage() {
 
   return (
     <Transition.Root appear show={open} as={Fragment}>
-      <Dialog as="div" className="relative z-30" onClose={setOpen}>
+      <Dialog as="div" className="relative z-20" onClose={setOpen}>
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -100,7 +100,7 @@ export default function ListingItemDetailPage() {
                       </div>
                     </div>
                     <div className="sm:col-span-8 lg:col-span-7">
-                      <h2 className="text-2xl font-bold text-gray-900 sm:pr-12 font-serif">
+                      <h2 className="text-2xl font-bold font-body text-gray-900 sm:pr-12">
                         {title}
                       </h2>
 
@@ -112,7 +112,7 @@ export default function ListingItemDetailPage() {
                           Item information
                         </h3>
 
-                        <p className="text-2xl text-gray-900">
+                        <p className="text-2xl text-gray-900 font-body">
                           <FormattedNumber
                             prefix={getPriceSymbol(price.currencyCode)}
                             thousands

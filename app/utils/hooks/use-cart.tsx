@@ -11,7 +11,6 @@ type CartItems = Map<string, CartItem>
 
 type BaseCart = {
   items: CartItems
-  note?: string
   subtotal: number
   itemCount: number
 }
@@ -20,7 +19,6 @@ type Cart = BaseCart & {
   add: (item: CartItem, quantity: number) => void
   listingId: string
   remove: (item: string) => void
-  setNote: (note: string) => void
 }
 
 const Context = createContext<Cart | undefined>(undefined)
@@ -107,9 +105,7 @@ export function CartProvider({
         itemCount,
         items: currentCart.items,
         listingId: listing,
-        note: currentCart.note,
         remove: removeItemFromCart,
-        setNote: (note) => saveCart("note", note),
         subtotal,
       }}
     >
