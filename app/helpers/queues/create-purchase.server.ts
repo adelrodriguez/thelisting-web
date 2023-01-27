@@ -39,7 +39,6 @@ export const processor: Processor<QueueData> = async (job) => {
         amount: Number(order.totalPriceSet.shopMoney.amount),
         commerceId: order.id,
         listingId,
-        note: order.note,
       },
     })
 

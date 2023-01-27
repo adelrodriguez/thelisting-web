@@ -1,7 +1,6 @@
 import type { Item } from "@prisma/client"
 import { Link } from "@remix-run/react"
 import * as Sentry from "@sentry/remix"
-import { flattenConnection } from "@shopify/storefront-kit-react"
 import clsx from "clsx"
 
 import { FormattedNumber, Image } from "~/components/common"
@@ -41,16 +40,14 @@ export default function RegistryItem({
     return null
   }
 
-  const title = data?.product?.title!
-  const variant = flattenConnection(data?.product?.variants)[0]
-  const price = variant?.price!
+  const { title, imageUrl, currencyCode, price } = data
 
   return (
     <Link className="group font-body text-center" to={id} preventScrollReset>
       <div className="relative">
         <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-sm sm:rounded-md xl:aspect-w-7 xl:aspect-h-8">
           <Image
-            src={data?.product?.variants.nodes[0]?.image?.url}
+            src={imageUrl}
             alt={title}
             className={clsx("h-full w-full object-cover object-center", {
               "group-hover:opacity-75": available,
@@ -68,11 +65,11 @@ export default function RegistryItem({
       <h3 className="mt-4 text-base text-gray-700">{title}</h3>
       <p className="mt-1 text-lg text-gray-700 font-medium">
         <FormattedNumber
-          prefix={getPriceSymbol(price.currencyCode)}
+          prefix={getPriceSymbol(currencyCode)}
           thousands
           decimals={2}
         >
-          {price.amount}
+          {price}
         </FormattedNumber>
       </p>
     </Link>

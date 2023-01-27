@@ -1,5 +1,4 @@
 import type { Item } from "@prisma/client"
-import { flattenConnection } from "@shopify/storefront-kit-react"
 
 import { FormattedNumber, Image } from "~/components/common"
 import { useProduct } from "~/utils/hooks"
@@ -17,15 +16,12 @@ export default function OrderItem({
   if (isLoading) return <div>Loading...</div>
   if (isError) return <div>Error</div>
 
-  const title = data?.product?.title!
-  const variant = flattenConnection(data?.product?.variants)[0]
-  const price = variant?.price!
-  const image = variant?.image?.url!
+  const { title, imageUrl, currencyCode, price } = data
 
   return (
     <>
       <Image
-        src={image}
+        src={imageUrl}
         alt={title}
         className="h-24 w-24 flex-none rounded-md bg-gray-100 object-cover object-center"
       />
@@ -35,11 +31,11 @@ export default function OrderItem({
       </div>
       <p className="flex-none font-medium text-gray-900">
         <FormattedNumber
-          prefix={getPriceSymbol(price.currencyCode)}
+          prefix={getPriceSymbol(currencyCode)}
           thousands
           decimals={2}
         >
-          {price.amount * quantity}
+          {price * quantity}
         </FormattedNumber>
       </p>
     </>

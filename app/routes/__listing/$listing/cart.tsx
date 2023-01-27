@@ -44,7 +44,7 @@ export default function ListingCartPage() {
       appear
       show={open}
       as={Fragment}
-      afterLeave={() => navigate("../")}
+      afterLeave={() => navigate("../", { preventScrollReset: true })}
     >
       <Dialog as="div" className="relative z-20" onClose={() => setOpen(false)}>
         <Transition.Child
@@ -75,7 +75,7 @@ export default function ListingCartPage() {
                     <div className="flex-1 overflow-y-auto py-6 px-4 sm:px-6">
                       <div className="flex items-start justify-between">
                         <Dialog.Title className="text-2xl font-bold text-gray-900 font-header">
-                          Shopping Cart
+                          Gift Bag
                         </Dialog.Title>
                         <div className="ml-3 flex h-7 items-center">
                           <button
@@ -104,23 +104,48 @@ export default function ListingCartPage() {
                       </div>
                     </div>
 
-                    <div className="border-t border-gray-200 py-6 px-4 sm:px-6">
-                      <div className="flex justify-between text-base font-medium text-gray-900">
-                        <p>Subtotal</p>
-                        <p>
-                          <FormattedNumber
-                            prefix={getPriceSymbol("DOP")}
-                            thousands
-                            decimals={2}
-                          >
-                            {cart.subtotal}
-                          </FormattedNumber>
-                        </p>
-                      </div>
-                      <p className="mt-0.5 text-sm text-gray-500">
-                        Shipping and handling to the recipient calculated at
-                        checkout.
-                      </p>
+                    <div className="py-6 px-4 border-t border-gray-200  sm:px-6">
+                      <dl className="space-y-2 text-sm font-medium text-gray-500">
+                        <div className="flex justify-between">
+                          <dt>Subtotal</dt>
+                          <dd>
+                            <FormattedNumber
+                              prefix={getPriceSymbol("DOP")}
+                              thousands
+                              decimals={2}
+                            >
+                              {cart.subtotal}
+                            </FormattedNumber>
+                          </dd>
+                        </div>
+
+                        <div className="flex justify-between">
+                          <dt>Shipping</dt>
+                          <dd>
+                            <FormattedNumber
+                              prefix={getPriceSymbol("DOP")}
+                              thousands
+                              decimals={2}
+                            >
+                              {cart.shipping}
+                            </FormattedNumber>
+                          </dd>
+                        </div>
+
+                        <div className="flex items-center justify-between  text-gray-900">
+                          <dt className="text-base">Total</dt>
+                          <dd className="text-base">
+                            <FormattedNumber
+                              prefix={getPriceSymbol("DOP")}
+                              thousands
+                              decimals={2}
+                            >
+                              {cart.total}
+                            </FormattedNumber>
+                          </dd>
+                        </div>
+                      </dl>
+
                       <div className="mt-4 flex justify-center text-center text-sm text-gray-500">
                         <button
                           type="button"
@@ -142,10 +167,10 @@ export default function ListingCartPage() {
                           {navigation.state === "submitting" ? (
                             <>
                               <Spinner />
-                              Loading...
+                              Preparing...
                             </>
                           ) : (
-                            "Checkout"
+                            "Ready to gift 🎁"
                           )}
                         </Button>
                       </div>

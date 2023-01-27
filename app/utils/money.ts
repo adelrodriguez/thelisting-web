@@ -1,12 +1,12 @@
 import { CURRENCIES } from "~/config/consts"
 
-export function getPriceSymbol(currencyCode: string): string {
+export function getPriceSymbol(currencyCode?: string): string {
   switch (currencyCode) {
     case CURRENCIES.dop:
       return "RD$ "
     case CURRENCIES.usd:
-      return "$"
+      return "US$ "
     default:
-      return currencyCode
+      return "$"
   }
 }

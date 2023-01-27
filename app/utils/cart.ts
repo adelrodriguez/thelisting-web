@@ -1,27 +1,29 @@
-import type { Item } from "@prisma/client"
 import { z } from "zod"
 
+import { SHIPPING_FEE } from "~/config/consts"
 import Storage from "~/helpers/storage"
 
-export type CartItem = Pick<Item, "id" | "title" | "commerceId"> & {
-  variantId: string
-  quantity: number
-  price: number
-}
-export const cartItemSchema: z.ZodSchema<CartItem> = z.object({
+export const CartItemSchema = z.object({
   commerceId: z.string(),
   id: z.string(),
   price: z.number().min(0),
   quantity: z.number().min(1),
-  title: z.string(),
   variantId: z.string(),
 })
-export const cartItemsSchema = z.array(cartItemSchema)
+export type CartItem = z.infer<typeof CartItemSchema>
+
+export const CartItemsSchema = z.array(CartItemSchema)
 
 export function calculateSubtotal(cartItems: CartItem[]): number {
   return cartItems.reduce((subtotal, cartItem) => {
     return subtotal + cartItem.price * cartItem.quantity
   }, 0)
+}
+
+export function calculateShipping(subtotal: number): number {
+  if (!subtotal) return 0
+
+  return SHIPPING_FEE
 }
 
 export function clearCart(listingId: string): boolean {

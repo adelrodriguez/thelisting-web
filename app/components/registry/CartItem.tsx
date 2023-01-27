@@ -8,25 +8,21 @@ import { getPriceSymbol } from "~/utils/money"
 export default function CartItem({
   commerceId,
   id,
-  title,
   quantity,
-}: Pick<Item, "id" | "commerceId" | "title"> & {
-  quantity: number
-}) {
+}: Pick<Item, "id" | "commerceId" | "quantity">) {
   const { data } = useProduct(commerceId!)
   const { remove } = useCart()
 
   // TODO(adelrodriguez): Handle loading and error states
   if (!data) return <div>Loading...</div>
 
-  const image = data.product?.variants.nodes[0]?.image!
-  const price = data.product?.variants.nodes[0]?.price!
+  const { title, price, imageUrl, currencyCode } = data
 
   return (
     <>
       <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
         <img
-          src={image.url}
+          src={imageUrl}
           alt={title}
           className="h-full w-full object-cover object-center"
         />
@@ -40,11 +36,11 @@ export default function CartItem({
             </h3>
             <p className="ml-4">
               <FormattedNumber
-                prefix={getPriceSymbol(price.currencyCode)}
+                prefix={getPriceSymbol(currencyCode)}
                 thousands
                 decimals={2}
               >
-                {price.amount}
+                {price}
               </FormattedNumber>
             </p>
           </div>

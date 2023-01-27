@@ -46,9 +46,7 @@ export default function ListingItemDetailPage() {
   if (isLoading) return null
   if (isError) return <div>Error!</div>
 
-  const title = data.product?.title!
-  const price = data.product?.variants.nodes[0]?.price!
-  const variantId = data.product?.variants.nodes[0]?.id!
+  const { title, price, variantId, imageUrl, currencyCode } = data
 
   return (
     <Transition.Root appear show={open} as={Fragment}>
@@ -93,7 +91,7 @@ export default function ListingItemDetailPage() {
                     <div className="sm:col-span-4 lg:col-span-5 ">
                       <div className="aspect-w-1 aspect-h-1 overflow-hidden rounded-sm sm:rounded-md bg-gray-100">
                         <Image
-                          src={data?.product?.variants.nodes[0]?.image?.url}
+                          src={imageUrl}
                           alt={title}
                           className="object-cover object-center"
                         />
@@ -114,11 +112,11 @@ export default function ListingItemDetailPage() {
 
                         <p className="text-2xl text-gray-900 font-body">
                           <FormattedNumber
-                            prefix={getPriceSymbol(price.currencyCode)}
+                            prefix={getPriceSymbol(currencyCode)}
                             thousands
                             decimals={2}
                           >
-                            {price.amount}
+                            {price}
                           </FormattedNumber>
                         </p>
 
@@ -143,10 +141,7 @@ export default function ListingItemDetailPage() {
                         size="lg"
                         className="mt-6 w-full"
                         onClick={() => {
-                          add(
-                            { ...item, price: price.amount, variantId },
-                            quantity
-                          )
+                          add({ ...item, price, variantId }, quantity)
                           setOpen(false)
                         }}
                         disabled={item.available === 0}

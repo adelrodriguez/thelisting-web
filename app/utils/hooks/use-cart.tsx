@@ -5,6 +5,7 @@ import { createContext, useState, useContext } from "react"
 
 import Storage from "~/helpers/storage"
 import type { CartItem } from "~/utils/cart"
+import { calculateShipping } from "~/utils/cart"
 import { calculateSubtotal } from "~/utils/cart"
 
 type CartItems = Map<string, CartItem>
@@ -12,6 +13,8 @@ type CartItems = Map<string, CartItem>
 type BaseCart = {
   items: CartItems
   subtotal: number
+  shipping: number
+  total: number
   itemCount: number
 }
 
@@ -39,13 +42,17 @@ export function CartProvider({
     items: new Map<string, CartItem>(),
     listingId: listing,
     note: undefined,
+    shipping: 0,
     subtotal: 0,
+    total: 0,
   }
   const subtotal = calculateSubtotal([...currentCart.items.values()])
   const itemCount = [...currentCart.items.values()].reduce(
     (acc, item) => acc + item.quantity,
     0
   )
+  const shipping = calculateShipping(subtotal)
+  const total = subtotal + shipping
 
   useEffect(() => {
     if (carts.size > 0) return
@@ -74,7 +81,6 @@ export function CartProvider({
       id: item.id,
       price: currency(item.price).value,
       quantity,
-      title: item.title,
       variantId: item.variantId,
     })
 
@@ -106,7 +112,9 @@ export function CartProvider({
         items: currentCart.items,
         listingId: listing,
         remove: removeItemFromCart,
+        shipping,
         subtotal,
+        total,
       }}
     >
       {children}

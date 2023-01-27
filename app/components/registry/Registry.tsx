@@ -1,4 +1,4 @@
-import { ShoppingCartIcon } from "@heroicons/react/24/solid"
+import { ShoppingBagIcon } from "@heroicons/react/24/outline"
 import type { Item } from "@prisma/client"
 import { Link } from "@remix-run/react"
 
@@ -9,7 +9,7 @@ export default function Registry({ items }: { items: Item[] }) {
   const cart = useCart()
 
   return (
-    <div className="grid grid-cols-2 gap-y-8 gap-x-8 md:grid-cols-3 xl:grid-cols-4 xl:gap-x-10">
+    <div className="grid grid-cols-2 gap-y-8 gap-x-4 md:gap-x-8 md:grid-cols-3 xl:grid-cols-4 xl:gap-x-10">
       {items.map((item) => {
         if (!item.commerceId) return null
 
@@ -32,9 +32,9 @@ export default function Registry({ items }: { items: Item[] }) {
 
           <button
             title="Go to cart"
-            className=" bg-gray-600 w-16 h-16 rounded-full drop-shadow-lg flex justify-center items-center text-white text-4xl hover:bg-blue-700 hover:drop-shadow-2xl duration-300"
+            className=" bg-gray-600 w-16 h-16 rounded-full drop-shadow-xl flex justify-center items-center text-white text-4xl hover:bg-blue-700 hover:drop-shadow-2xl duration-300"
           >
-            <ShoppingCartIcon className="h-8 w-8" />
+            <ShoppingBagIcon className="h-8 w-8" />
           </button>
         </Link>
       </div>

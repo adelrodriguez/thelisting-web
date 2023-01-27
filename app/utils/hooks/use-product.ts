@@ -1,24 +1,35 @@
-import type { UseQueryResult } from "@tanstack/react-query"
+import { flattenConnection } from "@shopify/storefront-kit-react"
 import { useQuery } from "@tanstack/react-query"
 import request from "graphql-request"
 
 import { getProductQuery } from "~/services/shopify/storefront"
-import type { GetProductQuery } from "~/services/shopify/storefront"
 
-export default function useProduct(
-  id: string
-): UseQueryResult<GetProductQuery> {
-  return useQuery(["products", id], async () =>
-    request(
-      window.env.shopifyStorefrontAPIEndpoint,
-      getProductQuery,
-      {
-        id,
+export default function useProduct(id: string) {
+  return useQuery(
+    ["products", id],
+    async () =>
+      request(
+        window.env.shopifyStorefrontAPIEndpoint,
+        getProductQuery,
+        {
+          id,
+        },
+        {
+          "X-Shopify-Storefront-Access-Token":
+            window.env.shopifyStorefrontAccessToken,
+        }
+      ),
+    {
+      select: (data) => {
+        const variant = flattenConnection(data.product?.variants)[0]
+        const imageUrl = variant?.image?.url
+        const price = variant?.price!.amount as number
+        const currencyCode = variant?.price!.currencyCode
+        const title = data.product?.title!
+        const variantId = variant?.id!
+
+        return { currencyCode, imageUrl, price, title, variantId }
       },
-      {
-        "X-Shopify-Storefront-Access-Token":
-          window.env.shopifyStorefrontAccessToken,
-      }
-    )
+    }
   )
 }

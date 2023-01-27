@@ -6,7 +6,7 @@ import * as Sentry from "@sentry/remix"
 import { z } from "zod"
 
 import { Alert } from "~/components/common"
-import { cartItemsSchema } from "~/utils/cart"
+import { CartItemsSchema } from "~/utils/cart"
 import { checkAvailability } from "~/utils/checkout.server"
 import { getFormData } from "~/utils/http.server"
 import { goToParent } from "~/utils/remix"
@@ -20,7 +20,7 @@ const CheckoutDataSchema = z.object({
   cartItems: z
     .string()
     .transform((items) => JSON.parse(items))
-    .transform(cartItemsSchema.parse),
+    .transform(CartItemsSchema.parse),
   listingId: z.string(),
   sku: z.string(),
 })
