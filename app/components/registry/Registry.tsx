@@ -18,10 +18,11 @@ export default function Registry({ items }: { items: Item[] }) {
             commerceId={item.commerceId}
             id={item.id}
             key={item.id}
+            available={!!item.available}
           />
         )
       })}
-      <div className="fixed z-2 bottom-8 right-8">
+      <div className="fixed z-2 bottom-8 right-8 group">
         <Link to="cart" relative="path" prefetch="intent" preventScrollReset>
           {!!cart.itemCount && (
             <div className="flex justify-center items-center top-0 right-0 h-5 w-5 absolute rounded-full bg-red-500 z-10 text-xs text-white">

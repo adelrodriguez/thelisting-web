@@ -36,7 +36,7 @@ export default function ListingPage() {
   return (
     <CartProvider listing={listing.id}>
       <main className="relative">
-        <div className="h-16 p-3 lg:h-20 w-full bg-white drop-shadow-md lg:p-4 sticky top-0 z-10">
+        <div className="h-16 p-3 lg:h-20 w-full bg-white drop-shadow-md lg:p-4 sticky top-0 z-20">
           <Image
             src={THE_LISTING_LOGO_BLACK}
             alt="The Listing"
