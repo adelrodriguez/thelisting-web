@@ -13,6 +13,7 @@ type BaseCart = {
   items: CartItems
   note?: string
   subtotal: number
+  itemCount: number
 }
 
 type Cart = BaseCart & {
@@ -36,12 +37,17 @@ export function CartProvider({
   // We use a Map to store the carts for each listing
   const [carts, setCarts] = useState<Map<string, BaseCart>>(new Map())
   const currentCart = carts.get(listing) || {
+    itemCount: 0,
     items: new Map<string, CartItem>(),
     listingId: listing,
     note: undefined,
     subtotal: 0,
   }
   const subtotal = calculateSubtotal([...currentCart.items.values()])
+  const itemCount = [...currentCart.items.values()].reduce(
+    (acc, item) => acc + item.quantity,
+    0
+  )
 
   useEffect(() => {
     if (carts.size > 0) return
@@ -98,6 +104,7 @@ export function CartProvider({
     <Context.Provider
       value={{
         add: addItemToCart,
+        itemCount,
         items: currentCart.items,
         listingId: listing,
         note: currentCart.note,
