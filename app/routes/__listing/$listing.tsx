@@ -1,7 +1,6 @@
 import type { LoaderArgs } from "@remix-run/node"
 import { Outlet } from "@remix-run/react"
 
-import { Image } from "~/components/common"
 import { Registry } from "~/components/registry"
 import { Hero } from "~/components/sections"
 import { THE_LISTING_LOGO_BLACK } from "~/config/consts"
@@ -37,14 +36,14 @@ export default function ListingPage() {
     <CartProvider listing={listing.id}>
       <main className="relative">
         <div className="h-16 p-3 lg:h-20 w-full bg-white drop-shadow-md lg:p-4 sticky top-0 z-20">
-          <Image
+          <img
             src={THE_LISTING_LOGO_BLACK}
             alt="The Listing"
             className="h-full mx-auto"
           />
         </div>
         <Hero>{listing.title}</Hero>
-        <div className="my-16 mx-4 sm:mx-12">
+        <div className="py-16 mx-4 sm:mx-12">
           <Registry items={listing.items} />
         </div>
 

@@ -7,24 +7,29 @@ import express from "express"
 import basicAuth from "express-basic-auth"
 
 import {
+  BULL_BOARD_PASSWORD,
+  BULL_BOARD_PORT,
+  RAILWAY_STATIC_URL,
+} from "~/config/env.server"
+import {
   saveOrderCustomerQueue,
   createInvoiceQueue,
   createPurchaseQueue,
 } from "~/helpers/queues"
 import { logger } from "~/utils/log"
 
-const port = process.env.BULL_BOARD_PORT || process.env.PORT || 3001
+const port = BULL_BOARD_PORT || process.env.PORT || 3001
 
 const serverAdapter = new ExpressAdapter()
 
 createBullBoard({
   options: {
     uiConfig: {
-      // boardLogo: {
-      //   height: 200,
-      //   path: "https://cdn.my-domain.com/logo.png",
-      //   width: "100px",
-      // },
+      boardLogo: {
+        height: "auto",
+        path: `https://${RAILWAY_STATIC_URL}/assets/images/ribbon.svg`,
+        width: 50,
+      },
       boardTitle: "The Listing",
     },
   },
@@ -40,7 +45,7 @@ app.use(
   "/",
   basicAuth({
     challenge: true,
-    users: { admin: process.env.BULL_BOARD_PASSWORD ?? "admin" },
+    users: { admin: BULL_BOARD_PASSWORD ?? "admin" },
   }),
   serverAdapter.getRouter()
 )

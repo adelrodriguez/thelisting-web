@@ -14,6 +14,9 @@ module.exports = z.object({
   BROWSERLESS_TOKEN: z.string(),
   BROWSERLESS_URL: z.string(),
 
+  BULL_BOARD_PASSWORD: z.string().optional(),
+  BULL_BOARD_PORT: z.string().optional(),
+
   COOKIE_SIGNING_SECRET: z.string(),
 
   DATABASE_URL: z.string().url(),

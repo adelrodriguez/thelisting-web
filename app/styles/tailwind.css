@@ -1456,6 +1456,11 @@ select {
   margin-right: 1rem;
 }
 
+.my-32 {
+  margin-top: 8rem;
+  margin-bottom: 8rem;
+}
+
 .mt-2 {
   margin-top: 0.5rem;
 }
