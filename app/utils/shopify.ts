@@ -1,5 +1,7 @@
 import { z } from "zod"
 
+import type { CustomAttribute } from "~/config/consts"
+import { CUSTOM_ATTRIBUTES } from "~/config/consts"
 import { BadRequest, getHeaders } from "~/utils/http.server"
 
 export const OrderPaymentWebhookPayloadSchema = z.object({
@@ -43,4 +45,16 @@ export function getShopifyWebhookHeaders(request: Request) {
 
 export function getShopifyId(id: string | number, type: "Order" | "Product") {
   return `gid://shopify/${type}/${id}`
+}
+
+export function transformCustomAttributes(
+  customAttributes: Array<{ key: string; value?: string | null }>
+): Record<CustomAttribute, string | null> {
+  return customAttributes.reduce((acc, { key, value }) => {
+    if (key in CUSTOM_ATTRIBUTES) {
+      acc[key as CustomAttribute] = value ?? null
+    }
+
+    return acc
+  }, {} as Record<CustomAttribute, string | null>)
 }

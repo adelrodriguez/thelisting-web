@@ -1,5 +1,6 @@
 import request from "graphql-request"
 
+import { CUSTOM_ATTRIBUTES } from "~/config/consts"
 import { SHOPIFY_SHIPPING_ITEM_1_ID } from "~/config/env.server"
 import {
   shopifyAdminAPInHeaders,
@@ -16,6 +17,8 @@ import { createCheckoutMutation } from "~/services/shopify/storefront"
 import type { CartItem } from "~/utils/cart"
 import { ShopifyError } from "~/utils/error"
 
+import { transformCustomAttributes } from "./shopify"
+
 export async function createCheckout(
   cartItems: CartItem[],
   meta: {
@@ -30,11 +33,11 @@ export async function createCheckout(
       input: {
         customAttributes: [
           {
-            key: "listing_id",
+            key: CUSTOM_ATTRIBUTES.ListingId,
             value: meta.listingId,
           },
           {
-            key: "listing_sku",
+            key: CUSTOM_ATTRIBUTES.ListingSku,
             value: meta.sku,
           },
         ],
@@ -115,5 +118,5 @@ export async function getOrderCustomAttributes(id: string) {
     throw new ShopifyError("Unable to get order", "order_get_error")
   }
 
-  return order.customAttributes
+  return transformCustomAttributes(order.customAttributes)
 }

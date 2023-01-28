@@ -2,6 +2,7 @@ import type { LoaderArgs } from "@remix-run/node"
 import { redirect } from "@remix-run/node"
 import * as Sentry from "@sentry/node"
 
+import { CUSTOM_ATTRIBUTES } from "~/config/consts"
 import prisma from "~/helpers/prisma.server"
 import { goHome } from "~/utils/remix"
 import { getShopifyId } from "~/utils/shopify"
@@ -17,9 +18,7 @@ export async function loader({ request }: LoaderArgs) {
     const customAttributes = await getOrderCustomAttributes(
       getShopifyId(orderId, "Order")
     )
-    const listingId = customAttributes.find(
-      (attribute) => attribute.key === "listing_id"
-    )?.value
+    const listingId = customAttributes[CUSTOM_ATTRIBUTES.ListingId]
 
     if (!listingId) throw goHome()
 
