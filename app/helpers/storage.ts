@@ -1,4 +1,5 @@
 import SuperJSON from "superjson"
+import invariant from "tiny-invariant"
 
 import { isWindowDefined } from "~/utils/window"
 
@@ -9,19 +10,20 @@ export default class Storage {
   private storage: globalThis.Storage
 
   constructor(storage: "local" | "session") {
-    if (!window) {
-      throw new Error("No window object found")
-    }
+    invariant(!isWindowDefined() || window, "No window object found")
 
-    if (storage === "session" && (!isWindowDefined() || !window.localStorage)) {
-      throw new Error("No session storage found!")
+    switch (storage) {
+      case "local":
+        invariant(!!window.localStorage, "No local storage found")
+        this.storage = localStorage
+        break
+      case "session":
+        invariant(!!window.sessionStorage, "No session storage found")
+        this.storage = sessionStorage
+        break
+      default:
+        throw new Error("Invalid storage type")
     }
-
-    if (storage === "local" && (!isWindowDefined() || !window.localStorage)) {
-      throw new Error("No local storage found!")
-    }
-
-    this.storage = storage === "local" ? localStorage : sessionStorage
   }
 
   set(key: string, data: unknown): void {
