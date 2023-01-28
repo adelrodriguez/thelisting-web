@@ -166,6 +166,9 @@ export default function LayoutFooter() {
             </div>
           </div>
           <div className="mt-12 xl:mt-0">
+            <h3 className="text-base font-medium text-white">
+              Language &amp; Currency
+            </h3>
             <LanguageCurrencySelector />
           </div>
         </div>

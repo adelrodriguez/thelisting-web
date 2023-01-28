@@ -25,6 +25,7 @@ import {
 import i18next from "~/helpers/i18next.server"
 import tailwind from "~/styles/tailwind.css"
 import { useChangeLanguage } from "~/utils/hooks"
+import { i18nCookie } from "~/utils/i18next"
 import { json, useLoaderData } from "~/utils/remix"
 
 const client = new QueryClient()
@@ -67,13 +68,15 @@ export function CatchBoundary() {
                   </a>
                 </div>
                 <div className="my-auto flex-shrink-0 py-16 sm:py-32">
-                  <p className="text-base font-semibold text-gray-600">
+                  <p className="text-base font-semibold text-gray-600 font-body">
                     {caught.status}
                   </p>
-                  <h1 className="mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
+                  <h1 className="mt-2 text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl font-header">
                     {caught.statusText}
                   </h1>
-                  <p className="mt-2 text-base text-gray-500">{caught.data}</p>
+                  <p className="mt-2 text-base text-gray-500 font-body">
+                    {caught.data}
+                  </p>
                   <div className="mt-6">
                     <Link
                       to="/"
@@ -104,14 +107,21 @@ export function CatchBoundary() {
 export async function loader({ request }: LoaderArgs) {
   const locale = await i18next.getLocale(request)
 
-  return json({
-    env: {
-      shopifyStorefrontAPIEndpoint,
-      shopifyStorefrontAccessToken: SHOPIFY_STOREFRONT_ACCESS_TOKEN,
-      xStateVisualizer,
+  return json(
+    {
+      env: {
+        shopifyStorefrontAPIEndpoint,
+        shopifyStorefrontAccessToken: SHOPIFY_STOREFRONT_ACCESS_TOKEN,
+        xStateVisualizer,
+      },
+      locale,
     },
-    locale,
-  })
+    {
+      headers: {
+        "Set-Cookie": await i18nCookie.serialize(locale),
+      },
+    }
+  )
 }
 
 function App() {

@@ -2617,16 +2617,16 @@ select {
   font-weight: 600;
 }
 
-.font-bold {
-  font-weight: 700;
+.font-extrabold {
+  font-weight: 800;
 }
 
 .font-medium {
   font-weight: 500;
 }
 
-.font-extrabold {
-  font-weight: 800;
+.font-bold {
+  font-weight: 700;
 }
 
 .font-light {
@@ -2797,6 +2797,11 @@ select {
 .text-rose-700 {
   --tw-text-opacity: 1;
   color: rgb(190 18 60 / var(--tw-text-opacity));
+}
+
+.text-gray-800 {
+  --tw-text-opacity: 1;
+  color: rgb(31 41 55 / var(--tw-text-opacity));
 }
 
 .placeholder-red-300::-moz-placeholder {

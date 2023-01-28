@@ -7,6 +7,8 @@ import { useState } from "react"
 import { THE_LISTING_LOGO_BLACK, THE_LISTING_LOGO_WHITE } from "~/config/consts"
 import { useCurrentRouteMatch } from "~/utils/hooks"
 
+import LanguageCurrencySelector from "./LanguageCurrencySelector"
+
 export default function LayoutHeader({
   navigationItems,
   loginText,
@@ -119,6 +121,12 @@ export default function LayoutHeader({
                 >
                   {loginText} <span aria-hidden="true">&rarr;</span>
                 </Link>
+              </div>
+              <div className="py-6">
+                <h3 className="text-base font-medium text-gray-700">
+                  Language &amp; Currency
+                </h3>
+                <LanguageCurrencySelector />
               </div>
             </div>
           </div>

@@ -13,7 +13,7 @@ import { Fragment, useEffect, useState } from "react"
 
 import { Button, Checkbox, FormattedNumber, Input } from "~/components/common"
 import { Spinner } from "~/components/loading"
-import { isDev } from "~/config/vars"
+import { isDevelopment } from "~/config/vars"
 import { scraperMachine } from "~/helpers/machines"
 import { downloadAsCSVFile } from "~/utils/csv"
 import { round } from "~/utils/number"
@@ -152,7 +152,9 @@ export default function ScrapeProductsTable({
       rowSelection,
     },
   })
-  const scraperService = useInterpret(scraperMachine, { devTools: isDev })
+  const scraperService = useInterpret(scraperMachine, {
+    devTools: isDevelopment,
+  })
   const isIdle = useSelector(scraperService, (state) => state.matches("idle"))
   const completed = useSelector(
     scraperService,

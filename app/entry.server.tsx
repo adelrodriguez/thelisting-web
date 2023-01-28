@@ -10,13 +10,11 @@ import { renderToPipeableStream } from "react-dom/server"
 import { I18nextProvider, initReactI18next } from "react-i18next"
 import { PassThrough } from "stream"
 
-// your i18n configuration file
+import { SENTRY_DSN } from "~/config/env.server"
+import { isProduction } from "~/config/vars"
+import i18next from "~/helpers/i18next.server"
 import prisma from "~/helpers/prisma.server"
-
-import { SENTRY_DSN } from "./config/env.server"
-import { isProduction } from "./config/vars"
-import i18next from "./helpers/i18next.server"
-import i18n from "./i18n"
+import i18n from "~/i18n"
 
 const ABORT_DELAY = 5000
 
