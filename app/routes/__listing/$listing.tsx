@@ -1,8 +1,8 @@
-import type { LoaderArgs } from "@remix-run/node"
+import type { LoaderArgs, MetaFunction } from "@remix-run/node"
 import { Outlet } from "@remix-run/react"
 
 import { Registry } from "~/components/registry"
-import { Hero } from "~/components/sections"
+import { Ribbons } from "~/components/ribbons"
 import { THE_LISTING_LOGO_BLACK } from "~/config/consts"
 import prisma from "~/helpers/prisma.server"
 import { CartProvider } from "~/utils/hooks"
@@ -15,7 +15,7 @@ export async function loader({ params }: LoaderArgs) {
   if (!path) return goHome()
 
   const listing = await prisma.listing.findFirst({
-    include: { items: true },
+    include: { items: true, ribbons: true },
     where: { path, status: "Published" },
   })
 
@@ -28,6 +28,10 @@ export async function loader({ params }: LoaderArgs) {
 
   return json(listing)
 }
+
+export const meta: MetaFunction<typeof loader> = ({ data }) => ({
+  title: data?.title ? `${data.title} | The Listing` : "The Listing",
+})
 
 export default function ListingPage() {
   const listing = useLoaderData<typeof loader>()
@@ -42,7 +46,7 @@ export default function ListingPage() {
             className="h-full mx-auto"
           />
         </div>
-        <Hero>{listing.title}</Hero>
+        <Ribbons listing={listing} />
         <div className="py-16 xl:px-32 2xl:px-64 mx-4 sm:mx-12">
           <Registry items={listing.items} />
         </div>

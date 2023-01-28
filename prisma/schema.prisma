@@ -30,6 +30,7 @@ model Listing {
   items     Item[]
   purchases Purchase[]
   notes     Note[]
+  ribbons   Ribbon[]
 }
 
 enum ListingType {
@@ -43,6 +44,24 @@ enum ListingStatus {
   Draft
   Published
   Closed
+}
+
+model Ribbon {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  listing   Listing @relation(fields: [listingId], references: [id])
+  listingId String  @db.Uuid
+
+  type     RibbonType
+  position Int        @default(0)
+
+  properties Json @default("{}") @db.Json
+}
+
+enum RibbonType {
+  Banner
 }
 
 model Item {
@@ -180,7 +199,7 @@ model Webhook {
 
   event String
 
-  payload Json?
+  payload Json? @db.Json
 }
 
 enum WebhookService {
