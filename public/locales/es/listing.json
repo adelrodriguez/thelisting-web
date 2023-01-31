@@ -1,0 +1,24 @@
+{
+  "itemInformation": "Información del artículo",
+  "itemDescription": "Descripción del artículo",
+  "addToCart": "Agregar a la bolsa 🛍",
+  "outOfStock": "Regalado ✨",
+  "quantity": {
+    "label": "Cantidad",
+    "add": "Agregar",
+    "remove": "Eliminar",
+    "abbreviation": "Cant."
+  },
+  "cart": "Tu bolsa de regalo",
+  "shippingNote": "Los artículos se enviarán a los dueños del listing.",
+  "addAMessage": "✨ Agrega un mensaje especial a tu regalo ✨",
+  "checkout": {
+    "ready": "Listo para regalar 🎁",
+    "submitting": "Preparando tu compra...",
+    "empty": "Tu bolsa está vacía"
+  },
+  "giftSent": "¡Regalo listo! 🎁",
+  "thankYou": "¡Gracias por tu regalo, {{name}}!",
+  "orderConfirmation": "Estamos preparando tu regalo. Te enviaremos un correo con la factura de gestión y entrega.",
+  "goBack": "Volver al listing"
+}

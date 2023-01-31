@@ -3,6 +3,7 @@ import type { ActionArgs, LoaderArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { useLoaderData, useNavigate } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
+import { useTranslation } from "react-i18next"
 import { ValidatedForm, validationError } from "remix-validated-form"
 import { z } from "zod"
 
@@ -18,6 +19,10 @@ const validator = withZod(
     email: z.string().email("Please enter a valid email address"),
   })
 )
+
+export const handle = {
+  i18n: ["login", "common"],
+}
 
 export async function loader({ request }: LoaderArgs) {
   const url = new URL(request.url)
@@ -55,6 +60,7 @@ export async function action({ request }: ActionArgs) {
 export default function LoginPage() {
   const { success, error } = useLoaderData<typeof loader>()
   const navigate = useNavigate()
+  const { t } = useTranslation(handle.i18n)
 
   const isSuccess = typeof success === "string"
   const isError = typeof error === "string"
@@ -65,8 +71,8 @@ export default function LoginPage() {
       <div className="flex flex-1 flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
         <main className="mx-auto w-full max-w-sm lg:w-96">
           <Logo />
-          <h2 className="my-6 text-3xl font-bold tracking-tight text-gray-900">
-            Bienvenidos a The Listing
+          <h2 className="my-6 font-header text-3xl font-bold tracking-tight text-gray-900">
+            {t("welcome")}
           </h2>
 
           <Transition
@@ -82,7 +88,7 @@ export default function LoginPage() {
               onClose={() => navigate("/login", { replace: true })}
               type="success"
             >
-              We sent you a magic link to your email. Please check your inbox.
+              {t("magicLinkSent")}
             </Alert>
           </Transition>
           <Transition
@@ -98,8 +104,7 @@ export default function LoginPage() {
               onClose={() => navigate("/login", { replace: true })}
               type="error"
             >
-              We can't find an account with that email address. Please contact
-              the administrator to create an account.
+              {t("magicLinkError")}
             </Alert>
           </Transition>
 
@@ -116,10 +121,10 @@ export default function LoginPage() {
                 required
                 type="email"
                 autoComplete="email"
-                placeholder="Enter your email"
+                placeholder={t("enterYourEmail") ?? ""}
               />
               <Button type="submit" className="w-full justify-center">
-                Log in
+                {t("common:login")}
               </Button>
             </ValidatedForm>
           </div>

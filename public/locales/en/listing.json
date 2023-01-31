@@ -1,0 +1,24 @@
+{
+  "itemInformation": "Item information",
+  "itemDescription": "Item description",
+  "addToCart": "Add to bag 🛍",
+  "outOfStock": "Gifted ✨",
+  "quantity": {
+    "label": "Quantity",
+    "add": "Add",
+    "remove": "Remove",
+    "abbreviation": "Qty."
+  },
+  "cart": "Your Gift Bag",
+  "shippingNote": "The items will be shipped to the owner of the listing.",
+  "addAMessage": "✨ Add a special message to your gift ✨",
+  "checkout": {
+    "ready": "Ready to gift 🎁",
+    "submitting": "Preparing your checkout...",
+    "empty": "Your gift bag is empty"
+  },
+  "giftSent": "Gift ready! 🎁",
+  "thankYou": "Thank you for your gift, {{name}}!",
+  "orderConfirmation": "We're preparing your gift. We'll send you an email with the invoice for the shipping and handling.",
+  "goBack": "Go back to the listing"
+}

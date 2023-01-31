@@ -1,5 +1,5 @@
 import { Dialog, Transition } from "@headlessui/react"
-import { XMarkIcon } from "@heroicons/react/24/outline"
+import { InformationCircleIcon, XMarkIcon } from "@heroicons/react/24/outline"
 import type { Listing } from "@prisma/client"
 import {
   Outlet,
@@ -9,12 +9,17 @@ import {
   useSubmit,
 } from "@remix-run/react"
 import { Fragment, useState } from "react"
+import { useTranslation } from "react-i18next"
 
 import { Button, FormattedNumber } from "~/components/common"
 import { Spinner } from "~/components/loading"
 import { CartItem } from "~/components/registry"
 import { useCart, useCurrentRouteMatch } from "~/utils/hooks"
 import { getPriceSymbol } from "~/utils/money"
+
+export const handle = {
+  i18n: ["listing", "common"],
+}
 
 export default function ListingCartPage() {
   const [open, setOpen] = useState(true)
@@ -24,6 +29,7 @@ export default function ListingCartPage() {
   const navigate = useNavigate()
   const submit = useSubmit()
   const navigation = useNavigation()
+  const { t } = useTranslation(handle.i18n)
 
   function handleSubmit() {
     const formData = new FormData()
@@ -74,8 +80,8 @@ export default function ListingCartPage() {
                   <div className="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
                     <div className="flex-1 overflow-y-auto py-6 px-4 sm:px-6">
                       <div className="flex items-start justify-between">
-                        <Dialog.Title className="text-2xl font-bold text-gray-900 font-header">
-                          Gift Bag
+                        <Dialog.Title className="font-header text-2xl font-bold text-gray-900">
+                          {t("cart")}
                         </Dialog.Title>
                         <div className="ml-3 flex h-7 items-center">
                           <button
@@ -104,10 +110,10 @@ export default function ListingCartPage() {
                       </div>
                     </div>
 
-                    <div className="py-6 px-4 border-t border-gray-200  sm:px-6">
+                    <div className="border-t border-gray-200 py-6 px-4  sm:px-6">
                       <dl className="space-y-2 text-sm font-medium text-gray-500">
                         <div className="flex justify-between">
-                          <dt>Subtotal</dt>
+                          <dt>{t("common:subtotal")}</dt>
                           <dd>
                             <FormattedNumber
                               prefix={getPriceSymbol("DOP")}
@@ -120,7 +126,10 @@ export default function ListingCartPage() {
                         </div>
 
                         <div className="flex justify-between">
-                          <dt>Shipping</dt>
+                          <dt className="flex items-center">
+                            {t("common:shipping")}
+                            <InformationCircleIcon className="ml-0.5 h-4 w-4" />
+                          </dt>
                           <dd>
                             <FormattedNumber
                               prefix={getPriceSymbol("DOP")}
@@ -133,8 +142,8 @@ export default function ListingCartPage() {
                         </div>
 
                         <div className="flex items-center justify-between  text-gray-900">
-                          <dt className="text-base">Total</dt>
-                          <dd className="text-base">
+                          <dt>{t("common:total")}</dt>
+                          <dd>
                             <FormattedNumber
                               prefix={getPriceSymbol("DOP")}
                               thousands
@@ -151,7 +160,7 @@ export default function ListingCartPage() {
                           type="button"
                           className="font-medium text-gray-600 hover:text-gray-500"
                         >
-                          ✨ Add a special message to your gift ✨
+                          {t("addAMessage")}
                         </button>
                       </div>
                       <div className="mt-6">
@@ -164,13 +173,15 @@ export default function ListingCartPage() {
                             navigation.state === "submitting"
                           }
                         >
-                          {navigation.state === "submitting" ? (
+                          {cart.items.size === 0 ? (
+                            t("checkout.empty")
+                          ) : navigation.state === "submitting" ? (
                             <>
                               <Spinner />
-                              Preparing...
+                              {t("checkout.submitting")}
                             </>
                           ) : (
-                            "Ready to gift 🎁"
+                            t("checkout.ready")
                           )}
                         </Button>
                       </div>

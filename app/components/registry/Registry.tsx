@@ -9,7 +9,7 @@ export default function Registry({ items }: { items: Item[] }) {
   const cart = useCart()
 
   return (
-    <div className="grid grid-cols-2 gap-y-8 gap-x-4 md:gap-x-8 md:grid-cols-3 xl:grid-cols-4 xl:gap-x-10">
+    <div className="grid grid-cols-2 gap-y-8 gap-x-4 md:grid-cols-3 md:gap-x-8 xl:grid-cols-4 xl:gap-x-10">
       {items.map((item) => {
         if (!item.commerceId) return null
 
@@ -24,17 +24,17 @@ export default function Registry({ items }: { items: Item[] }) {
           />
         )
       })}
-      <div className="fixed z-2 bottom-8 right-8 group">
+      <div className="z-2 group fixed bottom-8 right-8">
         <Link to="cart" relative="path" prefetch="intent" preventScrollReset>
           {!!cart.itemCount && (
-            <div className="flex justify-center items-center top-0 right-0 h-5 w-5 absolute rounded-full bg-red-500 z-10 text-xs text-white">
+            <div className="absolute top-0 right-0 z-10 flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-red-500 text-xs text-white">
               {cart.itemCount}
             </div>
           )}
 
           <button
             title="Go to cart"
-            className=" bg-gray-600 w-16 h-16 rounded-full drop-shadow-xl flex justify-center items-center text-white text-4xl hover:bg-blue-700 hover:drop-shadow-2xl duration-300"
+            className=" flex h-16 w-16 items-center justify-center rounded-full bg-gray-600 text-4xl text-white drop-shadow-xl duration-300 hover:bg-blue-700 hover:drop-shadow-2xl"
           >
             <ShoppingBagIcon className="h-8 w-8" />
           </button>

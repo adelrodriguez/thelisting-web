@@ -6,5 +6,9 @@
     "examples": "Ejemplos",
     "faq": "Preguntas",
     "contact": "Contacto"
-  }
+  },
+  "subtotal": "Subtotal",
+  "total": "Total",
+  "shipping": "Envío",
+  "billingAddress": "Dirección de facturación"
 }

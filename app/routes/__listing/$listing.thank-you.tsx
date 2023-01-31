@@ -2,6 +2,7 @@ import type { LoaderArgs } from "@remix-run/node"
 import { redirect } from "@remix-run/node"
 import { Link } from "@remix-run/react"
 import { useEffect } from "react"
+import { useTranslation } from "react-i18next"
 
 import { FormattedNumber } from "~/components/common"
 import OrderItem from "~/components/registry/OrderItem"
@@ -12,6 +13,10 @@ import { getPriceSymbol } from "~/utils/money"
 import { goHome, json, useLoaderData } from "~/utils/remix"
 import { getShopifyId } from "~/utils/shopify"
 import { getOrder } from "~/utils/shopify.server"
+
+export const handle = {
+  i18n: ["listing", "common"],
+}
 
 export async function loader({ params, request }: LoaderArgs) {
   const requestUrl = new URL(request.url)
@@ -39,6 +44,7 @@ export async function loader({ params, request }: LoaderArgs) {
 }
 
 export default function ListingThankYouPage() {
+  const { t } = useTranslation(handle.i18n)
   const { listing, order } = useLoaderData<typeof loader>()
 
   useEffect(() => {
@@ -53,7 +59,7 @@ export default function ListingThankYouPage() {
       <div className="h-80 overflow-hidden lg:absolute lg:h-full lg:w-1/2 lg:pr-4 xl:pr-12">
         <img
           src="https://images.unsplash.com/photo-1513885535751-8b9238bd345a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2340&q=80"
-          alt="TODO"
+          alt=""
           className="h-full w-full object-cover object-center"
         />
       </div>
@@ -61,12 +67,14 @@ export default function ListingThankYouPage() {
       <div>
         <div className="mx-auto max-w-2xl py-16 px-4 sm:px-6 sm:py-24 lg:grid lg:max-w-7xl lg:grid-cols-2 lg:gap-x-8 lg:px-8 lg:py-32 xl:gap-x-24">
           <div className="lg:col-start-2">
-            <h1 className="text-sm font-medium text-gray-600">Gift sent!</h1>
-            <p className="mt-2 text-4xl font-bold font-header tracking-tight text-gray-900 sm:text-5xl">
-              Thanks for your gift, {order.customer?.firstName}!
+            <h1 className="font-body text-sm font-medium text-gray-600">
+              {t("giftSent")}
+            </h1>
+            <p className="mt-2 font-headline text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
+              {t("thankYou", { name: order.customer?.firstName })}
             </p>
-            <p className="mt-2 text-base text-gray-500">
-              TODO: A thank you message for the gift sender is shown here.
+            <p className="mt-4 font-body text-base text-gray-500">
+              {t("orderConfirmation")}
             </p>
 
             <ul className="mt-6 divide-y divide-gray-200 border-t border-gray-200 text-sm font-medium text-gray-500">
@@ -81,7 +89,7 @@ export default function ListingThankYouPage() {
             </ul>
 
             <div className="flex items-center justify-between border-t border-gray-200 pt-6 text-gray-900">
-              <dt className="text-base">Total</dt>
+              <dt className="text-base">{t("common:total")}</dt>
               <dd className="text-base">
                 <FormattedNumber
                   prefix={getPriceSymbol(total.currencyCode)}
@@ -94,7 +102,9 @@ export default function ListingThankYouPage() {
             </div>
 
             <div className="mt-16 text-sm text-gray-600">
-              <dt className="font-medium text-gray-900">Billing Address</dt>
+              <dt className="font-medium text-gray-900">
+                {t("common:billingAddress")}
+              </dt>
               <dd className="mt-2">
                 <address className="not-italic">
                   <span className="block">{order.customer?.displayName}</span>
@@ -114,7 +124,7 @@ export default function ListingThankYouPage() {
                 to={"/" + listing.path}
                 className="text-sm font-medium text-gray-600 hover:text-gray-500"
               >
-                Go back to the page
+                {t("goBack")}
                 <span aria-hidden="true"> &rarr;</span>
               </Link>
             </div>

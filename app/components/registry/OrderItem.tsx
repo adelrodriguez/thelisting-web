@@ -1,4 +1,5 @@
 import type { Item } from "@prisma/client"
+import { useTranslation } from "react-i18next"
 
 import { FormattedNumber, Image } from "~/components/common"
 import { useProduct } from "~/utils/hooks"
@@ -12,6 +13,7 @@ export default function OrderItem({
   quantity: number
 }) {
   const { data, isLoading, isError } = useProduct(commerceId!)
+  const { t } = useTranslation("listing")
 
   if (isLoading) return <div>Loading...</div>
   if (isError) return <div>Error</div>
@@ -27,7 +29,9 @@ export default function OrderItem({
       />
       <div className="flex-auto space-y-1">
         <h3 className="text-gray-900">{title}</h3>
-        <p>Quantity: {quantity}</p>
+        <p>
+          {t("quantity.label")}: {quantity}
+        </p>
       </div>
       <p className="flex-none font-medium text-gray-900">
         <FormattedNumber

@@ -1,0 +1,6 @@
+{
+  "welcome": "Bienvenidos a The Listing",
+  "enterYourEmail": "Introduce tu email",
+  "magicLinkSent": "Te hemos enviado un enlace mágico a tu email. Por favor revisa tu bandeja de entrada.",
+  "magicLinkError": "No podemos encontrar una cuenta con ese email. Por favor, comuníquese con el administrador para crear una cuenta."
+}

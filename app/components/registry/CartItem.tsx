@@ -1,4 +1,5 @@
 import type { Item } from "@prisma/client"
+import { useTranslation } from "react-i18next"
 import { Link } from "react-router-dom"
 
 import { FormattedNumber } from "~/components/common"
@@ -11,7 +12,8 @@ export default function CartItem({
   quantity,
 }: Pick<Item, "id" | "commerceId" | "quantity">) {
   const { data } = useProduct(commerceId!)
-  const { remove } = useCart()
+  const cart = useCart()
+  const { t } = useTranslation("listing")
 
   // TODO(adelrodriguez): Handle loading and error states
   if (!data) return <div>Loading...</div>
@@ -46,15 +48,17 @@ export default function CartItem({
           </div>
         </div>
         <div className="flex flex-1 items-end justify-between text-sm">
-          <p className="text-gray-500">Qty {quantity}</p>
+          <p className="text-gray-500">
+            {t("quantity.abbreviation")} {quantity}
+          </p>
 
           <div className="flex">
             <button
               type="button"
               className="font-medium text-gray-600 hover:text-gray-500"
-              onClick={() => remove(id)}
+              onClick={() => cart.remove(id)}
             >
-              Remove
+              {t("quantity.remove")}
             </button>
           </div>
         </div>

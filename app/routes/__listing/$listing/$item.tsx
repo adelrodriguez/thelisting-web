@@ -3,6 +3,7 @@ import { XMarkIcon } from "@heroicons/react/24/outline"
 import type { LoaderArgs } from "@remix-run/node"
 import { useNavigate } from "@remix-run/react"
 import { Fragment, useState } from "react"
+import { useTranslation } from "react-i18next"
 
 import { Button, Image } from "~/components/common"
 import { FormattedNumber } from "~/components/common"
@@ -11,6 +12,10 @@ import prisma from "~/helpers/prisma.server"
 import { useCart, useProduct } from "~/utils/hooks"
 import { getPriceSymbol } from "~/utils/money"
 import { goToParent, json, useLoaderData } from "~/utils/remix"
+
+export const handle = {
+  i18n: "listing",
+}
 
 export async function loader({ params }: LoaderArgs) {
   const id = params.item
@@ -42,6 +47,7 @@ export default function ListingItemDetailPage() {
   const [open, setOpen] = useState(true)
   const isAvailable = item.stock > 0
   const [quantity, setQuantity] = useState(Number(isAvailable))
+  const { t } = useTranslation("listing")
 
   function handleAddToCart() {
     const { id, commerceId } = item
@@ -99,7 +105,7 @@ export default function ListingItemDetailPage() {
 
                   <div className="grid w-full grid-cols-1 items-start gap-y-8 gap-x-6 sm:grid-cols-12 lg:gap-x-8">
                     <div className="sm:col-span-4 lg:col-span-5 ">
-                      <div className="aspect-w-1 aspect-h-1 overflow-hidden rounded-sm sm:rounded-md bg-gray-100">
+                      <div className="aspect-w-1 aspect-h-1 overflow-hidden rounded-sm bg-gray-100 sm:rounded-md">
                         <Image
                           src={imageUrl}
                           alt={title}
@@ -108,7 +114,7 @@ export default function ListingItemDetailPage() {
                       </div>
                     </div>
                     <div className="sm:col-span-8 lg:col-span-7">
-                      <h2 className="text-2xl font-bold font-body text-gray-900 sm:pr-12">
+                      <h2 className="font-header text-2xl font-bold text-gray-900 sm:pr-12">
                         {title}
                       </h2>
 
@@ -117,10 +123,10 @@ export default function ListingItemDetailPage() {
                         className="mt-3"
                       >
                         <h3 id="information-heading" className="sr-only">
-                          Item information
+                          {t("itemInformation")}
                         </h3>
 
-                        <p className="text-2xl text-gray-900 font-body">
+                        <p className="font-body text-2xl text-gray-900">
                           <FormattedNumber
                             prefix={getPriceSymbol(currencyCode)}
                             thousands
@@ -131,13 +137,16 @@ export default function ListingItemDetailPage() {
                         </p>
 
                         <div className="mt-6">
-                          <h4 className="sr-only">Description</h4>
+                          <h4 className="sr-only">{t("itemDescription")}</h4>
 
                           <p className="text-sm text-gray-700">
                             {item.description}
                           </p>
 
                           <div className="mt-6">
+                            <label className="mb-2 block w-full text-sm font-semibold text-gray-700">
+                              {t("quantity.label")}
+                            </label>
                             <QuantityInput
                               onChange={setQuantity}
                               max={item.stock}
@@ -153,7 +162,7 @@ export default function ListingItemDetailPage() {
                         onClick={handleAddToCart}
                         disabled={item.stock === 0}
                       >
-                        {item.stock === 0 ? "Gifted ✨" : "Add to bag"}
+                        {item.stock === 0 ? t("outOfStock") : t("addToCart")}
                       </Button>
                     </div>
                   </div>

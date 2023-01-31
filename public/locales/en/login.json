@@ -1,0 +1,6 @@
+{
+  "welcome": "Welcome to The Listing",
+  "enterYourEmail": "Enter your email",
+  "magicLinkSent": "We sent you a magic link to your email. Please check your inbox.",
+  "magicLinkError": "We can't find an account with that email address. Please contact the administrator to create an account."
+}
