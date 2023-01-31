@@ -50,11 +50,13 @@ export function getShopifyId(id: string | number, type: "Order" | "Product") {
 export function transformCustomAttributes(
   customAttributes: Array<{ key: string; value?: string | null }>
 ): Record<CustomAttribute, string | null> {
+  const customAttributesKeys = Object.values(CUSTOM_ATTRIBUTES)
+
   return customAttributes.reduce((acc, { key, value }) => {
-    if (key in CUSTOM_ATTRIBUTES) {
-      acc[key as CustomAttribute] = value ?? null
+    if (customAttributesKeys.includes(key as CustomAttribute) && value) {
+      acc[key as CustomAttribute] = value
     }
 
     return acc
-  }, {} as Record<CustomAttribute, string | null>)
+  }, {} as Record<CustomAttribute, string>)
 }

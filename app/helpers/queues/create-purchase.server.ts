@@ -1,9 +1,10 @@
 import { flattenConnection } from "@shopify/storefront-kit-react"
 import type { Processor } from "bullmq"
 
+import { CUSTOM_ATTRIBUTES } from "~/config/consts"
 import Sentry from "~/services/sentry"
 import { GenericError } from "~/utils/error"
-import { getShopifyId } from "~/utils/shopify"
+import { getShopifyId, transformCustomAttributes } from "~/utils/shopify"
 import { getOrder } from "~/utils/shopify.server"
 
 import prisma from "../prisma.server"
@@ -17,13 +18,15 @@ export const processor: Processor<QueueData> = async (job) => {
   try {
     const order = await getOrder(getShopifyId(job.data.orderId, "Order"))
 
-    const listingId = order.tags[0]
+    const listingId = transformCustomAttributes(order.customAttributes)[
+      CUSTOM_ATTRIBUTES.ListingId
+    ]
 
     if (!listingId) {
       throw new GenericError({
         code: "listing_id_missing",
         customData: { order },
-        message: "Missing tag 'listingId' on order",
+        message: "Missing custom attribute 'listingId' on order",
       })
     }
 
