@@ -1,14 +1,20 @@
 {
+  "billingAddress": "Billing Address",
+  "cancel": "Cancel",
+  "closePanel": "Close panel",
   "login": "Log in",
   "navigation": {
-    "pricing": "Pricing",
     "about": "About",
+    "contact": "Contact",
     "examples": "Examples",
     "faq": "FAQ",
-    "contact": "Contact"
+    "pricing": "Pricing"
   },
-  "subtotal": "Subtotal",
-  "total": "Total",
+  "save": "Save",
+  "saving": "Saving",
   "shipping": "Shipping",
-  "billingAddress": "Billing Address"
+  "submit": "Submit",
+  "submitting": "Submitting",
+  "subtotal": "Subtotal",
+  "total": "Total"
 }

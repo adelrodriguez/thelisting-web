@@ -22,6 +22,7 @@ const CheckoutDataSchema = z.object({
     .transform((items) => JSON.parse(items))
     .transform(CartItemsSchema.parse),
   listingId: z.string(),
+  noteId: z.string().optional(),
   sku: z.string(),
 })
 
@@ -29,7 +30,7 @@ export async function action({ request }: ActionArgs): Promise<Response> {
   try {
     const formData = await getFormData(request)
     const data = Object.fromEntries(formData.entries())
-    const { cartItems, sku, listingId } = CheckoutDataSchema.parse(data)
+    const { cartItems, sku, listingId, noteId } = CheckoutDataSchema.parse(data)
 
     // Check that all items are available, in case someone messed with the cart
     const hasStock = await Promise.all(cartItems.map(checkStock))
@@ -40,6 +41,7 @@ export async function action({ request }: ActionArgs): Promise<Response> {
 
     const checkout = await createCheckout(cartItems, {
       listingId,
+      noteId,
       sku,
     })
 

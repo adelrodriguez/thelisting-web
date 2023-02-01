@@ -1,7 +1,6 @@
 import { flattenConnection } from "@shopify/storefront-kit-react"
 import type { Processor } from "bullmq"
 
-import { CUSTOM_ATTRIBUTES } from "~/config/consts"
 import Sentry from "~/services/sentry"
 import { GenericError } from "~/utils/error"
 import { getShopifyId, transformCustomAttributes } from "~/utils/shopify"
@@ -18,9 +17,8 @@ export const processor: Processor<QueueData> = async (job) => {
   try {
     const order = await getOrder(getShopifyId(job.data.orderId, "Order"))
 
-    const listingId = transformCustomAttributes(order.customAttributes)[
-      CUSTOM_ATTRIBUTES.ListingId
-    ]
+    const { listing_id: listingId, note_id: noteId } =
+      transformCustomAttributes(order.customAttributes)
 
     if (!listingId) {
       throw new GenericError({
@@ -44,6 +42,17 @@ export const processor: Processor<QueueData> = async (job) => {
         listingId,
       },
     })
+
+    if (noteId) {
+      await prisma.note.update({
+        data: {
+          purchaseId: purchase.id,
+        },
+        where: { id: noteId },
+      })
+
+      job.log(`Updated purchase with note ${noteId}`)
+    }
 
     job.log(`Created purchase ${purchase.id}`)
 

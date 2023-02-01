@@ -1,14 +1,20 @@
 {
+  "billingAddress": "Dirección de facturación",
+  "cancel": "Cancelar",
+  "closePanel": "Cerrar panel",
   "login": "Iniciar sesión",
   "navigation": {
-    "pricing": "Planes",
     "about": "Nosotros",
+    "contact": "Contacto",
     "examples": "Ejemplos",
     "faq": "Preguntas",
-    "contact": "Contacto"
+    "pricing": "Planes"
   },
-  "subtotal": "Subtotal",
-  "total": "Total",
+  "save": "Guardar",
+  "saving": "Guardando",
   "shipping": "Envío",
-  "billingAddress": "Dirección de facturación"
+  "submit": "Enviar",
+  "submitting": "Enviando",
+  "subtotal": "Subtotal",
+  "total": "Total"
 }

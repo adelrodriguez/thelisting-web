@@ -41,6 +41,12 @@ function Select<T extends OptionValue>(
       {label && (
         <label htmlFor={id} className="block text-sm font-medium text-gray-700">
           {label}
+          {required && (
+            <span className="text-red-500 text-xs" aria-hidden="true">
+              {" "}
+              *
+            </span>
+          )}
         </label>
       )}
       <div

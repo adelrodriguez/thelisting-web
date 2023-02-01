@@ -107,8 +107,8 @@ model Note {
   listing   Listing @relation(fields: [listingId], references: [id])
   listingId String  @db.Uuid
 
-  purchase   Purchase @relation(fields: [purchaseId], references: [id])
-  purchaseId String   @unique @db.Uuid
+  purchase   Purchase? @relation(fields: [purchaseId], references: [id])
+  purchaseId String?   @unique @db.Uuid
 
   type NoteType
 

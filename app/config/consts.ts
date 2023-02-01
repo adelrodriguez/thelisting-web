@@ -3,25 +3,25 @@ export const WHATSAPP_MESSAGE_TEMPLATES = {
   WeddingGuestNotification: "wedding_guest_notification",
 } as const
 export type WhatsAppMessageTemplate =
-  typeof WHATSAPP_MESSAGE_TEMPLATES[keyof typeof WHATSAPP_MESSAGE_TEMPLATES]
+  (typeof WHATSAPP_MESSAGE_TEMPLATES)[keyof typeof WHATSAPP_MESSAGE_TEMPLATES]
 
 export const MIME_TYPES = {
   csv: "text/csv",
   jpeg: "image/jpeg",
   png: "image/png",
 } as const
-export type FileType = typeof MIME_TYPES[keyof typeof MIME_TYPES]
+export type FileType = (typeof MIME_TYPES)[keyof typeof MIME_TYPES]
 
 export const CURRENCIES = {
   dop: "DOP",
   usd: "USD",
 } as const
-export type Currency = typeof CURRENCIES[keyof typeof CURRENCIES]
+export type Currency = (typeof CURRENCIES)[keyof typeof CURRENCIES]
 
 export const REDIS_KEYS = {
   productScraper: "scraper:product",
 } as const
-export type RedisKey = typeof REDIS_KEYS[keyof typeof REDIS_KEYS]
+export type RedisKey = (typeof REDIS_KEYS)[keyof typeof REDIS_KEYS]
 
 // Durations in seconds
 export const ONE_DAY = 60 * 60 * 24
@@ -41,6 +41,7 @@ export const THE_LISTING_LOGO_WHITE =
 export const CUSTOM_ATTRIBUTES = {
   ListingId: "listing_id",
   ListingSku: "listing_sku",
+  NoteId: "note_id",
 } as const
 export type CustomAttribute =
-  typeof CUSTOM_ATTRIBUTES[keyof typeof CUSTOM_ATTRIBUTES]
+  (typeof CUSTOM_ATTRIBUTES)[keyof typeof CUSTOM_ATTRIBUTES]

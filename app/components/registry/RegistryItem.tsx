@@ -2,6 +2,7 @@ import type { Item } from "@prisma/client"
 import { Link } from "@remix-run/react"
 import * as Sentry from "@sentry/remix"
 import clsx from "clsx"
+import { useTranslation } from "react-i18next"
 
 import { FormattedNumber, Image } from "~/components/common"
 import { useProduct } from "~/utils/hooks"
@@ -17,6 +18,7 @@ export default function RegistryItem({
   available: boolean
 }) {
   const { data, isLoading, isError, error } = useProduct(commerceId)
+  const { t } = useTranslation("listing")
 
   if (isLoading) {
     return (
@@ -25,9 +27,9 @@ export default function RegistryItem({
           <div className="h-full w-full bg-gray-200" />
         </div>
         <div className="mt-4 space-y-4">
-          <div className="h-4 bg-gray-200 rounded" />
+          <div className="h-4 rounded bg-gray-200" />
           <div className="space-y-2">
-            <div className="h-4 bg-gray-200 rounded w-1/4" />
+            <div className="h-4 w-1/4 rounded bg-gray-200" />
           </div>
         </div>
       </div>
@@ -43,7 +45,7 @@ export default function RegistryItem({
   const { title, imageUrl, currencyCode, price } = data
 
   return (
-    <Link className="group font-body text-center" to={id} preventScrollReset>
+    <Link className="group text-center font-body" to={id} preventScrollReset>
       <div className="relative">
         <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-sm sm:rounded-md xl:aspect-w-7 xl:aspect-h-8">
           <Image
@@ -56,14 +58,14 @@ export default function RegistryItem({
           />
         </div>
         {!available && (
-          <span className="absolute bottom-0 left-0 z-10 inline-flex items-center rounded-full bg-gray-700 px-3 py-0.5 text-sm lg:px-4 lg:py-1 lg:text-base font-medium text-white mb-4 ml-4">
-            ✨ Gifted
+          <span className="absolute bottom-0 left-0 z-10 mb-4 ml-4 inline-flex items-center rounded-full bg-gray-700 px-3 py-0.5 text-sm font-medium text-white lg:px-4 lg:py-1 lg:text-base">
+            {t("outOfStock")}
           </span>
         )}
       </div>
 
       <h3 className="mt-4 text-base text-gray-700">{title}</h3>
-      <p className="mt-1 text-lg text-gray-700 font-medium">
+      <p className="mt-1 text-lg font-medium text-gray-700">
         <FormattedNumber
           prefix={getPriceSymbol(currencyCode)}
           thousands

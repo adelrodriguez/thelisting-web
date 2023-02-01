@@ -20,5 +20,10 @@
   "giftSent": "Gift ready! 🎁",
   "thankYou": "Thank you for your gift, {{name}}!",
   "orderConfirmation": "We're preparing your gift. We'll send you an email with the invoice for the shipping and handling.",
-  "goBack": "Go back to the listing"
+  "goBack": "Go back to the listing",
+  "note": {
+    "title": "Add a note to your gift",
+    "subtitle": "Your note will be delivered to the recipient when the order is processed",
+    "placeholder": "Write your note here..."
+  }
 }

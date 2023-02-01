@@ -2,6 +2,7 @@ import { Dialog, Transition } from "@headlessui/react"
 import { InformationCircleIcon, XMarkIcon } from "@heroicons/react/24/outline"
 import type { Listing } from "@prisma/client"
 import {
+  Link,
   Outlet,
   useNavigate,
   useNavigation,
@@ -12,6 +13,7 @@ import { Fragment, useState } from "react"
 import { useTranslation } from "react-i18next"
 
 import { Button, FormattedNumber } from "~/components/common"
+import Tooltip from "~/components/common/Tooltip"
 import { Spinner } from "~/components/loading"
 import { CartItem } from "~/components/registry"
 import { useCart, useCurrentRouteMatch } from "~/utils/hooks"
@@ -38,6 +40,10 @@ export default function ListingCartPage() {
     formData.append("cartItems", cartItems)
     formData.append("listingId", listing.id)
     formData.append("sku", `${listing.sku}`)
+
+    if (cart.noteId) {
+      formData.append("noteId", cart.noteId)
+    }
 
     submit(formData, {
       action: `${currentRouteMatch.params.listing}/cart/checkout`,
@@ -128,7 +134,9 @@ export default function ListingCartPage() {
                         <div className="flex justify-between">
                           <dt className="flex items-center">
                             {t("common:shipping")}
-                            <InformationCircleIcon className="ml-0.5 h-4 w-4" />
+                            <Tooltip text={t("shippingNote")}>
+                              <InformationCircleIcon className="ml-0.5 h-4 w-4" />
+                            </Tooltip>
                           </dt>
                           <dd>
                             <FormattedNumber
@@ -156,12 +164,16 @@ export default function ListingCartPage() {
                       </dl>
 
                       <div className="mt-4 flex justify-center text-center text-sm text-gray-500">
-                        <button
-                          type="button"
+                        <Link
+                          to={
+                            "note" +
+                            (cart.noteId ? "?note_id=" + cart.noteId : "")
+                          }
+                          relative="route"
                           className="font-medium text-gray-600 hover:text-gray-500"
                         >
                           {t("addAMessage")}
-                        </button>
+                        </Link>
                       </div>
                       <div className="mt-6">
                         <Button

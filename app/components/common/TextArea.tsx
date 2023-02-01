@@ -4,18 +4,17 @@ import { forwardRef } from "react"
 
 function TextArea(
   {
-    defaultValue,
     label,
     name,
     rows = 4,
     id = name,
     description,
     error = false,
+    required,
     ...props
   }: {
     name?: string
     description?: string
-    defaultValue?: string
     label?: string
     error?: boolean
   } & TextareaHTMLAttributes<HTMLTextAreaElement>,
@@ -26,18 +25,23 @@ function TextArea(
       {label && (
         <label htmlFor={id} className="block text-sm font-medium text-gray-700">
           {label}
+          {required && (
+            <span className="text-xs text-red-500" aria-hidden="true">
+              {" "}
+              *
+            </span>
+          )}
         </label>
       )}
 
       <div className="mt-1">
         <textarea
+          {...props}
           className="block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm"
-          defaultValue={defaultValue}
           id={id}
           name={name}
           ref={ref}
           rows={rows}
-          {...props}
         />
       </div>
       {description && (

@@ -41,16 +41,12 @@ export const getOrderQuery = graphql(`
         zip
         phone
       }
-      transactions {
-        createdAt
-        processedAt
-      }
       tags
       customAttributes {
         key
         value
       }
-      lineItems(first: 250) {
+      lineItems(first: 20) {
         nodes {
           id
           quantity

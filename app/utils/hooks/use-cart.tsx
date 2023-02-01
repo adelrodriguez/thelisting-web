@@ -11,17 +11,19 @@ import { calculateSubtotal } from "~/utils/cart"
 type CartItems = Map<string, CartItem>
 
 type BaseCart = {
+  listingId: string
   items: CartItems
   subtotal: number
   shipping: number
   total: number
   itemCount: number
+  noteId?: string | null
 }
 
 type Cart = BaseCart & {
   add: (item: CartItem) => void
-  listingId: string
   remove: (item: string) => void
+  attachNoteId: (note: string | null) => void
 }
 
 const Context = createContext<Cart | undefined>(undefined)
@@ -41,7 +43,7 @@ export function CartProvider({
     itemCount: 0,
     items: new Map<string, CartItem>(),
     listingId: listing,
-    note: undefined,
+    noteId: undefined,
     shipping: 0,
     subtotal: 0,
     total: 0,
@@ -101,6 +103,10 @@ export function CartProvider({
     saveCart("items", newItems)
   }
 
+  function attachNoteIdToCart(noteId: string | null) {
+    saveCart("noteId", noteId)
+  }
+
   function saveCart<T extends keyof BaseCart>(key: T, value: BaseCart[T]) {
     const newCart = {
       ...currentCart,
@@ -114,9 +120,11 @@ export function CartProvider({
     <Context.Provider
       value={{
         add: addItemToCart,
+        attachNoteId: attachNoteIdToCart,
         itemCount,
         items: currentCart.items,
         listingId: listing,
+        noteId: currentCart.noteId,
         remove: removeItemFromCart,
         shipping,
         subtotal,

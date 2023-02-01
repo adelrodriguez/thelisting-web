@@ -1,5 +1,6 @@
 import request from "graphql-request"
 
+import type { CustomAttribute } from "~/config/consts"
 import { CUSTOM_ATTRIBUTES } from "~/config/consts"
 import { SHOPIFY_SHIPPING_ITEM_1_ID } from "~/config/env.server"
 import {
@@ -16,44 +17,48 @@ import { getOrderQuery } from "~/services/shopify/admin"
 import { createCheckoutMutation } from "~/services/shopify/storefront"
 import type { CartItem } from "~/utils/cart"
 import { ShopifyError } from "~/utils/error"
-
-import { transformCustomAttributes } from "./shopify"
+import { transformCustomAttributes } from "~/utils/shopify"
 
 export async function createCheckout(
   cartItems: CartItem[],
   meta: {
     sku: string
     listingId: string
+    noteId?: string
   }
 ) {
+  const lineItems = cartItems.map(({ variantId, quantity }) => ({
+    quantity,
+    variantId,
+  }))
+
+  lineItems.push({
+    quantity: 1,
+    variantId: SHOPIFY_SHIPPING_ITEM_1_ID,
+  })
+
+  const customAttributes: Array<{ key: CustomAttribute; value: string }> = [
+    {
+      key: CUSTOM_ATTRIBUTES.ListingId,
+      value: meta.listingId,
+    },
+    {
+      key: CUSTOM_ATTRIBUTES.ListingSku,
+      value: meta.sku,
+    },
+  ]
+
+  if (meta.noteId) {
+    customAttributes.push({
+      key: CUSTOM_ATTRIBUTES.NoteId,
+      value: meta.noteId,
+    })
+  }
+
   const response = await request(
     shopifyStorefrontAPIEndpoint,
     createCheckoutMutation,
-    {
-      input: {
-        customAttributes: [
-          {
-            key: CUSTOM_ATTRIBUTES.ListingId,
-            value: meta.listingId,
-          },
-          {
-            key: CUSTOM_ATTRIBUTES.ListingSku,
-            value: meta.sku,
-          },
-        ],
-        lineItems: [
-          ...cartItems.map(({ variantId, quantity }) => ({
-            quantity,
-            variantId,
-          })),
-          // Add the shipping item
-          {
-            quantity: 1,
-            variantId: SHOPIFY_SHIPPING_ITEM_1_ID,
-          },
-        ],
-      },
-    },
+    { input: { customAttributes, lineItems } },
     shopifyStorefrontAPInHeaders
   )
 

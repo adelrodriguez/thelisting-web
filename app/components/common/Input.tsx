@@ -15,6 +15,7 @@ function Input(
     id = name,
     placeholder,
     type = "text",
+    required,
     ...props
   }: {
     addOn?: string
@@ -32,6 +33,12 @@ function Input(
       {label && (
         <label htmlFor={id} className="block text-sm font-medium text-gray-700">
           {label}
+          {required && (
+            <span className="text-red-500 text-xs" aria-hidden="true">
+              {" "}
+              *
+            </span>
+          )}
         </label>
       )}
 
