@@ -1,5 +1,3 @@
-import { Dialog, Transition } from "@headlessui/react"
-import { ArrowDownTrayIcon } from "@heroicons/react/24/outline"
 import type { RowSelectionState } from "@tanstack/react-table"
 import {
   useReactTable,
@@ -11,11 +9,10 @@ import { useInterpret, useSelector } from "@xstate/react"
 import { useSnackbar } from "notistack"
 import { Fragment, useEffect, useState } from "react"
 
-import { Button, Checkbox, FormattedNumber, Input } from "~/components/common"
+import { Button, Checkbox, FormattedNumber } from "~/components/common"
 import { Spinner } from "~/components/loading"
 import { isDevelopment } from "~/config/vars"
 import { scraperMachine } from "~/helpers/machines"
-import { downloadAsCSVFile } from "~/utils/csv"
 import { round } from "~/utils/number"
 import type { ScrapedFields, ScrapedProductResult } from "~/utils/scraper"
 
@@ -74,13 +71,13 @@ const columns = [
     header: "URL",
   }),
   columnHelper.accessor("quantity", {
-    header: "Cantidad",
+    header: "Quantity",
   }),
   columnHelper.accessor("title", {
-    header: "Nombre",
+    header: "Name",
   }),
   columnHelper.accessor("description", {
-    header: "Descripción",
+    header: "Description",
   }),
   columnHelper.accessor("image", {
     cell: (props) => {
@@ -99,7 +96,7 @@ const columns = [
         </a>
       )
     },
-    header: "Imagen",
+    header: "Image",
   }),
   columnHelper.accessor("amount", {
     cell: (props) => {
@@ -113,21 +110,22 @@ const columns = [
         </FormattedNumber>
       )
     },
-    header: "Precio",
+    header: "Price",
   }),
   columnHelper.accessor("currency", {
-    header: "Moneda",
+    header: "Currency",
   }),
 ]
 
 export default function ScrapeProductsTable({
   data: initialData,
+  onExport,
 }: {
   data: ScrapeProductsTableRow[]
+  onExport: (data: ScrapeProductsTableRow[]) => void
 }) {
   const [data, setData] = useState<ScrapeProductsTableRow[]>(initialData)
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
-  const [open, setOpen] = useState(false)
   const table = useReactTable({
     columns,
     data,
@@ -214,23 +212,6 @@ export default function ScrapeProductsTable({
     }
   }
 
-  function handleExport(filename: string) {
-    const rowsToExport = selected.map((row) => ({
-      /* eslint-disable sort-keys/sort-keys-fix */
-      ID: row.id,
-      Nombre: row.title,
-      Descripción: row.description,
-      URL: row.url,
-      Cantidad: row.quantity,
-      Imagen: row.image,
-      Precio: row.amount,
-      Moneda: row.currency,
-      /* eslint-enable sort-keys/sort-keys-fix */
-    }))
-
-    downloadAsCSVFile(filename, rowsToExport)
-  }
-
   function handleScrape() {
     const rowsToScrape = data
       .filter((_, index) => rowSelection[index])
@@ -249,8 +230,8 @@ export default function ScrapeProductsTable({
             </h3>
           </div>
           <div className="mt-4 flex gap-4 sm:mt-0 sm:ml-16 sm:flex-none">
-            <Button type="button" onClick={() => setOpen(true)} size="sm">
-              Export to Wix CSV
+            <Button type="button" onClick={() => onExport(selected)} size="sm">
+              Export to CSV
             </Button>
 
             <Button type="button" onClick={handleScrape} disabled={!isIdle}>
@@ -265,14 +246,12 @@ export default function ScrapeProductsTable({
             </Button>
 
             {!isIdle && (
-              // TODO(adelrodriguez): Use a button component instead
-              <button
-                type="button"
-                className="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+              <Button
+                variant="secondary"
                 onClick={() => scraperService.send("CANCEL")}
               >
                 Stop
-              </button>
+              </Button>
             )}
           </div>
         </div>
@@ -322,87 +301,6 @@ export default function ScrapeProductsTable({
           </div>
         </div>
       </div>
-      <FilenameModal
-        open={open}
-        onClose={() => setOpen(false)}
-        onExport={handleExport}
-      />
     </>
-  )
-}
-
-function FilenameModal({
-  open,
-  onClose,
-  onExport,
-}: {
-  open: boolean
-  onClose: () => void
-  onExport: (filename: string) => void
-}) {
-  const [filename, setFilename] = useState("")
-
-  function handleSubmit() {
-    onClose()
-    onExport(filename)
-  }
-
-  return (
-    <Transition.Root show={open} as={Fragment}>
-      <Dialog as="div" className="relative z-10" onClose={onClose}>
-        <Transition.Child
-          as={Fragment}
-          enter="ease-out duration-300"
-          enterFrom="opacity-0"
-          enterTo="opacity-100"
-          leave="ease-in duration-200"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
-        >
-          <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
-        </Transition.Child>
-
-        <div className="fixed inset-0 z-10 overflow-y-auto">
-          <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-            <Transition.Child
-              as={Fragment}
-              enter="ease-out duration-300"
-              enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-              enterTo="opacity-100 translate-y-0 sm:scale-100"
-              leave="ease-in duration-200"
-              leaveFrom="opacity-100 translate-y-0 sm:scale-100"
-              leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-            >
-              <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6">
-                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
-                  <ArrowDownTrayIcon className="h-6 w-6" aria-hidden="true" />
-                </div>
-                <div className="mt-3 sm:mt-5">
-                  <Dialog.Title
-                    as="h3"
-                    className="text-lg text-center font-medium leading-6 text-gray-900"
-                  >
-                    Export your CSV file
-                  </Dialog.Title>
-                  <div className="mt-2">
-                    <Input
-                      name="filename"
-                      label="Filename"
-                      placeholder="my-csv-file.csv"
-                      onChange={(e) => setFilename(e.target.value)}
-                    />
-                  </div>
-                </div>
-                <div className="mt-4 sm:mt-5">
-                  <Button onClick={handleSubmit} className="w-full">
-                    Download
-                  </Button>
-                </div>
-              </Dialog.Panel>
-            </Transition.Child>
-          </div>
-        </div>
-      </Dialog>
-    </Transition.Root>
   )
 }
