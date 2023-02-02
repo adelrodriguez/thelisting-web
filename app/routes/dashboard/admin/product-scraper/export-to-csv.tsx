@@ -1,14 +1,14 @@
 import { Dialog, Transition } from "@headlessui/react"
 import { ArrowDownTrayIcon } from "@heroicons/react/24/outline"
-import { useNavigate, useOutletContext } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
-import { Fragment, useState } from "react"
+import { Fragment } from "react"
 import { ValidatedForm } from "remix-validated-form"
 import { z } from "zod"
 
-import type { ScrapeProductsTableRow } from "~/components/admin"
 import { FormInput, FormSubmit } from "~/components/form"
+import { useScrapedProducts } from "~/routes/dashboard/admin/product-scraper"
 import { downloadAsCSVFile } from "~/utils/csv"
+import { useDialogPage } from "~/utils/hooks"
 
 const ExportCSVSchema = z.object({
   filename: z.string().min(1),
@@ -17,20 +17,12 @@ const ExportCSVSchema = z.object({
 const validator = withZod(ExportCSVSchema)
 
 export default function ExportCSVPage() {
-  const [open, setOpen] = useState(true)
-  const { exportData } = useOutletContext<{
-    exportData: ScrapeProductsTableRow[]
-  }>()
-  const navigate = useNavigate()
+  const { open, close, leave } = useDialogPage()
+  const { products } = useScrapedProducts()
 
   return (
-    <Transition.Root
-      appear
-      show={open}
-      as={Fragment}
-      afterLeave={() => navigate("../", { preventScrollReset: true })}
-    >
-      <Dialog as="div" className="relative z-10" onClose={() => setOpen(false)}>
+    <Transition.Root appear show={open} as={Fragment}>
+      <Dialog as="div" className="relative z-10" onClose={close}>
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -39,6 +31,7 @@ export default function ExportCSVPage() {
           leave="ease-in duration-200"
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
+          afterLeave={leave}
         >
           <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
         </Transition.Child>
@@ -68,8 +61,8 @@ export default function ExportCSVPage() {
                   className="mt-5"
                   validator={validator}
                   onSubmit={async (data) => {
-                    downloadAsCSVFile(data.filename, exportData)
-                    setOpen(false)
+                    downloadAsCSVFile(data.filename, products)
+                    close()
                   }}
                 >
                   <div className="mt-2">

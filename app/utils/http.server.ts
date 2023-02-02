@@ -40,6 +40,11 @@ export const Unauthorized = new Response(ReasonPhrases.UNAUTHORIZED, {
   statusText: ReasonPhrases.UNAUTHORIZED,
 })
 
+export const Forbidden = new Response(ReasonPhrases.FORBIDDEN, {
+  status: StatusCodes.FORBIDDEN,
+  statusText: ReasonPhrases.FORBIDDEN,
+})
+
 export const OK = new Response(ReasonPhrases.OK, {
   status: StatusCodes.OK,
   statusText: ReasonPhrases.OK,

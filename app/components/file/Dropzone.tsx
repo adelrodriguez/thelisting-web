@@ -31,8 +31,8 @@ export default function Dropzone({
         <button
           type="button"
           className={clsx(
-            "relative block w-full rounded-lg border-2 border-dashed border-gray-300 p-12 text-center hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2",
-            { "bg-gray-300": isDragActive }
+            "relative block w-full rounded-lg bg-gray-100  p-12 text-center transition-all hover:border-gray-400 focus:shadow-lg focus:outline-none",
+            { "shadow-inner": !isDragActive, "shadow-lg": isDragActive }
           )}
           {...getRootProps()}
         >
@@ -43,7 +43,7 @@ export default function Dropzone({
           )}
           <input {...getInputProps()} />
 
-          <span className="mt-2 block text-sm font-medium text-gray-900">
+          <span className="mt-2 block text-sm font-medium text-gray-500">
             {isDragActive
               ? "Drop the files here"
               : `Drag and drop your files, or click to select. Accepted file types: ${acceptedFileType}`}

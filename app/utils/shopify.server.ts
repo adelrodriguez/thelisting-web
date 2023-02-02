@@ -1,6 +1,7 @@
+import type { Listing } from "@prisma/client"
 import request from "graphql-request"
 
-import type { CustomAttribute } from "~/config/consts"
+import type { Currency, CustomAttribute } from "~/config/consts"
 import { CUSTOM_ATTRIBUTES } from "~/config/consts"
 import { SHOPIFY_SHIPPING_ITEM_1_ID } from "~/config/env.server"
 import {
@@ -9,15 +10,20 @@ import {
   shopifyStorefrontAPIEndpoint,
   shopifyStorefrontAPInHeaders,
 } from "~/config/vars.server"
+import Sentry from "~/services/sentry"
 import {
   getOrderCustomAttributesQuery,
   getOrderTagsQuery,
+  searchProducts,
+  productCreateMutation,
 } from "~/services/shopify/admin"
 import { getOrderQuery } from "~/services/shopify/admin"
 import { createCheckoutMutation } from "~/services/shopify/storefront"
 import type { CartItem } from "~/utils/cart"
 import { ShopifyError } from "~/utils/error"
 import { transformCustomAttributes } from "~/utils/shopify"
+
+import { logger } from "./log"
 
 export async function createCheckout(
   cartItems: CartItem[],
@@ -66,10 +72,11 @@ export async function createCheckout(
   const url = response.checkoutCreate?.checkout?.webUrl
 
   if (!id || !url) {
-    throw new ShopifyError(
-      "Unable to create checkout",
-      "draft_order_create_error"
-    )
+    logger.error("Unable to create checkout", {
+      userErrors: response.checkoutCreate?.userErrors,
+    })
+    Sentry.captureException(response.checkoutCreate?.userErrors)
+    throw new ShopifyError("Unable to create checkout", "checkout_create_error")
   }
 
   return { id, url }
@@ -124,4 +131,69 @@ export async function getOrderCustomAttributes(id: string) {
   }
 
   return transformCustomAttributes(order.customAttributes)
+}
+
+export async function createProduct({
+  title,
+  description,
+  tags,
+  images,
+  price,
+  currency,
+  store,
+  collection,
+}: {
+  title?: string | null
+  description?: string | null
+  tags: string[]
+  images: {
+    src?: string | null
+    altText?: string | null
+  }[]
+  price: number
+  currency?: Currency | null
+  store?: string | null
+  collection: Listing["commerceId"]
+}) {
+  const { productCreate } = await request(
+    shopifyAdminAPIEndpoint,
+    productCreateMutation,
+    {
+      input: {
+        collectionsToJoin: [collection!],
+        descriptionHtml: description,
+        images,
+        tags,
+        title,
+        variants: [
+          {
+            price,
+            requiresShipping: false,
+            taxable: false,
+          },
+        ],
+        vendor: store,
+      },
+    },
+    shopifyAdminAPInHeaders
+  )
+
+  if (!productCreate?.product) {
+    throw new ShopifyError("Unable to create product", "product_create_error")
+  }
+
+  return productCreate.product
+}
+
+export async function getProductsByTag(tag: string) {
+  const { products } = await request(
+    shopifyAdminAPIEndpoint,
+    searchProducts,
+    {
+      query: "tag:" + tag,
+    },
+    shopifyAdminAPInHeaders
+  )
+
+  return products.edges.map((product) => product!.node)
 }

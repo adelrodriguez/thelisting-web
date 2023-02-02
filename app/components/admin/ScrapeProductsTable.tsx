@@ -7,25 +7,22 @@ import {
 } from "@tanstack/react-table"
 import { useInterpret, useSelector } from "@xstate/react"
 import { useSnackbar } from "notistack"
-import { Fragment, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 
 import { Button, Checkbox, FormattedNumber } from "~/components/common"
 import { Spinner } from "~/components/loading"
 import { isDevelopment } from "~/config/vars"
 import { scraperMachine } from "~/helpers/machines"
 import { round } from "~/utils/number"
-import type { ScrapedFields, ScrapedProductResult } from "~/utils/scraper"
+import type {
+  ScrapedProductResult,
+  ScrapeProductsTableRow,
+} from "~/utils/scraper"
 
 declare module "@tanstack/react-table" {
   interface TableMeta<TData extends unknown> {
     updateData: (value: TData) => void
   }
-}
-
-export type ScrapeProductsTableRow = ScrapedFields & {
-  id: string
-  quantity: number
-  url: string
 }
 
 const columnHelper = createColumnHelper<ScrapeProductsTableRow>()
@@ -120,9 +117,11 @@ const columns = [
 export default function ScrapeProductsTable({
   data: initialData,
   onExport,
+  onAddToListing,
 }: {
   data: ScrapeProductsTableRow[]
   onExport: (data: ScrapeProductsTableRow[]) => void
+  onAddToListing: (data: ScrapeProductsTableRow[]) => void
 }) {
   const [data, setData] = useState<ScrapeProductsTableRow[]>(initialData)
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
@@ -230,9 +229,24 @@ export default function ScrapeProductsTable({
             </h3>
           </div>
           <div className="mt-4 flex gap-4 sm:mt-0 sm:ml-16 sm:flex-none">
-            <Button type="button" onClick={() => onExport(selected)} size="sm">
-              Export to CSV
-            </Button>
+            {selected.length > 0 && (
+              <>
+                <Button
+                  type="button"
+                  onClick={() => onAddToListing(selected)}
+                  size="sm"
+                >
+                  Add To Listing
+                </Button>
+                <Button
+                  type="button"
+                  onClick={() => onExport(selected)}
+                  size="sm"
+                >
+                  Export to CSV
+                </Button>
+              </>
+            )}
 
             <Button type="button" onClick={handleScrape} disabled={!isIdle}>
               {isIdle ? (

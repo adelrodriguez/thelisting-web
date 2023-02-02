@@ -1,12 +1,36 @@
 import currency from "currency.js"
+import { z } from "zod"
 
-export type ScrapedFields = {
-  title: string | null
-  store: string | null
-  description: string | null
-  image: string | null
-  amount: number | null
-  currency: string | null
+import { CURRENCIES } from "~/config/consts"
+
+function undefinedToNull<T>(value: T | undefined): T | null {
+  return value === undefined ? null : value
+}
+
+export const ScrapedFieldsSchema = z.object({
+  amount: z.preprocess(undefinedToNull, z.coerce.number().nullable()),
+  currency: z.preprocess(
+    undefinedToNull,
+    z.enum([CURRENCIES.dop, CURRENCIES.usd]).nullable()
+  ),
+  description: z.preprocess(undefinedToNull, z.string().nullable()),
+  image: z.preprocess(undefinedToNull, z.string().nullable()),
+  store: z.preprocess(undefinedToNull, z.string().nullable()),
+  title: z.preprocess(undefinedToNull, z.string().nullable()),
+})
+export type ScrapedFields = z.infer<typeof ScrapedFieldsSchema>
+
+export const ScrapeProductsTableRowSchema = ScrapedFieldsSchema.extend({
+  id: z.union([z.string(), z.number()]),
+  quantity: z.coerce.number().min(1),
+  url: z.string(),
+})
+export type ScrapeProductsTableRow = z.infer<
+  typeof ScrapeProductsTableRowSchema
+>
+
+export function parseScrapeProductsTableRow(data: unknown) {
+  return ScrapeProductsTableRowSchema.parse(data)
 }
 
 export type ScrapedProductResult = {

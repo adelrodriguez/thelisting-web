@@ -1,12 +1,13 @@
-import { ListingType } from "@prisma/client"
-import { startOfToday } from "date-fns"
+import { ListingStatus, ListingType } from "@prisma/client"
+import { parse, startOfToday } from "date-fns"
 import { z } from "zod"
 
 import prisma from "~/helpers/prisma.server"
+import { getShopifyId } from "~/utils/shopify"
 
 export const EventDateSchema = z
   .string()
-  .transform((value) => new Date(value))
+  .transform((value) => parse(value, "yyyy-MM-dd", new Date()))
   .refine((value) => value >= startOfToday(), {
     message: "Event date must be in the future",
   })
@@ -22,6 +23,16 @@ export const PathSchema = z
 
 export const TitleSchema = z.string().min(1)
 
+export const CommerceIdSchema = z
+  .string()
+  .optional()
+  .nullable()
+  .transform((value) => {
+    if (!value) return value
+
+    return getShopifyId(value, "Order")
+  })
+
 export const TypeSchema = z.enum(
   [
     ListingType.BabyShower,
@@ -31,6 +42,13 @@ export const TypeSchema = z.enum(
   ],
   {
     errorMap: () => ({ message: "Please select a type of event" }),
+  }
+)
+
+export const StatusSchema = z.enum(
+  [ListingStatus.Draft, ListingStatus.Published, ListingStatus.Closed],
+  {
+    errorMap: () => ({ message: "Please select a status" }),
   }
 )
 

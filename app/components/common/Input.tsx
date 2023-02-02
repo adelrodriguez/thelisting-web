@@ -15,6 +15,7 @@ function Input(
     id = name,
     placeholder,
     type = "text",
+    trailing,
     required,
     ...props
   }: {
@@ -25,6 +26,7 @@ function Input(
     error?: boolean
     label?: string
     name?: string
+    trailing?: string
   } & InputHTMLAttributes<HTMLInputElement>,
   ref: Ref<HTMLInputElement>
 ) {
@@ -34,7 +36,7 @@ function Input(
         <label htmlFor={id} className="block text-sm font-medium text-gray-700">
           {label}
           {required && (
-            <span className="text-red-500 text-xs" aria-hidden="true">
+            <span className="text-xs text-red-500" aria-hidden="true">
               {" "}
               *
             </span>
@@ -66,7 +68,8 @@ function Input(
             "border-red-300": error,
             "focus:border-gray-500 focus:ring-gray-500": !error,
             "focus:border-red-500 focus:outline-none focus:ring-red-500": error,
-            "pr-10": error,
+            "pr-10": error || trailing,
+            "pr-16": error && trailing,
             "rounded-md": !addOn,
             "rounded-r-md": addOn,
             "text-red-900 placeholder-red-300": error,
@@ -77,6 +80,20 @@ function Input(
           disabled={disabled}
           {...props}
         />
+        {trailing && (
+          <div
+            className={clsx(
+              "pointer-events-none absolute inset-y-0 right-0 flex items-center",
+              {
+                "pr-10": error,
+                "pr-3": !error,
+              }
+            )}
+          >
+            <span className="text-gray-500 sm:text-sm">{trailing}</span>
+          </div>
+        )}
+
         {error && (
           <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
             <ExclamationCircleIcon

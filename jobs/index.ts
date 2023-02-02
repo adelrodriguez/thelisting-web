@@ -12,9 +12,10 @@ import {
   RAILWAY_STATIC_URL,
 } from "~/config/env.server"
 import {
-  saveOrderCustomerQueue,
+  addItemToListingQueue,
   createInvoiceQueue,
   createPurchaseQueue,
+  saveOrderCustomerQueue,
 } from "~/helpers/queues"
 import { logger } from "~/utils/log"
 
@@ -33,9 +34,12 @@ createBullBoard({
       boardTitle: "The Listing",
     },
   },
-  queues: [saveOrderCustomerQueue, createInvoiceQueue, createPurchaseQueue].map(
-    (queue) => new BullMQAdapter(queue)
-  ),
+  queues: [
+    addItemToListingQueue,
+    createInvoiceQueue,
+    createPurchaseQueue,
+    saveOrderCustomerQueue,
+  ].map((queue) => new BullMQAdapter(queue)),
   serverAdapter: serverAdapter,
 })
 

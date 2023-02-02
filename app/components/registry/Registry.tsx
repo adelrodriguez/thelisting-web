@@ -24,19 +24,19 @@ export default function Registry({ items }: { items: Item[] }) {
           />
         )
       })}
-      <div className="z-2 group fixed bottom-8 right-8">
+      <div className="z-2 group fixed bottom-8 right-8 hover:animate-bounce">
         <Link to="cart" relative="path" prefetch="intent" preventScrollReset>
           {!!cart.itemCount && (
-            <div className="absolute top-0 right-0 z-10 flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-red-500 text-xs text-white">
+            <div className="absolute top-0 right-0 z-10 flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-red-500 text-xs text-white ">
               {cart.itemCount}
             </div>
           )}
 
           <button
             title="Go to cart"
-            className=" flex h-16 w-16 items-center justify-center rounded-full bg-gray-600 text-4xl text-white drop-shadow-xl duration-300 hover:bg-blue-700 hover:drop-shadow-2xl"
+            className="flex h-16 w-16 items-center justify-center rounded-full bg-gray-600 text-4xl text-white drop-shadow-xl duration-300 group-hover:shadow-2xl"
           >
-            <ShoppingBagIcon className="h-8 w-8" />
+            <ShoppingBagIcon className="h-8 w-8 duration-300 group-hover:h-9  group-hover:w-9 " />
           </button>
         </Link>
       </div>

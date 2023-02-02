@@ -2,7 +2,7 @@ import type { Item } from "@prisma/client"
 import { useTranslation } from "react-i18next"
 import { Link } from "react-router-dom"
 
-import { FormattedNumber } from "~/components/common"
+import { Alert, FormattedNumber } from "~/components/common"
 import { useCart, useProduct } from "~/utils/hooks"
 import { getPriceSymbol } from "~/utils/money"
 
@@ -11,12 +11,21 @@ export default function CartItem({
   id,
   quantity,
 }: Pick<Item, "id" | "commerceId" | "quantity">) {
-  const { data } = useProduct(commerceId!)
+  const { data, isLoading, isError } = useProduct(commerceId!)
   const cart = useCart()
   const { t } = useTranslation("listing")
 
   // TODO(adelrodriguez): Handle loading and error states
-  if (!data) return <div>Loading...</div>
+  if (isLoading) return <div>Loading...</div>
+
+  if (isError)
+    return (
+      <div className="w-full">
+        <Alert type="error" onClose={() => cart.remove(id)}>
+          Error loading product
+        </Alert>
+      </div>
+    )
 
   const { title, price, imageUrl, currencyCode } = data
 

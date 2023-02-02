@@ -15,7 +15,7 @@ model Listing {
   closedAt    DateTime?
   publishedAt DateTime?
 
-  sku        Int     @default(autoincrement())
+  sku        Int     @unique @default(autoincrement())
   commerceId String? @db.VarChar(255)
 
   eventDate DateTime
@@ -69,6 +69,7 @@ model Item {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
+  sku        String? @unique
   commerceId String? @db.VarChar(255)
 
   listing   Listing @relation(fields: [listingId], references: [id])

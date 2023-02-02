@@ -8,7 +8,6 @@
   "sideEffects": false,
   "scripts": {
     "build:css": "npm run generate:css -- --minify",
-    "build:db": "npm run database:deploy && npm run database:generate",
     "build:jobs": "tsc --project tsconfig.jobs.json && tsc-alias -p tsconfig.jobs.json",
     "build:remix": "remix build",
     "build": "run-s build:*",
@@ -30,7 +29,7 @@
     "generate:css": "tailwindcss -i styles/app.css -o app/styles/tailwind.css",
     "lint": "eslint .",
     "logs": "railway logs",
-    "start": "remix-serve build",
+    "start": "npm run database:deploy && npm run database:generate && remix-serve build",
     "start:jobs": "cross-env NODE_ENV=production node lib/jobs",
     "test:coverage": "vitest run --coverage",
     "test:playwright": "playwright test",

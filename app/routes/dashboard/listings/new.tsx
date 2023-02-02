@@ -1,7 +1,7 @@
 import { ListingType } from "@prisma/client"
 import type { ActionArgs } from "@remix-run/node"
 import { withZod } from "@remix-validated-form/with-zod"
-import { format, startOfTomorrow } from "date-fns"
+import { startOfTomorrow } from "date-fns"
 import { ValidatedForm, validationError } from "remix-validated-form"
 import { z } from "zod"
 
@@ -17,17 +17,8 @@ import {
   verifyPathIsUnique,
 } from "~/utils/listing"
 import { redirect } from "~/utils/remix"
-import { getShopifyId } from "~/utils/shopify"
 
 const CreateListingSchema = z.object({
-  commerceId: z
-    .string()
-    .optional()
-    .transform((value) => {
-      if (!value) return
-
-      return getShopifyId(value, "Order")
-    }),
   eventDate: EventDateSchema,
   path: PathSchema,
   title: TitleSchema,
@@ -96,18 +87,21 @@ export default function CreateListingsPage() {
           label="Title"
           name="title"
           description="This is what we'll call your listing and show to others"
+          required
         />
         <FormInput
           name="path"
           label="Path"
           addOn="https://thelisting.do/"
           description="The unique path for your listing"
+          required
         />
         <FormDate
           label="Event Date"
           name="eventDate"
-          min={format(startOfTomorrow(), "yyyy-MM-dd")}
+          min={startOfTomorrow()}
           description="The date of your event"
+          required
         />
         <FormSelect
           options={[
@@ -116,32 +110,28 @@ export default function CreateListingsPage() {
               value: undefined,
             },
             {
-              label: "Wedding",
+              label: "💍 Wedding",
               value: ListingType.Wedding,
             },
             {
-              label: "Baby Shower",
+              label: "🍼 Baby Shower",
               value: ListingType.BabyShower,
             },
             {
-              label: "Birthday",
+              label: "🎂 Birthday",
               value: ListingType.Birthday,
             },
             {
-              label: "Other",
+              label: "❓ Other",
               value: ListingType.Other,
             },
           ]}
           label="Event Type"
           name="type"
           description="The type of event you're hosting"
+          required
         />
-        <FormInput
-          addOn="gid://shopify/Collection/"
-          description="The Shopify collection ID"
-          label="Commerce ID"
-          name="commerceId"
-        />
+
         <FormSubmit text="Create" loadingText="Creating..." />
       </ValidatedForm>
     </div>

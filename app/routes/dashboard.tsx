@@ -242,7 +242,7 @@ export default function DashboardLayout() {
           </h1>
         </div>
       </header>
-      <main className="h-auto mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
+      <main className="mx-auto h-auto max-w-7xl py-6 sm:px-6 lg:px-8">
         <SnackbarProvider
           Components={{
             error: Notification,
@@ -254,7 +254,7 @@ export default function DashboardLayout() {
             horizontal: "right",
             vertical: "top",
           }}
-          autoHideDuration={15 * 1000}
+          autoHideDuration={5 * 1000}
         >
           <Outlet />
         </SnackbarProvider>

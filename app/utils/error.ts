@@ -144,7 +144,10 @@ export type ItemErrorCode = "no_markup" | "no_transaction_fee"
 
 export type GenericErrorCode = "unknown_error" | "no_code_provided"
 
-export type ShopifyErrorCode = "draft_order_create_error" | "order_get_error"
+export type ShopifyErrorCode =
+  | "checkout_create_error"
+  | "order_get_error"
+  | "product_create_error"
 
 export type FileErrorCode =
   | "no_file_selected"

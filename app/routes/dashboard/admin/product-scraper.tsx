@@ -1,12 +1,12 @@
-import { Outlet, useNavigate } from "@remix-run/react"
+import { Outlet, useNavigate, useOutletContext } from "@remix-run/react"
 import { enqueueSnackbar } from "notistack"
 import { useState } from "react"
 import invariant from "tiny-invariant"
 
-import type { ScrapeProductsTableRow } from "~/components/admin"
 import { ScrapeProductsTable } from "~/components/admin"
 import { Dropzone } from "~/components/file"
 import { useCSVParser } from "~/utils/hooks"
+import type { ScrapeProductsTableRow } from "~/utils/scraper"
 
 const Headers = [
   "id",
@@ -35,12 +35,17 @@ export default function AdminToolsProductScraperPage() {
     header: true,
     transformHeader,
   })
-  const [exportData, setExportData] = useState<ScrapeProductsTableRow[]>([])
+  const [products, setProducts] = useState<ScrapeProductsTableRow[]>([])
   const navigate = useNavigate()
 
   function handleExport(data: ScrapeProductsTableRow[]) {
-    setExportData(data)
-    navigate("export-csv")
+    setProducts(data)
+    navigate("export-to-csv")
+  }
+
+  function handleAddToListing(data: ScrapeProductsTableRow[]) {
+    setProducts(data)
+    navigate("add-to-listing")
   }
 
   return (
@@ -59,7 +64,11 @@ export default function AdminToolsProductScraperPage() {
       </div>
       <div className="mt-8">
         {result ? (
-          <ScrapeProductsTable data={result.data} onExport={handleExport} />
+          <ScrapeProductsTable
+            data={result.data}
+            onExport={handleExport}
+            onAddToListing={handleAddToListing}
+          />
         ) : (
           <Dropzone
             fileTypes={{ "text/csv": [".csv"] }}
@@ -71,7 +80,11 @@ export default function AdminToolsProductScraperPage() {
           />
         )}
       </div>
-      <Outlet context={{ exportData }} />
+      <Outlet context={{ products }} />
     </div>
   )
+}
+
+export function useScrapedProducts() {
+  return useOutletContext<{ products: ScrapeProductsTableRow[] }>()
 }
