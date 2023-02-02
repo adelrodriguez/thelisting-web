@@ -53,7 +53,7 @@ export default function Email({
           </Text>
           <Hr style={hr} />
           <Img
-            src={`${baseUrl}/assets/img/ribbon.svg`}
+            src={`${baseUrl}/assets/images/ribbon.svg`}
             width={32}
             height={32}
             style={{
