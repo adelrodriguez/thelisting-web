@@ -28,6 +28,7 @@ import {
   TitleSchema,
   TypeSchema,
 } from "~/utils/listing"
+import { getShopifyIdNumber } from "~/utils/shopify"
 
 const EditListingSchema = z.object({
   commerceId: CommerceIdSchema,
@@ -49,7 +50,12 @@ export async function loader({ params }: LoaderArgs) {
 
   if (!listing) throw NotFound
 
-  return json(setFormDefaults("listing", listing))
+  return json(
+    setFormDefaults("listing", {
+      ...listing,
+      commerceId: listing.commerceId && getShopifyIdNumber(listing.commerceId),
+    })
+  )
 }
 
 export async function action({ request, params }: ActionArgs) {

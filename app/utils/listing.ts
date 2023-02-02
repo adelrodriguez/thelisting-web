@@ -30,7 +30,7 @@ export const CommerceIdSchema = z
   .transform((value) => {
     if (!value) return value
 
-    return getShopifyId(value, "Order")
+    return getShopifyId(value, "Collection")
   })
 
 export const TypeSchema = z.enum(

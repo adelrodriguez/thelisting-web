@@ -43,8 +43,15 @@ export function getShopifyWebhookHeaders(request: Request) {
   return { event, webhookId }
 }
 
-export function getShopifyId(id: string | number, type: "Order" | "Product") {
+export function getShopifyId(
+  id: string | number,
+  type: "Order" | "Product" | "Collection"
+) {
   return `gid://shopify/${type}/${id}`
+}
+
+export function getShopifyIdNumber(id: string) {
+  return Number(id.split("/").pop())
 }
 
 export function transformCustomAttributes(
