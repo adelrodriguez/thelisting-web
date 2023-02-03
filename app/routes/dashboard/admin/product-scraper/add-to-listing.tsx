@@ -106,7 +106,7 @@ export default function AddToListingPage() {
                     id="addToListing"
                     defaultValues={{
                       listingId: undefined,
-                      margin: 6,
+                      margin: 7.5,
                       products,
                     }}
                     method="post"
@@ -159,7 +159,7 @@ export default function AddToListingPage() {
                           name="margin"
                           label="Margin"
                           type="number"
-                          step={1}
+                          step={0.1}
                           min={0}
                           max={100}
                           trailing="%"
