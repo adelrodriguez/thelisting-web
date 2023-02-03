@@ -3,11 +3,16 @@ import { z } from "zod"
 
 export const BannerPropertiesSchema = z.object({
   backgroundImage: z.string().url().optional(),
+  subtitle: z.string().optional(),
   title: z.string(),
 })
 export type BannerProperties = z.infer<typeof BannerPropertiesSchema>
 
-export default function Banner({ title, backgroundImage }: BannerProperties) {
+export default function Banner({
+  title,
+  subtitle,
+  backgroundImage,
+}: BannerProperties) {
   return (
     <section>
       <div className="relative bg-gray-800">
@@ -27,10 +32,15 @@ export default function Banner({ title, backgroundImage }: BannerProperties) {
             aria-hidden="true"
           />
         </div>
-        <div className="relative mx-auto max-w-7xl py-32 px-6 sm:py-48 md:py-48 lg:py-64 lg:px-8">
-          <h1 className="text-4xl font-headline font-bold text-white sm:text-5xl lg:text-6xl md:text-center">
+        <div className="relative mx-auto max-w-7xl py-16 px-6 md:py-24 lg:py-32 lg:px-8">
+          <h1 className="font-headline text-4xl font-bold text-white sm:text-5xl md:text-center lg:text-6xl">
             {title}
           </h1>
+          {subtitle && (
+            <p className="mt-2 font-body text-lg text-white md:text-center md:text-xl">
+              {subtitle}
+            </p>
+          )}
         </div>
       </div>
     </section>
