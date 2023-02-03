@@ -1,13 +1,17 @@
 import type { Listing } from "@prisma/client"
 import type { Processor } from "bullmq"
 import { MD5 } from "crypto-js"
-import currency from "currency.js"
 
 import prisma from "~/helpers/prisma.server"
 import { createQueue } from "~/helpers/queue.server"
 import Sentry from "~/services/sentry"
+import { calculatePricePlusMargin } from "~/utils/money"
 import type { ScrapeProductsTableRow } from "~/utils/scraper"
-import { createProduct, getProductsByTag } from "~/utils/shopify.server"
+import {
+  createProduct,
+  getProductsByTag,
+  publishToCurrentChannel,
+} from "~/utils/shopify.server"
 
 export type QueueData = {
   listingId: Listing["id"]
@@ -54,13 +58,21 @@ export const processor: Processor<QueueData> = async (job) => {
           },
         ],
         // TODO(adelrodriguez): Multiply by exchange rate
-        price: currency(product.amount || 0).multiply(1 + margin / 100).value,
+        price: calculatePricePlusMargin(product.amount || 0, margin),
         store: product.store,
         tags: [tag],
         title: product.title,
       })
 
       job.log(`Created product ${shopifyProduct.id}`)
+
+      const published = await publishToCurrentChannel(shopifyProduct.id)
+
+      job.log(
+        published
+          ? `Published product ${shopifyProduct.id}`
+          : `Failed to publish product ${shopifyProduct.id}`
+      )
 
       commerceId = shopifyProduct.id
     } else {

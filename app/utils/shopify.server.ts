@@ -16,6 +16,7 @@ import {
   getOrderTagsQuery,
   searchProducts,
   productCreateMutation,
+  publishToCurrentChannelMutation,
 } from "~/services/shopify/admin"
 import { getOrderQuery } from "~/services/shopify/admin"
 import { createCheckoutMutation } from "~/services/shopify/storefront"
@@ -196,4 +197,25 @@ export async function getProductsByTag(tag: string) {
   )
 
   return products.edges.map((product) => product!.node)
+}
+
+export async function publishToCurrentChannel(id: string) {
+  const { publishablePublishToCurrentChannel } = await request(
+    shopifyAdminAPIEndpoint,
+    publishToCurrentChannelMutation,
+    {
+      id,
+    },
+    shopifyAdminAPInHeaders
+  )
+
+  if (!publishablePublishToCurrentChannel?.publishable) {
+    throw new ShopifyError(
+      "Unable to publish product to current channel",
+      "product_publish_error"
+    )
+  }
+
+  return publishablePublishToCurrentChannel.publishable
+    .publishedOnCurrentPublication
 }

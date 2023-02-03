@@ -148,6 +148,7 @@ export type ShopifyErrorCode =
   | "checkout_create_error"
   | "order_get_error"
   | "product_create_error"
+  | "product_publish_error"
 
 export type FileErrorCode =
   | "no_file_selected"

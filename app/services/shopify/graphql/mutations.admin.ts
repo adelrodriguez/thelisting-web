@@ -9,3 +9,13 @@ export const productCreateMutation = graphql(`
     }
   }
 `)
+
+export const publishToCurrentChannelMutation = graphql(`
+  mutation publishablePublishToCurrentChannel($id: ID!) {
+    publishablePublishToCurrentChannel(id: $id) {
+      publishable {
+        publishedOnCurrentPublication
+      }
+    }
+  }
+`)
