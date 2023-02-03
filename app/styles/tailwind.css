@@ -3782,6 +3782,11 @@ select {
     line-height: 1;
   }
 
+  .sm\:text-xl {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+  }
+
   .sm\:duration-700 {
     transition-duration: 700ms;
   }
@@ -3931,6 +3936,11 @@ select {
 
   .md\:text-center {
     text-align: center;
+  }
+
+  .md\:text-xl {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
   }
 }
 

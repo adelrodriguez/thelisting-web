@@ -1,0 +1,50 @@
+import type { Processor } from "bullmq"
+
+import prisma from "~/helpers/prisma.server"
+import { createQueue } from "~/helpers/queue.server"
+import Sentry from "~/services/sentry"
+import {
+  createCollection,
+  publishToCurrentChannel,
+} from "~/utils/shopify.server"
+
+export type QueueData = {
+  listingId: string
+}
+
+export const processor: Processor<QueueData> = async (job) => {
+  try {
+    const listingId = job.data.listingId
+
+    const listing = await prisma.listing.findUniqueOrThrow({
+      where: { id: listingId },
+    })
+
+    const collection = await createCollection({
+      sku: listing.sku,
+    })
+
+    job.log(`Created collection ${collection.id}`)
+
+    await prisma.listing.update({
+      data: { commerceId: listing.id },
+      where: { id: listingId },
+    })
+
+    job.log(`Updated listing ${listingId} with commerceId ${collection.id}`)
+
+    const published = await publishToCurrentChannel(collection.id)
+
+    job.log(
+      published
+        ? `Published collection ${collection.id}`
+        : `Failed to publish collection ${collection.id}`
+    )
+  } catch (error) {
+    Sentry.captureException(error)
+
+    throw error
+  }
+}
+
+export default createQueue("CREATE_LISTING_COMMERCE_ENTITY", processor)

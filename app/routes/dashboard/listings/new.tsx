@@ -8,6 +8,7 @@ import { z } from "zod"
 import { FormDate, FormInput, FormSelect, FormSubmit } from "~/components/form"
 import auth from "~/helpers/auth.server"
 import prisma from "~/helpers/prisma.server"
+import { createListingCommerceEntityQueue } from "~/helpers/queues"
 import { getFormData, Unauthorized } from "~/utils/http.server"
 import {
   EventDateSchema,
@@ -58,6 +59,10 @@ export async function action({ request }: ActionArgs) {
       title: result.data.title,
       type: result.data.type,
     },
+  })
+
+  await createListingCommerceEntityQueue.add(`${listing.sku}`, {
+    listingId: listing.id,
   })
 
   return redirect(`/dashboard/listings/${listing.sku}`)

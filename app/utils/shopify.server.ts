@@ -15,8 +15,9 @@ import {
   getOrderCustomAttributesQuery,
   getOrderTagsQuery,
   searchProducts,
-  productCreateMutation,
+  createProductMutation,
   publishToCurrentChannelMutation,
+  createCollectionMutation,
 } from "~/services/shopify/admin"
 import { getOrderQuery } from "~/services/shopify/admin"
 import { createCheckoutMutation } from "~/services/shopify/storefront"
@@ -158,7 +159,7 @@ export async function createProduct({
 }) {
   const { productCreate } = await request(
     shopifyAdminAPIEndpoint,
-    productCreateMutation,
+    createProductMutation,
     {
       input: {
         collectionsToJoin: [collection!],
@@ -218,4 +219,26 @@ export async function publishToCurrentChannel(id: string) {
 
   return publishablePublishToCurrentChannel.publishable
     .publishedOnCurrentPublication
+}
+
+export async function createCollection({ sku }: { sku: number }) {
+  const { collectionCreate } = await request(
+    shopifyAdminAPIEndpoint,
+    createCollectionMutation,
+    {
+      input: {
+        title: `Listing ${sku}`,
+      },
+    },
+    shopifyAdminAPInHeaders
+  )
+
+  if (!collectionCreate?.collection) {
+    throw new ShopifyError(
+      "Unable to create collection",
+      "collection_create_error"
+    )
+  }
+
+  return collectionCreate.collection
 }

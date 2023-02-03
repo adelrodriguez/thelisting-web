@@ -14,6 +14,7 @@ import {
 import {
   addItemToListingQueue,
   createInvoiceQueue,
+  createListingCommerceEntityQueue,
   createPurchaseQueue,
   saveOrderCustomerQueue,
 } from "~/helpers/queues"
@@ -37,6 +38,7 @@ createBullBoard({
   queues: [
     addItemToListingQueue,
     createInvoiceQueue,
+    createListingCommerceEntityQueue,
     createPurchaseQueue,
     saveOrderCustomerQueue,
   ].map((queue) => new BullMQAdapter(queue)),
