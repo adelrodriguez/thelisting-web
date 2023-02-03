@@ -60,17 +60,17 @@ export async function action({ request }: ActionArgs) {
     },
   })
 
-  return redirect(`/dashboard/listings/${listing.path}`)
+  return redirect(`/dashboard/listings/${listing.sku}`)
 }
 
 export default function CreateListingsPage() {
   return (
-    <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-7xl py-12 px-4 sm:px-6 lg:px-8">
       <div className="sm:text-center">
-        <p className="text-base text-gray-600 font-semibold tracking-wide uppercase">
+        <p className="text-base font-semibold uppercase tracking-wide text-gray-600">
           Listings
         </p>
-        <h2 className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+        <h2 className="mt-2 text-3xl font-extrabold leading-8 tracking-tight text-gray-900 sm:text-4xl">
           Create a new listing
         </h2>
         <p className="mt-4 max-w-2xl text-xl text-gray-500 sm:mx-auto">
@@ -80,7 +80,7 @@ export default function CreateListingsPage() {
       <ValidatedForm
         validator={validator}
         method="post"
-        className="mt-8 flex flex-col sm:w-[500px] gap-y-6 m-auto"
+        className="m-auto mt-8 flex flex-col gap-y-6 sm:w-[500px]"
         resetAfterSubmit
       >
         <FormInput

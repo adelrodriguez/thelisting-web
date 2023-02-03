@@ -3,7 +3,7 @@ import type { ActionArgs, LoaderArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { withZod } from "@remix-validated-form/with-zod"
 import { startOfTomorrow } from "date-fns"
-import { redirect } from "react-router"
+import { useSnackbar } from "notistack"
 import {
   setFormDefaults,
   ValidatedForm,
@@ -11,7 +11,13 @@ import {
 } from "remix-validated-form"
 import { z } from "zod"
 
-import { FormInput, FormDate, FormSelect, FormSubmit } from "~/components/form"
+import {
+  FormInput,
+  FormDate,
+  FormSelect,
+  FormSubmit,
+  FormListRadioGroup,
+} from "~/components/form"
 import auth from "~/helpers/auth.server"
 import prisma from "~/helpers/prisma.server"
 import {
@@ -42,16 +48,20 @@ const EditListingSchema = z.object({
 const validator = withZod(EditListingSchema)
 
 export async function loader({ params }: LoaderArgs) {
-  const path = params.listing
+  const sku = params.sku
+
+  if (!sku) throw NotFound
+
+  if (isNaN(Number(sku))) throw NotFound
 
   const listing = await prisma.listing.findUnique({
-    where: { path },
+    where: { sku: Number(sku) },
   })
 
   if (!listing) throw NotFound
 
   return json(
-    setFormDefaults("listing", {
+    setFormDefaults("editListing", {
       ...listing,
       commerceId: listing.commerceId && getShopifyIdNumber(listing.commerceId),
     })
@@ -63,9 +73,14 @@ export async function action({ request, params }: ActionArgs) {
 
   if (!user) throw Unauthorized
 
-  const path = params.listing
+  const sku = params.sku
+
+  if (!sku) throw NotFound
+
+  if (isNaN(Number(sku))) throw NotFound
+
   const listing = await prisma.listing.findUnique({
-    where: { path },
+    where: { sku: Number(sku) },
   })
 
   if (!listing) throw NotFound
@@ -79,26 +94,40 @@ export async function action({ request, params }: ActionArgs) {
     throw Forbidden
   }
 
-  const updated = await prisma.listing.update({
+  await prisma.listing.update({
     data: { ...result.data },
     where: { id: listing.id },
   })
 
-  return redirect(`/dashboard/listings/${updated.path}`)
+  return null
 }
 
 export default function DashboardListingPage() {
+  const { enqueueSnackbar } = useSnackbar()
+
   return (
     <ValidatedForm
       validator={validator}
       method="post"
       className="m-auto mt-8 flex flex-col gap-y-6 sm:w-[500px]"
-      id="listing"
+      id="editListing"
+      onSubmit={() => {
+        enqueueSnackbar("Listing updated 🎉", {
+          description: "The listing was successfully updated",
+          variant: "success",
+        })
+      }}
     >
       <FormInput
         label="Title"
         name="title"
         description="This is what we'll call your listing and show to others"
+      />
+      <FormInput
+        label="SKU"
+        name="sku"
+        disabled
+        description="This is the unique identifier for your listing"
       />
       <FormInput
         name="path"
@@ -139,24 +168,29 @@ export default function DashboardListingPage() {
         name="type"
         description="The type of event you're hosting"
       />
-      <FormSelect
+
+      <FormListRadioGroup
+        name="status"
+        label="Testing"
         options={[
           {
+            description:
+              "The listing is not visible to others, you can still edit it and add items",
             label: "Draft",
             value: ListingStatus.Draft,
           },
           {
+            description: "The listing is visible to others",
             label: "Published",
             value: ListingStatus.Published,
           },
           {
+            description:
+              "The listing is closed, it is no longer visible to others and you can no longer edit it",
             label: "Closed",
             value: ListingStatus.Closed,
           },
         ]}
-        label="Status"
-        name="status"
-        disabled
       />
       <FormInput
         addOn="gid://shopify/Collection/"

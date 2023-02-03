@@ -7,6 +7,7 @@ import { json, useLoaderData } from "~/utils/remix"
 export async function loader() {
   const listings = await prisma.listing.findMany({
     orderBy: { createdAt: "desc" },
+    select: { id: true, sku: true, title: true },
     take: 100,
   })
 
@@ -21,7 +22,7 @@ export default function DashboardListingsPage() {
       <ul>
         {listings.map((listing) => (
           <li key={listing.id}>
-            <Link to={`/dashboard/listings/${listing.path}`}>
+            <Link to={`/dashboard/listings/${listing.sku}`}>
               {listing.title}
             </Link>
           </li>
