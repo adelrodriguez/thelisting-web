@@ -1695,6 +1695,10 @@ select {
   height: 0px;
 }
 
+.h-screen {
+  height: 100vh;
+}
+
 .min-h-full {
   min-height: 100%;
 }
@@ -3915,12 +3919,20 @@ select {
     left: auto;
   }
 
+  .lg\:fixed {
+    position: fixed;
+  }
+
   .lg\:absolute {
     position: absolute;
   }
 
   .lg\:relative {
     position: relative;
+  }
+
+  .lg\:sticky {
+    position: sticky;
   }
 
   .lg\:inset-0 {
@@ -4051,8 +4063,16 @@ select {
     height: 5rem;
   }
 
+  .lg\:h-screen {
+    height: 100vh;
+  }
+
   .lg\:min-h-full {
     min-height: 100%;
+  }
+
+  .lg\:min-h-screen {
+    min-height: 100vh;
   }
 
   .lg\:w-1\/2 {

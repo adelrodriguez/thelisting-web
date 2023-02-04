@@ -56,7 +56,7 @@ export default function ListingThankYouPage() {
 
   return (
     <main className="relative lg:min-h-full">
-      <div className="h-80 overflow-hidden lg:absolute lg:h-full lg:w-1/2 lg:pr-4 xl:pr-12">
+      <div className="h-80 overflow-hidden lg:fixed lg:h-full lg:w-1/2 lg:pr-4 xl:pr-12">
         <img
           src="https://images.unsplash.com/photo-1513885535751-8b9238bd345a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2340&q=80"
           alt=""
