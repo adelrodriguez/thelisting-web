@@ -52,6 +52,7 @@ export const getOrderQuery = graphql(`
           quantity
           product {
             id
+            title
           }
         }
       }

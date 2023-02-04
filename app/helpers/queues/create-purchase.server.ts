@@ -88,6 +88,8 @@ export const processor: Processor<QueueData> = async (job) => {
     }
 
     job.log(`Finished processing purchase ${purchase.id}`)
+
+    // TODO(adelrodriguez): Add tags to the order with the listing sku
   } catch (error) {
     Sentry.captureException(error)
 

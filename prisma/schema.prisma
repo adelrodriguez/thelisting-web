@@ -148,7 +148,8 @@ model User {
 
   firstName String
   lastName  String
-  email     String @unique
+  email     String  @unique
+  phone     String?
 
   role        UserRole  @default(User)
   lastLoginAt DateTime?

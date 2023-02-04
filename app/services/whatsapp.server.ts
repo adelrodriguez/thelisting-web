@@ -3,6 +3,7 @@ import { createBot } from "whatsapp-cloud-api"
 import type { SendMessageResult } from "whatsapp-cloud-api/dist/sendRequestHelper"
 
 import type { WhatsAppMessageTemplate } from "~/config/consts"
+import { WHATSAPP_MESSAGE_TEMPLATES } from "~/config/consts"
 import {
   META_GRAPH_API_USER_ACCESS_TOKEN,
   META_GRAPH_API_VERSION,
@@ -24,7 +25,7 @@ class WhatsApp {
     )
   }
 
-  public async sendGuestNotification(
+  public sendGuestNotification(
     template: WhatsAppMessageTemplate,
     to: string,
     {
@@ -36,7 +37,7 @@ class WhatsApp {
       customer: string
       path: string
     }
-  ): Promise<SendMessageResult> {
+  ) {
     return this.bot.sendTemplate(to, template, "ES", [
       {
         // @ts-ignore Ignoring this since the type definition does not account
@@ -76,6 +77,63 @@ class WhatsApp {
         type: "button",
       },
     ])
+  }
+
+  public async sendGiftPurchaseNotification(
+    to: string,
+    {
+      recipient,
+      buyer,
+      amount,
+      gift,
+      path,
+    }: {
+      recipient: string
+      buyer: string
+      amount: string
+      gift: string
+      path: string
+    }
+  ): Promise<SendMessageResult> {
+    return this.bot.sendTemplate(
+      to,
+      WHATSAPP_MESSAGE_TEMPLATES.ListingGiftPurchase,
+      "ES",
+      [
+        {
+          parameters: [
+            {
+              text: recipient,
+              type: "text",
+            },
+            {
+              text: buyer,
+              type: "text",
+            },
+            {
+              text: amount.toString(),
+              type: "text",
+            },
+            {
+              text: gift,
+              type: "text",
+            },
+          ],
+          type: "body",
+        },
+        {
+          index: 0,
+          parameters: [
+            {
+              text: path,
+              type: "text",
+            },
+          ],
+          sub_type: "url",
+          type: "button",
+        },
+      ]
+    )
   }
 }
 
