@@ -27,7 +27,7 @@ export const processor: Processor<QueueData> = async (job) => {
     job.log(`Created collection ${collection.id}`)
 
     await prisma.listing.update({
-      data: { commerceId: listing.id },
+      data: { commerceId: collection.id },
       where: { id: listingId },
     })
 
