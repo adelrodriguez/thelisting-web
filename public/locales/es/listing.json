@@ -1,20 +1,20 @@
 {
   "addAMessage": "✨ Agrega un mensaje especial a tu regalo ✨",
-  "addToCart": "Agregar a la bolsa 🛍",
-  "cart": "Tu bolsa de regalo",
+  "addToCart": "Agregar a tu compra 🛍",
+  "cart": "Tu compra 🛍",
   "checkout": {
-    "empty": "Tu bolsa está vacía",
+    "empty": "No has agregado regalos",
     "ready": "Listo para regalar 🎁",
     "submitting": "Preparando tu compra..."
   },
   "giftSent": "¡Regalo listo! 🎁",
-  "goBack": "Volver al listing",
+  "goBack": "Volver a la lista",
   "itemDescription": "Descripción del artículo",
   "itemInformation": "Información del artículo",
   "note": {
-    "placeholder": "Escribe tu nota aquí...",
-    "subtitle": "Tu nota será entregada al destinatario cuando la orden sea procesada",
-    "title": "Añade una nota a tu regalo"
+    "placeholder": "Escribe tu mensaje aquí...",
+    "subtitle": "Tu mensaje sera enviado al destinatario cuando la orden sea procesada",
+    "title": "Añade un mensaje personalizado a tu regalo"
   },
   "orderConfirmation": "Estamos preparando tu regalo. Te enviaremos un correo con la factura de gestión y entrega.",
   "outOfStock": "Regalado ✨",
@@ -24,6 +24,6 @@
     "label": "Cantidad",
     "remove": "Eliminar"
   },
-  "shippingNote": "Los artículos se enviarán a los dueños del listing.",
+  "shippingNote": "Los artículos se enviarán a los dueños de la lista.",
   "thankYou": "¡Gracias por tu regalo, {{name}}!"
 }
