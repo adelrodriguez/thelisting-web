@@ -3,7 +3,6 @@ import { parse, startOfToday } from "date-fns"
 import { z } from "zod"
 
 import prisma from "~/helpers/prisma.server"
-import { getShopifyId } from "~/utils/shopify"
 
 export const EventDateSchema = z
   .string()
@@ -23,15 +22,7 @@ export const PathSchema = z
 
 export const TitleSchema = z.string().min(1)
 
-export const CommerceIdSchema = z
-  .string()
-  .optional()
-  .nullable()
-  .transform((value) => {
-    if (!value) return value
-
-    return getShopifyId(value, "Collection")
-  })
+export const CommerceIdSchema = z.string().optional().nullable()
 
 export const TypeSchema = z.enum(
   [

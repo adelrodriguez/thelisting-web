@@ -2,6 +2,7 @@ import { ListingType } from "@prisma/client"
 import type { ActionArgs } from "@remix-run/node"
 import { withZod } from "@remix-validated-form/with-zod"
 import { startOfTomorrow } from "date-fns"
+import { useSnackbar } from "notistack"
 import { ValidatedForm, validationError } from "remix-validated-form"
 import { z } from "zod"
 
@@ -65,10 +66,11 @@ export async function action({ request }: ActionArgs) {
     listingId: listing.id,
   })
 
-  return redirect(`/dashboard/listings/${listing.sku}`)
+  return redirect("/dashboard/listings/")
 }
 
 export default function CreateListingsPage() {
+  const { enqueueSnackbar } = useSnackbar()
   return (
     <div className="mx-auto max-w-7xl py-12 px-4 sm:px-6 lg:px-8">
       <div className="sm:text-center">
@@ -87,6 +89,13 @@ export default function CreateListingsPage() {
         method="post"
         className="m-auto mt-8 flex flex-col gap-y-6 sm:w-[500px]"
         resetAfterSubmit
+        onSubmit={() => {
+          enqueueSnackbar("Listing created 🎉", {
+            description:
+              "The listing was successfully created. The Shopify collection will be created shortly.",
+            variant: "success",
+          })
+        }}
       >
         <FormInput
           label="Title"

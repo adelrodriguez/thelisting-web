@@ -34,7 +34,6 @@ import {
   TitleSchema,
   TypeSchema,
 } from "~/utils/listing"
-import { getShopifyIdNumber } from "~/utils/shopify"
 
 export const handle = {
   id: "dashboard-listings-edit",
@@ -64,12 +63,7 @@ export async function loader({ params }: LoaderArgs) {
 
   if (!listing) throw NotFound
 
-  return json(
-    setFormDefaults("editListing", {
-      ...listing,
-      commerceId: listing.commerceId && getShopifyIdNumber(listing.commerceId),
-    })
-  )
+  return json(setFormDefaults("editListing", listing))
 }
 
 export async function action({ request, params }: ActionArgs) {
@@ -197,10 +191,10 @@ export default function DashboardListingPage() {
         ]}
       />
       <FormInput
-        addOn="gid://shopify/Collection/"
-        description="The Shopify collection ID. You need to add this in order to be able to add items to your listing."
+        description="The Shopify collection ID. You need to have this in order to be able to add items to your listing. If this is empty and you recently created the listing, please wait a few seconds."
         label="Commerce ID"
         name="commerceId"
+        disabled
       />
       <FormSubmit text="Update" loadingText="Updating..." />
     </ValidatedForm>
