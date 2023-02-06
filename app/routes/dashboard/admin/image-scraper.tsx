@@ -6,6 +6,13 @@ import { Dropzone } from "~/components/file"
 import { useCSVParser } from "~/utils/hooks"
 import { scrapeImage } from "~/utils/scraper"
 
+export const handle = {
+  crumb: () => ({
+    href: "/dashboard/admin/image-scraper/",
+    name: "Image Scraper",
+  }),
+}
+
 type ImagesToScrape = {
   filename: string
   url: string
@@ -47,12 +54,12 @@ export default function AdminToolsScrapeImagesPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-7xl py-12 px-4 sm:px-6 lg:px-8">
       <div className="sm:text-center">
-        <p className="text-base text-teal-600 font-semibold tracking-wide uppercase">
+        <p className="text-base font-semibold uppercase tracking-wide text-teal-600">
           Admin Tools
         </p>
-        <h2 className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+        <h2 className="mt-2 text-3xl font-extrabold leading-8 tracking-tight text-gray-900 sm:text-4xl">
           Scrape Images
         </h2>
         <p className="mt-4 max-w-2xl text-xl text-gray-500 sm:mx-auto">
@@ -65,7 +72,7 @@ export default function AdminToolsScrapeImagesPage() {
           <>
             <p className="max-w-2xl text-lg text-gray-500 lg:mx-auto">
               You have{" "}
-              <span className="text-black font-bold">{result.data.length}</span>{" "}
+              <span className="font-bold text-black">{result.data.length}</span>{" "}
               images available to download
             </p>
             <Button size="xl" onClick={handleDownloadImages} className="mt-4">

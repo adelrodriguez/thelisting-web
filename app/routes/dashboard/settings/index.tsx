@@ -14,6 +14,13 @@ import auth from "~/helpers/auth.server"
 import prisma from "~/helpers/prisma.server"
 import { getFormData, Unauthorized } from "~/utils/http.server"
 
+export const handle = {
+  crumb: () => ({
+    href: "/dashboard/settings",
+    name: "User Settings",
+  }),
+}
+
 const EditUserSchema = z.object({
   email: z.string().email(),
   firstName: z.string().min(1),

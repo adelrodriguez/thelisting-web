@@ -15,6 +15,7 @@ import { Fragment } from "react"
 
 import { Logo } from "~/components/branding"
 import { Notification } from "~/components/common"
+import { Breadcrumbs } from "~/components/dashboard"
 import auth from "~/helpers/auth.server"
 import { json, useLoaderData } from "~/utils/remix"
 
@@ -235,11 +236,8 @@ export default function DashboardLayout() {
         )}
       </Disclosure>
       <header className="bg-white shadow-sm">
-        <div className="mx-auto max-w-7xl py-4 px-4 sm:px-6 lg:px-8">
-          {/* TODO(adelrodriguez): Add breadcrumbs */}
-          <h1 className="text-lg font-semibold leading-6 text-gray-900">
-            Dashboard
-          </h1>
+        <div className="mx-auto max-w-7xl py-3 px-4 sm:px-6 lg:px-8">
+          <Breadcrumbs />
         </div>
       </header>
       <main className="mx-auto h-auto max-w-7xl py-6 sm:px-6 lg:px-8">

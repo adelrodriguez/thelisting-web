@@ -8,6 +8,13 @@ import { Dropzone } from "~/components/file"
 import { useCSVParser } from "~/utils/hooks"
 import type { ScrapeProductsTableRow } from "~/utils/scraper"
 
+export const handle = {
+  crumb: () => ({
+    href: "/dashboard/admin/product-scraper",
+    name: "Product Scraper",
+  }),
+}
+
 const Headers = [
   "id",
   "url",

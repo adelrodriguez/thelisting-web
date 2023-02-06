@@ -1,11 +1,11 @@
 import {
   AcademicCapIcon,
-  BanknotesIcon,
   ReceiptRefundIcon,
   PhoneIcon,
   PhotoIcon,
   GiftIcon,
 } from "@heroicons/react/24/outline"
+import { UserGroupIcon } from "@heroicons/react/24/solid"
 import { Link } from "@remix-run/react"
 import clsx from "clsx"
 
@@ -39,11 +39,12 @@ const tools = [
   },
 
   {
-    href: "#coming-soon3",
-    icon: BanknotesIcon,
+    description: "Create, edit, and delete users.",
+    href: "./users",
+    icon: UserGroupIcon,
     iconBackground: "bg-yellow-50",
     iconForeground: "text-yellow-700",
-    title: "Coming Soon",
+    title: "User Management",
   },
   {
     href: "#coming-soon2",
