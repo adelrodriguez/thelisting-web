@@ -1,11 +1,10 @@
 import { Dialog } from "@headlessui/react"
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline"
-import { Link } from "@remix-run/react"
+import { Link, useLocation } from "@remix-run/react"
 import clsx from "clsx"
 import { useState } from "react"
 
 import { THE_LISTING_LOGO_BLACK, THE_LISTING_LOGO_WHITE } from "~/config/consts"
-import { useCurrentRouteMatch } from "~/utils/hooks"
 
 import LanguageCurrencySelector from "./LanguageCurrencySelector"
 
@@ -17,14 +16,14 @@ export default function LayoutHeader({
   loginText: string
 }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const currentMatch = useCurrentRouteMatch()
-  const isIndex = currentMatch?.pathname === "/"
+  const location = useLocation()
+  const isIndex = location.pathname === "/"
 
   return (
-    <header className="absolute top-0 w-full z-10 px-6 pt-6 lg:px-12">
+    <header className="absolute top-0 z-10 w-full px-6 pt-6 lg:px-12">
       <nav className="flex items-center justify-between" aria-label="Global">
         <div className="flex lg:flex-1">
-          <div className="items-center hidden lg:flex">
+          <div className="hidden items-center lg:flex">
             <div
               className={clsx(
                 "space-x-2",
@@ -36,7 +35,7 @@ export default function LayoutHeader({
                   key={item.key}
                   to={item.href}
                   className={clsx(
-                    "text-sm xl:text-base font-medium rounded-lg py-2 px-3",
+                    "rounded-lg py-2 px-3 text-sm font-medium xl:text-base",
                     isIndex ? "hover:bg-gray-700/70" : "hover:bg-gray-200"
                   )}
                 >
@@ -61,7 +60,7 @@ export default function LayoutHeader({
         </div>
         <Link
           to="/"
-          className="top-4 absolute left-1/2 transform -translate-x-1/2 z-10"
+          className="absolute top-4 left-1/2 z-10 -translate-x-1/2 transform"
         >
           <img
             src={isIndex ? THE_LISTING_LOGO_WHITE : THE_LISTING_LOGO_BLACK}
@@ -72,7 +71,7 @@ export default function LayoutHeader({
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
           <Link
             to="/login"
-            className="text-base font-semibold leading-6 text-white bg-transparent"
+            className="bg-transparent text-base font-semibold leading-6 text-white"
           >
             {loginText} <span aria-hidden="true">&rarr;</span>
           </Link>
@@ -83,7 +82,7 @@ export default function LayoutHeader({
           <div className="flex items-center justify-end">
             <Link
               to="/"
-              className="top-4 absolute left-1/2 transform -translate-x-1/2 z-10"
+              className="absolute top-4 left-1/2 z-10 -translate-x-1/2 transform"
             >
               <img
                 src={THE_LISTING_LOGO_BLACK}

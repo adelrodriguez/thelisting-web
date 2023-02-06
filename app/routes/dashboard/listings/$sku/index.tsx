@@ -1,9 +1,10 @@
-import { ListingStatus, ListingType, UserRole } from "@prisma/client"
+import { ListingStatus, UserRole } from "@prisma/client"
 import type { ActionArgs, LoaderArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { withZod } from "@remix-validated-form/with-zod"
 import { startOfTomorrow } from "date-fns"
 import { useSnackbar } from "notistack"
+import { useState, useEffect } from "react"
 import {
   setFormDefaults,
   ValidatedForm,
@@ -14,7 +15,6 @@ import { z } from "zod"
 import {
   FormInput,
   FormDate,
-  FormSelect,
   FormSubmit,
   FormListRadioGroup,
 } from "~/components/form"
@@ -34,6 +34,7 @@ import {
   TitleSchema,
   TypeSchema,
 } from "~/utils/listing"
+import { isWindowDefined } from "~/utils/window"
 
 export const handle = {
   id: "dashboard-listings-edit",
@@ -102,6 +103,12 @@ export async function action({ request, params }: ActionArgs) {
 
 export default function DashboardListingPage() {
   const { enqueueSnackbar } = useSnackbar()
+  const [origin, setOrigin] = useState("")
+  useEffect(() => {
+    if (isWindowDefined()) {
+      setOrigin(window.location.origin)
+    }
+  }, [])
 
   return (
     <ValidatedForm
@@ -130,7 +137,7 @@ export default function DashboardListingPage() {
       <FormInput
         name="path"
         label="Path"
-        addOn="https://thelisting.do/"
+        addOn={origin}
         description="The unique path for your listing"
       />
       <FormDate
@@ -138,33 +145,6 @@ export default function DashboardListingPage() {
         name="eventDate"
         min={startOfTomorrow()}
         description="The date of your event"
-      />
-      <FormSelect
-        options={[
-          {
-            label: "Select an option",
-            value: undefined,
-          },
-          {
-            label: "💍 Wedding",
-            value: ListingType.Wedding,
-          },
-          {
-            label: "🍼 Baby Shower",
-            value: ListingType.BabyShower,
-          },
-          {
-            label: "🎂 Birthday",
-            value: ListingType.Birthday,
-          },
-          {
-            label: "❓ Other",
-            value: ListingType.Other,
-          },
-        ]}
-        label="Event Type"
-        name="type"
-        description="The type of event you're hosting"
       />
 
       <FormListRadioGroup
@@ -189,6 +169,7 @@ export default function DashboardListingPage() {
             value: ListingStatus.Closed,
           },
         ]}
+        required
       />
       <FormInput
         description="The Shopify collection ID. You need to have this in order to be able to add items to your listing. If this is empty and you recently created the listing, please wait a few seconds."

@@ -4,6 +4,7 @@ import type { Listing } from "@prisma/client"
 import {
   Link,
   Outlet,
+  useLocation,
   useNavigate,
   useNavigation,
   useOutletContext,
@@ -16,7 +17,7 @@ import { Button, FormattedNumber } from "~/components/common"
 import Tooltip from "~/components/common/Tooltip"
 import { Spinner } from "~/components/loading"
 import { CartItem } from "~/components/registry"
-import { useCart, useCurrentRouteMatch } from "~/utils/hooks"
+import { useCart } from "~/utils/hooks"
 import { getPriceSymbol } from "~/utils/money"
 
 export const handle = {
@@ -26,7 +27,7 @@ export const handle = {
 export default function ListingCartPage() {
   const [open, setOpen] = useState(true)
   const cart = useCart()
-  const currentRouteMatch = useCurrentRouteMatch()
+  const location = useLocation()
   const listing = useOutletContext<Listing>()
   const navigate = useNavigate()
   const submit = useSubmit()
@@ -46,7 +47,7 @@ export default function ListingCartPage() {
     }
 
     submit(formData, {
-      action: `${currentRouteMatch.params.listing}/cart/checkout`,
+      action: location.pathname + "/checkout",
       method: "post",
     })
   }

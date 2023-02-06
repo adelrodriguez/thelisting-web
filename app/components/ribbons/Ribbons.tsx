@@ -1,6 +1,7 @@
 import type { Listing, Ribbon } from "@prisma/client"
 
-import { Banner, BannerPropertiesSchema } from "~/components/ribbons"
+import { Banner } from "~/components/ribbons"
+import { BannerPropertiesSchema } from "~/utils/ribbon"
 
 export default function Ribbons({
   listing,

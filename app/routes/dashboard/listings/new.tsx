@@ -3,6 +3,7 @@ import type { ActionArgs } from "@remix-run/node"
 import { withZod } from "@remix-validated-form/with-zod"
 import { startOfTomorrow } from "date-fns"
 import { useSnackbar } from "notistack"
+import { useEffect, useState } from "react"
 import { ValidatedForm, validationError } from "remix-validated-form"
 import { z } from "zod"
 
@@ -19,6 +20,7 @@ import {
   verifyPathIsUnique,
 } from "~/utils/listing"
 import { redirect } from "~/utils/remix"
+import { isWindowDefined } from "~/utils/window"
 
 const CreateListingSchema = z.object({
   eventDate: EventDateSchema,
@@ -62,6 +64,19 @@ export async function action({ request }: ActionArgs) {
     },
   })
 
+  // todo: move this to a queue
+  await prisma.ribbon.create({
+    data: {
+      listingId: listing.id,
+      name: "My Banner",
+      position: 1,
+      properties: {
+        title: listing.title,
+      },
+      type: "Banner",
+    },
+  })
+
   await createListingCommerceEntityQueue.add(`${listing.sku}`, {
     listingId: listing.id,
   })
@@ -71,6 +86,14 @@ export async function action({ request }: ActionArgs) {
 
 export default function CreateListingsPage() {
   const { enqueueSnackbar } = useSnackbar()
+  const [origin, setOrigin] = useState("")
+
+  useEffect(() => {
+    if (isWindowDefined()) {
+      setOrigin(window.location.origin)
+    }
+  }, [])
+
   return (
     <div className="mx-auto max-w-7xl py-12 px-4 sm:px-6 lg:px-8">
       <div className="sm:text-center">
@@ -96,6 +119,12 @@ export default function CreateListingsPage() {
             variant: "success",
           })
         }}
+        defaultValues={{
+          eventDate: startOfTomorrow(),
+          path: "",
+          title: "",
+          type: undefined,
+        }}
       >
         <FormInput
           label="Title"
@@ -106,7 +135,7 @@ export default function CreateListingsPage() {
         <FormInput
           name="path"
           label="Path"
-          addOn="https://thelisting.do/"
+          addOn={origin}
           description="The unique path for your listing"
           required
         />
@@ -143,7 +172,6 @@ export default function CreateListingsPage() {
           label="Event Type"
           name="type"
           description="The type of event you're hosting"
-          required
         />
 
         <FormSubmit text="Create" loadingText="Creating..." />

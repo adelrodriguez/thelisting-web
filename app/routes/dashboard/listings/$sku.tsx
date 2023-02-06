@@ -1,21 +1,24 @@
-import { NavLink, Outlet, useNavigate } from "@remix-run/react"
+import { NavLink, Outlet, useMatches, useNavigate } from "@remix-run/react"
 import clsx from "clsx"
 
 import { Select } from "~/components/common"
-import { useCurrentRouteMatch } from "~/utils/hooks"
 
 import { handle as handleIndex } from "./$sku/index"
 import { handle as handleItems } from "./$sku/items"
+import { handle as handleRibbons } from "./$sku/ribbons"
 
 const tabs = [
   { id: handleIndex, label: "Details", value: "./" },
   { id: handleItems.id, label: "Items", value: "./items" },
+  { id: handleRibbons.id, label: "Ribbons", value: "./ribbons" },
 ]
 
 export default function DashboardListingPage() {
   const navigate = useNavigate()
-  const currentMatch = useCurrentRouteMatch()
-  const currentTab = tabs.find((tab) => currentMatch.handle?.id === tab.id)!
+  const matches = useMatches()
+  const currentTab = tabs.find(
+    (tab) => matches[matches.length - 1]?.handle?.id === tab.id
+  )!
 
   return (
     <>

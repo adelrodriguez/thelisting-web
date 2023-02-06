@@ -13,22 +13,30 @@ type FormListRadioGroupOption = ComponentProps<
 export default function FormInput<T extends FormListRadioGroupOption>({
   name,
   options,
-  ...props
+  label,
+  required,
+  description,
 }: {
   name: string
   options: T[]
+  label?: string
+  required?: boolean
 } & Omit<ComponentProps<typeof ListRadioGroup>, "onChange" | "value">) {
-  const { getInputProps } = useField(name)
+  const { error, getInputProps } = useField(name)
   const [value, setValue] = useControlField<string>(name)
 
   return (
     <>
-      <input {...getInputProps({ value })} type="hidden" />
+      <input {...getInputProps({ required, value })} type="hidden" />
       <ListRadioGroup<T>
-        {...props}
+        label={label}
         options={options}
         value={options.find((option) => option.value === value)!}
         onChange={(option) => setValue(option.value)}
+        required={required}
+        name={name}
+        description={error || description}
+        error={!!error}
       />
     </>
   )
