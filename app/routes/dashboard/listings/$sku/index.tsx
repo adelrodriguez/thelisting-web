@@ -1,4 +1,4 @@
-import { ListingStatus, UserRole } from "@prisma/client"
+import { ListingStatus, ListingType, UserRole } from "@prisma/client"
 import type { ActionArgs, LoaderArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { withZod } from "@remix-validated-form/with-zod"
@@ -17,6 +17,7 @@ import {
   FormDate,
   FormSubmit,
   FormListRadioGroup,
+  FormSelect,
 } from "~/components/form"
 import auth from "~/helpers/auth.server"
 import prisma from "~/helpers/prisma.server"
@@ -146,10 +147,36 @@ export default function DashboardListingPage() {
         min={startOfTomorrow()}
         description="The date of your event"
       />
-
+      <FormSelect
+        options={[
+          {
+            label: "Select an option",
+            value: undefined,
+          },
+          {
+            label: "💍 Wedding",
+            value: ListingType.Wedding,
+          },
+          {
+            label: "🍼 Baby Shower",
+            value: ListingType.BabyShower,
+          },
+          {
+            label: "🎂 Birthday",
+            value: ListingType.Birthday,
+          },
+          {
+            label: "❓ Other",
+            value: ListingType.Other,
+          },
+        ]}
+        label="Event Type"
+        name="type"
+        description="The type of event you're hosting"
+      />
       <FormListRadioGroup
         name="status"
-        label="Testing"
+        label="Status"
         options={[
           {
             description:
