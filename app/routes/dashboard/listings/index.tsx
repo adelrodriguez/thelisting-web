@@ -19,10 +19,10 @@ export default function DashboardListingsPage() {
 
   return (
     <>
-      <ul>
+      <ul className="flex flex-col gap-y-4">
         {listings.map((listing) => (
           <li key={listing.id}>
-            <Link to={`/dashboard/listings/${listing.sku}`}>
+            <Link to={`/dashboard/listings/${listing.sku}/`}>
               {listing.title}
             </Link>
           </li>

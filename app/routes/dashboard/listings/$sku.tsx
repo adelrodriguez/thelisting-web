@@ -1,204 +1,60 @@
-import { ListingStatus, ListingType, UserRole } from "@prisma/client"
-import type { ActionArgs, LoaderArgs } from "@remix-run/node"
-import { json } from "@remix-run/node"
-import { withZod } from "@remix-validated-form/with-zod"
-import { startOfTomorrow } from "date-fns"
-import { useSnackbar } from "notistack"
-import {
-  setFormDefaults,
-  ValidatedForm,
-  validationError,
-} from "remix-validated-form"
-import { z } from "zod"
+import { NavLink, Outlet, useNavigate } from "@remix-run/react"
+import clsx from "clsx"
 
-import {
-  FormInput,
-  FormDate,
-  FormSelect,
-  FormSubmit,
-  FormListRadioGroup,
-} from "~/components/form"
-import auth from "~/helpers/auth.server"
-import prisma from "~/helpers/prisma.server"
-import {
-  Forbidden,
-  getFormData,
-  NotFound,
-  Unauthorized,
-} from "~/utils/http.server"
-import {
-  CommerceIdSchema,
-  EventDateSchema,
-  PathSchema,
-  StatusSchema,
-  TitleSchema,
-  TypeSchema,
-} from "~/utils/listing"
-import { getShopifyIdNumber } from "~/utils/shopify"
+import { Select } from "~/components/common"
+import { useCurrentRouteMatch } from "~/utils/hooks"
 
-const EditListingSchema = z.object({
-  commerceId: CommerceIdSchema,
-  eventDate: EventDateSchema,
-  path: PathSchema,
-  status: StatusSchema,
-  title: TitleSchema,
-  type: TypeSchema,
-})
+import { handle as handleIndex } from "./$sku/index"
+import { handle as handleItems } from "./$sku/items"
 
-const validator = withZod(EditListingSchema)
-
-export async function loader({ params }: LoaderArgs) {
-  const sku = params.sku
-
-  if (!sku) throw NotFound
-
-  if (isNaN(Number(sku))) throw NotFound
-
-  const listing = await prisma.listing.findUnique({
-    where: { sku: Number(sku) },
-  })
-
-  if (!listing) throw NotFound
-
-  return json(
-    setFormDefaults("editListing", {
-      ...listing,
-      commerceId: listing.commerceId && getShopifyIdNumber(listing.commerceId),
-    })
-  )
-}
-
-export async function action({ request, params }: ActionArgs) {
-  const user = await auth.isAuthenticated(request)
-
-  if (!user) throw Unauthorized
-
-  const sku = params.sku
-
-  if (!sku) throw NotFound
-
-  if (isNaN(Number(sku))) throw NotFound
-
-  const listing = await prisma.listing.findUnique({
-    where: { sku: Number(sku) },
-  })
-
-  if (!listing) throw NotFound
-
-  const formData = await getFormData(request)
-  const result = await validator.validate(formData)
-
-  if (result.error) return validationError(result.error)
-
-  if (listing.ownerId !== user.id && user.role !== UserRole.Admin) {
-    throw Forbidden
-  }
-
-  await prisma.listing.update({
-    data: { ...result.data },
-    where: { id: listing.id },
-  })
-
-  return null
-}
+const tabs = [
+  { id: handleIndex, label: "Details", value: "./" },
+  { id: handleItems.id, label: "Items", value: "./items" },
+]
 
 export default function DashboardListingPage() {
-  const { enqueueSnackbar } = useSnackbar()
+  const navigate = useNavigate()
+  const currentMatch = useCurrentRouteMatch()
+  const currentTab = tabs.find((tab) => currentMatch.handle?.id === tab.id)!
 
   return (
-    <ValidatedForm
-      validator={validator}
-      method="post"
-      className="m-auto mt-8 flex flex-col gap-y-6 sm:w-[500px]"
-      id="editListing"
-      onSubmit={() => {
-        enqueueSnackbar("Listing updated 🎉", {
-          description: "The listing was successfully updated",
-          variant: "success",
-        })
-      }}
-    >
-      <FormInput
-        label="Title"
-        name="title"
-        description="This is what we'll call your listing and show to others"
-      />
-      <FormInput
-        label="SKU"
-        name="sku"
-        disabled
-        description="This is the unique identifier for your listing"
-      />
-      <FormInput
-        name="path"
-        label="Path"
-        addOn="https://thelisting.do/"
-        description="The unique path for your listing"
-      />
-      <FormDate
-        label="Event Date"
-        name="eventDate"
-        min={startOfTomorrow()}
-        description="The date of your event"
-      />
-      <FormSelect
-        options={[
-          {
-            label: "Select an option",
-            value: undefined,
-          },
-          {
-            label: "💍 Wedding",
-            value: ListingType.Wedding,
-          },
-          {
-            label: "🍼 Baby Shower",
-            value: ListingType.BabyShower,
-          },
-          {
-            label: "🎂 Birthday",
-            value: ListingType.Birthday,
-          },
-          {
-            label: "❓ Other",
-            value: ListingType.Other,
-          },
-        ]}
-        label="Event Type"
-        name="type"
-        description="The type of event you're hosting"
-      />
-
-      <FormListRadioGroup
-        name="status"
-        label="Testing"
-        options={[
-          {
-            description:
-              "The listing is not visible to others, you can still edit it and add items",
-            label: "Draft",
-            value: ListingStatus.Draft,
-          },
-          {
-            description: "The listing is visible to others",
-            label: "Published",
-            value: ListingStatus.Published,
-          },
-          {
-            description:
-              "The listing is closed, it is no longer visible to others and you can no longer edit it",
-            label: "Closed",
-            value: ListingStatus.Closed,
-          },
-        ]}
-      />
-      <FormInput
-        addOn="gid://shopify/Collection/"
-        description="The Shopify collection ID. You need to add this in order to be able to add items to your listing."
-        label="Commerce ID"
-        name="commerceId"
-      />
-      <FormSubmit text="Update" loadingText="Updating..." />
-    </ValidatedForm>
+    <>
+      <div>
+        <div className="sm:hidden">
+          <label htmlFor="tabs" className="sr-only">
+            Select a tab
+          </label>
+          <Select
+            id="tabs"
+            name="tabs"
+            className="block w-full rounded-md border-gray-300 focus:border-gray-500 focus:ring-gray-500"
+            defaultValue={currentTab?.value}
+            onChange={(event) => navigate(event.target.value)}
+            options={tabs}
+          />
+        </div>
+        <div className="hidden sm:block">
+          <nav className="flex space-x-4" aria-label="Tabs">
+            {tabs.map((tab) => (
+              <NavLink
+                key={tab.label}
+                to={tab.value}
+                relative="route"
+                className={({ isActive }) =>
+                  clsx("rounded-md px-3 py-2 text-sm font-medium", {
+                    "bg-gray-100 text-gray-700": isActive,
+                    "text-gray-500 hover:text-gray-700": !isActive,
+                  })
+                }
+                aria-current={tab.id === currentTab?.id ? "page" : undefined}
+              >
+                {tab.label}
+              </NavLink>
+            ))}
+          </nav>
+        </div>
+      </div>
+      <Outlet />
+    </>
   )
 }
