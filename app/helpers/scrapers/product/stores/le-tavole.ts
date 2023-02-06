@@ -1,3 +1,4 @@
+import { CURRENCIES } from "~/config/consts"
 import { cleanAmount, cleanText } from "~/utils/scraper"
 
 import { BaseScraper } from "./base"
@@ -35,7 +36,7 @@ export default class LeTavole extends BaseScraper {
       .catch((err) => this.logError("amount: " + err.message))
   }
 
-  public get currency(): string | Promise<string | null> {
-    return "USD"
+  public get currency() {
+    return CURRENCIES.USD
   }
 }

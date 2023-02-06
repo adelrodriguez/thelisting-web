@@ -1,3 +1,4 @@
+import { CURRENCIES } from "~/config/consts"
 import { cleanAmount } from "~/utils/scraper"
 
 import { BaseScraper } from "./base"
@@ -22,7 +23,7 @@ export default class BabylistScraper extends BaseScraper {
       .catch((err) => this.logError("amount: " + err.message))
   }
 
-  public get currency(): Promise<string | null> {
-    return Promise.resolve("USD")
+  public get currency() {
+    return CURRENCIES.USD
   }
 }

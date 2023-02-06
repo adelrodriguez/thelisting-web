@@ -189,7 +189,7 @@ export default function ScrapeProductsTable({
   }, [])
 
   function showResultMessage(
-    id: string,
+    id: string | number,
     duration: ScrapedProductResult["duration"],
     errors: ScrapedProductResult["errors"],
     cached: ScrapedProductResult["cached"]

@@ -1,4 +1,4 @@
-import { cleanText, cleanAmount } from "~/utils/scraper"
+import { cleanText, cleanAmount, CurrencySchema } from "~/utils/scraper"
 
 import { BaseScraper } from "./base"
 
@@ -29,7 +29,7 @@ export default class CasaCool extends BaseScraper {
       .catch((err) => this.logError("amount: " + err.message))
   }
 
-  public get currency(): string | Promise<string | null> {
+  public get currency() {
     return this.page
       .$eval(
         'script[type="application/ld+json"]',
@@ -38,6 +38,7 @@ export default class CasaCool extends BaseScraper {
       .then((content) => content && JSON.parse(content))
       .then((content) => content.offers.priceCurrency)
       .then(cleanText)
+      .then(CurrencySchema.parse)
       .catch((err) => this.logError("currency: " + err.message))
   }
 }

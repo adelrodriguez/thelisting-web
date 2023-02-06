@@ -4,9 +4,9 @@ import { CURRENCIES } from "~/config/consts"
 
 export function getPriceSymbol(currencyCode?: string): string {
   switch (currencyCode) {
-    case CURRENCIES.dop:
+    case CURRENCIES.DOP:
       return "RD$ "
-    case CURRENCIES.usd:
+    case CURRENCIES.USD:
       return "US$ "
     default:
       return "$"

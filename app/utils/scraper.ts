@@ -7,12 +7,13 @@ function undefinedToNull<T>(value: T | undefined): T | null {
   return value === undefined ? null : value
 }
 
+export const CurrencySchema = z
+  .enum([CURRENCIES.DOP, CURRENCIES.USD])
+  .catch(CURRENCIES.DOP)
+
 export const ScrapedFieldsSchema = z.object({
   amount: z.preprocess(undefinedToNull, z.coerce.number().nullable()),
-  currency: z.preprocess(
-    undefinedToNull,
-    z.enum([CURRENCIES.dop, CURRENCIES.usd]).nullable()
-  ),
+  currency: z.preprocess(undefinedToNull, CurrencySchema.nullable()),
   description: z.preprocess(undefinedToNull, z.string().nullable()),
   image: z.preprocess(undefinedToNull, z.string().nullable()),
   store: z.preprocess(undefinedToNull, z.string().nullable()),

@@ -1,3 +1,4 @@
+import { CURRENCIES } from "~/config/consts"
 import { cleanText, cleanAmount } from "~/utils/scraper"
 
 import { BaseScraper } from "./base"
@@ -24,7 +25,7 @@ export default class ElEstudioStore extends BaseScraper {
       .catch((err) => this.logError(err.message))
   }
 
-  public get currency(): string | Promise<string | null> {
-    return "DOP"
+  public get currency() {
+    return CURRENCIES.DOP
   }
 }

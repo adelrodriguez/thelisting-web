@@ -14,8 +14,8 @@ export const MIME_TYPES = {
 export type FileType = (typeof MIME_TYPES)[keyof typeof MIME_TYPES]
 
 export const CURRENCIES = {
-  dop: "DOP",
-  usd: "USD",
+  DOP: "DOP",
+  USD: "USD",
 } as const
 export type Currency = (typeof CURRENCIES)[keyof typeof CURRENCIES]
 

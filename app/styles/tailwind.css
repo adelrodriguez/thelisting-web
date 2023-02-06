@@ -1695,10 +1695,6 @@ select {
   height: 0px;
 }
 
-.h-screen {
-  height: 100vh;
-}
-
 .min-h-full {
   min-height: 100%;
 }
@@ -3931,10 +3927,6 @@ select {
     position: relative;
   }
 
-  .lg\:sticky {
-    position: sticky;
-  }
-
   .lg\:inset-0 {
     top: 0px;
     right: 0px;
@@ -4063,16 +4055,8 @@ select {
     height: 5rem;
   }
 
-  .lg\:h-screen {
-    height: 100vh;
-  }
-
   .lg\:min-h-full {
     min-height: 100%;
-  }
-
-  .lg\:min-h-screen {
-    min-height: 100vh;
   }
 
   .lg\:w-1\/2 {

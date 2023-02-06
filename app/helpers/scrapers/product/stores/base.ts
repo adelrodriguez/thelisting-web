@@ -3,10 +3,11 @@ import type { Browser, Page } from "playwright"
 import { chromium } from "playwright"
 import UserAgent from "user-agents"
 
+import type { Currency } from "~/config/consts"
 import { BROWSERLESS_TOKEN, BROWSERLESS_URL } from "~/config/env.server"
 import Sentry from "~/services/sentry"
 import { logger } from "~/utils/log"
-import { cleanAmount, cleanText } from "~/utils/scraper"
+import { cleanAmount, cleanText, CurrencySchema } from "~/utils/scraper"
 
 const userAgent = new UserAgent()
 
@@ -24,7 +25,7 @@ export interface ScraperInterface {
   description: Promise<string | null>
   image: Promise<string | null>
   amount: Promise<number | null>
-  currency: Promise<string | null> | string
+  currency: Promise<Currency | null> | Currency
   notes?: Promise<string | null>
   start: number
   duration: number
@@ -102,12 +103,13 @@ export class BaseScraper implements ScraperInterface {
       .catch((err) => this.logError(err.message))
   }
 
-  public get currency(): Promise<string | null> | string {
+  public get currency(): Promise<Currency | null> | Currency {
     return this.page
       .$eval("meta[property='product:price:currency']", (element) =>
         element.getAttribute("content")
       )
       .then(cleanText)
+      .then(CurrencySchema.parse)
       .catch((err) => this.logError(err.message))
   }
 

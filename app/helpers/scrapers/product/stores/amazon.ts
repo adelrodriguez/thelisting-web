@@ -1,3 +1,4 @@
+import { CURRENCIES } from "~/config/consts"
 import { cleanAmount, cleanText } from "~/utils/scraper"
 
 import { BaseScraper } from "./base"
@@ -44,7 +45,7 @@ export default class AmazonScraper extends BaseScraper {
       .catch((err) => this.logError("amount: " + err.message))
   }
 
-  public get currency(): string {
-    return "USD"
+  public get currency() {
+    return CURRENCIES.USD
   }
 }
