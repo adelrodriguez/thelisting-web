@@ -9,8 +9,8 @@ export default function useCSVParser<T>({
   transformHeader,
 }: {
   header?: boolean
-  transform?: (value: string, field: string | number) => string | number
-  transformHeader?: (header: string, index: number) => string
+  transform?: Papa.ParseConfig["transform"]
+  transformHeader?: Papa.ParseConfig["transformHeader"]
 }): {
   filename: string | null
   parse: (file: File) => void
@@ -32,7 +32,13 @@ export default function useCSVParser<T>({
       },
       header,
       skipEmptyLines: "greedy",
-      transform,
+      transform: (value, field) => {
+        if (transform) {
+          return transform(value.trim(), field)
+        }
+
+        return value.trim()
+      },
       transformHeader,
     })
   }, [file, header, transform, transformHeader])
