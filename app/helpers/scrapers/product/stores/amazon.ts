@@ -25,22 +25,14 @@ export default class AmazonScraper extends BaseScraper {
 
   public get amount(): Promise<number | null> {
     return this.page
-      .evaluate(() => {
-        // First, if there's a discount, try to get the original price
-        const element1 = document.querySelector(
-          '[data-a-strike="true"] > .a-offscreen'
-        )
-
-        if (element1) return element1.textContent
-
-        // Otherwise, try to fetch the original price
-        const element2 = document.querySelector("span.a-price > .a-offscreen")
-
-        if (element2) return element2?.textContent
-
-        // If neither of those work, return null to throw an error
-        return null
-      })
+      .$eval(
+        [
+          '[data-a-strike="true"] > .a-offscreen',
+          "span.a-price > .a-offscreen",
+          "#sns-base-price",
+        ].join(","),
+        (element) => element.textContent
+      )
       .then(cleanAmount)
       .catch((err) => this.logError("amount: " + err.message))
   }
