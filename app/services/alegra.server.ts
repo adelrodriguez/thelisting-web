@@ -1,4 +1,5 @@
 import { ALEGRA_API_TOKEN, ALEGRA_API_USERNAME } from "~/config/env.server"
+import Sentry from "~/services/sentry"
 import type {
   CreateContactRequest,
   CreateContactResponse,
@@ -11,12 +12,12 @@ import type {
   SendInvoiceRequest,
   SendInvoiceResponse,
 } from "~/utils/alegra"
-import { GetContactResponseSchema } from "~/utils/alegra"
-import { SendInvoiceResponseSchema } from "~/utils/alegra"
-import { CreateInvoiceResponseSchema } from "~/utils/alegra"
 import {
-  GetCurrencyResponseSchema,
-  CreateContactResponseSchema,
+  parseCreateInvoiceResponse,
+  parseGetCurrencyResponse,
+  parseSendInvoiceResponse,
+  parseGetContactResponse,
+  parseCreateContactResponse,
 } from "~/utils/alegra"
 import { AlegraError } from "~/utils/error"
 import { logger } from "~/utils/log"
@@ -67,8 +68,9 @@ export class Alegra {
 
           logger.info("contacts.create response", { data })
 
-          return CreateContactResponseSchema.parse(data)
+          return parseCreateContactResponse(data)
         } catch (error) {
+          Sentry.captureException(error)
           throw new AlegraError(
             (error as Error).message,
             "create_contact_error"
@@ -82,8 +84,9 @@ export class Alegra {
 
           logger.info("contacts.get response", { data })
 
-          return GetContactResponseSchema.parse(data)
+          return parseGetContactResponse(data)
         } catch (error) {
+          Sentry.captureException(error)
           throw new AlegraError((error as Error).message, "get_contact_error")
         }
       },
@@ -112,8 +115,9 @@ export class Alegra {
 
           logger.info("currencies.get response", { data })
 
-          return GetCurrencyResponseSchema.parse(data)
+          return parseGetCurrencyResponse(data)
         } catch (error) {
+          Sentry.captureException(error)
           throw new AlegraError((error as Error).message, "get_currency_error")
         }
       },
@@ -131,8 +135,10 @@ export class Alegra {
 
           logger.info("invoices.create response", { data })
 
-          return CreateInvoiceResponseSchema.parse(data)
+          return parseCreateInvoiceResponse(data)
         } catch (error) {
+          Sentry.captureException(error)
+
           throw new AlegraError(
             (error as Error).message,
             "create_invoice_error"
@@ -151,8 +157,10 @@ export class Alegra {
 
           logger.info("invoices.send response", { data })
 
-          return SendInvoiceResponseSchema.parse(data)
+          return parseSendInvoiceResponse(data)
         } catch (error) {
+          Sentry.captureException(error)
+
           throw new AlegraError((error as Error).message, "send_invoice_error")
         }
       },
