@@ -1,4 +1,5 @@
-import { cleanText, cleanAmount, CurrencySchema } from "~/utils/scraper"
+import { CurrencySchema } from "~/utils/money"
+import { cleanText, cleanAmount } from "~/utils/scraper"
 
 import { BaseScraper } from "./base"
 

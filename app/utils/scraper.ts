@@ -1,15 +1,11 @@
 import currency from "currency.js"
 import { z } from "zod"
 
-import { CURRENCIES } from "~/config/consts"
+import { CurrencySchema } from "~/utils/money"
 
 function undefinedToNull<T>(value: T | undefined): T | null {
   return value === undefined ? null : value
 }
-
-export const CurrencySchema = z
-  .enum([CURRENCIES.DOP, CURRENCIES.USD])
-  .catch(CURRENCIES.DOP)
 
 export const ScrapedFieldsSchema = z.object({
   amount: z.preprocess(undefinedToNull, z.coerce.number().nullable()),

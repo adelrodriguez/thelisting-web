@@ -14,9 +14,11 @@ import { z } from "zod"
 
 import { Alert, Button } from "~/components/common"
 import { FormInput, FormSelect, FormSubmit } from "~/components/form"
+import { CURRENCIES } from "~/config/consts"
 import prisma from "~/helpers/prisma.server"
 import { addItemToListingQueue } from "~/helpers/queues"
 import { useScrapedProducts } from "~/routes/dashboard/admin/product-scraper"
+import alegra from "~/services/alegra.server"
 import { useDialogPage } from "~/utils/hooks"
 import { getFormData } from "~/utils/http.server"
 import { goToParent, json, useLoaderData } from "~/utils/remix"
@@ -24,6 +26,7 @@ import { ScrapeProductsTableRowSchema } from "~/utils/scraper"
 import { capitalize } from "~/utils/string"
 
 const AddToListingSchema = z.object({
+  exchangeRate: z.coerce.number().min(1),
   listingId: z.string().uuid(),
   margin: z.coerce.number().min(0).max(100),
   products: z.array(ScrapeProductsTableRowSchema).min(1),
@@ -31,12 +34,21 @@ const AddToListingSchema = z.object({
 
 const validator = withZod(AddToListingSchema)
 
-export async function loader({ request }: ActionArgs) {
+export async function loader() {
   const listings = await prisma.listing.findMany({
     where: { commerceId: { not: null } },
   })
 
-  return json(listings)
+  let exchangeRate: number
+
+  try {
+    const currency = await alegra.currencies.get({ code: CURRENCIES.USD })
+    exchangeRate = currency.exchangeRate
+  } catch (error) {
+    exchangeRate = 1
+  }
+
+  return json({ exchangeRate, listings })
 }
 
 export async function action({ request }: ActionArgs) {
@@ -45,7 +57,7 @@ export async function action({ request }: ActionArgs) {
 
   if (result.error) return validationError(result.error)
 
-  const { listingId, margin, products } = result.data
+  const { listingId, margin, products, exchangeRate } = result.data
 
   const listing = await prisma.listing.findUniqueOrThrow({
     where: { id: listingId },
@@ -54,6 +66,7 @@ export async function action({ request }: ActionArgs) {
   await addItemToListingQueue.addBulk(
     products.map((product) => ({
       data: {
+        exchangeRate,
         listingId,
         margin,
         product,
@@ -68,7 +81,7 @@ export async function action({ request }: ActionArgs) {
 export default function AddToListingPage() {
   const { products } = useScrapedProducts()
 
-  const listings = useLoaderData<typeof loader>()
+  const { listings, exchangeRate } = useLoaderData<typeof loader>()
   const { open, close, leave } = useDialogPage()
   const { getValues } = useFormContext("addToListing")
   const listing = listings.find(({ id }) => id === getValues().get("listingId"))
@@ -105,6 +118,7 @@ export default function AddToListingPage() {
                     className="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl"
                     id="addToListing"
                     defaultValues={{
+                      exchangeRate,
                       listingId: undefined,
                       margin: 7.5,
                       products,
@@ -149,7 +163,7 @@ export default function AddToListingPage() {
                               value: undefined,
                             },
                             ...listings.map((listing) => ({
-                              label: listing.title,
+                              label: `${listing.sku} - ${listing.title}`,
                               value: listing.id,
                             })),
                           ]}
@@ -164,6 +178,14 @@ export default function AddToListingPage() {
                           max={100}
                           trailing="%"
                           description="The margin to add to the product price, from 0% to a 100%."
+                        />
+                        <FormInput
+                          name="exchangeRate"
+                          label="Exchange Rate"
+                          type="number"
+                          step={0.01}
+                          min={1}
+                          description="The exchange rate from USD to DOP, for products with USD prices."
                         />
                         <FieldArray name="products">
                           {(items) => (

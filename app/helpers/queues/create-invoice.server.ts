@@ -1,6 +1,7 @@
 import * as Sentry from "@sentry/remix"
 import type { Processor } from "bullmq"
 
+import type { Currency } from "~/config/consts"
 import { SHIPPING_FEE } from "~/config/consts"
 import {
   ALEGRA_INVOICE_BACKUP_EMAIL,
@@ -24,7 +25,9 @@ export const processor: Processor<QueueData> = async (job) => {
     const contact = await alegra.contacts.get({ id: job.data.contactId })
 
     const { exchangeRate } = await alegra.currencies.get({
-      code: order.currencyCode,
+      // Shopify's CurrencyCode is similar to our Currency, so we're casting it
+      // here
+      code: order.currencyCode as Currency,
     })
 
     const shippingFee = SHIPPING_FEE * exchangeRate

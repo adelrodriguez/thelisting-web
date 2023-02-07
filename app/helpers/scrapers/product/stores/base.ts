@@ -7,7 +7,8 @@ import type { Currency } from "~/config/consts"
 import { BROWSERLESS_TOKEN, BROWSERLESS_URL } from "~/config/env.server"
 import Sentry from "~/services/sentry"
 import { logger } from "~/utils/log"
-import { cleanAmount, cleanText, CurrencySchema } from "~/utils/scraper"
+import { CurrencySchema } from "~/utils/money"
+import { cleanAmount, cleanText } from "~/utils/scraper"
 
 const userAgent = new UserAgent()
 

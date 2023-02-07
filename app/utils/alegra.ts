@@ -1,5 +1,7 @@
 import { z } from "zod"
 
+import { CurrencySchema } from "~/utils/money"
+
 export const GetContactRequestSchema = z.object({
   id: z.string(),
 })
@@ -44,7 +46,7 @@ export function parseCreateContactResponse(
 }
 
 export const GetCurrencyRequestSchema = z.object({
-  code: z.string(),
+  code: CurrencySchema,
 })
 export type GetCurrencyRequest = z.infer<typeof GetCurrencyRequestSchema>
 export function parseGetCurrencyRequest(data: unknown): GetCurrencyRequest {

@@ -5,7 +5,10 @@ import { MD5 } from "crypto-js"
 import prisma from "~/helpers/prisma.server"
 import { createQueue } from "~/helpers/queue.server"
 import Sentry from "~/services/sentry"
-import { calculatePricePlusMargin } from "~/utils/money"
+import {
+  calculatePricePlusMargin,
+  multiplyPriceByExchangeRate,
+} from "~/utils/money"
 import type { ScrapeProductsTableRow } from "~/utils/scraper"
 import {
   createProduct,
@@ -14,9 +17,10 @@ import {
 } from "~/utils/shopify.server"
 
 export type QueueData = {
+  exchangeRate: number // The exchange rate from USD to DOP
   listingId: Listing["id"]
-  product: ScrapeProductsTableRow
   margin: number
+  product: ScrapeProductsTableRow
 }
 
 export const processor: Processor<QueueData> = async (job) => {
@@ -57,8 +61,13 @@ export const processor: Processor<QueueData> = async (job) => {
             src: product.image,
           },
         ],
-        // TODO(adelrodriguez): Multiply by exchange rate
-        price: calculatePricePlusMargin(product.amount || 0, margin),
+        price: calculatePricePlusMargin(
+          multiplyPriceByExchangeRate(
+            product.amount || 0,
+            product.currency === "USD" ? job.data.exchangeRate : 1
+          ),
+          margin
+        ),
         store: product.store,
         tags: [tag],
         title: product.title,

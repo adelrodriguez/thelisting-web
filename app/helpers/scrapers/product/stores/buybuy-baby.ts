@@ -1,4 +1,5 @@
-import { cleanAmount, cleanText, CurrencySchema } from "~/utils/scraper"
+import { CURRENCIES } from "~/config/consts"
+import { cleanAmount, cleanText } from "~/utils/scraper"
 
 import { BaseScraper } from "./base"
 
@@ -29,13 +30,7 @@ export default class BuybuyBaby extends BaseScraper {
   }
 
   public get currency() {
-    return this.page
-      .$eval('[itemprop="priceCurrency"]', (element) =>
-        element.getAttribute("content")
-      )
-      .then(cleanText)
-      .then(CurrencySchema.parse)
-      .catch((err) => this.logError("currency: " + err.message))
+    return CURRENCIES.USD
   }
 
   // TODO(adelrodriguez): This is not working
