@@ -63,21 +63,21 @@ export async function createCheckout(
     })
   }
 
-  const response = await request(
+  const { checkoutCreate } = await request(
     shopifyStorefrontAPIEndpoint,
     createCheckoutMutation,
     { input: { customAttributes, lineItems } },
     shopifyStorefrontAPInHeaders
   )
 
-  const id = response.checkoutCreate?.checkout?.id
-  const url = response.checkoutCreate?.checkout?.webUrl
+  const id = checkoutCreate?.checkout?.id
+  const url = checkoutCreate?.checkout?.webUrl
 
   if (!id || !url) {
     logger.error("Unable to create checkout", {
-      userErrors: response.checkoutCreate?.userErrors,
+      userErrors: checkoutCreate?.userErrors,
     })
-    Sentry.captureException(response.checkoutCreate?.userErrors)
+    Sentry.captureException(checkoutCreate?.userErrors)
     throw new ShopifyError("Unable to create checkout", "checkout_create_error")
   }
 
@@ -181,6 +181,10 @@ export async function createProduct({
   )
 
   if (!productCreate?.product) {
+    logger.error("Unable to create checkout", {
+      userErrors: productCreate?.userErrors,
+    })
+    Sentry.captureException(productCreate?.userErrors)
     throw new ShopifyError("Unable to create product", "product_create_error")
   }
 

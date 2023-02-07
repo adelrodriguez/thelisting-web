@@ -6,6 +6,10 @@ export const createProductMutation = graphql(`
       product {
         id
       }
+      userErrors {
+        field
+        message
+      }
     }
   }
 `)
