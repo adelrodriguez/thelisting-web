@@ -15,15 +15,16 @@ import {
   IkeaScraper,
   IlumelOutletScraper,
   IlumelScraper,
+  JumboScraper,
   LaNoviaDeVillaScraper,
   LeTavoleScraper,
   PandarettaScraper,
   PlazaLamaScraper,
+  PotteryBarnKidsScraper,
   PricesmartScraper,
   SirenaScraper,
-  ZaraHomeScraper,
   TwinkleRDScraper,
-  JumboScraper,
+  ZaraHomeScraper,
 } from "./stores"
 import type { ScraperInterface } from "./stores/base"
 import createScraperFactory, { BaseScraper } from "./stores/base"
@@ -54,6 +55,7 @@ export default async function createScraper(
     [LeTavoleScraper.domain]: LeTavoleScraper,
     [PandarettaScraper.domain]: PandarettaScraper,
     [PlazaLamaScraper.domain]: PlazaLamaScraper,
+    [PotteryBarnKidsScraper.domain]: PotteryBarnKidsScraper,
     [PricesmartScraper.domain]: PricesmartScraper,
     [SirenaScraper.domain]: SirenaScraper,
     [TwinkleRDScraper.domain]: TwinkleRDScraper,
