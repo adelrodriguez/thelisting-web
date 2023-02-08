@@ -89,7 +89,7 @@ function App() {
         <Meta />
         <Links />
       </head>
-      <body className="h-auto min-h-full bg-white">
+      <body className="h-auto min-h-full">
         <QueryClientProvider client={client}>
           <Outlet />
           <ReactQueryDevtools initialIsOpen={false} />

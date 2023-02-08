@@ -64,8 +64,8 @@ export default function DashboardLayout() {
   const { user } = useLoaderData<typeof loader>()
 
   return (
-    <>
-      <header className="sticky top-0 z-10">
+    <div className="flex max-h-screen flex-col">
+      <header className="sticky top-0 z-10 w-screen">
         <Disclosure as="nav" className="bg-gray-600">
           {({ open }) => (
             <>
@@ -242,11 +242,13 @@ export default function DashboardLayout() {
             </>
           )}
         </Disclosure>
-        <div className="mx-auto max-w-7xl bg-white py-3 px-4 shadow-sm sm:px-6 lg:px-8">
-          <Breadcrumbs />
+        <div className="bg-white shadow-sm">
+          <div className="mx-auto max-w-7xl py-3 px-4 sm:px-6 lg:px-8">
+            <Breadcrumbs />
+          </div>
         </div>
       </header>
-      <main className="mx-auto h-auto max-w-7xl py-6 sm:px-6 lg:px-8">
+      <main className="flex-1 overflow-auto">
         <SnackbarProvider
           Components={{
             error: Notification,
@@ -260,9 +262,11 @@ export default function DashboardLayout() {
           }}
           autoHideDuration={5 * 1000}
         >
-          <Outlet />
+          <div className="mx-auto h-auto max-w-7xl py-6 px-4 sm:px-6 lg:px-8">
+            <Outlet />
+          </div>
         </SnackbarProvider>
       </main>
-    </>
+    </div>
   )
 }
