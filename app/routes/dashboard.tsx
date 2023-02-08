@@ -45,13 +45,6 @@ const userNavigation = [
   { href: "/logout", name: "Logout" },
 ]
 
-const profile = {
-  imageUrl:
-    "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-
-  name: "Tom Cook",
-}
-
 export async function loader({ request }: LoaderArgs) {
   const user = await auth.isAuthenticated(request, {
     failureRedirect: "/login",
@@ -177,18 +170,22 @@ export default function DashboardLayout() {
               </div>
 
               <Disclosure.Panel className="md:hidden">
-                <div className="space-y-1 px-2 pt-2 pb-3 sm:px-3">
+                <div className="px-2 pt-2 pb-3 sm:px-3">
                   {navigation.map((item) => (
-                    <NavLink to={item.href} key={item.name}>
+                    <NavLink
+                      to={item.href}
+                      key={item.name}
+                      end={item.href === "/dashboard"}
+                    >
                       {({ isActive }) => (
                         <Disclosure.Button
                           className={clsx(
+                            "my-2 block rounded-md px-3 py-2 text-base font-medium",
                             {
                               "bg-gray-700 text-white": isActive,
                               "text-white hover:bg-gray-500 hover:bg-opacity-75":
                                 !isActive,
-                            },
-                            "block rounded-md px-3 py-2 text-base font-medium"
+                            }
                           )}
                           aria-current={isActive ? "page" : undefined}
                         >
@@ -201,13 +198,12 @@ export default function DashboardLayout() {
                 <div className="border-t border-gray-700 pt-4 pb-3">
                   <div className="flex items-center px-5">
                     <div className="flex-shrink-0">
-                      <img
-                        width={40}
-                        height={40}
-                        className="h-10 w-10 rounded-full"
-                        src={profile.imageUrl}
-                        alt=""
-                      />
+                      <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gray-500">
+                        <span className="text-sm font-medium leading-none text-white">
+                          {user.firstName[0]}
+                          {user.lastName[0]}
+                        </span>
+                      </span>
                     </div>
                     <div className="ml-3">
                       <div className="text-base font-medium text-white">
