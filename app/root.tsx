@@ -1,4 +1,5 @@
 import type { MetaFunction, LinksFunction, LoaderArgs } from "@remix-run/node"
+import type { ThrownResponse } from "@remix-run/react"
 import {
   Links,
   LiveReload,
@@ -14,9 +15,13 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 import { useTranslation } from "react-i18next"
 import remixImageStyles from "remix-image/remix-image.css"
 
-import { RootError } from "~/components/error"
+import type { NotFoundBoundaryData } from "~/components/error"
+import { NotFound } from "~/components/error"
 import { PublicEnv } from "~/components/utils"
-import { SHOPIFY_STOREFRONT_ACCESS_TOKEN } from "~/config/env.server"
+import {
+  SHOPIFY_STORE,
+  SHOPIFY_STOREFRONT_ACCESS_TOKEN,
+} from "~/config/env.server"
 import {
   shopifyStorefrontAPIEndpoint,
   xStateVisualizer,
@@ -46,15 +51,9 @@ export const links: LinksFunction = () => [
 ]
 
 export function CatchBoundary() {
-  const caught = useCatch()
+  const caught = useCatch<ThrownResponse<number, NotFoundBoundaryData>>()
 
-  return (
-    <RootError
-      status={caught.status}
-      statusText={caught.statusText}
-      data={caught.data}
-    />
-  )
+  return <NotFound status={caught.status} data={caught.data} />
 }
 
 export async function loader({ request }: LoaderArgs) {
@@ -63,6 +62,7 @@ export async function loader({ request }: LoaderArgs) {
   return json(
     {
       env: {
+        shopifyStore: SHOPIFY_STORE,
         shopifyStorefrontAPIEndpoint,
         shopifyStorefrontAccessToken: SHOPIFY_STOREFRONT_ACCESS_TOKEN,
         xStateVisualizer,

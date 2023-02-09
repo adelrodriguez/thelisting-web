@@ -45,7 +45,9 @@ module.exports = z.object({
 
   SHOPIFY_ADMIN_ACCESS_TOKEN: z.string(),
   SHOPIFY_API_VERSION: z.string(),
+  SHOPIFY_DELEGATE_TOKEN: z.string(),
   SHOPIFY_SHIPPING_ITEM_1_ID: z.string(),
+  SHOPIFY_STORE: z.string(),
   SHOPIFY_STOREFRONT_ACCESS_TOKEN: z.string(),
   SHOPIFY_STORE_DOMAIN: z.string(),
   SHOPIFY_WEBHOOK_SECRET: z.string(),

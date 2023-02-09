@@ -1,37 +1,14 @@
-import type { LoaderArgs } from "@remix-run/node"
-
-import prisma from "~/helpers/prisma.server"
-import { NotFound } from "~/utils/http.server"
-import { json, useLoaderData } from "~/utils/remix"
+import type { RouteMatch } from "@remix-run/react"
+import { Outlet } from "@remix-run/react"
 
 export const handle = {
+  crumb: ({ params }: RouteMatch) => ({
+    href: `/dashboard/listings/${params.sku}/items`,
+    name: "Items",
+  }),
   id: "dashboard-listings-items",
 }
 
-export async function loader({ params }: LoaderArgs) {
-  const sku = params.sku
-
-  if (!sku) throw NotFound
-
-  if (isNaN(Number(sku))) throw NotFound
-
-  const listing = await prisma.listing.findUnique({
-    include: { items: true },
-    where: { sku: Number(sku) },
-  })
-
-  if (!listing) throw NotFound
-
-  return json(listing)
-}
-
 export default function DashboardListingItemsPage() {
-  const listing = useLoaderData<typeof loader>()
-  return (
-    <ul className="flex flex-col gap-y-4">
-      {listing.items.map((item) => (
-        <li key={item.id}>{item.id}</li>
-      ))}
-    </ul>
-  )
+  return <Outlet />
 }

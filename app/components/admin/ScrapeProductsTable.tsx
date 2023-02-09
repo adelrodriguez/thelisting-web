@@ -1,3 +1,4 @@
+import { Link } from "@remix-run/react"
 import type { RowSelectionState } from "@tanstack/react-table"
 import {
   useReactTable,
@@ -55,14 +56,14 @@ const columns = [
       if (!value) return null
 
       return (
-        <a
-          href={value}
+        <Link
+          to={value}
           target="_blank"
           rel="noreferrer"
           className="hover:underline"
         >
           {value}
-        </a>
+        </Link>
       )
     },
     header: "URL",
@@ -83,14 +84,14 @@ const columns = [
       if (!value) return null
 
       return (
-        <a
-          href={value}
+        <Link
+          to={value}
           target="_blank"
           rel="noreferrer"
           className="hover:underline"
         >
           {value}
-        </a>
+        </Link>
       )
     },
     header: "Image",

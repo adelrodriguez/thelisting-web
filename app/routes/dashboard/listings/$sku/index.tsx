@@ -1,6 +1,7 @@
 import { ListingStatus, ListingType, UserRole } from "@prisma/client"
 import type { ActionArgs, LoaderArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
+import type { RouteMatch } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
 import { startOfTomorrow } from "date-fns"
 import { useSnackbar } from "notistack"
@@ -38,6 +39,10 @@ import {
 import { isWindowDefined } from "~/utils/window"
 
 export const handle = {
+  crumb: ({ params }: RouteMatch) => ({
+    href: `/dashboard/listings/${params.sku}/`,
+    name: "Details",
+  }),
   id: "dashboard-listings-edit",
 }
 
@@ -115,7 +120,7 @@ export default function DashboardListingPage() {
     <ValidatedForm
       validator={validator}
       method="post"
-      className="m-auto mt-8 flex flex-col gap-y-6 sm:w-[500px]"
+      className="m-auto mt-8 flex w-full max-w-xl flex-col gap-y-6"
       id="editListing"
       onSubmit={() => {
         enqueueSnackbar("Listing updated 🎉", {

@@ -57,7 +57,7 @@ export default function DashboardLayout() {
   const { user } = useLoaderData<typeof loader>()
 
   return (
-    <div className="flex max-h-screen flex-col">
+    <div className="flex h-screen flex-col">
       <header className="sticky top-0 z-10 w-screen">
         <Disclosure as="nav" className="bg-gray-600">
           {({ open }) => (
@@ -244,7 +244,7 @@ export default function DashboardLayout() {
           </div>
         </div>
       </header>
-      <main className="flex-1 overflow-auto">
+      <main className="flex-grow overflow-auto bg-gray-50">
         <SnackbarProvider
           Components={{
             error: Notification,

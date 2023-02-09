@@ -1,12 +1,13 @@
 import type { LoaderArgs, MetaFunction } from "@remix-run/node"
 import { Outlet } from "@remix-run/react"
+import { notFound } from "remix-utils"
 
+import type { NotFoundBoundaryData } from "~/components/error"
 import { Registry } from "~/components/registry"
 import { Ribbons } from "~/components/ribbons"
 import { THE_LISTING_LOGO_BLACK } from "~/config/consts"
 import prisma from "~/helpers/prisma.server"
 import { CartProvider } from "~/utils/hooks"
-import { ReasonPhrases, StatusCodes } from "~/utils/http.server"
 import { goHome, json, useLoaderData } from "~/utils/remix"
 
 export async function loader({ params }: LoaderArgs) {
@@ -20,9 +21,9 @@ export async function loader({ params }: LoaderArgs) {
   })
 
   if (!listing) {
-    throw json("Sorry, we couldn’t find the Listing you’re looking for.", {
-      status: StatusCodes.NOT_FOUND,
-      statusText: ReasonPhrases.NOT_FOUND,
+    throw notFound<NotFoundBoundaryData>({
+      message: "Sorry, we couldn’t find the Listing you’re looking for.",
+      title: "Not Found",
     })
   }
 
@@ -39,15 +40,15 @@ export default function ListingPage() {
   return (
     <CartProvider listing={listing.id}>
       <main className="relative">
-        <div className="h-16 p-3 lg:h-20 w-full bg-white drop-shadow-md lg:p-4 sticky top-0 z-20">
+        <div className="sticky top-0 z-20 h-16 w-full bg-white p-3 drop-shadow-md lg:h-20 lg:p-4">
           <img
             src={THE_LISTING_LOGO_BLACK}
             alt="The Listing"
-            className="h-full mx-auto"
+            className="mx-auto h-full"
           />
         </div>
         <Ribbons listing={listing} />
-        <div className="py-16 xl:px-32 2xl:px-64 mx-4 sm:mx-12">
+        <div className="mx-4 py-16 sm:mx-12 xl:px-32 2xl:px-64">
           <Registry items={listing.items} />
         </div>
 

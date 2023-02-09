@@ -1,4 +1,5 @@
 type PublicEnvs = {
+  shopifyStore: string
   shopifyStorefrontAccessToken: string
   shopifyStorefrontAPIEndpoint: string
   xStateVisualizer: boolean

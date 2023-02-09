@@ -1,0 +1,189 @@
+import type { ActionArgs, LoaderArgs } from "@remix-run/node"
+import type { RouteMatch } from "@remix-run/react"
+import { withZod } from "@remix-validated-form/with-zod"
+import { useSnackbar } from "notistack"
+import { notFound } from "remix-utils"
+import {
+  setFormDefaults,
+  ValidatedForm,
+  validationError,
+} from "remix-validated-form"
+import { z } from "zod"
+
+import { FormattedNumber, Image } from "~/components/common"
+import { ViewOnShopify } from "~/components/dashboard"
+import type { NotFoundBoundaryData } from "~/components/error"
+import { FormInput, FormSubmit, FormTextArea } from "~/components/form"
+import prisma from "~/helpers/prisma.server"
+import { useProduct } from "~/utils/hooks"
+import { getFormData } from "~/utils/http.server"
+import { getPriceSymbol } from "~/utils/money"
+import { goToParent, json, useLoaderData } from "~/utils/remix"
+
+export const handle = {
+  crumb: ({ params }: RouteMatch) => ({
+    href: `/dashboard/listings/${params.sku}/items/${params.itemSku}`,
+    name: params.itemSku,
+  }),
+}
+
+const EditItemSchema = z
+  .object({
+    description: z.string().optional(),
+    quantity: z.coerce.number().min(0),
+    stock: z.coerce.number().min(0),
+  })
+  .refine((data) => data.quantity >= data.stock, {
+    message: "Stock cannot be greater than quantity",
+    path: ["stock"],
+  })
+
+const validator = withZod(EditItemSchema)
+
+export async function loader({ params }: LoaderArgs) {
+  const itemSku = params.itemSku
+
+  if (!itemSku) {
+    return goToParent()
+  }
+
+  const item = await prisma.item.findUnique({
+    where: { sku: itemSku },
+  })
+
+  if (!item) {
+    throw notFound<NotFoundBoundaryData>({
+      message: "The item you are looking for does not exist.",
+      title: "Item not found",
+    })
+  }
+
+  const itemPurchases = await prisma.itemPurchase.findMany({
+    where: { itemId: item.id },
+  })
+
+  return json({ item, itemPurchases, ...setFormDefaults("editItem", item) })
+}
+
+export async function action({ request, params }: ActionArgs) {
+  const formData = await getFormData(request)
+  const result = await validator.validate(formData)
+  const itemSku = params.itemSku
+
+  if (!itemSku) {
+    return goToParent()
+  }
+
+  if (result.error) return validationError(result.error)
+
+  const item = await prisma.item.update({
+    data: result.data,
+    where: { sku: itemSku },
+  })
+
+  return { item }
+}
+
+export default function DashboardListingItemDetailPage() {
+  const { item, itemPurchases } = useLoaderData<typeof loader>()
+  const { data, isLoading, isError } = useProduct(item.commerceId!)
+  const { enqueueSnackbar } = useSnackbar()
+
+  const stats = [
+    { name: "Total Times Ordered", stat: itemPurchases.length },
+    {
+      name: "Total Purchased",
+      stat: itemPurchases.reduce((acc, cur) => acc + cur.quantity, 0),
+    },
+  ]
+
+  return (
+    <div className="mt-4 grid gap-x-2 sm:grid-cols-2">
+      <div>
+        <div className="overflow-hidden rounded-lg bg-white shadow">
+          <div className="px-4 py-5 sm:p-6">
+            <h3 className="text-lg font-medium leading-6 text-gray-900">
+              Product Information
+            </h3>
+            <p className="mt-1 text-sm text-gray-500">
+              This is the product information available on Shopify.
+            </p>
+            {!isLoading && !isError ? (
+              <div className="mt-4 flex flex-col md:flex-row">
+                <div className="mr-4 flex-shrink-0">
+                  <Image
+                    src={data.imageUrl}
+                    alt={data.title}
+                    className="h-full w-64 rounded-sm"
+                  />
+                </div>
+                <div className="mt-2 md:mt-0">
+                  <h4 className="text-lg font-bold">{data.title}</h4>
+                  <p className="mt-1">
+                    <FormattedNumber
+                      prefix={getPriceSymbol(data.currencyCode)}
+                      thousands
+                      decimals={2}
+                    >
+                      {data.price}
+                    </FormattedNumber>
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div>Loading...</div>
+            )}
+          </div>
+
+          <div className="bg-gray-50 px-4 py-4 sm:px-6">
+            {item.commerceId && <ViewOnShopify id={item.commerceId} />}
+          </div>
+        </div>
+        <div className="mt-4">
+          <h3 className="text-lg font-medium leading-6 text-gray-900">
+            Purchases
+          </h3>
+          <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
+            {stats.map((item) => (
+              <div
+                key={item.name}
+                className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6"
+              >
+                <dt className="truncate text-sm font-medium text-gray-500">
+                  {item.name}
+                </dt>
+                <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
+                  {item.stat}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      </div>
+
+      <ValidatedForm
+        validator={validator}
+        id="editItem"
+        method="post"
+        className="m-auto mt-8 flex w-full max-w-xl flex-col gap-y-6"
+        onSubmit={() => {
+          enqueueSnackbar("Item updated 🎉", {
+            description: "The item was successfully updated",
+            variant: "success",
+          })
+        }}
+      >
+        <FormTextArea label="Description" name="description" />
+        <FormInput
+          label="Quantity"
+          name="quantity"
+          type="number"
+          step="1"
+          min={0}
+        />
+        <FormInput label="Stock" name="stock" type="number" step="1" min={0} />
+        <FormSubmit text="Update" loadingText="Updating..." />
+      </ValidatedForm>
+    </div>
+  )
+}

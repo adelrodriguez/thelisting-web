@@ -1,6 +1,5 @@
 import { RemixBrowser } from "@remix-run/react"
 import { useLocation, useMatches } from "@remix-run/react"
-import * as Sentry from "@sentry/remix"
 import i18next from "i18next"
 import LanguageDetector from "i18next-browser-languagedetector"
 import Backend from "i18next-http-backend"
@@ -11,6 +10,7 @@ import { getInitialNamespaces } from "remix-i18next"
 
 import { isProduction } from "~/config/vars"
 import i18n from "~/i18n"
+import Sentry from "~/services/sentry"
 
 async function hydrate() {
   await i18next
@@ -49,7 +49,14 @@ Sentry.init({
         useMatches
       ),
     }),
+    new Sentry.Replay(),
   ],
+  // If the entire session is not sampled, use the below sample rate to sample
+  // sessions when an error occurs.
+  replaysOnErrorSampleRate: 1.0,
+  // This sets the sample rate to be 10%. You may want this to be 100% while
+  // in development and sample at a lower rate in production
+  replaysSessionSampleRate: isProduction ? 0.1 : 1.0,
   tracesSampleRate: 1,
 })
 

@@ -2,14 +2,17 @@ import { Link, Links, Meta, Scripts } from "@remix-run/react"
 
 import { Logo } from "~/components/branding"
 
+export type BoundaryData = {
+  message: string
+  title: string
+}
+
 export default function NotFound({
   status,
-  statusText,
   data,
 }: {
   status: number
-  statusText: string
-  data: any
+  data: BoundaryData
 }) {
   return (
     <html className="h-full">
@@ -30,14 +33,14 @@ export default function NotFound({
                   </a>
                 </div>
                 <div className="my-auto flex-shrink-0 py-16 sm:py-32">
-                  <p className="text-base font-semibold text-gray-600 font-body">
+                  <p className="font-body text-base font-semibold text-gray-600">
                     {status}
                   </p>
-                  <h1 className="mt-2 text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl font-header">
-                    {statusText}
+                  <h1 className="mt-2 font-header text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl">
+                    {data.title}
                   </h1>
-                  <p className="mt-2 text-base text-gray-500 font-body">
-                    {data}
+                  <p className="mt-2 font-body text-base text-gray-500">
+                    {data.message}
                   </p>
                   <div className="mt-6">
                     <Link
