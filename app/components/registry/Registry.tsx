@@ -4,13 +4,14 @@ import { Link } from "@remix-run/react"
 
 import { RegistryItem } from "~/components/registry"
 import { useCart } from "~/utils/hooks"
+import { sortByQuantity } from "~/utils/listing"
 
 export default function Registry({ items }: { items: Item[] }) {
   const cart = useCart()
 
   return (
     <div className="grid grid-cols-2 gap-y-8 gap-x-4 md:grid-cols-3 md:gap-x-8 xl:grid-cols-4 xl:gap-x-10">
-      {items.map((item) => {
+      {items.sort(sortByQuantity).map((item) => {
         if (!item.commerceId) return null
 
         const isAvailable = item.stock > 0
