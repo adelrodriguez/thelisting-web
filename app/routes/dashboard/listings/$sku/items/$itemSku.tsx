@@ -173,7 +173,11 @@ export default function DashboardListingItemDetailPage() {
           })
         }}
       >
-        <FormTextArea label="Description" name="description" />
+        <FormTextArea
+          label="Description"
+          name="description"
+          description="Custom description that the client wants to show on the product"
+        />
         <FormInput
           label="Quantity"
           name="quantity"

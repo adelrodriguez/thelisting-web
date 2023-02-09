@@ -10,6 +10,7 @@ import {
 
 import { ViewOnShopify } from "~/components/dashboard"
 import prisma from "~/helpers/prisma.server"
+import { useProduct } from "~/utils/hooks"
 import { NotFound } from "~/utils/http.server"
 import { json, useLoaderData } from "~/utils/remix"
 
@@ -33,11 +34,16 @@ export async function loader({ params }: LoaderArgs) {
 const columnHelper = createColumnHelper<Item>()
 
 const columns = [
-  columnHelper.accessor("id", {
-    header: "ID",
-  }),
   columnHelper.accessor("sku", {
     header: "SKU",
+  }),
+  columnHelper.accessor("commerceId", {
+    cell: (props) => {
+      const item = props.row.original
+
+      return <TitleCell item={item} />
+    },
+    header: "Title",
   }),
   columnHelper.accessor("quantity", {
     header: "Quantity",
@@ -45,21 +51,7 @@ const columns = [
   columnHelper.accessor("stock", {
     header: "Stock",
   }),
-  columnHelper.display({
-    cell: (props) => {
-      const item = props.row.original
 
-      return (
-        <Link
-          to={`./${item.sku}`}
-          className="font-medium text-gray-600 hover:text-gray-900"
-        >
-          Edit
-        </Link>
-      )
-    },
-    id: "Edit",
-  }),
   columnHelper.display({
     cell: (props) => {
       const item = props.row.original
@@ -126,5 +118,22 @@ export default function DashboardListingItemsPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+function TitleCell({ item }: { item: Item }) {
+  const { data, isLoading, isError } = useProduct(item.commerceId!)
+
+  if (isLoading) return <div>Loading...</div>
+
+  if (isError) return <div>Error</div>
+
+  return (
+    <Link
+      to={`./${item.sku}`}
+      className="text-gray-600 hover:text-gray-900 hover:underline"
+    >
+      {data.title}
+    </Link>
   )
 }
