@@ -98,7 +98,7 @@ export default function DashboardListingItemDetailPage() {
   ]
 
   return (
-    <div className="mt-4 grid gap-x-2 sm:grid-cols-2">
+    <div className="mt-4 grid gap-x-6 sm:grid-cols-2">
       <div>
         <div className="overflow-hidden rounded-lg bg-white shadow">
           <div className="px-4 py-5 sm:p-6">
@@ -161,33 +161,44 @@ export default function DashboardListingItemDetailPage() {
         </div>
       </div>
 
-      <ValidatedForm
-        validator={validator}
-        id="editItem"
-        method="post"
-        className="m-auto mt-8 flex w-full max-w-xl flex-col gap-y-6"
-        onSubmit={() => {
-          enqueueSnackbar("Item updated 🎉", {
-            description: "The item was successfully updated",
-            variant: "success",
-          })
-        }}
-      >
-        <FormTextArea
-          label="Description"
-          name="description"
-          description="Custom description that the client wants to show on the product"
-        />
-        <FormInput
-          label="Quantity"
-          name="quantity"
-          type="number"
-          step="1"
-          min={0}
-        />
-        <FormInput label="Stock" name="stock" type="number" step="1" min={0} />
-        <FormSubmit text="Update" loadingText="Updating..." />
-      </ValidatedForm>
+      <div className="w-full max-w-xl pt-8 sm:pt-0">
+        <h3 className="text-lg font-medium leading-6 text-gray-900">
+          Item Information
+        </h3>
+        <ValidatedForm
+          validator={validator}
+          id="editItem"
+          method="post"
+          className="flex flex-col gap-y-6 pt-4"
+          onSubmit={() => {
+            enqueueSnackbar("Item updated 🎉", {
+              description: "The item was successfully updated",
+              variant: "success",
+            })
+          }}
+        >
+          <FormTextArea
+            label="Description"
+            name="description"
+            description="Custom description that the client wants to show on the product"
+          />
+          <FormInput
+            label="Quantity"
+            name="quantity"
+            type="number"
+            step="1"
+            min={0}
+          />
+          <FormInput
+            label="Stock"
+            name="stock"
+            type="number"
+            step="1"
+            min={0}
+          />
+          <FormSubmit text="Update" loadingText="Updating..." />
+        </ValidatedForm>
+      </div>
     </div>
   )
 }

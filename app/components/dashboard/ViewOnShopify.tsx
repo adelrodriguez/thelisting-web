@@ -15,7 +15,7 @@ export default function ViewOnShopify({ id }: { id: string }) {
         <Link
           to={`https://admin.shopify.com/store/${window.env.shopifyStore}/${entity}s/${numberId}`}
           target="_blank"
-          className="flex items-center gap-2 font-medium"
+          className="flex items-center gap-2 font-medium hover:underline"
         >
           View on Shopify{" "}
           <ArrowTopRightOnSquareIcon className="inline-block h-4 w-4" />

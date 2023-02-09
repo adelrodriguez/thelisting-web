@@ -21,14 +21,18 @@ export async function loader({ params }: LoaderArgs) {
 
   if (isNaN(Number(sku))) throw NotFound
 
-  const listing = await prisma.listing.findUnique({
-    include: { items: true },
-    where: { sku: Number(sku) },
+  const items = await prisma.item.findMany({
+    orderBy: {
+      sku: "desc",
+    },
+    where: {
+      listing: {
+        sku: Number(sku),
+      },
+    },
   })
 
-  if (!listing) throw NotFound
-
-  return json(listing)
+  return json({ items })
 }
 
 const columnHelper = createColumnHelper<Item>()
@@ -60,15 +64,15 @@ const columns = [
 
       return <ViewOnShopify id={item.commerceId} />
     },
-    id: "View on Shopify",
+    id: "viewOnShopify",
   }),
 ]
 
 export default function DashboardListingItemsPage() {
-  const listing = useLoaderData<typeof loader>()
+  const { items } = useLoaderData<typeof loader>()
   const table = useReactTable({
     columns,
-    data: listing.items,
+    data: items,
     getCoreRowModel: getCoreRowModel(),
   })
 
@@ -98,7 +102,7 @@ export default function DashboardListingItemsPage() {
               </thead>
               <tbody className="divide-y divide-gray-200 bg-white">
                 {table.getRowModel().rows.map((row) => (
-                  <tr key={row.id}>
+                  <tr key={row.id} className="hover:bg-gray-50">
                     {row.getVisibleCells().map((cell) => (
                       <td
                         className="max-w-[500px] overflow-hidden text-ellipsis whitespace-nowrap px-3 py-4 text-sm text-gray-500"
