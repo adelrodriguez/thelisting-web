@@ -27,7 +27,7 @@ export async function loader({ params }: LoaderArgs) {
     })
   }
 
-  return json(listing)
+  return json({ listing })
 }
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => ({
@@ -35,7 +35,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => ({
 })
 
 export default function ListingPage() {
-  const listing = useLoaderData<typeof loader>()
+  const { listing } = useLoaderData<typeof loader>()
 
   return (
     <CartProvider listing={listing.id}>
@@ -47,7 +47,7 @@ export default function ListingPage() {
             className="mx-auto h-full"
           />
         </div>
-        <Ribbons listing={listing} />
+        <Ribbons ribbons={listing.ribbons} />
         <div className="mx-4 py-16 sm:mx-12 xl:px-32 2xl:px-64">
           <Registry items={listing.items} />
         </div>
