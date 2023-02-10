@@ -7,8 +7,8 @@ import {
   useReactTable,
 } from "@tanstack/react-table"
 
+import { ViewOnShopify } from "~/components/admin"
 import { Button } from "~/components/common"
-import { ViewOnShopify } from "~/components/dashboard"
 import prisma from "~/helpers/prisma.server"
 import { json, useLoaderData } from "~/utils/remix"
 

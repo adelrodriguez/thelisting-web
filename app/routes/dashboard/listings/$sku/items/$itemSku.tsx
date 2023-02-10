@@ -10,8 +10,8 @@ import {
 } from "remix-validated-form"
 import { z } from "zod"
 
+import { ViewOnShopify } from "~/components/admin"
 import { FormattedNumber, Image } from "~/components/common"
-import { ViewOnShopify } from "~/components/dashboard"
 import type { NotFoundBoundaryData } from "~/components/error"
 import { FormInput, FormSubmit, FormTextArea } from "~/components/form"
 import prisma from "~/helpers/prisma.server"

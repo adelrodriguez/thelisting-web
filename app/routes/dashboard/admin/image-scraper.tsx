@@ -1,8 +1,7 @@
 import { enqueueSnackbar } from "notistack"
 import invariant from "tiny-invariant"
 
-import { Button } from "~/components/common"
-import { Dropzone } from "~/components/file"
+import { Button, Dropzone } from "~/components/common"
 import { useCSVParser } from "~/utils/hooks"
 import { scrapeImage } from "~/utils/scraper"
 

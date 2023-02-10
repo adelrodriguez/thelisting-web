@@ -4,7 +4,7 @@ import { useState } from "react"
 import invariant from "tiny-invariant"
 
 import { ScrapeProductsTable } from "~/components/admin"
-import { Dropzone } from "~/components/file"
+import { Dropzone } from "~/components/common"
 import { useCSVParser } from "~/utils/hooks"
 import type { ScrapeProductsTableRow } from "~/utils/scraper"
 
