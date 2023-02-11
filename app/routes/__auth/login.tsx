@@ -67,7 +67,7 @@ export default function LoginPage() {
   const show = isSuccess || isError
 
   return (
-    <div className="flex min-h-full bg-white">
+    <div className="flex h-screen min-h-full bg-white">
       <div className="flex flex-1 flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
         <main className="mx-auto w-full max-w-sm lg:w-96">
           <Logo />
