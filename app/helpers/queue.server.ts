@@ -1,7 +1,7 @@
 import type { Processor } from "bullmq"
 import { Queue, Worker } from "bullmq"
 
-import redis from "./redis.server"
+import redis from "~/helpers/redis.server"
 
 export type RegisteredQueue = {
   queue: Queue
@@ -24,6 +24,10 @@ export function createQueue<Payload>(
   if (registeredQueue) {
     return registeredQueue.queue
   }
+
+  // TODO(adelrodriguez): We should probably use a different redis connection for
+  // this, since right now we are using the same connection for both the app
+  // cache and the queue.
 
   // BullMQ queues are the storage container managing jobs.
   const queue = new Queue<Payload>(name, { connection: redis })

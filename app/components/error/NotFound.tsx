@@ -1,6 +1,7 @@
 import { Link, Links, Meta, Scripts } from "@remix-run/react"
 
 import { Logo } from "~/components/branding"
+import { Image } from "~/components/common"
 
 export type BoundaryData = {
   message: string
@@ -56,7 +57,7 @@ export default function NotFound({
             </main>
           </div>
           <div className="hidden lg:absolute lg:inset-y-0 lg:right-0 lg:block lg:w-1/2">
-            <img
+            <Image
               className="absolute inset-0 h-full w-full object-cover"
               src="https://images.unsplash.com/photo-1470847355775-e0e3c35a9a2c?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1825&q=80"
               alt=""

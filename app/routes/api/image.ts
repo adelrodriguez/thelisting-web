@@ -1,11 +1,21 @@
 import type { LoaderArgs } from "@remix-run/server-runtime"
-import { imageLoader, MemoryCache } from "remix-image/server"
+import { sharpTransformer } from "remix-image-sharp"
+import { fetchResolver, imageLoader } from "remix-image/server"
 
-const config = {
-  cache: new MemoryCache(),
-  selfUrl: "http://localhost:3000",
-}
+import { ImageCache } from "~/utils/image"
 
 export function loader({ request }: LoaderArgs) {
-  return imageLoader(config, request)
+  let url = new URL("/", request.url)
+
+  return imageLoader(
+    {
+      cache: new ImageCache(),
+      resolver: async (asset, url, options, basePath) => {
+        return await fetchResolver(asset, url, options, basePath)
+      },
+      selfUrl: url.href,
+      transformer: sharpTransformer,
+    },
+    request
+  )
 }
