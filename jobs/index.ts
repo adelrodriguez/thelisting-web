@@ -13,6 +13,7 @@ import {
 } from "~/config/env.server"
 import {
   addItemToListingQueue,
+  clearCartQueue,
   createInvoiceQueue,
   createListingCommerceEntityQueue,
   createPurchaseQueue,
@@ -43,6 +44,7 @@ createBullBoard({
     createPurchaseQueue,
     notifyPurchaseQueue,
     saveOrderCustomerQueue,
+    clearCartQueue,
   ].map((queue) => new BullMQAdapter(queue)),
   serverAdapter: serverAdapter,
 })

@@ -1,9 +1,9 @@
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import currency from "currency.js"
 import type { ReactNode } from "react"
-import { useEffect } from "react"
-import { createContext, useState, useContext } from "react"
+import { createContext, useContext } from "react"
+import SuperJSON from "superjson"
 
-import Storage from "~/helpers/storage"
 import type { CartItem } from "~/utils/cart"
 import { calculateShipping } from "~/utils/cart"
 import { calculateSubtotal } from "~/utils/cart"
@@ -28,6 +28,18 @@ type Cart = BaseCart & {
 
 const Context = createContext<Cart | undefined>(undefined)
 
+function createDefaultCart(listing: string): BaseCart {
+  return {
+    itemCount: 0,
+    items: new Map<string, CartItem>(),
+    listingId: listing,
+    noteId: undefined,
+    shipping: 0,
+    subtotal: 0,
+    total: 0,
+  }
+}
+
 Context.displayName = "Cart"
 
 export function CartProvider({
@@ -38,16 +50,19 @@ export function CartProvider({
   listing: string
 }) {
   // We use a Map to store the carts for each listing
-  const [carts, setCarts] = useState<Map<string, BaseCart>>(new Map())
-  const currentCart = carts.get(listing) || {
-    itemCount: 0,
-    items: new Map<string, CartItem>(),
-    listingId: listing,
-    noteId: undefined,
-    shipping: 0,
-    subtotal: 0,
-    total: 0,
-  }
+  const { data } = useQuery<BaseCart>(
+    ["carts", listing],
+    () =>
+      fetch("/api/cart?" + new URLSearchParams({ listing }))
+        .then((res) => res.json())
+        .then((data) => SuperJSON.parse<BaseCart>(data.cart)),
+    {
+      initialData: createDefaultCart(listing),
+    }
+  )
+
+  const currentCart = data || createDefaultCart(listing)
+
   const subtotal = calculateSubtotal([...currentCart.items.values()])
   const itemCount = [...currentCart.items.values()].reduce(
     (acc, item) => acc + item.quantity,
@@ -55,25 +70,22 @@ export function CartProvider({
   )
   const shipping = calculateShipping(subtotal)
   const total = subtotal + shipping
+  const queryClient = useQueryClient()
+  const storeCarts = useMutation({
+    mutationFn: (cart: BaseCart) =>
+      fetch("/api/cart?" + new URLSearchParams({ listing }), {
+        body: SuperJSON.stringify(cart),
+        method: "POST",
+      }),
+    onMutate: (cart) => {
+      queryClient.setQueryData(["carts", listing], cart)
 
-  useEffect(() => {
-    if (carts.size > 0) return
-
-    const storage = new Storage("local")
-    const storedCarts = storage.get<Map<string, BaseCart>>("carts")
-
-    if (!storedCarts) return
-
-    setCarts(storedCarts)
-  }, [carts.size])
-
-  useEffect(() => {
-    if (carts.size === 0) return
-
-    const storage = new Storage("local")
-
-    storage.set("carts", carts)
-  }, [carts])
+      return cart
+    },
+    onSuccess: async (_, cart) => {
+      queryClient.setQueryData(["carts", listing], cart)
+    },
+  })
 
   function addItemToCart({
     commerceId,
@@ -113,7 +125,7 @@ export function CartProvider({
       [key]: value,
     }
 
-    setCarts((prev) => new Map(prev).set(listing, newCart))
+    storeCarts.mutate(newCart)
   }
 
   return (

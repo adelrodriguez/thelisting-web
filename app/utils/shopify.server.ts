@@ -33,6 +33,7 @@ export async function createCheckout(
     sku: string
     listingId: string
     noteId?: string
+    sessionCartsKey: string // The session id used to identify the user's cart in Redis
   }
 ) {
   const lineItems = cartItems.map(({ variantId, quantity }) => ({
@@ -53,6 +54,10 @@ export async function createCheckout(
     {
       key: CUSTOM_ATTRIBUTES.ListingSku,
       value: meta.sku,
+    },
+    {
+      key: CUSTOM_ATTRIBUTES.SessionCartsKey,
+      value: meta.sessionCartsKey,
     },
   ]
 

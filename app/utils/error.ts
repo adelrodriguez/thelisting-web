@@ -138,7 +138,10 @@ export type ProductErrorCode =
 
 export type DraftOrderErrorCode = "draft_order_error"
 
-export type PurchaseErrorCode = "no_purchase" | "listing_id_missing"
+export type PurchaseErrorCode =
+  | "no_purchase"
+  | "listing_id_missing"
+  | "session_carts_key_missing"
 
 export type ItemErrorCode = "no_markup" | "no_transaction_fee"
 

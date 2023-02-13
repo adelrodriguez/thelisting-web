@@ -1,13 +1,11 @@
 import type { LoaderArgs } from "@remix-run/node"
 import { redirect } from "@remix-run/node"
 import { Link } from "@remix-run/react"
-import { useEffect } from "react"
 import { useTranslation } from "react-i18next"
 
 import { FormattedNumber } from "~/components/common"
 import OrderItem from "~/components/registry/OrderItem"
 import prisma from "~/helpers/prisma.server"
-import { clearCart } from "~/utils/cart"
 import { ReasonPhrases, StatusCodes } from "~/utils/http.server"
 import { getPriceSymbol } from "~/utils/money"
 import { goHome, json, useLoaderData } from "~/utils/remix"
@@ -46,11 +44,6 @@ export async function loader({ params, request }: LoaderArgs) {
 export default function ListingThankYouPage() {
   const { t } = useTranslation(handle.i18n)
   const { listing, order } = useLoaderData<typeof loader>()
-
-  useEffect(() => {
-    // Clear the cart
-    clearCart(listing.id)
-  }, [listing.id])
 
   const total = order.totalPriceSet.presentmentMoney
 

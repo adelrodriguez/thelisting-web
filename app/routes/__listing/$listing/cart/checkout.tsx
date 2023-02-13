@@ -6,9 +6,10 @@ import * as Sentry from "@sentry/remix"
 import { z } from "zod"
 
 import { Alert } from "~/components/common"
+import { getSession } from "~/helpers/session.server"
 import { CartItemsSchema } from "~/utils/cart"
 import { checkStock } from "~/utils/checkout.server"
-import { getFormData } from "~/utils/http.server"
+import { getFormData, getHeaders } from "~/utils/http.server"
 import { goToParent } from "~/utils/remix"
 import { createCheckout } from "~/utils/shopify.server"
 
@@ -30,10 +31,16 @@ export async function action({ request }: ActionArgs): Promise<Response> {
   try {
     const formData = await getFormData(request)
     const data = Object.fromEntries(formData.entries())
+    const session = await getSession(getHeaders(request).get("cookie"))
     const { cartItems, sku, listingId, noteId } = CheckoutDataSchema.parse(data)
 
     // Check that all items are available, in case someone messed with the cart
     const hasStock = await Promise.all(cartItems.map(checkStock))
+    const cartsKey = session.get("cartsKey")
+
+    if (!cartsKey) {
+      throw new Error("No cartsKey found.")
+    }
 
     if (hasStock.some((isAvailable) => !isAvailable)) {
       throw json("Some items are no longer available.")
@@ -42,6 +49,7 @@ export async function action({ request }: ActionArgs): Promise<Response> {
     const checkout = await createCheckout(cartItems, {
       listingId,
       noteId,
+      sessionCartsKey: cartsKey,
       sku,
     })
 

@@ -20,12 +20,14 @@ export const CURRENCIES = {
 export type Currency = (typeof CURRENCIES)[keyof typeof CURRENCIES]
 
 export const REDIS_KEYS = {
-  productScraper: "scraper:product",
+  Cart: "cart",
+  ProductScraper: "scraper:product",
 } as const
 export type RedisKey = (typeof REDIS_KEYS)[keyof typeof REDIS_KEYS]
 
 // Durations in seconds
 export const ONE_DAY = 60 * 60 * 24
+export const ONE_WEEK = ONE_DAY * 7
 
 // Fees
 export const PAYMENT_FEE = 0.055
@@ -43,6 +45,7 @@ export const CUSTOM_ATTRIBUTES = {
   ListingId: "listing_id",
   ListingSku: "listing_sku",
   NoteId: "note_id",
+  SessionCartsKey: "session_carts_key", // Used to identify the cart in Redis
 } as const
 export type CustomAttribute =
   (typeof CUSTOM_ATTRIBUTES)[keyof typeof CUSTOM_ATTRIBUTES]

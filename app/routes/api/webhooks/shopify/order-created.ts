@@ -2,7 +2,7 @@ import type { ActionArgs } from "@remix-run/node"
 import { logger } from "@sentry/utils"
 import { z } from "zod"
 
-import { createPurchaseQueue } from "~/helpers/queues"
+import { clearCartQueue, createPurchaseQueue } from "~/helpers/queues"
 import Sentry from "~/services/sentry"
 import {
   getJSON,
@@ -40,6 +40,10 @@ export async function action({ request }: ActionArgs) {
     const order = parseOrderCreationWebhookPayload(body)
 
     await createPurchaseQueue.add(`Order #${order.number}`, {
+      orderId: order.id,
+    })
+
+    await clearCartQueue.add(`Order #${order.number}`, {
       orderId: order.id,
     })
 

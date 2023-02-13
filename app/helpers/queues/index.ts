@@ -4,3 +4,4 @@ export { default as createListingCommerceEntityQueue } from "./create-listing-co
 export { default as createPurchaseQueue } from "./create-purchase.server"
 export { default as notifyPurchaseQueue } from "./notify-purchase.server"
 export { default as saveOrderCustomerQueue } from "./save-order-customer.server"
+export { default as clearCartQueue } from "./clear-cart.server"

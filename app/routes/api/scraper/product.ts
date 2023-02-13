@@ -31,7 +31,7 @@ export async function loader({ request }: LoaderArgs) {
     })
   }
 
-  const key = generateKey(REDIS_KEYS.productScraper, url)
+  const key = generateKey(REDIS_KEYS.ProductScraper, url)
 
   const cachedPayload = await redis.get(key)
 
