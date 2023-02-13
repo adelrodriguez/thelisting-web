@@ -16,7 +16,7 @@ export default function FormSubmit({
   const isSubmitting = useIsSubmitting()
 
   return (
-    <Button type="submit" className={className}>
+    <Button type="submit" className={className} disabled={isSubmitting}>
       {isSubmitting ? (
         <>
           <Spinner />

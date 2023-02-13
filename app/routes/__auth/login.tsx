@@ -8,8 +8,8 @@ import { ValidatedForm, validationError } from "remix-validated-form"
 import { z } from "zod"
 
 import { Logo } from "~/components/branding"
-import { Alert, Button, Image } from "~/components/common"
-import { FormInput } from "~/components/form"
+import { Alert, Image } from "~/components/common"
+import { FormInput, FormSubmit } from "~/components/form"
 import auth from "~/helpers/auth.server"
 import sessionStorage from "~/helpers/session.server"
 import { getFormData } from "~/utils/http.server"
@@ -123,9 +123,11 @@ export default function LoginPage() {
                 autoComplete="email"
                 placeholder={t("enterYourEmail") ?? ""}
               />
-              <Button type="submit" className="w-full justify-center">
-                {t("common:login")}
-              </Button>
+              <FormSubmit
+                className="w-full justify-center"
+                text={t("common:login") ?? ""}
+                loadingText={t("common:loggingIn") ?? ""}
+              />
             </ValidatedForm>
           </div>
         </main>
