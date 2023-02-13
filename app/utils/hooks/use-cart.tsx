@@ -93,6 +93,7 @@ export function CartProvider({
     price,
     quantity,
     variantId,
+    sku,
   }: CartItem) {
     const newItems = new Map(currentCart.items)
 
@@ -101,6 +102,7 @@ export function CartProvider({
       id,
       price: currency(price).value,
       quantity,
+      sku,
       variantId,
     })
 

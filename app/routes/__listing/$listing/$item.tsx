@@ -18,11 +18,11 @@ export const handle = {
 }
 
 export async function loader({ params }: LoaderArgs) {
-  const id = params.item
+  const sku = params.item
 
   try {
     const item = await prisma.item.findFirst({
-      where: { id },
+      where: { sku },
     })
 
     if (!item) {
@@ -50,11 +50,11 @@ export default function ListingItemDetailPage() {
   const { t } = useTranslation("listing")
 
   function handleAddToCart() {
-    const { id, commerceId } = item
+    const { id, commerceId, sku } = item
 
     if (!commerceId) throw new Error("Item must have a commerceId")
 
-    cart.add({ commerceId, id, price, quantity, variantId })
+    cart.add({ commerceId, id, price, quantity, sku, variantId })
     setOpen(false)
   }
 

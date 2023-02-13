@@ -70,7 +70,7 @@ model Item {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
-  sku        String? @unique
+  sku        String  @unique
   commerceId String? @db.VarChar(255)
 
   listing   Listing @relation(fields: [listingId], references: [id])

@@ -10,7 +10,8 @@ export default function CartItem({
   commerceId,
   id,
   quantity,
-}: Pick<Item, "id" | "commerceId" | "quantity">) {
+  sku,
+}: Pick<Item, "id" | "commerceId" | "quantity" | "sku">) {
   const { data, isLoading, isError } = useProduct(commerceId!)
   const cart = useCart()
   const { t } = useTranslation("listing")
@@ -43,7 +44,7 @@ export default function CartItem({
         <div>
           <div className="flex justify-between text-base font-medium text-gray-900">
             <h3>
-              <Link to={`../${id}`}>{title}</Link>
+              <Link to={`../${sku}`}>{title}</Link>
             </h3>
             <p className="ml-4">
               <FormattedNumber

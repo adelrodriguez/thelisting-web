@@ -9,13 +9,13 @@ import { useProduct } from "~/utils/hooks"
 import { getPriceSymbol } from "~/utils/money"
 
 export default function RegistryItem({
-  id,
-  commerceId,
   available,
+  commerceId,
+  sku,
 }: {
-  id: Item["id"]
-  commerceId: string
   available: boolean
+  commerceId: string
+  sku: Item["sku"]
 }) {
   const { data, isLoading, isError, error } = useProduct(commerceId)
   const { t } = useTranslation("listing")
@@ -45,7 +45,7 @@ export default function RegistryItem({
   const { title, imageUrl, currencyCode, price } = data
 
   return (
-    <Link className="group text-center font-body" to={id} preventScrollReset>
+    <Link className="group text-center font-body" to={sku} preventScrollReset>
       <div className="relative">
         <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-sm sm:rounded-md xl:aspect-w-7 xl:aspect-h-8">
           <Image

@@ -19,7 +19,7 @@ export default function Registry({ items }: { items: Item[] }) {
         return (
           <RegistryItem
             commerceId={item.commerceId}
-            id={item.id}
+            sku={item.sku}
             key={item.id}
             available={isAvailable}
           />

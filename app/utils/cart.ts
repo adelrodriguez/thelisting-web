@@ -7,6 +7,7 @@ export const CartItemSchema = z.object({
   id: z.string(),
   price: z.number().min(0),
   quantity: z.number().min(1),
+  sku: z.string(),
   variantId: z.string(),
 })
 export type CartItem = z.infer<typeof CartItemSchema>
