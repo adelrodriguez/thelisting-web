@@ -1,13 +1,12 @@
 import { flattenConnection } from "@shopify/storefront-kit-react"
 import type { Processor } from "bullmq"
 
+import prisma from "~/helpers/prisma.server"
+import { createQueue } from "~/helpers/queue.server"
 import Sentry from "~/services/sentry"
 import { GenericError } from "~/utils/error"
 import { getShopifyId, transformCustomAttributes } from "~/utils/shopify"
 import { getOrder } from "~/utils/shopify.server"
-
-import prisma from "../prisma.server"
-import { createQueue } from "../queue.server"
 
 export type QueueData = {
   orderId: string | number

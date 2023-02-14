@@ -2,6 +2,7 @@ import type { LoaderArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { withZod } from "@remix-validated-form/with-zod"
 import { useSnackbar } from "notistack"
+import { unauthorized } from "remix-utils"
 import {
   setFormDefaults,
   ValidatedForm,
@@ -12,7 +13,7 @@ import { z } from "zod"
 import { FormInput, FormSubmit } from "~/components/form"
 import auth from "~/helpers/auth.server"
 import prisma from "~/helpers/prisma.server"
-import { getFormData, Unauthorized } from "~/utils/http.server"
+import { getFormData } from "~/utils/http.server"
 
 export const handle = {
   crumb: () => ({
@@ -45,7 +46,8 @@ export async function loader({ request }: LoaderArgs) {
 export async function action({ request }: LoaderArgs) {
   const user = await auth.isAuthenticated(request)
 
-  if (!user) throw Unauthorized
+  if (!user)
+    throw unauthorized("You must be logged in to edit your user settings")
 
   const formData = await getFormData(request)
   const result = await validator.validate(formData)

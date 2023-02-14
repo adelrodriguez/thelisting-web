@@ -36,8 +36,13 @@ export const processor: Processor<QueueData> = async (job) => {
         symbol: getPriceSymbol(order.totalPriceSet.shopMoney.currencyCode),
       }),
       buyer: order.customer?.displayName!,
-      // TODO(adelrodriguez): Remove shipping item
-      gift: order.lineItems.nodes.map((node) => node.product?.title).join(", "),
+      gift: order.lineItems.nodes
+        // TODO(adelrodriguez): Remove shipping item more elegantly. Probably
+        // use the variantId to filter it out
+        .filter((node) => !node.product?.title.includes("Gestión y Entrega"))
+        .map((node) => node.product?.title)
+        .join(", "),
+      // TODO: Add link to order
       path: "pending",
       recipient: listing.owner.firstName,
     })
