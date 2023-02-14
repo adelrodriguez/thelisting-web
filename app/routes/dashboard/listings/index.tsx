@@ -1,3 +1,4 @@
+import { EyeIcon } from "@heroicons/react/20/solid"
 import type { Listing } from "@prisma/client"
 import { Link } from "@remix-run/react"
 import {
@@ -56,6 +57,20 @@ const columns = [
     header: "Title",
   }),
   columnHelper.accessor("path", {
+    cell: (props) => {
+      const path = props.getValue()
+
+      return (
+        <Link
+          to={`/${path}`}
+          className="group text-gray-600 hover:text-gray-900 hover:underline"
+          target="_blank"
+        >
+          {path}
+          <EyeIcon className="ml-1 hidden h-4 w-4 group-hover:inline-block" />
+        </Link>
+      )
+    },
     header: "Path",
   }),
   columnHelper.accessor("status", {

@@ -4,6 +4,7 @@ import { withZod } from "@remix-validated-form/with-zod"
 import { startOfTomorrow } from "date-fns"
 import { useSnackbar } from "notistack"
 import { useEffect, useState } from "react"
+import { unauthorized } from "remix-utils"
 import { ValidatedForm, validationError } from "remix-validated-form"
 import { z } from "zod"
 
@@ -11,7 +12,7 @@ import { FormDate, FormInput, FormSelect, FormSubmit } from "~/components/form"
 import auth from "~/helpers/auth.server"
 import prisma from "~/helpers/prisma.server"
 import { createListingCommerceEntityQueue } from "~/helpers/queues"
-import { getFormData, Unauthorized } from "~/utils/http.server"
+import { getFormData } from "~/utils/http.server"
 import {
   EventDateSchema,
   PathSchema,
@@ -34,7 +35,7 @@ const validator = withZod(CreateListingSchema)
 export async function action({ request }: ActionArgs) {
   const user = await auth.isAuthenticated(request)
 
-  if (!user) throw Unauthorized
+  if (!user) throw unauthorized("You must be logged in to create a listing")
 
   const CreateListingSchemaWithUniquePath = CreateListingSchema.refine(
     async (data) => {
@@ -71,6 +72,8 @@ export async function action({ request }: ActionArgs) {
       name: "My Banner",
       position: 1,
       properties: {
+        backgroundImage: null,
+        subtitle: null,
         title: listing.title,
       },
       type: "Banner",

@@ -17,6 +17,10 @@ module.exports = z.object({
   BULL_BOARD_PASSWORD: z.string().optional(),
   BULL_BOARD_PORT: z.string().optional(),
 
+  CLOUDFLARE_ACCOUNT_ID: z.string(),
+  CLOUDFLARE_IMAGES_ACCOUNT_HASH: z.string(),
+  CLOUDFLARE_IMAGES_API_TOKEN: z.string(),
+
   COOKIE_SIGNING_SECRET: z.string(),
 
   DATABASE_URL: z.string().url(),

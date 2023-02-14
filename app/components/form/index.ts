@@ -1,4 +1,5 @@
 export { default as FormDate } from "./FormDate"
+export { default as FormImageUpload } from "./FormImageUpload"
 export { default as FormInput } from "./FormInput"
 export { default as FormListRadioGroup } from "./FormListRadioGroup"
 export { default as FormSelect } from "./FormSelect"

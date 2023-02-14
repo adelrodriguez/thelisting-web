@@ -1,10 +1,12 @@
+import { DocumentArrowDownIcon } from "@heroicons/react/24/outline"
 import { Outlet, useNavigate, useOutletContext } from "@remix-run/react"
+import clsx from "clsx"
 import { enqueueSnackbar } from "notistack"
 import { useState } from "react"
+import { useDropzone } from "react-dropzone"
 import invariant from "tiny-invariant"
 
 import { ScrapeProductsTable } from "~/components/admin"
-import { Dropzone } from "~/components/common"
 import { useCSVParser } from "~/utils/hooks"
 import type { ScrapeProductsTableRow } from "~/utils/scraper"
 
@@ -44,6 +46,15 @@ export default function AdminToolsProductScraperPage() {
   })
   const [products, setProducts] = useState<ScrapeProductsTableRow[]>([])
   const navigate = useNavigate()
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    accept: { "text/csv": [".csv"] },
+    maxFiles: 1,
+    onDrop: (files) => {
+      invariant(files[0], "You must provide a file")
+
+      parse(files[0])
+    },
+  })
 
   function handleExport(data: ScrapeProductsTableRow[]) {
     setProducts(data)
@@ -77,14 +88,43 @@ export default function AdminToolsProductScraperPage() {
             onAddToListing={handleAddToListing}
           />
         ) : (
-          <Dropzone
-            fileTypes={{ "text/csv": [".csv"] }}
-            onDrop={(files) => {
-              invariant(files[0], "You must provide a file")
+          <div className="mx-auto w-full max-w-7xl">
+            <button
+              {...getRootProps({
+                className: clsx(
+                  "relative block w-full rounded-lg p-6 text-center transition-all hover:border-gray-400  focus:shadow-lg focus:outline-none",
+                  {
+                    "bg-gray-100 shadow-lg": isDragActive,
+                    "border-2 border-dashed border-gray-300": !isDragActive,
+                  }
+                ),
+                type: "button",
+              })}
+            >
+              <div className="flex flex-col space-y-1 text-sm text-gray-600">
+                <DocumentArrowDownIcon className="mx-auto h-12 w-12 text-gray-400" />
+                <div className="mx-auto flex">
+                  <label
+                    htmlFor="file-upload"
+                    className="relative cursor-pointer rounded-md  font-medium text-gray-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-gray-500 focus-within:ring-offset-2 hover:text-gray-500"
+                  >
+                    Upload a file
+                  </label>
+                  <input
+                    {...getInputProps({
+                      className: "sr-only",
+                      id: "csv-upload",
+                      name: "csv-upload",
+                      type: "file",
+                    })}
+                  />
+                  <p className="pl-1">or drag and drop</p>
+                </div>
 
-              parse(files[0])
-            }}
-          />
+                <p className="text-xs text-gray-500">CSV files up to 10MB</p>
+              </div>
+            </button>
+          </div>
         )}
       </div>
       <Outlet context={{ products }} />

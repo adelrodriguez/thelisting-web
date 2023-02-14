@@ -6,6 +6,7 @@ import { withZod } from "@remix-validated-form/with-zod"
 import { startOfTomorrow } from "date-fns"
 import { useSnackbar } from "notistack"
 import { useState, useEffect } from "react"
+import { unauthorized } from "remix-utils"
 import {
   setFormDefaults,
   ValidatedForm,
@@ -22,12 +23,7 @@ import {
 } from "~/components/form"
 import auth from "~/helpers/auth.server"
 import prisma from "~/helpers/prisma.server"
-import {
-  Forbidden,
-  getFormData,
-  NotFound,
-  Unauthorized,
-} from "~/utils/http.server"
+import { Forbidden, getFormData, NotFound } from "~/utils/http.server"
 import {
   CommerceIdSchema,
   EventDateSchema,
@@ -76,7 +72,7 @@ export async function loader({ params }: LoaderArgs) {
 export async function action({ request, params }: ActionArgs) {
   const user = await auth.isAuthenticated(request)
 
-  if (!user) throw Unauthorized
+  if (!user) throw unauthorized("You must be logged in to update a listing.")
 
   const sku = params.sku
 

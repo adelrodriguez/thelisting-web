@@ -1,7 +1,6 @@
 export { default as Alert } from "./Alert"
 export { default as Button } from "./Button"
 export { default as Checkbox } from "./Checkbox"
-export { default as Dropzone } from "../common/Dropzone"
 export { default as FormattedNumber } from "./FormattedNumber"
 export { default as Image } from "./Image"
 export { default as Input } from "./Input"

@@ -1,7 +1,7 @@
 import { z } from "zod"
 
 export const BannerPropertiesSchema = z.object({
-  backgroundImage: z.string().url().optional(),
+  backgroundImage: z.any().optional(),
   subtitle: z.string().optional(),
   title: z.string(),
 })
