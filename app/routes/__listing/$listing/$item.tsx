@@ -35,10 +35,6 @@ export async function loader({ params }: LoaderArgs) {
   }
 }
 
-export function CatchBoundary() {
-  return <div>Item not found</div>
-}
-
 export default function ListingItemDetailPage() {
   const cart = useCart()
   const item = useLoaderData<typeof loader>()

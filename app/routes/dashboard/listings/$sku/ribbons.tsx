@@ -20,6 +20,7 @@ import {
   generateCloudflareImageUrl,
   uploadImageToCloudflare,
 } from "~/utils/cloudflare.server"
+import type { ErrorBoundaryProps } from "~/utils/remix"
 import { json, useLoaderData } from "~/utils/remix"
 import { BannerPropertiesSchema } from "~/utils/ribbon"
 
@@ -56,7 +57,7 @@ export async function loader({ params }: LoaderArgs) {
 export async function action({ request }: ActionArgs) {
   const uploadHandler = composeUploadHandlers(
     async ({ name, data, filename }) => {
-      if (name !== "properties.backgroundImage") {
+      if (name !== "properties.backgroundImage" || !filename) {
         return undefined
       }
 
@@ -74,16 +75,17 @@ export async function action({ request }: ActionArgs) {
   if (result.error) return validationError(result.error)
 
   const formId = result.formId
-  const { properties } = result.data
 
   const ribbon = await prisma.ribbon.update({
-    data: {
-      properties,
-    },
+    data: result.data,
     where: { id: formId },
   })
 
-  return ribbon
+  return json({ ribbon })
+}
+
+export function ErrorBoundary({ error }: ErrorBoundaryProps) {
+  return <div>There was an error. Error: {error.message}</div>
 }
 
 export default function DashboardListingRibbonsPage() {
@@ -112,6 +114,7 @@ export default function DashboardListingRibbonsPage() {
                 validator={validator}
                 method="post"
                 encType="multipart/form-data"
+                resetAfterSubmit
               >
                 <div className="shadow sm:overflow-hidden sm:rounded-md">
                   <div className="space-y-6 bg-white px-4 py-5 sm:p-6">
