@@ -1,11 +1,15 @@
 import { ListingType } from "@prisma/client"
-import type { ActionArgs } from "@remix-run/node"
+import type { ActionArgs, LoaderArgs } from "@remix-run/node"
 import { withZod } from "@remix-validated-form/with-zod"
 import { startOfTomorrow } from "date-fns"
 import { useSnackbar } from "notistack"
 import { useEffect, useState } from "react"
 import { unauthorized } from "remix-utils"
-import { ValidatedForm, validationError } from "remix-validated-form"
+import {
+  setFormDefaults,
+  ValidatedForm,
+  validationError,
+} from "remix-validated-form"
 import { z } from "zod"
 
 import { FormDate, FormInput, FormSelect, FormSubmit } from "~/components/form"
@@ -20,17 +24,48 @@ import {
   TypeSchema,
   verifyPathIsUnique,
 } from "~/utils/listing"
-import { redirect } from "~/utils/remix"
+import { json, redirect, useLoaderData } from "~/utils/remix"
+import { getUserFullName } from "~/utils/user"
 import { isWindowDefined } from "~/utils/window"
+
+export const handle = {
+  crumb: () => ({
+    href: `/dashboard/listings/new/`,
+    name: "New Listing",
+  }),
+}
 
 const CreateListingSchema = z.object({
   eventDate: EventDateSchema,
+  ownerId: z.string().uuid(),
   path: PathSchema,
   title: TitleSchema,
   type: TypeSchema,
 })
 
 const validator = withZod(CreateListingSchema)
+
+export async function loader({ request }: LoaderArgs) {
+  const user = await auth.isAuthenticated(request)
+
+  if (!user) throw unauthorized("You must be logged in to create a listing")
+
+  const users = await prisma.user.findMany({
+    orderBy: { firstName: "asc" },
+    select: { firstName: true, id: true, lastName: true },
+  })
+
+  return json({
+    users,
+    ...setFormDefaults("createListing", {
+      eventDate: startOfTomorrow(),
+      ownerId: user.id,
+      path: "",
+      title: "",
+      type: undefined,
+    }),
+  })
+}
 
 export async function action({ request }: ActionArgs) {
   const user = await auth.isAuthenticated(request)
@@ -56,13 +91,7 @@ export async function action({ request }: ActionArgs) {
   if (result.error) return validationError(result.error)
 
   const listing = await prisma.listing.create({
-    data: {
-      eventDate: result.data.eventDate,
-      ownerId: user.id,
-      path: result.data.path,
-      title: result.data.title,
-      type: result.data.type,
-    },
+    data: result.data,
   })
 
   // todo: move this to a queue
@@ -89,6 +118,7 @@ export async function action({ request }: ActionArgs) {
 
 export default function CreateListingsPage() {
   const { enqueueSnackbar } = useSnackbar()
+  const { users } = useLoaderData<typeof loader>()
   const [origin, setOrigin] = useState("")
 
   useEffect(() => {
@@ -111,6 +141,7 @@ export default function CreateListingsPage() {
         </p>
       </div>
       <ValidatedForm
+        id="createListing"
         validator={validator}
         method="post"
         className="m-auto mt-8 flex flex-col gap-y-6 sm:w-[500px]"
@@ -121,12 +152,6 @@ export default function CreateListingsPage() {
               "The listing was successfully created. The Shopify collection will be created shortly.",
             variant: "success",
           })
-        }}
-        defaultValues={{
-          eventDate: startOfTomorrow(),
-          path: "",
-          title: "",
-          type: undefined,
         }}
       >
         <FormInput
@@ -175,6 +200,15 @@ export default function CreateListingsPage() {
           label="Event Type"
           name="type"
           description="The type of event you're hosting"
+        />
+        <FormSelect
+          options={users.map((user) => ({
+            label: getUserFullName(user),
+            value: user.id,
+          }))}
+          label="Owner"
+          name="ownerId"
+          description="The owner of this listing"
         />
 
         <FormSubmit text="Create" loadingText="Creating..." />

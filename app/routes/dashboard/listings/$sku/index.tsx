@@ -1,12 +1,11 @@
 import { ListingStatus, ListingType, UserRole } from "@prisma/client"
 import type { ActionArgs, LoaderArgs } from "@remix-run/node"
-import { json } from "@remix-run/node"
 import type { RouteMatch } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
 import { startOfTomorrow } from "date-fns"
 import { useSnackbar } from "notistack"
 import { useState, useEffect } from "react"
-import { unauthorized } from "remix-utils"
+import { forbidden, notFound, unauthorized } from "remix-utils"
 import {
   setFormDefaults,
   ValidatedForm,
@@ -23,7 +22,7 @@ import {
 } from "~/components/form"
 import auth from "~/helpers/auth.server"
 import prisma from "~/helpers/prisma.server"
-import { Forbidden, getFormData, NotFound } from "~/utils/http.server"
+import { getFormData } from "~/utils/http.server"
 import {
   CommerceIdSchema,
   EventDateSchema,
@@ -32,10 +31,12 @@ import {
   TitleSchema,
   TypeSchema,
 } from "~/utils/listing"
+import { json, useLoaderData } from "~/utils/remix"
+import { getUserFullName } from "~/utils/user"
 import { isWindowDefined } from "~/utils/window"
 
 export const handle = {
-  crumb: ({ params }: RouteMatch) => ({
+  crumb: ({ params, data }: RouteMatch) => ({
     href: `/dashboard/listings/${params.sku}/`,
     name: "Details",
   }),
@@ -45,6 +46,7 @@ export const handle = {
 const EditListingSchema = z.object({
   commerceId: CommerceIdSchema,
   eventDate: EventDateSchema,
+  ownerId: z.string().uuid(),
   path: PathSchema,
   status: StatusSchema,
   title: TitleSchema,
@@ -56,17 +58,22 @@ const validator = withZod(EditListingSchema)
 export async function loader({ params }: LoaderArgs) {
   const sku = params.sku
 
-  if (!sku) throw NotFound
+  if (!sku) throw notFound("Listing not found")
 
-  if (isNaN(Number(sku))) throw NotFound
+  if (isNaN(Number(sku))) throw notFound("Listing not found")
 
   const listing = await prisma.listing.findUnique({
     where: { sku: Number(sku) },
   })
 
-  if (!listing) throw NotFound
+  if (!listing) throw notFound("Listing not found")
 
-  return json(setFormDefaults("editListing", listing))
+  const users = await prisma.user.findMany({
+    orderBy: { firstName: "asc" },
+    select: { firstName: true, id: true, lastName: true },
+  })
+
+  return json({ listing, users, ...setFormDefaults("editListing", listing) })
 }
 
 export async function action({ request, params }: ActionArgs) {
@@ -76,15 +83,15 @@ export async function action({ request, params }: ActionArgs) {
 
   const sku = params.sku
 
-  if (!sku) throw NotFound
+  if (!sku) throw notFound("Listing not found")
 
-  if (isNaN(Number(sku))) throw NotFound
+  if (isNaN(Number(sku))) throw notFound("Listing not found")
 
   const listing = await prisma.listing.findUnique({
     where: { sku: Number(sku) },
   })
 
-  if (!listing) throw NotFound
+  if (!listing) throw notFound("Listing not found")
 
   const formData = await getFormData(request)
   const result = await validator.validate(formData)
@@ -92,19 +99,22 @@ export async function action({ request, params }: ActionArgs) {
   if (result.error) return validationError(result.error)
 
   if (listing.ownerId !== user.id && user.role !== UserRole.Admin) {
-    throw Forbidden
+    throw forbidden({
+      message: "You do not have permission to update this listing.",
+    })
   }
 
-  await prisma.listing.update({
+  const updatedListing = await prisma.listing.update({
     data: { ...result.data },
     where: { id: listing.id },
   })
 
-  return null
+  return json({ listing: updatedListing })
 }
 
 export default function DashboardListingPage() {
   const { enqueueSnackbar } = useSnackbar()
+  const { users } = useLoaderData<typeof loader>()
   const [origin, setOrigin] = useState("")
   useEffect(() => {
     if (isWindowDefined()) {
@@ -174,6 +184,14 @@ export default function DashboardListingPage() {
         label="Event Type"
         name="type"
         description="The type of event you're hosting"
+      />
+      <FormSelect
+        options={users.map((user) => ({
+          label: getUserFullName(user),
+          value: user.id,
+        }))}
+        label="Owner"
+        name="ownerId"
       />
       <FormListRadioGroup
         name="status"

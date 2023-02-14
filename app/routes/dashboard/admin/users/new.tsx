@@ -1,0 +1,106 @@
+import { UserRole } from "@prisma/client"
+import type { ActionArgs } from "@remix-run/node"
+import { withZod } from "@remix-validated-form/with-zod"
+import { useSnackbar } from "notistack"
+import { unauthorized } from "remix-utils"
+import { ValidatedForm, validationError } from "remix-validated-form"
+
+import { FormInput, FormListRadioGroup, FormSubmit } from "~/components/form"
+import auth from "~/helpers/auth.server"
+import prisma from "~/helpers/prisma.server"
+import { getFormData } from "~/utils/http.server"
+import { redirect } from "~/utils/remix"
+import { UserSchema } from "~/utils/user"
+
+const validator = withZod(UserSchema)
+
+export const handle = {
+  crumb: () => ({
+    href: `/dashboard/admin/users/new/`,
+    name: "New User",
+  }),
+}
+
+export async function action({ request }: ActionArgs) {
+  const user = await auth.isAuthenticated(request)
+
+  if (!user) throw unauthorized("You must be logged in to create a listing")
+
+  const formData = await getFormData(request)
+
+  const result = await validator.validate(formData)
+
+  if (result.error) return validationError(result.error)
+
+  await prisma.user.create({
+    data: result.data,
+  })
+
+  return redirect("/dashboard/admin/users")
+}
+
+export default function CreateListingsPage() {
+  const { enqueueSnackbar } = useSnackbar()
+
+  return (
+    <div className="mx-auto max-w-7xl py-12 px-4 sm:px-6 lg:px-8">
+      <div className="sm:text-center">
+        <p className="text-base font-semibold uppercase tracking-wide text-gray-600">
+          Users
+        </p>
+        <h2 className="mt-2 text-3xl font-extrabold leading-8 tracking-tight text-gray-900 sm:text-4xl">
+          Create a new user
+        </h2>
+        <p className="mt-4 max-w-2xl text-xl text-gray-500 sm:mx-auto">
+          Create a new user to manage their listings.
+        </p>
+      </div>
+      <ValidatedForm
+        validator={validator}
+        method="post"
+        className="m-auto mt-8 flex w-full max-w-xl flex-col gap-y-6"
+        id="editUser"
+        onSubmit={() => {
+          enqueueSnackbar("User created 🎉", {
+            description: "The user was successfully created",
+            variant: "success",
+          })
+        }}
+      >
+        <FormInput label="First Name" name="firstName" required />
+        <FormInput label="Last Name" name="lastName" required />
+        <FormInput
+          name="email"
+          label="Email"
+          description="The user's email address to receive email notifications"
+          required
+        />
+        <FormInput
+          name="phone"
+          label="Phone"
+          description="The user's phone number to receive WhatsApp notifications"
+        />
+
+        <FormListRadioGroup
+          name="role"
+          label="Role"
+          options={[
+            {
+              description: "A regular user without admin privileges",
+              label: "User",
+              value: UserRole.User,
+            },
+            {
+              description: "A user with admin privileges",
+              label: "Admin",
+              value: UserRole.Admin,
+            },
+          ]}
+          required
+        />
+
+        <FormSubmit text="Update" loadingText="Updating..." />
+      </ValidatedForm>
+    </div>
+  )
+}

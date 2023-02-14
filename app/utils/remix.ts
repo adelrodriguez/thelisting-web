@@ -14,6 +14,8 @@ export const goToParent = () => redirect("..")
 
 export const goHome = () => redirect("/")
 
+export const goToLogin = () => redirect("/login")
+
 // Export remix-typedjson
 export {
   typedjson as json,
