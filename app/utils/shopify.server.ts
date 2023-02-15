@@ -1,7 +1,7 @@
 import type { Listing } from "@prisma/client"
 import request from "graphql-request"
 
-import type { Currency, CustomAttribute } from "~/config/consts"
+import type { CustomAttribute } from "~/config/consts"
 import { CUSTOM_ATTRIBUTES } from "~/config/consts"
 import { SHOPIFY_SHIPPING_ITEM_1_ID } from "~/config/env.server"
 import {
@@ -146,9 +146,9 @@ export async function createProduct({
   tags,
   images,
   price,
-  currency,
   store,
   collection,
+  cost,
 }: {
   title?: string | null
   description?: string | null
@@ -158,7 +158,7 @@ export async function createProduct({
     altText?: string | null
   }[]
   price: number
-  currency?: Currency | null
+  cost: number
   store?: string | null
   collection: Listing["commerceId"]
 }) {
@@ -174,6 +174,10 @@ export async function createProduct({
         title,
         variants: [
           {
+            inventoryItem: {
+              cost,
+              tracked: false,
+            },
             price,
             requiresShipping: false,
             taxable: false,

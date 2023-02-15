@@ -53,6 +53,16 @@ export const getOrderQuery = graphql(`
           product {
             id
             title
+            variants(first: 1) {
+              nodes {
+                price
+                inventoryItem {
+                  unitCost {
+                    amount
+                  }
+                }
+              }
+            }
           }
         }
       }

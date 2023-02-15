@@ -18,7 +18,7 @@ export function getPriceSymbol(currencyCode?: string): string {
   }
 }
 
-export function calculatePricePlusMargin(
+export function calculatePriceWithMargin(
   price: number,
   margin: number
 ): number {

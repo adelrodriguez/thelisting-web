@@ -2,6 +2,7 @@ import type { ActionArgs } from "@remix-run/node"
 import * as Sentry from "@sentry/remix"
 import { z } from "zod"
 
+import { ONE_MINUTE } from "~/config/consts"
 import { notifyPurchaseQueue, saveOrderCustomerQueue } from "~/helpers/queues"
 import {
   getJSON,
@@ -43,9 +44,13 @@ export async function action({ request }: ActionArgs) {
       orderId: order.id,
     })
 
-    await notifyPurchaseQueue.add(`Order #${order.number}`, {
-      orderId: order.id,
-    })
+    await notifyPurchaseQueue.add(
+      `Order #${order.number}`,
+      {
+        orderId: order.id,
+      },
+      { attempts: 5, backoff: { delay: ONE_MINUTE, type: "exponential" } }
+    )
 
     return OK
   } catch (error) {

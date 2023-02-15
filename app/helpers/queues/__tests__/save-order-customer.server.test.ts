@@ -75,6 +75,7 @@ test("calls the GET /contacts/:id endpoint if the contact already exists", async
     createdAt: faker.date.past(),
     email,
     id: faker.datatype.uuid(),
+    name: faker.name.fullName(),
     updatedAt: faker.date.past(),
   })
 

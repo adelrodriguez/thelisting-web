@@ -94,7 +94,11 @@ model Purchase {
   listing   Listing @relation(fields: [listingId], references: [id])
   listingId String  @db.Uuid
 
-  amount Float
+  total Float
+  cost  Float
+
+  customer   Customer? @relation(fields: [customerId], references: [id])
+  customerId String?   @db.Uuid
 
   note Note?
 
@@ -136,6 +140,9 @@ model ItemPurchase {
 
   purchase   Purchase @relation(fields: [purchaseId], references: [id])
   purchaseId String   @db.Uuid
+
+  total Float
+  cost  Float
 
   quantity Int
 
@@ -187,9 +194,12 @@ model Customer {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
-  email String @unique
+  email String  @unique
+  name  String?
 
   alegraId String
+
+  purchase Purchase[]
 }
 
 model Webhook {

@@ -6,7 +6,7 @@ import prisma from "~/helpers/prisma.server"
 import { createQueue } from "~/helpers/queue.server"
 import Sentry from "~/services/sentry"
 import {
-  calculatePricePlusMargin,
+  calculatePriceWithMargin,
   multiplyPriceByExchangeRate,
 } from "~/utils/money"
 import type { ScrapeProductsTableRow } from "~/utils/scraper"
@@ -48,12 +48,14 @@ export const processor: Processor<QueueData> = async (job) => {
 
     job.log(`Found ${shopifyProducts.length} product(s) with tag ${tag}`)
 
+    const exchangeRate = product.currency === "USD" ? job.data.exchangeRate : 1
+
     let commerceId: string
     if (shopifyProducts.length === 0) {
       // If product doesn't exist, create it
       const shopifyProduct = await createProduct({
         collection: listing.commerceId,
-        currency: product.currency,
+        cost: multiplyPriceByExchangeRate(product.amount || 0, exchangeRate),
         description: product.description,
         images: [
           {
@@ -61,11 +63,8 @@ export const processor: Processor<QueueData> = async (job) => {
             src: product.image,
           },
         ],
-        price: calculatePricePlusMargin(
-          multiplyPriceByExchangeRate(
-            product.amount || 0,
-            product.currency === "USD" ? job.data.exchangeRate : 1
-          ),
+        price: calculatePriceWithMargin(
+          multiplyPriceByExchangeRate(product.amount || 0, exchangeRate),
           margin
         ),
         store: product.store,

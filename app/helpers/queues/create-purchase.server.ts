@@ -29,16 +29,27 @@ export const processor: Processor<QueueData> = async (job) => {
 
     const purchasedItems = flattenConnection(order.lineItems).map(
       (lineItem) => ({
+        cost: parseFloat(
+          flattenConnection(lineItem.product?.variants)[0]?.inventoryItem
+            .unitCost?.amount || 0
+        ),
         id: lineItem.product?.id!,
         quantity: lineItem.quantity,
+        total: parseFloat(
+          flattenConnection(lineItem.product?.variants)[0]!.price
+        ),
       })
     )
 
     const purchase = await prisma.purchase.create({
       data: {
-        amount: Number(order.totalPriceSet.shopMoney.amount),
         commerceId: order.id,
+        cost: purchasedItems.reduce(
+          (acc, item) => acc + item.cost * item.quantity,
+          0
+        ),
         listingId,
+        total: parseFloat(order.totalPriceSet.shopMoney.amount),
       },
     })
 
@@ -55,12 +66,25 @@ export const processor: Processor<QueueData> = async (job) => {
 
     job.log(`Created purchase ${purchase.id}`)
 
+    // TODO(adelrodriguez): Split this into a separate job
     for (const purchasedItem of purchasedItems) {
       const item = await prisma.item.findFirst({
         where: { commerceId: purchasedItem.id, listingId },
       })
 
       if (!item) continue
+
+      await prisma.itemPurchase.create({
+        data: {
+          cost: purchasedItem.cost,
+          itemId: item.id,
+          purchaseId: purchase.id,
+          quantity: purchasedItem.quantity,
+          total: purchasedItem.total,
+        },
+      })
+
+      job.log(`Created item purchase ${item.id} → ${purchase.id}`)
 
       await prisma.item.update({
         data: {
@@ -74,16 +98,6 @@ export const processor: Processor<QueueData> = async (job) => {
           item.stock - purchasedItem.quantity
         })`
       )
-
-      await prisma.itemPurchase.create({
-        data: {
-          itemId: item.id,
-          purchaseId: purchase.id,
-          quantity: purchasedItem.quantity,
-        },
-      })
-
-      job.log(`Created item purchase ${item.id} → ${purchase.id}`)
     }
 
     job.log(`Finished processing purchase ${purchase.id}`)

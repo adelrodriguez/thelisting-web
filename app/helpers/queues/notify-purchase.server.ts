@@ -16,6 +16,10 @@ export type QueueData = {
 export const processor: Processor<QueueData> = async (job) => {
   try {
     const order = await getOrder(getShopifyId(job.data.orderId, "Order"))
+    const purchase = await prisma.purchase.findFirstOrThrow({
+      include: { customer: true },
+      where: { commerceId: order.id },
+    })
 
     const { listing_id: listingId } = transformCustomAttributes(
       order.customAttributes
@@ -31,19 +35,17 @@ export const processor: Processor<QueueData> = async (job) => {
     }
 
     await whatsapp.sendGiftPurchaseNotification(listing.owner.phone, {
-      // TODO(adelrodriguez): Format amount to remove margin
-      amount: currency(order.totalPriceSet.shopMoney.amount).format({
+      amount: currency(purchase.cost).format({
         symbol: getPriceSymbol(order.totalPriceSet.shopMoney.currencyCode),
       }),
-      buyer: order.customer?.displayName!,
+      buyer: purchase.customer?.name || order.customer?.displayName!,
       gift: order.lineItems.nodes
         // TODO(adelrodriguez): Remove shipping item more elegantly. Probably
         // use the variantId to filter it out
         .filter((node) => !node.product?.title.includes("Gestión y Entrega"))
         .map((node) => node.product?.title)
         .join(", "),
-      // TODO: Add link to order
-      path: "pending",
+      path: `${listing.path}/review`,
       recipient: listing.owner.firstName,
     })
   } catch (error) {

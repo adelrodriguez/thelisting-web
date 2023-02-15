@@ -20,7 +20,7 @@ export const processor: Processor<QueueData> = async (job) => {
 
     let contact: CreateContactResponse | GetContactResponse
 
-    const savedContact = await prisma.customer.findUnique({
+    let savedContact = await prisma.customer.findUnique({
       where: { email: order.customer?.email ?? undefined },
     })
 
@@ -44,15 +44,23 @@ export const processor: Processor<QueueData> = async (job) => {
 
       contact = await alegra.contacts.create(request)
 
-      await prisma.customer.create({
+      savedContact = await prisma.customer.create({
         data: {
           alegraId: contact.id,
           email: contact.email,
+          name: order.customer?.displayName,
         },
       })
 
       job.log("Contact created successfully")
     }
+
+    await prisma.purchase.updateMany({
+      data: {
+        customerId: savedContact.id,
+      },
+      where: { commerceId: order.id },
+    })
 
     // Create the invoice for the customer
     await createInvoiceQueue.add(`Order ${order.name}`, {
