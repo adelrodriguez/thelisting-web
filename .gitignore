@@ -46,9 +46,6 @@ yarn-error.log*
 /redis-data
 dump.rdb
 
-# scripts
-/scripts
-
 # email
 .react-email
 /emails/*

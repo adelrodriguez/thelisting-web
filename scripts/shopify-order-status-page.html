@@ -1,0 +1,10 @@
+<script>
+  let baseUrl = "http://v2.thelisting.do"
+
+  if (Shopify.checkout.billing_address.city === "Local Test") {
+    baseUrl = "http://localhost:3000"
+  }
+
+  window.location.href =
+    baseUrl + "/thank-you?order_id=" + Shopify.checkout.order_id
+</script>

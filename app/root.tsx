@@ -36,7 +36,8 @@ const client = new QueryClient()
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
-  description: "Coming soon",
+  description:
+    "Listas de regalo personalizadas para todo tipo de eventos. Te permitimos elegir artículos de cualquier tienda que desees; logistica de compra y entrega incluida.",
   title: "The Listing",
   viewport: "width=device-width,initial-scale=1",
 })

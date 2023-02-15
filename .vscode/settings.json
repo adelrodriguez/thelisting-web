@@ -26,5 +26,8 @@
   },
   "cSpell.words": [
     "alegra"
-  ]
+  ],
+  "[ignore]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format"
+  }
 }
