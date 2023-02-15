@@ -75,6 +75,11 @@ export default function ListingReviewPage() {
 
               <div className="mt-16">
                 <div className="mx-auto max-w-2xl space-y-8 sm:px-4 lg:max-w-4xl lg:px-0">
+                  {listing.purchases.length === 0 && (
+                    <h2 className="px-4 py-5 text-center font-body text-lg font-medium text-gray-500 sm:px-6">
+                      {t("listing:yourGiftsEmpty")}
+                    </h2>
+                  )}
                   {listing.purchases.map((purchase, index) => (
                     <Disclosure key={purchase.id} defaultOpen={index === 0}>
                       {({ open }) => (

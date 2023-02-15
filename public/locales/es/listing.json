@@ -8,9 +8,12 @@
     "submitting": "Preparando tu compra..."
   },
   "giftSent": "¡Regalo listo! 🎁",
+  "giftedBy": "Regalado por",
+  "giftedOn": "Regalado el",
   "goBack": "Volver a la lista",
   "itemDescription": "Descripción del artículo",
   "itemInformation": "Información del artículo",
+  "leftYouANote": "{{name}} te dejó un mensaje:",
   "note": {
     "placeholder": "Escribe tu mensaje aquí...",
     "subtitle": "Tu mensaje sera enviado al destinatario cuando la orden sea procesada",
@@ -26,11 +29,8 @@
   },
   "shippingNote": "Los artículos se enviarán a los dueños de la lista.",
   "thankYou": "¡Gracias por tu regalo, {{name}}!",
+  "totalGifted": "Total regalado",
   "yourGifts": "Tus regalos",
   "yourGiftsDescription": "Aquí puedes ver los regalos que has recibido, y los mensajes que te han dejado.",
-  "yourGiftsEmpty": "No has recibido regalos aún",
-  "giftedBy": "Regalado por",
-  "leftYouANote": "{{name}} te dejó un mensaje:",
-  "giftedOn": "Regalado el",
-  "totalGifted": "Total regalado"
+  "yourGiftsEmpty": "Todavía no has recibido ningún regalo."
 }

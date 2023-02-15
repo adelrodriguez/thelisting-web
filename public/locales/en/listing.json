@@ -8,9 +8,12 @@
     "submitting": "Preparing your checkout..."
   },
   "giftSent": "Gift ready! 🎁",
+  "giftedBy": "Gifted by",
+  "giftedOn": "Gifted on",
   "goBack": "Go back to the registry",
   "itemDescription": "Item description",
   "itemInformation": "Item information",
+  "leftYouANote": "{{name}} left you a message:",
   "note": {
     "placeholder": "Write your note here...",
     "subtitle": "Your note will be delivered to the recipient when the order is processed",
@@ -26,11 +29,8 @@
   },
   "shippingNote": "The items will be shipped to the owners of the registry.",
   "thankYou": "Thank you for your gift, {{name}}!",
+  "totalGifted": "Total gifted",
   "yourGifts": "Your gifts",
   "yourGiftsDescription": "Here you can see the gifts you've received, and the messages that came with them.",
-  "yourGiftsEmpty": "You haven't received any gifts yet.",
-  "giftedBy": "Gifted by",
-  "leftYouANote": "{{name}} left you a message:",
-  "giftedOn": "Gifted on",
-  "totalGifted": "Total gifted"
+  "yourGiftsEmpty": "You haven't received any gifts yet."
 }
