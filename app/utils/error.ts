@@ -130,6 +130,7 @@ export type ShopifyErrorCode =
   | "order_get_error"
   | "product_create_error"
   | "product_publish_error"
+  | "add_products_to_collection_error"
 
 export type FileErrorCode =
   | "no_file_selected"
@@ -137,11 +138,13 @@ export type FileErrorCode =
   | "file_size_too_large"
   | "unable_to_parse_file"
 
+export type ItemErrorCode = "item_not_found"
 export type ErrorCode =
   | AlegraErrorCode
   | DraftOrderErrorCode
   | FileErrorCode
   | GenericErrorCode
+  | ItemErrorCode
   | ProductErrorCode
   | PurchaseErrorCode
   | ShopifyErrorCode

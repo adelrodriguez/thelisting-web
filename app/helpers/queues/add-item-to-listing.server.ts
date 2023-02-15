@@ -1,6 +1,7 @@
 import type { Listing } from "@prisma/client"
 import type { Processor } from "bullmq"
 import { MD5 } from "crypto-js"
+import invariant from "tiny-invariant"
 
 import prisma from "~/helpers/prisma.server"
 import { createQueue } from "~/helpers/queue.server"
@@ -11,6 +12,7 @@ import {
 } from "~/utils/money"
 import type { ScrapeProductsTableRow } from "~/utils/scraper"
 import {
+  addProductsToCollection,
   createProduct,
   getProductsByTag,
   publishToCurrentChannel,
@@ -33,6 +35,11 @@ export const processor: Processor<QueueData> = async (job) => {
         id: listingId,
       },
     })
+
+    invariant(
+      listing.commerceId,
+      `Listing ${listing.id} doesn't have a commerceId`
+    )
 
     const sku = `${listing.sku}-${product.id}`
 
@@ -85,10 +92,15 @@ export const processor: Processor<QueueData> = async (job) => {
       commerceId = shopifyProduct.id
     } else {
       // Since product already exists, let's reuse it
-      const shopifyProduct = shopifyProducts[0]!
+      const [shopifyProduct] = shopifyProducts
 
-      job.log(`Found product ${shopifyProduct.id}`)
+      invariant(shopifyProduct, "Shopify product does not exist")
       commerceId = shopifyProduct.id
+
+      job.log(`Found product ${commerceId}`)
+
+      // Add the product to the listing collection
+      await addProductsToCollection(listing.commerceId, [commerceId])
     }
 
     // Create or update item

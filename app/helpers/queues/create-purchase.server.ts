@@ -1,8 +1,10 @@
 import { flattenConnection } from "@shopify/storefront-kit-react"
 import type { Processor } from "bullmq"
 
+import { SHOPIFY_SHIPPING_ITEM_1_ID } from "~/config/env.server"
 import prisma from "~/helpers/prisma.server"
 import { createQueue } from "~/helpers/queue.server"
+import { createItemPurchaseQueue } from "~/helpers/queues"
 import Sentry from "~/services/sentry"
 import { GenericError } from "~/utils/error"
 import { getShopifyId, transformCustomAttributes } from "~/utils/shopify"
@@ -27,27 +29,28 @@ export const processor: Processor<QueueData> = async (job) => {
       })
     }
 
-    const purchasedItems = flattenConnection(order.lineItems).map(
-      (lineItem) => ({
+    const items = flattenConnection(order.lineItems)
+      .filter(
+        (lineItem) =>
+          flattenConnection(lineItem.product?.variants)[0]?.id !==
+          SHOPIFY_SHIPPING_ITEM_1_ID
+      )
+      .map((lineItem) => ({
+        commerceId: lineItem.product?.id!,
         cost: parseFloat(
           flattenConnection(lineItem.product?.variants)[0]?.inventoryItem
             .unitCost?.amount || 0
         ),
-        id: lineItem.product?.id!,
         quantity: lineItem.quantity,
         total: parseFloat(
           flattenConnection(lineItem.product?.variants)[0]!.price
         ),
-      })
-    )
+      }))
 
     const purchase = await prisma.purchase.create({
       data: {
         commerceId: order.id,
-        cost: purchasedItems.reduce(
-          (acc, item) => acc + item.cost * item.quantity,
-          0
-        ),
+        cost: items.reduce((acc, item) => acc + item.cost * item.quantity, 0),
         listingId,
         total: parseFloat(order.totalPriceSet.shopMoney.amount),
       },
@@ -66,42 +69,26 @@ export const processor: Processor<QueueData> = async (job) => {
 
     job.log(`Created purchase ${purchase.id}`)
 
-    // TODO(adelrodriguez): Split this into a separate job
-    for (const purchasedItem of purchasedItems) {
-      const item = await prisma.item.findFirst({
-        where: { commerceId: purchasedItem.id, listingId },
-      })
+    job.log(`Queueing ${items.length} item purchases...`)
 
-      if (!item) continue
-
-      await prisma.itemPurchase.create({
+    await createItemPurchaseQueue.addBulk(
+      items.map((item) => ({
         data: {
-          cost: purchasedItem.cost,
-          itemId: item.id,
+          item,
           purchaseId: purchase.id,
-          quantity: purchasedItem.quantity,
-          total: purchasedItem.total,
         },
-      })
-
-      job.log(`Created item purchase ${item.id} → ${purchase.id}`)
-
-      await prisma.item.update({
-        data: {
-          stock: { decrement: purchasedItem.quantity },
+        name: `${item.commerceId}`,
+        opts: {
+          attempts: 7,
+          backoff: {
+            delay: 1000,
+            type: "exponential",
+          },
         },
-        where: { id: item.id },
-      })
-
-      job.log(
-        `Updated item ${item.id} availability: ${item.stock} → ${
-          item.stock - purchasedItem.quantity
-        })`
-      )
-    }
+      }))
+    )
 
     job.log(`Finished processing purchase ${purchase.id}`)
-
     // TODO(adelrodriguez): Add tags to the order with the listing sku
   } catch (error) {
     Sentry.captureException(error)

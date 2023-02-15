@@ -15,6 +15,7 @@ import {
   addItemToListingQueue,
   clearCartQueue,
   createInvoiceQueue,
+  createItemPurchaseQueue,
   createListingCommerceEntityQueue,
   createPurchaseQueue,
   notifyPurchaseQueue,
@@ -39,12 +40,13 @@ createBullBoard({
   },
   queues: [
     addItemToListingQueue,
+    clearCartQueue,
     createInvoiceQueue,
+    createItemPurchaseQueue,
     createListingCommerceEntityQueue,
     createPurchaseQueue,
     notifyPurchaseQueue,
     saveOrderCustomerQueue,
-    clearCartQueue,
   ].map((queue) => new BullMQAdapter(queue)),
   serverAdapter: serverAdapter,
 })

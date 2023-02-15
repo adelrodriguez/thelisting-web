@@ -33,3 +33,17 @@ export const createCollectionMutation = graphql(`
     }
   }
 `)
+
+export const addProductsToCollectionMutation = graphql(`
+  mutation addProductsToCollection($id: ID!, $productIds: [ID!]!) {
+    collectionAddProducts(id: $id, productIds: $productIds) {
+      collection {
+        id
+      }
+      userErrors {
+        field
+        message
+      }
+    }
+  }
+`)

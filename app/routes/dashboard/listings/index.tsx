@@ -156,10 +156,7 @@ export default function DashboardListingsPage() {
                 </thead>
                 <tbody className="divide-y divide-gray-200 bg-white">
                   {table.getRowModel().rows.map((row) => (
-                    <tr
-                      className="hover:cursor-pointer hover:bg-gray-50"
-                      key={row.id}
-                    >
+                    <tr className="hover:bg-gray-50" key={row.id}>
                       {row.getVisibleCells().map((cell) => (
                         <td
                           className="max-w-[500px] overflow-hidden text-ellipsis whitespace-nowrap px-3 py-4 text-sm text-gray-500"

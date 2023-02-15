@@ -1,4 +1,5 @@
 import currency from "currency.js"
+import invariant from "tiny-invariant"
 import { z } from "zod"
 
 import { CurrencySchema } from "~/utils/money"
@@ -43,23 +44,17 @@ export type ScrapedProductResult = {
 }
 
 export function cleanAmount(amount?: string | null): number {
-  if (!amount) {
-    throw new Error("There was no specified amount for this property")
-  }
+  invariant(amount, "There was no specified amount for this property")
 
   const value = currency(amount).value
 
-  if (isNaN(value)) {
-    throw new Error(`The amount "${amount}" is not a valid number`)
-  }
+  invariant(!isNaN(value), `The amount "${amount}" is not a valid number`)
 
   return value
 }
 
 export function cleanText(text?: string | null): string {
-  if (!text) {
-    throw new Error("There was no specified text for this property")
-  }
+  invariant(text, "There was no specified text for this property")
 
   return text.trim().replaceAll("\n", " ")
 }

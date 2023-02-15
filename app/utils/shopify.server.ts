@@ -18,14 +18,14 @@ import {
   createProductMutation,
   publishToCurrentChannelMutation,
   createCollectionMutation,
+  addProductsToCollectionMutation,
 } from "~/services/shopify/admin"
 import { getOrderQuery } from "~/services/shopify/admin"
 import { createCheckoutMutation } from "~/services/shopify/storefront"
 import type { CartItem } from "~/utils/cart"
 import { ShopifyError } from "~/utils/error"
+import { logger } from "~/utils/log"
 import { transformCustomAttributes } from "~/utils/shopify"
-
-import { logger } from "./log"
 
 export async function createCheckout(
   cartItems: CartItem[],
@@ -254,4 +254,28 @@ export async function createCollection({ sku }: { sku: number }) {
   }
 
   return collectionCreate.collection
+}
+
+export async function addProductsToCollection(
+  collectionId: string,
+  productIds: string[]
+) {
+  const { collectionAddProducts } = await request(
+    shopifyAdminAPIEndpoint,
+    addProductsToCollectionMutation,
+    {
+      id: collectionId,
+      productIds,
+    },
+    shopifyAdminAPInHeaders
+  )
+
+  if (!collectionAddProducts?.collection) {
+    throw new ShopifyError(
+      "Unable to add products to collection",
+      "add_products_to_collection_error"
+    )
+  }
+
+  return collectionAddProducts.collection
 }

@@ -171,7 +171,7 @@ export default function ListingCartPage() {
                           relative="route"
                           className="font-medium text-gray-600 hover:text-gray-500"
                         >
-                          {t("addAMessage")}
+                          {cart.noteId ? t("messageAdded") : t("addAMessage")}
                         </Link>
                       </div>
                       <div className="mt-6">
