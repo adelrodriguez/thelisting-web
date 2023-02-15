@@ -25,5 +25,12 @@
     "remove": "Eliminar"
   },
   "shippingNote": "Los artículos se enviarán a los dueños de la lista.",
-  "thankYou": "¡Gracias por tu regalo, {{name}}!"
+  "thankYou": "¡Gracias por tu regalo, {{name}}!",
+  "yourGifts": "Tus regalos",
+  "yourGiftsDescription": "Aquí puedes ver los regalos que has recibido, y los mensajes que te han dejado.",
+  "yourGiftsEmpty": "No has recibido regalos aún",
+  "giftedBy": "Regalado por",
+  "leftYouANote": "{{name}} te dejó un mensaje:",
+  "giftedOn": "Regalado el",
+  "totalGifted": "Total regalado"
 }

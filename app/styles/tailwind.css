@@ -1740,6 +1740,10 @@ select {
   height: 8rem;
 }
 
+.h-\[calc\(100\%\+2px\)\] {
+  height: calc(100% + 2px);
+}
+
 .max-h-64 {
   max-height: 16rem;
 }

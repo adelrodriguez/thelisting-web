@@ -1,9 +1,11 @@
 {
   "billingAddress": "Dirección de facturación",
   "cancel": "Cancelar",
+  "close": "Cerrar",
   "closePanel": "Cerrar panel",
-  "login": "Iniciar sesión",
+  "date": "Fecha",
   "loggingIn": "Iniciando sesión...",
+  "login": "Iniciar sesión",
   "navigation": {
     "about": "Nosotros",
     "contact": "Contacto",
@@ -17,5 +19,6 @@
   "submit": "Enviar",
   "submitting": "Enviando",
   "subtotal": "Subtotal",
-  "total": "Total"
+  "total": "Total",
+  "viewDetails": "Ver detalles"
 }

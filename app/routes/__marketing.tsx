@@ -14,7 +14,7 @@ const headerNavigation = [
 export const handle = { i18n: "common" }
 
 export default function MarketingLayout() {
-  const { t } = useTranslation("common")
+  const { t } = useTranslation(handle.i18n)
 
   return (
     <>

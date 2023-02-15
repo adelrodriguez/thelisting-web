@@ -171,7 +171,7 @@ export default function AddToListingPage() {
                         />
                         <FormInput
                           name="margin"
-                          label="Margin"
+                          label="Gross Profit Margin"
                           type="number"
                           step={0.1}
                           min={0}

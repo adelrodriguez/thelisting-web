@@ -22,7 +22,7 @@ export async function loader({ params }: LoaderArgs) {
 
   if (!listing) {
     throw notFound<NotFoundBoundaryData>({
-      message: "Sorry, we couldn’t find the Listing you’re looking for.",
+      message: "Sorry, we couldn’t find the page you’re looking for.",
       title: "Not Found",
     })
   }
@@ -30,8 +30,8 @@ export async function loader({ params }: LoaderArgs) {
   return json({ listing })
 }
 
-export const meta: MetaFunction<typeof loader> = ({ data }) => ({
-  title: data?.title ? `${data.title} | The Listing` : "The Listing",
+export const meta: MetaFunction = ({ data }) => ({
+  title: `${data?.listing?.title} | The Listing` || "The Listing",
 })
 
 export default function ListingPage() {

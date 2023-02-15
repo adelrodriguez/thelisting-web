@@ -108,27 +108,6 @@ export type AlegraErrorCode =
   | "get_currency_error"
   | "send_invoice_error"
 
-export type UserFrameworkErrorCode =
-  | "get_users_error"
-  | "get_user_error"
-  | "create_user_error"
-  | "delete_user_error"
-  | "update_user_error"
-
-export type ListingFrameworkErrorCode =
-  | "get_listings_error"
-  | "get_listing_error"
-  | "create_listing_error"
-  | "delete_listing_error"
-  | "update_listing_error"
-
-export type ItemFrameworkErrorCode =
-  | "get_items_error"
-  | "get_item_error"
-  | "create_item_error"
-  | "delete_item_error"
-  | "update_item_error"
-
 export type ProductErrorCode =
   | "no_product_image"
   | "no_product_price"
@@ -142,8 +121,6 @@ export type PurchaseErrorCode =
   | "no_purchase"
   | "listing_id_missing"
   | "session_carts_key_missing"
-
-export type ItemErrorCode = "no_markup" | "no_transaction_fee"
 
 export type GenericErrorCode = "unknown_error" | "no_code_provided"
 
@@ -165,14 +142,10 @@ export type ErrorCode =
   | DraftOrderErrorCode
   | FileErrorCode
   | GenericErrorCode
-  | ItemErrorCode
-  | ItemFrameworkErrorCode
-  | ListingFrameworkErrorCode
   | ProductErrorCode
   | PurchaseErrorCode
   | ShopifyErrorCode
   | StockErrorCode
-  | UserFrameworkErrorCode
   | ValidationErrorCode
 
 export type ErrorData = {

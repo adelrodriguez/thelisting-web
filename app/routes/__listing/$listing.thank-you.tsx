@@ -4,11 +4,11 @@ import { Link } from "@remix-run/react"
 import { useTranslation } from "react-i18next"
 
 import { FormattedNumber } from "~/components/common"
-import OrderItem from "~/components/registry/OrderItem"
+import { OrderItem } from "~/components/registry"
 import prisma from "~/helpers/prisma.server"
 import { ReasonPhrases, StatusCodes } from "~/utils/http.server"
 import { getPriceSymbol } from "~/utils/money"
-import { goHome, json, useLoaderData } from "~/utils/remix"
+import { getParam, json, useLoaderData } from "~/utils/remix"
 import { getShopifyId } from "~/utils/shopify"
 import { getOrder } from "~/utils/shopify.server"
 
@@ -18,10 +18,8 @@ export const handle = {
 
 export async function loader({ params, request }: LoaderArgs) {
   const requestUrl = new URL(request.url)
-  const path = params.listing
+  const path = getParam(params, "listing")
   const orderId = requestUrl.searchParams.get("order_id")
-
-  if (!path) throw goHome()
 
   if (!orderId) throw redirect(`/${path}`)
 
@@ -51,7 +49,7 @@ export default function ListingThankYouPage() {
     <main className="relative lg:min-h-full">
       <div className="h-80 overflow-hidden lg:fixed lg:h-full lg:w-1/2 lg:pr-4 xl:pr-12">
         <img
-          src="https://images.unsplash.com/photo-1513885535751-8b9238bd345a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2340&q=80"
+          src="https://images.unsplash.com/photo-1625552186152-668cd2f0b707?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80"
           alt=""
           className="h-full w-full object-cover object-center"
         />
@@ -72,7 +70,7 @@ export default function ListingThankYouPage() {
 
             <ul className="mt-6 divide-y divide-gray-200 border-t border-gray-200 text-sm font-medium text-gray-500">
               {order.lineItems?.nodes.map((lineItem) => (
-                <li key={lineItem.product?.id} className="flex space-x-6 py-6">
+                <li key={lineItem.product?.id} className="py-6">
                   <OrderItem
                     commerceId={lineItem.product?.id!}
                     quantity={lineItem.quantity}

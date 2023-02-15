@@ -4,7 +4,6 @@ import type { Listing } from "@prisma/client"
 import {
   Link,
   Outlet,
-  useLocation,
   useNavigate,
   useNavigation,
   useOutletContext,
@@ -27,7 +26,6 @@ export const handle = {
 export default function ListingCartPage() {
   const [open, setOpen] = useState(true)
   const cart = useCart()
-  const location = useLocation()
   const listing = useOutletContext<Listing>()
   const navigate = useNavigate()
   const submit = useSubmit()
@@ -47,7 +45,7 @@ export default function ListingCartPage() {
     }
 
     submit(formData, {
-      action: location.pathname + "/checkout",
+      action: `${listing.path}/cart/checkout`,
       method: "post",
     })
   }

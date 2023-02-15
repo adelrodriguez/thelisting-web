@@ -1,9 +1,11 @@
 {
   "billingAddress": "Billing Address",
   "cancel": "Cancel",
+  "close": "Close",
   "closePanel": "Close panel",
-  "login": "Log in",
+  "date": "Date",
   "loggingIn": "Logging in...",
+  "login": "Log in",
   "navigation": {
     "about": "About",
     "contact": "Contact",
@@ -17,5 +19,6 @@
   "submit": "Submit",
   "submitting": "Submitting",
   "subtotal": "Subtotal",
-  "total": "Total"
+  "total": "Total",
+  "viewDetails": "View details"
 }

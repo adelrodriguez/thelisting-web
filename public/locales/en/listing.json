@@ -1,29 +1,36 @@
 {
-  "itemInformation": "Item information",
-  "itemDescription": "Item description",
-  "addToCart": "Add to gifts 🛍",
-  "outOfStock": "Gifted ✨",
-  "quantity": {
-    "label": "Quantity",
-    "add": "Add",
-    "remove": "Remove",
-    "abbreviation": "Qty."
-  },
-  "cart": "Your Gift Bag",
-  "shippingNote": "The items will be shipped to the owners of the registry.",
   "addAMessage": "✨ Add a special message to your gift ✨",
+  "addToCart": "Add to gifts 🛍",
+  "cart": "Your Gift Bag",
   "checkout": {
+    "empty": "Your gift bag is empty",
     "ready": "Ready to gift 🎁",
-    "submitting": "Preparing your checkout...",
-    "empty": "Your gift bag is empty"
+    "submitting": "Preparing your checkout..."
   },
   "giftSent": "Gift ready! 🎁",
-  "thankYou": "Thank you for your gift, {{name}}!",
-  "orderConfirmation": "We're preparing your gift. We'll send you an email with the invoice for the shipping and handling.",
   "goBack": "Go back to the registry",
+  "itemDescription": "Item description",
+  "itemInformation": "Item information",
   "note": {
-    "title": "Add a note to your gift",
+    "placeholder": "Write your note here...",
     "subtitle": "Your note will be delivered to the recipient when the order is processed",
-    "placeholder": "Write your note here..."
-  }
+    "title": "Add a note to your gift"
+  },
+  "orderConfirmation": "We're preparing your gift. We'll send you an email with the invoice for the shipping and handling.",
+  "outOfStock": "Gifted ✨",
+  "quantity": {
+    "abbreviation": "Qty.",
+    "add": "Add",
+    "label": "Quantity",
+    "remove": "Remove"
+  },
+  "shippingNote": "The items will be shipped to the owners of the registry.",
+  "thankYou": "Thank you for your gift, {{name}}!",
+  "yourGifts": "Your gifts",
+  "yourGiftsDescription": "Here you can see the gifts you've received, and the messages that came with them.",
+  "yourGiftsEmpty": "You haven't received any gifts yet.",
+  "giftedBy": "Gifted by",
+  "leftYouANote": "{{name}} left you a message:",
+  "giftedOn": "Gifted on",
+  "totalGifted": "Total gifted"
 }

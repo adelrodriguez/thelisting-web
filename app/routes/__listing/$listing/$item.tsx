@@ -43,7 +43,7 @@ export default function ListingItemDetailPage() {
   const [open, setOpen] = useState(true)
   const isAvailable = item.stock > 0
   const [quantity, setQuantity] = useState(Number(isAvailable))
-  const { t } = useTranslation("listing")
+  const { t } = useTranslation(handle.i18n)
 
   function handleAddToCart() {
     const { id, commerceId, sku } = item
