@@ -27,7 +27,7 @@ import {
   xStateVisualizer,
 } from "~/config/vars.server"
 import i18next from "~/helpers/i18next.server"
-import tailwind from "~/styles/tailwind.css"
+import stylesheet from "~/styles/app.css"
 import { useChangeLanguage } from "~/utils/hooks"
 import { i18nCookie } from "~/utils/i18next"
 import { json, useLoaderData } from "~/utils/remix"
@@ -43,7 +43,7 @@ export const meta: MetaFunction = () => ({
 })
 
 export const links: LinksFunction = () => [
-  { href: tailwind, rel: "stylesheet" },
+  { href: stylesheet, rel: "stylesheet" },
   { href: remixImageStyles, rel: "stylesheet" },
   {
     href: "https://use.typekit.net/vno7ewy.css",
