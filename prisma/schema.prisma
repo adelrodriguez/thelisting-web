@@ -22,10 +22,14 @@ model Listing {
   path      String        @unique @db.VarChar(255)
   status    ListingStatus @default(Draft)
   title     String        @db.VarChar(255)
+  subtitle  String?       @db.VarChar(255)
   type      ListingType   @default(Wedding)
 
   owner   User   @relation(fields: [ownerId], references: [id])
   ownerId String @db.Uuid
+
+  coverImage    String?
+  thankYouImage String?
 
   items     Item[]
   purchases Purchase[]

@@ -51,3 +51,5 @@ export const CUSTOM_ATTRIBUTES = {
 } as const
 export type CustomAttribute =
   (typeof CUSTOM_ATTRIBUTES)[keyof typeof CUSTOM_ATTRIBUTES]
+
+export const CLOUDFLARE_IMAGES_ACCOUNT_HASH = "wHwwAqNxbuESOwdHNE6NsQ"

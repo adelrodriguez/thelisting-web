@@ -23,7 +23,9 @@ export const PathSchema = z
 
 export const TitleSchema = z.string().min(1)
 
-export const CommerceIdSchema = z.string().optional().nullable()
+export const SubtitleSchema = z.string().nullish()
+
+export const CommerceIdSchema = z.string().nullish()
 
 export const TypeSchema = z.enum(
   [
@@ -43,6 +45,8 @@ export const StatusSchema = z.enum(
     errorMap: () => ({ message: "Please select a status" }),
   }
 )
+
+export const ImageSchema = z.string().nullish().optional()
 
 export async function verifyPathIsUnique(path: string) {
   const listing = await prisma.listing.findUnique({

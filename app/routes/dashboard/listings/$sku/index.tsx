@@ -26,8 +26,10 @@ import { getFormData } from "~/utils/http.server"
 import {
   CommerceIdSchema,
   EventDateSchema,
+  ImageSchema,
   PathSchema,
   StatusSchema,
+  SubtitleSchema,
   TitleSchema,
   TypeSchema,
 } from "~/utils/listing"
@@ -45,10 +47,13 @@ export const handle = {
 
 const EditListingSchema = z.object({
   commerceId: CommerceIdSchema,
+  coverImage: ImageSchema,
   eventDate: EventDateSchema,
   ownerId: z.string().uuid(),
   path: PathSchema,
   status: StatusSchema,
+  subtitle: SubtitleSchema,
+  thankYouImage: ImageSchema,
   title: TitleSchema,
   type: TypeSchema,
 })
@@ -62,16 +67,17 @@ export async function loader({ params }: LoaderArgs) {
 
   if (isNaN(Number(sku))) throw notFound("Listing not found")
 
-  const listing = await prisma.listing.findUnique({
-    where: { sku: Number(sku) },
-  })
+  const [listing, users] = await Promise.all([
+    prisma.listing.findUnique({
+      where: { sku: Number(sku) },
+    }),
+    prisma.user.findMany({
+      orderBy: { firstName: "asc" },
+      select: { firstName: true, id: true, lastName: true },
+    }),
+  ])
 
   if (!listing) throw notFound("Listing not found")
-
-  const users = await prisma.user.findMany({
-    orderBy: { firstName: "asc" },
-    select: { firstName: true, id: true, lastName: true },
-  })
 
   return json({ listing, users, ...setFormDefaults("editListing", listing) })
 }
@@ -105,7 +111,7 @@ export async function action({ request, params }: ActionArgs) {
   }
 
   const updatedListing = await prisma.listing.update({
-    data: { ...result.data },
+    data: result.data,
     where: { id: listing.id },
   })
 
@@ -116,6 +122,7 @@ export default function DashboardListingPage() {
   const { enqueueSnackbar } = useSnackbar()
   const { users } = useLoaderData<typeof loader>()
   const [origin, setOrigin] = useState("")
+
   useEffect(() => {
     if (isWindowDefined()) {
       setOrigin(window.location.origin)
@@ -139,6 +146,12 @@ export default function DashboardListingPage() {
         label="Title"
         name="title"
         description="This is what we'll call your listing and show to others"
+        required
+      />
+      <FormInput
+        label="Subtitle"
+        name="subtitle"
+        description="This will appear under the title and in the description when sharing your listing"
       />
       <FormInput
         label="SKU"
@@ -151,12 +164,14 @@ export default function DashboardListingPage() {
         label="Path"
         addOn={origin}
         description="The unique path for your listing"
+        required
       />
       <FormDate
         label="Event Date"
         name="eventDate"
         min={startOfTomorrow()}
         description="The date of your event"
+        required
       />
       <FormSelect
         options={[
@@ -184,6 +199,7 @@ export default function DashboardListingPage() {
         label="Event Type"
         name="type"
         description="The type of event you're hosting"
+        required
       />
       <FormSelect
         options={users.map((user) => ({
@@ -192,6 +208,7 @@ export default function DashboardListingPage() {
         }))}
         label="Owner"
         name="ownerId"
+        required
       />
       <FormListRadioGroup
         name="status"
@@ -216,6 +233,16 @@ export default function DashboardListingPage() {
           },
         ]}
         required
+      />
+      <FormInput
+        label="Cover Image"
+        name="coverImage"
+        description="The image that will be shown on the listing page"
+      />
+      <FormInput
+        label={'"Thank You" Image'}
+        name="thankYouImage"
+        description="The image that will be shown after someone purchases an item from your listing"
       />
       <FormInput
         description="The Shopify collection ID. You need to have this in order to be able to add items to your listing. If this is empty and you recently created the listing, please wait a few seconds."

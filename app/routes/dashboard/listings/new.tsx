@@ -94,21 +94,6 @@ export async function action({ request }: ActionArgs) {
     data: result.data,
   })
 
-  // todo: move this to a queue
-  await prisma.ribbon.create({
-    data: {
-      listingId: listing.id,
-      name: "My Banner",
-      position: 1,
-      properties: {
-        backgroundImage: null,
-        subtitle: null,
-        title: listing.title,
-      },
-      type: "Banner",
-    },
-  })
-
   await createListingCommerceEntityQueue.add(`${listing.sku}`, {
     listingId: listing.id,
   })

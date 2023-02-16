@@ -2,10 +2,8 @@ import { z } from "zod"
 
 import {
   CLOUDFLARE_ACCOUNT_ID,
-  CLOUDFLARE_IMAGES_ACCOUNT_HASH,
   CLOUDFLARE_IMAGES_API_TOKEN,
 } from "~/config/env.server"
-import { isDevelopment } from "~/config/vars"
 import { logger } from "~/utils/log"
 
 const UploadImageToCloudflareResponseSchema = z.object({
@@ -72,21 +70,4 @@ export async function uploadImageToCloudflare(
     logger.error("Error uploading image to Cloudflare", { err })
     throw err
   }
-}
-
-export const CLOUDFLARE_IMAGE_VARIANTS = {
-  Public: "public",
-} as const
-export type CloudflareImageVariant =
-  (typeof CLOUDFLARE_IMAGE_VARIANTS)[keyof typeof CLOUDFLARE_IMAGE_VARIANTS]
-
-export function generateCloudflareImageUrl(
-  imageId: string,
-  variant: CloudflareImageVariant = "public"
-) {
-  if (isDevelopment) {
-    return `https://imagedelivery.net/${CLOUDFLARE_IMAGES_ACCOUNT_HASH}/${imageId}/${variant}`
-  }
-
-  return `https://giftthelisting.com/cdn-cgi/imagedelivery/${CLOUDFLARE_ACCOUNT_ID}/${imageId}`
 }

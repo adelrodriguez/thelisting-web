@@ -16,10 +16,8 @@ import { z } from "zod"
 
 import { FormImageUpload, FormInput, FormSubmit } from "~/components/form"
 import prisma from "~/helpers/prisma.server"
-import {
-  generateCloudflareImageUrl,
-  uploadImageToCloudflare,
-} from "~/utils/cloudflare.server"
+import { generateCloudflareImageUrl } from "~/utils/cloudflare"
+import { uploadImageToCloudflare } from "~/utils/cloudflare.server"
 import type { ErrorBoundaryProps } from "~/utils/remix"
 import { json, useLoaderData } from "~/utils/remix"
 import { BannerPropertiesSchema } from "~/utils/ribbon"
