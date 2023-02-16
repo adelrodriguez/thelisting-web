@@ -20,5 +20,6 @@
   "submitting": "Enviando",
   "subtotal": "Subtotal",
   "total": "Total",
-  "viewDetails": "Ver detalles"
+  "viewDetails": "Ver detalles",
+  "error": "Ocurrió un error. Favor de intentar más tarde."
 }
