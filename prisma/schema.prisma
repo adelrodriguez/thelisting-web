@@ -197,7 +197,8 @@ model Customer {
   email String  @unique
   name  String?
 
-  alegraId String
+  alegraId   String?
+  commerceId String? @db.VarChar(255)
 
   purchase Purchase[]
 }

@@ -28,6 +28,7 @@ export const getOrderQuery = graphql(`
       processedAt
       currencyCode
       customer {
+        id
         firstName
         lastName
         displayName

@@ -47,10 +47,21 @@ export const processor: Processor<QueueData> = async (job) => {
         ),
       }))
 
+    const customer = await prisma.customer.upsert({
+      create: {
+        commerceId: order.customer?.id!,
+        email: order.customer?.email!,
+        name: order.customer?.displayName!,
+      },
+      update: {},
+      where: { email: order.customer?.email! },
+    })
+
     const purchase = await prisma.purchase.create({
       data: {
         commerceId: order.id,
         cost: items.reduce((acc, item) => acc + item.cost * item.quantity, 0),
+        customerId: customer.id,
         listingId,
         total: parseFloat(order.totalPriceSet.shopMoney.amount),
       },

@@ -5,8 +5,7 @@ import { createQueue } from "~/helpers/queue.server"
 import { createInvoiceQueue } from "~/helpers/queues"
 import alegra from "~/services/alegra.server"
 import Sentry from "~/services/sentry"
-import type { CreateContactResponse, GetContactResponse } from "~/utils/alegra"
-import { CreateContactRequestSchema } from "~/utils/alegra"
+import { parseCreateContactRequest } from "~/utils/alegra"
 import { getShopifyId } from "~/utils/shopify"
 import { getOrder } from "~/utils/shopify.server"
 
@@ -18,53 +17,52 @@ export const processor: Processor<QueueData> = async (job) => {
   try {
     const order = await getOrder(getShopifyId(job.data.orderId, "Order"))
 
-    let contact: CreateContactResponse | GetContactResponse
+    let contactId: string
 
-    let savedContact = await prisma.customer.findUnique({
+    const customer = await prisma.customer.findUnique({
       where: { email: order.customer?.email ?? undefined },
     })
 
-    if (savedContact) {
-      job.log("Contact already exists, skipping creation")
+    const alegraId = customer?.alegraId
 
-      contact = await alegra.contacts.get({ id: savedContact.alegraId })
+    if (alegraId) {
+      job.log(`Found Alegra ID ${alegraId} for customer ${customer?.name}`)
+      contactId = alegraId
     } else {
       job.log("Contact does not exist, creating it")
 
-      const request = CreateContactRequestSchema.parse({
-        address: {
-          address: order.billingAddress?.address1,
-          city: order.billingAddress?.city,
-        },
-        email: order.customer?.email,
-        name: order.customer?.displayName,
-        phonePrimary: order.billingAddress?.phone,
-        type: "client",
-      })
+      const contact = await alegra.contacts.create(
+        parseCreateContactRequest({
+          address: {
+            address: order.billingAddress?.address1,
+            city: order.billingAddress?.city,
+          },
+          email: order.customer?.email,
+          name: order.customer?.displayName,
+          phonePrimary: order.billingAddress?.phone,
+          type: "client",
+        })
+      )
 
-      contact = await alegra.contacts.create(request)
-
-      savedContact = await prisma.customer.create({
-        data: {
+      await prisma.customer.upsert({
+        create: {
           alegraId: contact.id,
+          commerceId: order.customer?.id,
           email: contact.email,
           name: order.customer?.displayName,
         },
+        update: {},
+        where: { email: order.customer?.email! },
       })
+
+      contactId = contact.id
 
       job.log("Contact created successfully")
     }
 
-    await prisma.purchase.updateMany({
-      data: {
-        customerId: savedContact.id,
-      },
-      where: { commerceId: order.id },
-    })
-
     // Create the invoice for the customer
     await createInvoiceQueue.add(`Order ${order.name}`, {
-      contactId: contact.id,
+      contactId,
       orderId: job.data.orderId,
     })
   } catch (error) {
