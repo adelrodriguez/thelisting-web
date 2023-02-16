@@ -39,13 +39,14 @@ export async function action({ request }: ActionArgs) {
 
     const order = parseOrderCreationWebhookPayload(body)
 
-    await createPurchaseQueue.add(`Order #${order.number}`, {
-      orderId: order.id,
-    })
-
-    await clearCartQueue.add(`Order #${order.number}`, {
-      orderId: order.id,
-    })
+    await Promise.all([
+      createPurchaseQueue.add(`Order #${order.number}`, {
+        orderId: order.id,
+      }),
+      clearCartQueue.add(`Order #${order.number}`, {
+        orderId: order.id,
+      }),
+    ])
 
     return OK
   } catch (error) {
