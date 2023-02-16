@@ -11,13 +11,14 @@ import { logger } from "~/utils/log"
  * Verify that the webhook is originating from Hookdeck.
  */
 export async function verifyWebhook(request: Request): Promise<void> {
-  const headers = await request.clone().headers
+  const clone = request.clone()
+  const headers = clone.headers
 
   const isHookdeckVerified = headers.get("x-hookdeck-verified") === "true"
 
   if (!isHookdeckVerified) throw Unauthorized
 
-  const body = await request.clone().text()
+  const body = await clone.text()
 
   const hmacHeader = headers.get("x-hookdeck-signature")
   const hmacHeader2 = headers.get("x-hookdeck-signature-2")

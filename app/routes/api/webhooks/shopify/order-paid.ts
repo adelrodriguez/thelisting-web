@@ -9,7 +9,6 @@ import {
   InternalServerError,
   NotAllowed,
   OK,
-  verifyMethod,
 } from "~/utils/http.server"
 import { logger } from "~/utils/log"
 import {
@@ -26,31 +25,30 @@ export function loader() {
 }
 
 export async function action({ request }: ActionArgs) {
-  await verifyMethod(request, "POST")
   await verifyWebhook(request)
 
   const { webhookId, event } = getShopifyWebhookHeaders(request)
+  logger.info(`Received ${event} webhook`, { webhookId })
 
   const body = await getJSON(request)
 
   await verifyIfWebhookIsProcessed(webhookId, event, "Shopify", body)
 
   try {
-    logger.info(`Received ${event} webhook`, { webhookId })
-
     const order = parseOrderPaymentWebhookPayload(body)
 
-    await saveOrderCustomerQueue.add(`Order #${order.number}`, {
-      orderId: order.id,
-    })
-
-    await notifyPurchaseQueue.add(
-      `Order #${order.number}`,
-      {
+    await Promise.all([
+      saveOrderCustomerQueue.add(`Order #${order.number}`, {
         orderId: order.id,
-      },
-      { attempts: 5, backoff: { delay: ONE_MINUTE, type: "exponential" } }
-    )
+      }),
+      notifyPurchaseQueue.add(
+        `Order #${order.number}`,
+        {
+          orderId: order.id,
+        },
+        { attempts: 5, backoff: { delay: ONE_MINUTE, type: "exponential" } }
+      ),
+    ])
 
     return OK
   } catch (error) {

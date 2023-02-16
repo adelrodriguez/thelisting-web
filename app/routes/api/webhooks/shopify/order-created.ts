@@ -9,7 +9,6 @@ import {
   InternalServerError,
   NotAllowed,
   OK,
-  verifyMethod,
 } from "~/utils/http.server"
 import {
   getShopifyWebhookHeaders,
@@ -25,10 +24,10 @@ export function loader() {
 }
 
 export async function action({ request }: ActionArgs) {
-  await verifyMethod(request, "POST")
   await verifyWebhook(request)
 
   const { webhookId, event } = getShopifyWebhookHeaders(request)
+  logger.info(`Received ${event} webhook`, { webhookId })
 
   const body = await getJSON(request)
 
