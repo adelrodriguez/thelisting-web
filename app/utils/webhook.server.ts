@@ -4,7 +4,7 @@ import hmacSHA256 from "crypto-js/hmac-sha256"
 
 import { HOOKDECK_SIGNING_SECRET } from "~/config/env.server"
 import prisma from "~/helpers/prisma.server"
-import { OK, Unauthorized } from "~/utils/http.server"
+import { Unauthorized } from "~/utils/http.server"
 import { logger } from "~/utils/log"
 
 /**
@@ -38,9 +38,9 @@ export function encodeWebhookSignature(
 }
 
 /**
- * Check if we have already received this webhook call. Throws an OK if we have.
+ * Check if we have already received this webhook call.
  */
-export async function verifyIfWebhookIsProcessed(
+export async function hasWebhookBeenAlreadyReceived(
   webhookId: string,
   event: string,
   service: WebhookService,
@@ -51,8 +51,10 @@ export async function verifyIfWebhookIsProcessed(
   if (webhook) {
     logger.info("Webhook already received. Ignoring...", { webhookId })
 
-    throw OK
+    return true
   }
 
   await prisma.webhook.create({ data: { event, payload, service, webhookId } })
+
+  return false
 }

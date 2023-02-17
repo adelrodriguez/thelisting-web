@@ -5,6 +5,7 @@ import { z } from "zod"
 import { clearCartQueue, createPurchaseQueue } from "~/helpers/queues"
 import Sentry from "~/services/sentry"
 import {
+  Accepted,
   getJSON,
   InternalServerError,
   NotAllowed,
@@ -15,7 +16,7 @@ import {
   parseOrderCreationWebhookPayload,
 } from "~/utils/shopify"
 import {
-  verifyIfWebhookIsProcessed,
+  hasWebhookBeenAlreadyReceived,
   verifyWebhook,
 } from "~/utils/webhook.server"
 
@@ -31,11 +32,16 @@ export async function action({ request }: ActionArgs) {
 
   const body = await getJSON(request)
 
-  await verifyIfWebhookIsProcessed(webhookId, event, "Shopify", body)
+  const received = await hasWebhookBeenAlreadyReceived(
+    webhookId,
+    event,
+    "Shopify",
+    body
+  )
+
+  if (received) return Accepted
 
   try {
-    logger.info(`Received ${event} webhook`, { webhookId })
-
     const order = parseOrderCreationWebhookPayload(body)
 
     await Promise.all([

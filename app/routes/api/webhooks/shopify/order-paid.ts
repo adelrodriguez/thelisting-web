@@ -5,6 +5,7 @@ import { z } from "zod"
 import { ONE_MINUTE } from "~/config/consts"
 import { notifyPurchaseQueue, saveOrderCustomerQueue } from "~/helpers/queues"
 import {
+  Accepted,
   getJSON,
   InternalServerError,
   NotAllowed,
@@ -16,7 +17,7 @@ import {
   parseOrderPaymentWebhookPayload,
 } from "~/utils/shopify"
 import {
-  verifyIfWebhookIsProcessed,
+  hasWebhookBeenAlreadyReceived,
   verifyWebhook,
 } from "~/utils/webhook.server"
 
@@ -32,7 +33,14 @@ export async function action({ request }: ActionArgs) {
 
   const body = await getJSON(request)
 
-  await verifyIfWebhookIsProcessed(webhookId, event, "Shopify", body)
+  const received = await hasWebhookBeenAlreadyReceived(
+    webhookId,
+    event,
+    "Shopify",
+    body
+  )
+
+  if (received) return Accepted
 
   try {
     const order = parseOrderPaymentWebhookPayload(body)

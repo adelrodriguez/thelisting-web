@@ -50,6 +50,11 @@ export const OK = new Response(ReasonPhrases.OK, {
   statusText: ReasonPhrases.OK,
 })
 
+export const Accepted = new Response(ReasonPhrases.ACCEPTED, {
+  status: StatusCodes.ACCEPTED,
+  statusText: ReasonPhrases.ACCEPTED,
+})
+
 export const BadRequest = new Response(ReasonPhrases.BAD_REQUEST, {
   status: StatusCodes.BAD_REQUEST,
   statusText: ReasonPhrases.BAD_REQUEST,
