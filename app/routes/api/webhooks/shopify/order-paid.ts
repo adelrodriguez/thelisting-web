@@ -15,10 +15,7 @@ import {
   getShopifyWebhookHeaders,
   parseOrderPaymentWebhookPayload,
 } from "~/utils/shopify"
-import {
-  hasWebhookBeenAlreadyReceived,
-  verifyWebhook,
-} from "~/utils/webhook.server"
+import { checkWebhookLog, verifyWebhook } from "~/utils/webhook.server"
 
 export function loader() {
   throw NotAllowed
@@ -35,12 +32,7 @@ export async function action({ request }: ActionArgs) {
   const { webhookId, event } = getShopifyWebhookHeaders(headers)
   logger.info(`Received ${event} webhook`, { webhookId })
 
-  const received = await hasWebhookBeenAlreadyReceived(
-    webhookId,
-    event,
-    "Shopify",
-    json
-  )
+  const received = await checkWebhookLog(webhookId, event, "Shopify", json)
 
   if (received) return Accepted
 

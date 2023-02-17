@@ -36,9 +36,10 @@ export function encodeWebhookSignature(
 }
 
 /**
- * Check if we have already received this webhook call.
+ * Check if we have already received this webhook call. If not, stores it in the
+ * database.
  */
-export async function hasWebhookBeenAlreadyReceived(
+export async function checkWebhookLog(
   webhookId: string,
   event: string,
   service: WebhookService,
