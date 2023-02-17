@@ -35,14 +35,14 @@ export async function action({ request }: ActionArgs) {
   const { webhookId, event } = getShopifyWebhookHeaders(headers)
   logger.info(`Received ${event} webhook`, { webhookId })
 
-  // const received = await hasWebhookBeenAlreadyReceived(
-  //   webhookId,
-  //   event,
-  //   "Shopify",
-  //   json
-  // )
+  const received = await hasWebhookBeenAlreadyReceived(
+    webhookId,
+    event,
+    "Shopify",
+    json
+  )
 
-  // if (received) return Accepted
+  if (received) return Accepted
 
   try {
     const order = parseOrderPaymentWebhookPayload(json)
