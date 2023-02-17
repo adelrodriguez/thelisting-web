@@ -4,10 +4,6 @@ export function getFormData(request: Request) {
   return request.clone().formData()
 }
 
-export function getJSON(request: Request) {
-  return request.clone().json()
-}
-
 export function getHeaders(request: Request) {
   return request.clone().headers
 }

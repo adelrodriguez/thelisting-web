@@ -6,7 +6,6 @@ import { ONE_MINUTE } from "~/config/consts"
 import { notifyPurchaseQueue, saveOrderCustomerQueue } from "~/helpers/queues"
 import {
   Accepted,
-  getJSON,
   InternalServerError,
   NotAllowed,
   OK,
@@ -26,24 +25,27 @@ export function loader() {
 }
 
 export async function action({ request }: ActionArgs) {
-  await verifyWebhook(request)
+  const clone = request.clone()
+  const json = await clone.json()
+  const text = await request.text()
+  const headers = request.headers
 
-  const { webhookId, event } = getShopifyWebhookHeaders(request)
+  await verifyWebhook(headers, text)
+
+  const { webhookId, event } = getShopifyWebhookHeaders(headers)
   logger.info(`Received ${event} webhook`, { webhookId })
-
-  const body = await getJSON(request)
 
   const received = await hasWebhookBeenAlreadyReceived(
     webhookId,
     event,
     "Shopify",
-    body
+    json
   )
 
   if (received) return Accepted
 
   try {
-    const order = parseOrderPaymentWebhookPayload(body)
+    const order = parseOrderPaymentWebhookPayload(json)
 
     await Promise.all([
       saveOrderCustomerQueue.add(`Order #${order.number}`, {

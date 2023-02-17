@@ -2,7 +2,7 @@ import { z } from "zod"
 
 import type { CustomAttribute } from "~/config/consts"
 import { CUSTOM_ATTRIBUTES } from "~/config/consts"
-import { BadRequest, getHeaders } from "~/utils/http.server"
+import { BadRequest } from "~/utils/http.server"
 
 export const OrderPaymentWebhookPayloadSchema = z.object({
   id: z.number(),
@@ -30,9 +30,7 @@ export function parseOrderCreationWebhookPayload(
   return OrderCreationWebhookPayloadSchema.parse(body)
 }
 
-export function getShopifyWebhookHeaders(request: Request) {
-  const headers = getHeaders(request)
-
+export function getShopifyWebhookHeaders(headers: Headers) {
   const webhookId = headers.get("X-Shopify-Webhook-Id")
   const event = headers.get("X-Shopify-Topic")
 

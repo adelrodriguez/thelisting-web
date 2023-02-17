@@ -6,7 +6,6 @@ import { clearCartQueue, createPurchaseQueue } from "~/helpers/queues"
 import Sentry from "~/services/sentry"
 import {
   Accepted,
-  getJSON,
   InternalServerError,
   NotAllowed,
   OK,
@@ -25,24 +24,27 @@ export function loader() {
 }
 
 export async function action({ request }: ActionArgs) {
-  await verifyWebhook(request)
+  const clone = request.clone()
+  const json = await clone.json()
+  const headers = request.headers
+  const text = await request.text()
 
-  const { webhookId, event } = getShopifyWebhookHeaders(request)
+  await verifyWebhook(headers, text)
+
+  const { webhookId, event } = getShopifyWebhookHeaders(headers)
   logger.info(`Received ${event} webhook`, { webhookId })
-
-  const body = await getJSON(request)
 
   const received = await hasWebhookBeenAlreadyReceived(
     webhookId,
     event,
     "Shopify",
-    body
+    json
   )
 
   if (received) return Accepted
 
   try {
-    const order = parseOrderCreationWebhookPayload(body)
+    const order = parseOrderCreationWebhookPayload(json)
 
     await Promise.all([
       createPurchaseQueue.add(`Order #${order.number}`, {
