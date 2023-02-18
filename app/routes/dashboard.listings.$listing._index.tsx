@@ -33,13 +33,13 @@ import {
   TitleSchema,
   TypeSchema,
 } from "~/utils/listing"
-import { json, useLoaderData } from "~/utils/remix"
+import { getParam, json, useLoaderData } from "~/utils/remix"
 import { getUserFullName } from "~/utils/user"
 import { isWindowDefined } from "~/utils/window"
 
 export const handle = {
-  crumb: ({ params, data }: RouteMatch) => ({
-    href: `/dashboard/listings/${params.sku}/`,
+  crumb: ({ params }: RouteMatch) => ({
+    href: `/dashboard/listings/${params.listing}/`,
     name: "Details",
   }),
   id: "dashboard-listings-edit",
@@ -61,11 +61,13 @@ const EditListingSchema = z.object({
 const validator = withZod(EditListingSchema)
 
 export async function loader({ params }: LoaderArgs) {
-  const sku = params.sku
+  const sku = getParam(params, "listing")
 
-  if (!sku) throw notFound("Listing not found")
-
-  if (isNaN(Number(sku))) throw notFound("Listing not found")
+  if (isNaN(Number(sku)))
+    throw notFound({
+      message: "Listing not found",
+      title: "Listing not found",
+    })
 
   const [listing, users] = await Promise.all([
     prisma.listing.findUnique({
@@ -77,7 +79,11 @@ export async function loader({ params }: LoaderArgs) {
     }),
   ])
 
-  if (!listing) throw notFound("Listing not found")
+  if (!listing)
+    throw notFound({
+      message: "Listing not found",
+      title: "Listing not found",
+    })
 
   return json({ listing, users, ...setFormDefaults("editListing", listing) })
 }

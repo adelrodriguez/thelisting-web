@@ -19,6 +19,7 @@ import prisma from "~/helpers/prisma.server"
 import { generateCloudflareImageUrl } from "~/utils/cloudflare"
 import { uploadImageToCloudflare } from "~/utils/cloudflare.server"
 import type { ErrorBoundaryProps } from "~/utils/remix"
+import { getParam } from "~/utils/remix"
 import { json, useLoaderData } from "~/utils/remix"
 import { BannerPropertiesSchema } from "~/utils/ribbon"
 
@@ -34,9 +35,7 @@ const EditRibbonSchema = z.object({
 const validator = withZod(EditRibbonSchema)
 
 export async function loader({ params }: LoaderArgs) {
-  const sku = params.sku
-
-  if (!sku) throw notFound("Listing not found")
+  const sku = getParam(params, "listing")
 
   if (isNaN(Number(sku))) throw notFound("Listing not found")
 

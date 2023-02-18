@@ -12,12 +12,10 @@ import { ViewOnShopify } from "~/components/admin"
 import prisma from "~/helpers/prisma.server"
 import { useProduct } from "~/utils/hooks"
 import { NotFound } from "~/utils/http.server"
-import { json, useLoaderData } from "~/utils/remix"
+import { getParam, json, useLoaderData } from "~/utils/remix"
 
 export async function loader({ params }: LoaderArgs) {
-  const sku = params.sku
-
-  if (!sku) throw NotFound
+  const sku = getParam(params, "listing")
 
   if (isNaN(Number(sku))) throw NotFound
 

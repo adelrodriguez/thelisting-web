@@ -3,7 +3,7 @@ import { Outlet } from "@remix-run/react"
 
 export const handle = {
   crumb: ({ params }: RouteMatch) => ({
-    href: `/dashboard/listings/${params.sku}/items`,
+    href: `/dashboard/listings/${params.listing}/items`,
     name: "Items",
   }),
   id: "dashboard-listings-items",

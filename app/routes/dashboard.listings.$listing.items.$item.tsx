@@ -22,8 +22,8 @@ import { goToParent, json, useLoaderData, getParam } from "~/utils/remix"
 
 export const handle = {
   crumb: ({ params }: RouteMatch) => ({
-    href: `/dashboard/listings/${params.sku}/items/${params.itemSku}`,
-    name: params.itemSku,
+    href: `/dashboard/listings/${params.listing}/items/${params.item}`,
+    name: params.item,
   }),
 }
 
@@ -41,7 +41,7 @@ const EditItemSchema = z
 const validator = withZod(EditItemSchema)
 
 export async function loader({ params }: LoaderArgs) {
-  const sku = getParam(params, "$item")
+  const sku = getParam(params, "item", "Item not found")
 
   const item = await prisma.item.findUnique({ where: { sku } })
 

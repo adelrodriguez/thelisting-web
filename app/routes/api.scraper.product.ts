@@ -36,9 +36,9 @@ export async function loader({ request }: LoaderArgs) {
   const cachedPayload = await redis.get(key)
 
   if (cachedPayload) {
-    const payload = parseScrapedProductResult(JSON.parse(cachedPayload))
+    const result = parseScrapedProductResult(JSON.parse(cachedPayload))
 
-    return json({ ...payload, cached: true })
+    return json({ cached: true, ...result })
   }
 
   const payload = await productScraper(url)
@@ -59,11 +59,14 @@ export async function loader({ request }: LoaderArgs) {
     },
   })
 
-  payload.id = scrapedProduct.id
-
   if (payload.errors.length === 0) {
-    await redis.set(key, JSON.stringify(payload), "EX", ONE_DAY)
+    await redis.set(
+      key,
+      JSON.stringify({ id: scrapedProduct.id, payload }),
+      "EX",
+      ONE_DAY
+    )
   }
 
-  return json(payload)
+  return json({ id: scrapedProduct.id, payload })
 }
