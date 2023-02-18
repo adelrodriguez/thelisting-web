@@ -1,12 +1,15 @@
 import { Disclosure } from "@headlessui/react"
+import { GiftIcon, CurrencyDollarIcon } from "@heroicons/react/24/solid"
 import { ListingStatus } from "@prisma/client"
 import type { LoaderArgs } from "@remix-run/node"
+import currency from "currency.js"
 import { intlFormat } from "date-fns"
 import { useTranslation } from "react-i18next"
 import { notFound } from "remix-utils"
 
 import { Button, FormattedNumber } from "~/components/common"
 import { OrderItem } from "~/components/registry"
+import i18next from "~/helpers/i18next.server"
 import prisma from "~/helpers/prisma.server"
 import { getPriceSymbol } from "~/utils/money"
 import { getParam, json, useLoaderData } from "~/utils/remix"
@@ -15,8 +18,9 @@ export const handle = {
   i18n: ["common", "listing"],
 }
 
-export async function loader({ params }: LoaderArgs) {
+export async function loader({ request, params }: LoaderArgs) {
   const path = getParam(params, "listing")
+  const t = await i18next.getFixedT(request, "listing")
 
   const listing = await prisma.listing.findUnique({
     select: {
@@ -44,11 +48,32 @@ export async function loader({ params }: LoaderArgs) {
     throw notFound("The listing you are looking for does not exist.")
   }
 
-  return json({ listing })
+  const totalPurchased = listing.purchases.reduce(
+    (total, purchase) => total + purchase.cost,
+    0
+  )
+  const itemsPurchased = listing.purchases.reduce(
+    (total, purchase) => total + purchase.itemPurchases.length,
+    0
+  )
+
+  return json({
+    listing,
+    stats: [
+      { icon: "gift", name: t("itemsGifted"), stat: itemsPurchased },
+      {
+        icon: "currency",
+        name: t("totalGifted"),
+        stat: currency(totalPurchased)
+          .format({ symbol: getPriceSymbol() })
+          .toString(),
+      },
+    ],
+  })
 }
 
 export default function ListingReviewPage() {
-  const { listing } = useLoaderData<typeof loader>()
+  const { listing, stats } = useLoaderData<typeof loader>()
   const { t, i18n } = useTranslation(handle.i18n)
 
   return (
@@ -72,6 +97,40 @@ export default function ListingReviewPage() {
                   {t("listing:yourGiftsDescription")}
                 </p>
               </div>
+
+              <section className="mt-5 px-5">
+                <dl className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                  {stats.map((item) => (
+                    <div
+                      key={item.name}
+                      className="flex items-center overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6"
+                    >
+                      <div className="h-fit w-fit rounded-md bg-slate-500 p-3">
+                        {item.icon === "currency" && (
+                          <CurrencyDollarIcon
+                            className="h-6 w-6 text-white"
+                            aria-hidden="true"
+                          />
+                        )}
+                        {item.icon === "gift" && (
+                          <GiftIcon
+                            className="h-6 w-6 text-white"
+                            aria-hidden="true"
+                          />
+                        )}
+                      </div>
+                      <div className="ml-4">
+                        <dt className="truncate text-sm font-medium text-gray-500">
+                          {item.name}
+                        </dt>
+                        <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
+                          {item.stat}
+                        </dd>
+                      </div>
+                    </div>
+                  ))}
+                </dl>
+              </section>
 
               <div className="mt-16">
                 <div className="mx-auto max-w-2xl space-y-8 sm:px-4 lg:max-w-4xl lg:px-0">

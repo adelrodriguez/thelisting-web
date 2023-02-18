@@ -33,5 +33,6 @@
   "totalGifted": "Total gifted",
   "yourGifts": "Your gifts",
   "yourGiftsDescription": "Here you can see the gifts you've received, and the messages that came with them.",
-  "yourGiftsEmpty": "You haven't received any gifts yet."
+  "yourGiftsEmpty": "You haven't received any gifts yet.",
+  "itemsGifted": "Items gifted"
 }
