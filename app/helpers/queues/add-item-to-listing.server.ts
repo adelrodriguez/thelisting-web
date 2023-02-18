@@ -46,6 +46,12 @@ export const processor: Processor<QueueData> = async (job) => {
 
     const sku = `${listing.sku}-${rowId}`
 
+    const existingItem = await prisma.item.findFirst({
+      where: { sku },
+    })
+
+    invariant(!existingItem, `Item ${sku} already exists`)
+
     // Create hashed tag
     const tag = MD5(
       `product:${scrapedProduct.url}|amount:${scrapedProduct.amount || 0}`
@@ -65,12 +71,15 @@ export const processor: Processor<QueueData> = async (job) => {
 
     if (shopifyProducts.length === 0) {
       // If product doesn't exist, create it
+      const priceMultipledByExchangeRate = multiplyPriceByExchangeRate(
+        scrapedProduct.amount || 0,
+        exchangeRate
+      )
+
       const shopifyProduct = await createProduct({
         collection: listing.commerceId,
-        cost: multiplyPriceByExchangeRate(
-          scrapedProduct.amount || 0,
-          exchangeRate
-        ),
+        cost: priceMultipledByExchangeRate,
+        currency: scrapedProduct.currency || "DOP",
         description: scrapedProduct.description,
         images: [
           {
@@ -78,13 +87,12 @@ export const processor: Processor<QueueData> = async (job) => {
             src: scrapedProduct.image,
           },
         ],
-        price: calculatePriceWithMargin(
-          multiplyPriceByExchangeRate(scrapedProduct.amount || 0, exchangeRate),
-          margin
-        ),
+        originalAmount: scrapedProduct.amount,
+        price: calculatePriceWithMargin(priceMultipledByExchangeRate, margin),
         store: scrapedProduct.store,
         tags: [tag],
         title: scrapedProduct.title,
+        url: scrapedProduct.url,
       })
 
       job.log(`Created product ${shopifyProduct.id}`)

@@ -141,26 +141,32 @@ export async function getOrderCustomAttributes(id: string) {
 }
 
 export async function createProduct({
-  title,
-  description,
-  tags,
-  images,
-  price,
-  store,
   collection,
   cost,
+  currency,
+  description,
+  images,
+  originalAmount,
+  url,
+  price,
+  store,
+  tags,
+  title,
 }: {
-  title?: string | null
+  collection: Listing["commerceId"]
+  cost: number
+  currency: string
   description?: string | null
-  tags: string[]
   images: {
     src?: string | null
     altText?: string | null
   }[]
+  originalAmount?: number | null
+  url?: string | null
   price: number
-  cost: number
   store?: string | null
-  collection: Listing["commerceId"]
+  tags: string[]
+  title?: string | null
 }) {
   const { productCreate } = await request(
     shopifyAdminAPIEndpoint,
@@ -170,6 +176,38 @@ export async function createProduct({
         collectionsToJoin: [collection!],
         descriptionHtml: description,
         images,
+        metafields: [
+          {
+            key: "original_product_url",
+            namespace: "original_product",
+            type: "url",
+            value: url,
+          },
+          {
+            key: "original_product_title",
+            namespace: "original_product",
+            type: "single_line_text_field",
+            value: title,
+          },
+          {
+            key: "original_product_description",
+            namespace: "original_product",
+            type: "multi_line_text_field",
+            value: description,
+          },
+          {
+            key: "original_product_price",
+            namespace: "original_product",
+            type: "number_decimal",
+            value: originalAmount?.toString(),
+          },
+          {
+            key: "original_product_currency",
+            namespace: "original_product",
+            type: "single_line_text_field",
+            value: currency,
+          },
+        ],
         tags,
         title,
         variants: [
@@ -184,22 +222,13 @@ export async function createProduct({
           },
         ],
         vendor: store,
-        // metafields: [
-        //   {
-        //     key: "originalPrice",
-        //     value: cost.toString(),
-        //   },
-        //   {
-
-        //   }
-        // ]
       },
     },
     shopifyAdminAPInHeaders
   )
 
   if (!productCreate?.product) {
-    logger.error("Unable to create checkout", {
+    logger.error("Unable to create product", {
       userErrors: productCreate?.userErrors,
     })
     Sentry.captureException(productCreate?.userErrors)
