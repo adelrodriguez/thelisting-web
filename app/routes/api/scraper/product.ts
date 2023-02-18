@@ -9,7 +9,7 @@ import { productScraper } from "~/helpers/scraper.server"
 import { ReasonPhrases, StatusCodes } from "~/utils/http.server"
 import { logger } from "~/utils/log"
 import { generateKey } from "~/utils/redis"
-import type { ScrapedProductResult } from "~/utils/scraper"
+import { parseScrapedProductResult } from "~/utils/scraper"
 
 export async function loader({ request }: LoaderArgs) {
   const user = await auth.isAuthenticated(request)
@@ -36,7 +36,7 @@ export async function loader({ request }: LoaderArgs) {
   const cachedPayload = await redis.get(key)
 
   if (cachedPayload) {
-    const payload = JSON.parse(cachedPayload) as ScrapedProductResult
+    const payload = parseScrapedProductResult(JSON.parse(cachedPayload))
 
     return json({ ...payload, cached: true })
   }
@@ -49,7 +49,7 @@ export async function loader({ request }: LoaderArgs) {
     logger.success(`${url} scrapped successfully`)
   }
 
-  await prisma.scrapedProduct.create({
+  const scrapedProduct = await prisma.scrapedProduct.create({
     data: {
       duration: payload.duration,
       errors: payload.errors,
@@ -58,6 +58,8 @@ export async function loader({ request }: LoaderArgs) {
       ...payload.fields,
     },
   })
+
+  payload.id = scrapedProduct.id
 
   if (payload.errors.length === 0) {
     await redis.set(key, JSON.stringify(payload), "EX", ONE_DAY)

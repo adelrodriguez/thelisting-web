@@ -184,6 +184,15 @@ export async function createProduct({
           },
         ],
         vendor: store,
+        // metafields: [
+        //   {
+        //     key: "originalPrice",
+        //     value: cost.toString(),
+        //   },
+        //   {
+
+        //   }
+        // ]
       },
     },
     shopifyAdminAPInHeaders
@@ -271,6 +280,10 @@ export async function addProductsToCollection(
   )
 
   if (!collectionAddProducts?.collection) {
+    logger.error("Unable to add products to collection", {
+      userErrors: collectionAddProducts?.userErrors,
+    })
+    Sentry.captureException(collectionAddProducts?.userErrors)
     throw new ShopifyError(
       "Unable to add products to collection",
       "add_products_to_collection_error"

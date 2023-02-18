@@ -6,7 +6,10 @@ import { ValidatedForm } from "remix-validated-form"
 import { z } from "zod"
 
 import { FormInput, FormSubmit } from "~/components/form"
-import { useScrapedProducts } from "~/routes/dashboard/admin/product-scraper"
+import {
+  useScrapedProducts,
+  Headers,
+} from "~/routes/dashboard/admin/product-scraper"
 import { downloadAsCSVFile } from "~/utils/csv"
 import { useDialogPage } from "~/utils/hooks"
 
@@ -61,7 +64,9 @@ export default function ExportCSVPage() {
                   className="mt-5"
                   validator={validator}
                   onSubmit={async (data) => {
-                    downloadAsCSVFile(data.filename, products)
+                    downloadAsCSVFile(data.filename, products, {
+                      columns: Headers.map((header) => header), // Mapping the headers to the columns (to avoid the "scrapedProductId" column)
+                    })
                     close()
                   }}
                 >

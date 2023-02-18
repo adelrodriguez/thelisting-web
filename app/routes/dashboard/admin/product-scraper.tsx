@@ -17,7 +17,7 @@ export const handle = {
   }),
 }
 
-const Headers = [
+export const Headers = [
   "id",
   "url",
   "quantity",

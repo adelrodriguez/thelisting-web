@@ -41,6 +41,7 @@ export default async function scraper(
         store,
         title,
       },
+      id: "",
       time: new Date().getTime(),
       url: requestUrl,
     }

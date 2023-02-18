@@ -10,7 +10,6 @@ import {
   calculatePriceWithMargin,
   multiplyPriceByExchangeRate,
 } from "~/utils/money"
-import type { ScrapeProductsTableRow } from "~/utils/scraper"
 import {
   addProductsToCollection,
   createProduct,
@@ -22,30 +21,34 @@ export type QueueData = {
   exchangeRate: number // The exchange rate from USD to DOP
   listingId: Listing["id"]
   margin: number
-  product: ScrapeProductsTableRow
+  rowId: string
+  scrapedProductId: string
+  quantity: number
 }
 
 export const processor: Processor<QueueData> = async (job) => {
-  const { product, listingId, margin } = job.data
+  const { scrapedProductId, rowId, listingId, margin, quantity } = job.data
 
   try {
     // Get listing
     const listing = await prisma.listing.findUniqueOrThrow({
-      where: {
-        id: listingId,
-      },
+      where: { id: listingId },
     })
 
     invariant(
       listing.commerceId,
-      `Listing ${listing.id} doesn't have a commerceId`
+      `Listing ${listingId} doesn't have a commerceId`
     )
 
-    const sku = `${listing.sku}-${product.id}`
+    const scrapedProduct = await prisma.scrapedProduct.findUniqueOrThrow({
+      where: { id: scrapedProductId },
+    })
+
+    const sku = `${listing.sku}-${rowId}`
 
     // Create hashed tag
     const tag = MD5(
-      `product:${job.data.product.url}|amount:${job.data.product.amount}`
+      `product:${scrapedProduct.url}|amount:${scrapedProduct.amount || 0}`
     ).toString()
 
     job.log(`Created tag ${tag}`)
@@ -55,28 +58,33 @@ export const processor: Processor<QueueData> = async (job) => {
 
     job.log(`Found ${shopifyProducts.length} product(s) with tag ${tag}`)
 
-    const exchangeRate = product.currency === "USD" ? job.data.exchangeRate : 1
+    const exchangeRate =
+      scrapedProduct.currency === "USD" ? job.data.exchangeRate : 1
 
     let commerceId: string
+
     if (shopifyProducts.length === 0) {
       // If product doesn't exist, create it
       const shopifyProduct = await createProduct({
         collection: listing.commerceId,
-        cost: multiplyPriceByExchangeRate(product.amount || 0, exchangeRate),
-        description: product.description,
+        cost: multiplyPriceByExchangeRate(
+          scrapedProduct.amount || 0,
+          exchangeRate
+        ),
+        description: scrapedProduct.description,
         images: [
           {
-            altText: product.title,
-            src: product.image,
+            altText: scrapedProduct.title,
+            src: scrapedProduct.image,
           },
         ],
         price: calculatePriceWithMargin(
-          multiplyPriceByExchangeRate(product.amount || 0, exchangeRate),
+          multiplyPriceByExchangeRate(scrapedProduct.amount || 0, exchangeRate),
           margin
         ),
-        store: product.store,
+        store: scrapedProduct.store,
         tags: [tag],
-        title: product.title,
+        title: scrapedProduct.title,
       })
 
       job.log(`Created product ${shopifyProduct.id}`)
@@ -108,14 +116,14 @@ export const processor: Processor<QueueData> = async (job) => {
       create: {
         commerceId,
         listingId: listing.id,
-        quantity: product.quantity,
-        sku: `${listing.sku}-${product.id}`,
-        stock: product.quantity,
+        quantity,
+        sku: `${listing.sku}-${rowId}`,
+        stock: quantity,
       },
       update: {
         commerceId,
-        quantity: product.quantity,
-        stock: product.quantity,
+        quantity,
+        stock: quantity,
       },
       where: { sku },
     })

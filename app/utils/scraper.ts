@@ -13,6 +13,7 @@ export const ScrapedFieldsSchema = z.object({
   currency: z.preprocess(undefinedToNull, CurrencySchema.nullable()),
   description: z.preprocess(undefinedToNull, z.string().nullable()),
   image: z.preprocess(undefinedToNull, z.string().nullable()),
+  scrapedProductId: z.preprocess(undefinedToNull, z.string().nullable()),
   store: z.preprocess(undefinedToNull, z.string().nullable()),
   title: z.preprocess(undefinedToNull, z.string().nullable()),
 })
@@ -31,16 +32,21 @@ export function parseScrapeProductsTableRow(data: unknown) {
   return ScrapeProductsTableRowSchema.parse(data)
 }
 
-export type ScrapedProductResult = {
-  url: string
-
-  /** The start time the function was executed */
-  time: number
+export const ScrapedProductResultSchema = z.object({
+  cached: z.boolean().optional(),
   /** The duration for the function execution (in milliseconds)  */
-  duration: number
-  fields: ScrapedFields
-  errors: string[]
-  cached?: true
+  duration: z.number(),
+  errors: z.array(z.string()),
+  fields: ScrapedFieldsSchema,
+  id: z.string().uuid(),
+  /** The start time the function was executed */
+  time: z.number(),
+  url: z.string(),
+})
+export type ScrapedProductResult = z.infer<typeof ScrapedProductResultSchema>
+
+export function parseScrapedProductResult(data: unknown) {
+  return ScrapedProductResultSchema.parse(data)
 }
 
 export function cleanAmount(amount?: string | null): number {
@@ -63,12 +69,14 @@ export async function scrapeProduct(
   url: string,
   init?: RequestInit
 ): Promise<ScrapedProductResult> {
-  const res = await fetch(
-    "/api/scraper/product?" + new URLSearchParams({ url }),
-    init
-  )
+  const requestUrl = new URL("/api/scraper/product", window.location.origin)
+  requestUrl.searchParams.set("url", url)
 
-  return res.json()
+  const res = await fetch(requestUrl, init)
+
+  const data = await res.json()
+
+  return parseScrapedProductResult(data)
 }
 
 export async function scrapeImage(url: string): Promise<Blob> {

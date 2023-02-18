@@ -5,7 +5,6 @@ import { withZod } from "@remix-validated-form/with-zod"
 import { useSnackbar } from "notistack"
 import { Fragment, useEffect } from "react"
 import {
-  FieldArray,
   useFormContext,
   ValidatedForm,
   validationError,
@@ -22,14 +21,20 @@ import alegra from "~/services/alegra.server"
 import { useDialogPage } from "~/utils/hooks"
 import { getFormData } from "~/utils/http.server"
 import { goToParent, json, useLoaderData } from "~/utils/remix"
-import { ScrapeProductsTableRowSchema } from "~/utils/scraper"
-import { capitalize } from "~/utils/string"
 
 const AddToListingSchema = z.object({
   exchangeRate: z.coerce.number().min(1),
   listingId: z.string().uuid(),
   margin: z.coerce.number().min(0).max(100),
-  products: z.array(ScrapeProductsTableRowSchema).min(1),
+  products: z
+    .array(
+      z.object({
+        quantity: z.coerce.number().min(1),
+        rowId: z.string(),
+        scrapedProductId: z.string().uuid(),
+      })
+    )
+    .min(1),
 })
 
 const validator = withZod(AddToListingSchema)
@@ -64,14 +69,17 @@ export async function action({ request }: ActionArgs) {
   })
 
   await addItemToListingQueue.addBulk(
-    products.map((product) => ({
+    products.map(({ scrapedProductId, rowId, quantity }) => ({
       data: {
         exchangeRate,
         listingId,
         margin,
-        product,
+        quantity,
+        rowId,
+        scrapedProductId,
       },
-      name: `${listing.sku}-${product.id}`,
+      name: `${listing.sku}-${rowId}`,
+      opts: { attempts: 7, backoff: { delay: 1000, type: "exponential" } },
     }))
   )
 
@@ -80,6 +88,11 @@ export async function action({ request }: ActionArgs) {
 
 export default function AddToListingPage() {
   const { products } = useScrapedProducts()
+  const productFields = products.map(({ id, scrapedProductId, quantity }) => ({
+    quantity,
+    rowId: `${id}`,
+    scrapedProductId: scrapedProductId!,
+  }))
 
   const { listings, exchangeRate } = useLoaderData<typeof loader>()
   const { open, close, leave } = useDialogPage()
@@ -121,7 +134,7 @@ export default function AddToListingPage() {
                       exchangeRate,
                       listingId: undefined,
                       margin: 7.5,
-                      products,
+                      products: productFields,
                     }}
                     method="post"
                     onSubmit={() => {
@@ -187,21 +200,28 @@ export default function AddToListingPage() {
                           min={1}
                           description="The exchange rate from USD to DOP, for products with USD prices."
                         />
-                        <FieldArray name="products">
-                          {(items) => (
-                            <div className="hidden">
-                              {items.map((product, index) =>
-                                Object.keys(product).map((key) => (
-                                  <FormInput
-                                    label={capitalize(key)}
-                                    key={`${product.id}.${key}`}
-                                    name={`products[${index}].${key}`}
-                                  />
-                                ))
-                              )}
+
+                        {productFields.map(
+                          ({ scrapedProductId, rowId }, index) => (
+                            <div
+                              key={`${rowId}-${scrapedProductId}`}
+                              className="hidden"
+                            >
+                              <FormInput
+                                name={`products[${index}].rowId`}
+                                type="hidden"
+                              />
+                              <FormInput
+                                name={`products[${index}].scrapedProductId`}
+                                type="hidden"
+                              />
+                              <FormInput
+                                name={`products[${index}].quantity`}
+                                type="hidden"
+                              />
                             </div>
-                          )}
-                        </FieldArray>
+                          )
+                        )}
                         <Alert type="info">
                           You will be adding{" "}
                           <span className="font-bold">{products.length}</span>{" "}

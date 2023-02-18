@@ -170,10 +170,20 @@ export default function ScrapeProductsTable({
         const payload = event.payload
         const dataMap = new Map(data.map((row) => [row.url, row]))
         const product = dataMap.get(payload.url)
-        const { fields, duration, errors, cached } = payload
+        const {
+          fields,
+          duration,
+          errors,
+          cached,
+          id: scrapedProductId,
+        } = payload
 
         if (!product) return
-        table.options.meta.updateData({ ...product, ...fields })
+        table.options.meta.updateData({
+          ...product,
+          ...fields,
+          scrapedProductId,
+        })
 
         showResultMessage(product.id, duration, errors, cached)
       }
