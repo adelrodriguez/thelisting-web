@@ -72,6 +72,7 @@ test("calls the GET /contacts/:id endpoint if the contact already exists", async
 
   prisma.customer.findUnique.mockResolvedValue({
     alegraId: faker.datatype.uuid(),
+    commerceId: faker.datatype.uuid(),
     createdAt: faker.date.past(),
     email,
     id: faker.datatype.uuid(),

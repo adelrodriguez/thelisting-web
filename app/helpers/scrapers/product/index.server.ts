@@ -1,12 +1,12 @@
 import { UnknownError } from "~/utils/error"
 import { logger } from "~/utils/log"
-import type { ScrapedProductResult } from "~/utils/scraper"
+import type { ScrapedProductPayload } from "~/utils/scraper"
 
 import createScraper from "./scraper.server"
 
 export default async function scraper(
   requestUrl: string
-): Promise<ScrapedProductResult> {
+): Promise<ScrapedProductPayload> {
   logger.info(`Scrapping product ${requestUrl}`, {
     url: requestUrl,
   })
@@ -30,7 +30,7 @@ export default async function scraper(
     // Close the browser window
     await scraper.stop()
 
-    const payload: ScrapedProductResult = {
+    const payload: ScrapedProductPayload = {
       duration: scraper.duration,
       errors: [],
       fields: {
@@ -41,7 +41,6 @@ export default async function scraper(
         store,
         title,
       },
-      id: "",
       time: new Date().getTime(),
       url: requestUrl,
     }

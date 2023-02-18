@@ -16,6 +16,7 @@ import { isDevelopment } from "~/config/vars"
 import { scraperMachine } from "~/helpers/machines"
 import { round } from "~/utils/number"
 import type {
+  ScrapedProductPayload,
   ScrapedProductResult,
   ScrapeProductsTableRow,
 } from "~/utils/scraper"
@@ -167,22 +168,20 @@ export default function ScrapeProductsTable({
       if (!table.options.meta) return
 
       if (event.type === "FINISHED") {
-        const payload = event.payload
+        const result = event.payload
         const dataMap = new Map(data.map((row) => [row.url, row]))
-        const product = dataMap.get(payload.url)
+        const product = dataMap.get(result.payload.url)
         const {
-          fields,
-          duration,
-          errors,
+          payload: { fields, duration, errors },
+          id,
           cached,
-          id: scrapedProductId,
-        } = payload
+        } = result
 
         if (!product) return
         table.options.meta.updateData({
           ...product,
           ...fields,
-          scrapedProductId,
+          scrapedProductId: id,
         })
 
         showResultMessage(product.id, duration, errors, cached)
@@ -201,8 +200,8 @@ export default function ScrapeProductsTable({
 
   function showResultMessage(
     id: string | number,
-    duration: ScrapedProductResult["duration"],
-    errors: ScrapedProductResult["errors"],
+    duration: ScrapedProductPayload["duration"],
+    errors: ScrapedProductPayload["errors"],
     cached: ScrapedProductResult["cached"]
   ) {
     if (errors.length) {

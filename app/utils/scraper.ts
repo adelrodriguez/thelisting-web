@@ -13,7 +13,6 @@ export const ScrapedFieldsSchema = z.object({
   currency: z.preprocess(undefinedToNull, CurrencySchema.nullable()),
   description: z.preprocess(undefinedToNull, z.string().nullable()),
   image: z.preprocess(undefinedToNull, z.string().nullable()),
-  scrapedProductId: z.preprocess(undefinedToNull, z.string().nullable()),
   store: z.preprocess(undefinedToNull, z.string().nullable()),
   title: z.preprocess(undefinedToNull, z.string().nullable()),
 })
@@ -22,6 +21,7 @@ export type ScrapedFields = z.infer<typeof ScrapedFieldsSchema>
 export const ScrapeProductsTableRowSchema = ScrapedFieldsSchema.extend({
   id: z.union([z.string(), z.number()]),
   quantity: z.coerce.number().min(1),
+  scrapedProductId: z.preprocess(undefinedToNull, z.string().nullable()),
   url: z.string(),
 })
 export type ScrapeProductsTableRow = z.infer<
@@ -32,16 +32,21 @@ export function parseScrapeProductsTableRow(data: unknown) {
   return ScrapeProductsTableRowSchema.parse(data)
 }
 
-export const ScrapedProductResultSchema = z.object({
-  cached: z.boolean().optional(),
+export const ScrapedProductPayloadSchema = z.object({
   /** The duration for the function execution (in milliseconds)  */
   duration: z.number(),
   errors: z.array(z.string()),
   fields: ScrapedFieldsSchema,
-  id: z.string().uuid(),
   /** The start time the function was executed */
   time: z.number(),
   url: z.string(),
+})
+export type ScrapedProductPayload = z.infer<typeof ScrapedProductPayloadSchema>
+
+export const ScrapedProductResultSchema = z.object({
+  cached: z.boolean().optional(),
+  id: z.string().uuid(),
+  payload: ScrapedProductPayloadSchema,
 })
 export type ScrapedProductResult = z.infer<typeof ScrapedProductResultSchema>
 
