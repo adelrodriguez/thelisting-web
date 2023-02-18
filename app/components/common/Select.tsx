@@ -3,15 +3,13 @@ import clsx from "clsx"
 import type { OptionHTMLAttributes, Ref, SelectHTMLAttributes } from "react"
 import { forwardRef } from "react"
 
-type OptionValue = OptionHTMLAttributes<HTMLOptionElement>["value"]
-
-export type SelectOption<T> = {
+type SelectOption = {
   label: string
-  value: T
+  value: OptionHTMLAttributes<HTMLOptionElement>["value"]
   disabled?: boolean
 }
 
-function Select<T extends OptionValue>(
+function Select<T extends SelectOption>(
   {
     className,
     description,
@@ -30,7 +28,7 @@ function Select<T extends OptionValue>(
     error?: boolean
     label?: string
     name?: string
-    options: SelectOption<T>[]
+    options: T[]
     placeholder?: string
     required?: boolean
   } & SelectHTMLAttributes<HTMLSelectElement>,
@@ -42,7 +40,7 @@ function Select<T extends OptionValue>(
         <label htmlFor={id} className="block text-sm font-medium text-gray-700">
           {label}
           {required && (
-            <span className="text-red-500 text-xs" aria-hidden="true">
+            <span className="text-xs text-red-500" aria-hidden="true">
               {" "}
               *
             </span>

@@ -3,12 +3,10 @@ import { useField } from "remix-validated-form"
 
 import { Select } from "~/components/common"
 
-export type { SelectOption } from "~/components/common"
-
 /**
  * This component should only be used within a Form component.
  */
-export default function SelectInput({
+export default function FormSelect({
   name,
   description,
   options,

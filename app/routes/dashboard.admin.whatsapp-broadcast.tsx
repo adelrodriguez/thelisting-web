@@ -6,11 +6,9 @@ import { useEffect } from "react"
 import { ValidatedForm, validationError } from "remix-validated-form"
 import { z } from "zod"
 
-import type { SelectOption } from "~/components/form"
 import { FormSubmit } from "~/components/form"
 import { FormTextArea } from "~/components/form"
 import { FormInput, FormSelect } from "~/components/form"
-import type { WhatsAppMessageTemplate } from "~/config/consts"
 import { WHATSAPP_MESSAGE_TEMPLATES } from "~/config/consts"
 import whatsapp from "~/services/whatsapp.server"
 import { getFormData } from "~/utils/http.server"
@@ -44,21 +42,6 @@ const whatsAppBroadcastFormSchema = z.object({
 })
 
 const validator = withZod(whatsAppBroadcastFormSchema)
-
-const options: Array<SelectOption<WhatsAppMessageTemplate | undefined>> = [
-  {
-    label: "Select a template",
-    value: undefined,
-  },
-  {
-    label: "Wedding Guest Notification",
-    value: WHATSAPP_MESSAGE_TEMPLATES.WeddingGuestNotification,
-  },
-  {
-    label: "Baby Shower Guest Notification",
-    value: WHATSAPP_MESSAGE_TEMPLATES.BabyShowerGuestNotification,
-  },
-]
 
 export async function action({ request }: ActionArgs) {
   const formData = await getFormData(request)
@@ -135,7 +118,20 @@ export default function WhatsAppBroadcastPage() {
         <FormSelect
           label="Template"
           name="template"
-          options={options}
+          options={[
+            {
+              label: "Select a template",
+              value: undefined,
+            },
+            {
+              label: "Wedding Guest Notification",
+              value: WHATSAPP_MESSAGE_TEMPLATES.WeddingGuestNotification,
+            },
+            {
+              label: "Baby Shower Guest Notification",
+              value: WHATSAPP_MESSAGE_TEMPLATES.BabyShowerGuestNotification,
+            },
+          ]}
           placeholder="Select a template"
           required
         />
