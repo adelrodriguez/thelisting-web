@@ -15,9 +15,10 @@ import { Fragment } from "react"
 
 import { Logo } from "~/components/branding"
 import { Notification } from "~/components/common"
-import { Breadcrumbs } from "~/components/dashboard"
 import auth from "~/helpers/auth.server"
 import { json, useLoaderData } from "~/utils/remix"
+
+import Breadcrumbs from "./Breadcrumbs"
 
 const navigation = [
   {
