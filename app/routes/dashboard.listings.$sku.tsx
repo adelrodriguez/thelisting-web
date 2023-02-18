@@ -3,10 +3,9 @@ import { NavLink, Outlet, useMatches, useNavigate } from "@remix-run/react"
 import clsx from "clsx"
 
 import { Select } from "~/components/common"
-
-import { handle as handleIndex } from "./$sku/index"
-import { handle as handleItems } from "./$sku/items"
-import { handle as handleRibbons } from "./$sku/ribbons"
+import { handle as handleIndex } from "~/routes/dashboard.listings.$sku._index"
+import { handle as handleItems } from "~/routes/dashboard.listings.$sku.items"
+import { handle as handleRibbons } from "~/routes/dashboard.listings.$sku.ribbons"
 
 export const handle = {
   crumb: ({ params }: RouteMatch) => ({

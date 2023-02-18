@@ -14,7 +14,7 @@ import { FormInput, FormListRadioGroup, FormSubmit } from "~/components/form"
 import prisma from "~/helpers/prisma.server"
 import { isUserAdmin } from "~/utils/auth.server"
 import { getFormData } from "~/utils/http.server"
-import { json } from "~/utils/remix"
+import { getParam, json } from "~/utils/remix"
 import { getUserFullName, UserSchema } from "~/utils/user"
 
 const validator = withZod(UserSchema)
@@ -27,11 +27,7 @@ export const handle = {
 }
 
 export async function loader({ params }: LoaderArgs) {
-  const userId = params.userId
-
-  if (!userId) {
-    throw notFound("User not found")
-  }
+  const userId = getParam(params, "user")
 
   const user = await prisma.user.findUnique({
     where: { id: userId },

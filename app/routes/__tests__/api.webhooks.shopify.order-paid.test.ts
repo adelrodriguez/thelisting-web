@@ -7,7 +7,7 @@ import { StatusCodes } from "~/utils/http.server"
 import { OrderPaymentWebhookPayloadSchema } from "~/utils/shopify"
 import { encodeWebhookSignature } from "~/utils/webhook.server"
 
-import { action } from "../order-paid"
+import { action } from "../api.webhooks.shopify.order-paid"
 
 vi.mock("~/helpers/prisma.server")
 vi.mock("~/helpers/queues")

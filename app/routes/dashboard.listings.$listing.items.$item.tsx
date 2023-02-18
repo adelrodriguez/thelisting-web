@@ -18,7 +18,7 @@ import prisma from "~/helpers/prisma.server"
 import { useProduct } from "~/utils/hooks"
 import { getFormData } from "~/utils/http.server"
 import { getPriceSymbol } from "~/utils/money"
-import { goToParent, json, useLoaderData } from "~/utils/remix"
+import { goToParent, json, useLoaderData, getParam } from "~/utils/remix"
 
 export const handle = {
   crumb: ({ params }: RouteMatch) => ({
@@ -41,15 +41,9 @@ const EditItemSchema = z
 const validator = withZod(EditItemSchema)
 
 export async function loader({ params }: LoaderArgs) {
-  const itemSku = params.itemSku
+  const sku = getParam(params, "$item")
 
-  if (!itemSku) {
-    return goToParent()
-  }
-
-  const item = await prisma.item.findUnique({
-    where: { sku: itemSku },
-  })
+  const item = await prisma.item.findUnique({ where: { sku } })
 
   if (!item) {
     throw notFound<NotFoundBoundaryData>({
