@@ -93,17 +93,23 @@ export async function action({ request, params }: ActionArgs) {
 
   if (!user) throw unauthorized("You must be logged in to update a listing.")
 
-  const sku = params.sku
+  const sku = getParam(params, "listing")
 
-  if (!sku) throw notFound("Listing not found")
-
-  if (isNaN(Number(sku))) throw notFound("Listing not found")
+  if (isNaN(Number(sku)))
+    throw notFound({
+      message: "Listing not found",
+      title: "Listing not found",
+    })
 
   const listing = await prisma.listing.findUnique({
     where: { sku: Number(sku) },
   })
 
-  if (!listing) throw notFound("Listing not found")
+  if (!listing)
+    throw notFound({
+      message: "Listing not found",
+      title: "Listing not found",
+    })
 
   const formData = await getFormData(request)
   const result = await validator.validate(formData)

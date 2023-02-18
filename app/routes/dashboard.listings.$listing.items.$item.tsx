@@ -18,7 +18,7 @@ import prisma from "~/helpers/prisma.server"
 import { useProduct } from "~/utils/hooks"
 import { getFormData } from "~/utils/http.server"
 import { getPriceSymbol } from "~/utils/money"
-import { goToParent, json, useLoaderData, getParam } from "~/utils/remix"
+import { json, useLoaderData, getParam } from "~/utils/remix"
 
 export const handle = {
   crumb: ({ params }: RouteMatch) => ({
@@ -62,17 +62,13 @@ export async function loader({ params }: LoaderArgs) {
 export async function action({ request, params }: ActionArgs) {
   const formData = await getFormData(request)
   const result = await validator.validate(formData)
-  const itemSku = params.itemSku
-
-  if (!itemSku) {
-    return goToParent()
-  }
+  const sku = getParam(params, "item")
 
   if (result.error) return validationError(result.error)
 
   const item = await prisma.item.update({
     data: result.data,
-    where: { sku: itemSku },
+    where: { sku },
   })
 
   return { item }
