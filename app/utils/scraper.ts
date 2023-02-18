@@ -85,7 +85,10 @@ export async function scrapeProduct(
 }
 
 export async function scrapeImage(url: string): Promise<Blob> {
-  const res = await fetch("/api/scraper/image?" + new URLSearchParams({ url }))
+  const requestUrl = new URL("/api/scraper/image", window.location.origin)
+  requestUrl.searchParams.set("url", url)
+
+  const res = await fetch(requestUrl)
 
   return res.blob()
 }
