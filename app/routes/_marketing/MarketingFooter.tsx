@@ -93,7 +93,7 @@ const navigation = {
   ],
 }
 
-export default function LayoutFooter() {
+export default function MarketingFooter() {
   return (
     <footer className="bg-gray-900">
       <div className="mx-auto max-w-7xl py-12 px-4 sm:px-6 lg:py-16 lg:px-8">

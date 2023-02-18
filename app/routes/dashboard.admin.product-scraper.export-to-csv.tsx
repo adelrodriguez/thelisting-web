@@ -9,7 +9,7 @@ import { FormInput, FormSubmit } from "~/components/form"
 import {
   useScrapedProducts,
   Headers,
-} from "~/routes/dashboard.admin.product-scraper"
+} from "~/routes/dashboard.admin.product-scraper/route"
 import { downloadAsCSVFile } from "~/utils/csv"
 import { useDialogPage } from "~/utils/hooks"
 

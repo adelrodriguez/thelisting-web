@@ -15,9 +15,10 @@ import { useTranslation } from "react-i18next"
 import { Button, FormattedNumber } from "~/components/common"
 import Tooltip from "~/components/common/Tooltip"
 import { Spinner } from "~/components/loading"
-import { CartItem } from "~/components/registry"
 import { useCart } from "~/utils/hooks"
 import { getPriceSymbol } from "~/utils/money"
+
+import CartItem from "./CartItem"
 
 export const handle = {
   i18n: ["listing", "common"],

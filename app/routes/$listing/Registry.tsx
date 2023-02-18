@@ -2,9 +2,10 @@ import { ShoppingBagIcon } from "@heroicons/react/24/outline"
 import type { Item } from "@prisma/client"
 import { Link } from "@remix-run/react"
 
-import { RegistryItem } from "~/components/registry"
 import { useCart } from "~/utils/hooks"
 import { sortByQuantity } from "~/utils/listing"
+
+import RegistryItem from "./RegistryItem"
 
 export default function Registry({ items }: { items: Item[] }) {
   const cart = useCart()

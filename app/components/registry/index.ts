@@ -1,5 +1,1 @@
-export { default as CartItem } from "./CartItem"
 export { default as OrderItem } from "./OrderItem"
-export { default as QuantityInput } from "./QuantityInput"
-export { default as Registry } from "./Registry"
-export { default as RegistryItem } from "./RegistryItem"

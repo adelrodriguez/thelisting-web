@@ -6,9 +6,10 @@ import { useState } from "react"
 import { useDropzone } from "react-dropzone"
 import invariant from "tiny-invariant"
 
-import { ScrapeProductsTable } from "~/components/admin"
 import { useCSVParser } from "~/utils/hooks"
 import type { ScrapeProductsTableRow } from "~/utils/scraper"
+
+import ScrapeProductsTable from "./ScrapeProductsTable"
 
 export const handle = {
   crumb: () => ({

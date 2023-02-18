@@ -4,11 +4,10 @@ import { Link, useLocation } from "@remix-run/react"
 import clsx from "clsx"
 import { useState } from "react"
 
+import { LanguageCurrencySelector } from "~/components/marketing"
 import { THE_LISTING_LOGO_BLACK, THE_LISTING_LOGO_WHITE } from "~/config/consts"
 
-import LanguageCurrencySelector from "./LanguageCurrencySelector"
-
-export default function LayoutHeader({
+export default function MarketingHeader({
   navigationItems,
   loginText,
 }: {

@@ -1,7 +1,8 @@
 import { Outlet } from "@remix-run/react"
 import { useTranslation } from "react-i18next"
 
-import { LayoutHeader, LayoutFooter } from "~/components/marketing"
+import MarketingFooter from "./MarketingFooter"
+import MarketingHeader from "./MarketingHeader"
 
 const headerNavigation = [
   { href: "/pricing", key: "navigation.pricing" },
@@ -18,7 +19,7 @@ export default function MarketingLayout() {
 
   return (
     <>
-      <LayoutHeader
+      <MarketingHeader
         navigationItems={headerNavigation.map((item) => ({
           ...item,
           key: t(item.key),
@@ -28,7 +29,7 @@ export default function MarketingLayout() {
       <main className="flex-1">
         <Outlet />
       </main>
-      <LayoutFooter />
+      <MarketingFooter />
     </>
   )
 }

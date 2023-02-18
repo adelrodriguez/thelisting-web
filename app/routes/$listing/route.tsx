@@ -4,7 +4,6 @@ import clsx from "clsx"
 import { notFound } from "remix-utils"
 
 import type { NotFoundBoundaryData } from "~/components/error"
-import { Registry } from "~/components/registry"
 import { Ribbons } from "~/components/ribbons"
 import { THE_LISTING_LOGO_BLACK } from "~/config/consts"
 import prisma from "~/helpers/prisma.server"
@@ -14,6 +13,8 @@ import {
 } from "~/utils/cloudflare"
 import { CartProvider } from "~/utils/hooks"
 import { goHome, json, useLoaderData } from "~/utils/remix"
+
+import Registry from "./Registry"
 
 export async function loader({ params }: LoaderArgs) {
   const path = params.listing

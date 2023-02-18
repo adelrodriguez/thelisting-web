@@ -7,11 +7,12 @@ import { useTranslation } from "react-i18next"
 
 import { Button, Image } from "~/components/common"
 import { FormattedNumber } from "~/components/common"
-import { QuantityInput } from "~/components/registry"
 import prisma from "~/helpers/prisma.server"
 import { useCart, useProduct } from "~/utils/hooks"
 import { getPriceSymbol } from "~/utils/money"
 import { goToParent, json, useLoaderData } from "~/utils/remix"
+
+import QuantityInput from "./QuantityInput"
 
 export const handle = {
   i18n: "listing",
