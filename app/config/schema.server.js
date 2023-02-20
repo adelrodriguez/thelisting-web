@@ -53,7 +53,6 @@ module.exports = z.object({
   SHOPIFY_STORE: z.string(),
   SHOPIFY_STOREFRONT_ACCESS_TOKEN: z.string(),
   SHOPIFY_STORE_DOMAIN: z.string(),
-  SHOPIFY_WEBHOOK_SECRET: z.string(),
 
   WHATSAPP_PHONE_NUMBER_ID: z.string(),
 })
