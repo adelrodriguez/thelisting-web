@@ -16,7 +16,10 @@ export async function verifyWebhook(
 ): Promise<void> {
   const isHookdeckVerified = headers.get("x-hookdeck-verified") === "true"
 
-  if (!isHookdeckVerified) throw Unauthorized
+  if (!isHookdeckVerified) {
+    logger.error("Webhook not verified by Hookdeck", { headers })
+    throw Unauthorized
+  }
 
   const hmacHeader = headers.get("x-hookdeck-signature")
   const hmacHeader2 = headers.get("x-hookdeck-signature-2")
@@ -25,7 +28,15 @@ export async function verifyWebhook(
 
   const isPayloadVerified = hmac === hmacHeader || hmac === hmacHeader2
 
-  if (!isPayloadVerified) throw Unauthorized
+  if (!isPayloadVerified) {
+    logger.error("Webhook payload not verified", {
+      hmac,
+      hmacHeader,
+      hmacHeader2,
+    })
+
+    throw Unauthorized
+  }
 }
 
 export function encodeWebhookSignature(
