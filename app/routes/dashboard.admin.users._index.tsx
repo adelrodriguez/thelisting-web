@@ -27,7 +27,11 @@ export async function loader({ request }: LoaderArgs) {
     throw forbidden("You do not have permission to access this page.")
   }
 
-  const users = await prisma.user.findMany()
+  const users = await prisma.user.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+  })
 
   return json({ users })
 }
