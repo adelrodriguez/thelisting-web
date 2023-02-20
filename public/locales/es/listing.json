@@ -32,7 +32,7 @@
   "thankYou": "¡Gracias por tu regalo, {{name}}!",
   "totalGifted": "Total regalado",
   "yourGifts": "Tus regalos",
-  "yourGiftsDescription": "Aquí puedes ver los regalos que has recibido, y los mensajes que te han dejado.",
+  "yourGiftsDescription": "Aquí puedes ver los regalos que has recibido y los mensajes que te han dejado.",
   "yourGiftsEmpty": "Todavía no has recibido ningún regalo.",
   "itemsGifted": "Artículos regalados"
 }
