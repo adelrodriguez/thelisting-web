@@ -2,7 +2,7 @@ import type { LoaderArgs } from "@remix-run/server-runtime"
 import { sharpTransformer } from "remix-image-sharp"
 import { fetchResolver, imageLoader } from "remix-image/server"
 
-import { ImageCache } from "~/utils/image"
+import { ImageCache } from "~/utils/image.server"
 
 export function loader({ request }: LoaderArgs) {
   let url = new URL("/", request.url)

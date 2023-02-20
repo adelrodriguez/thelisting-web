@@ -167,11 +167,23 @@ model User {
   lastLoginAt DateTime?
 
   listings Listing[]
+  images   Image[]
 }
 
 enum UserRole {
   Admin
   User
+}
+
+model Image {
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  id       String @id // The image id from the service
+  filename String
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @db.Uuid
 }
 
 model ScrapedProduct {

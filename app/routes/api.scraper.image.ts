@@ -1,5 +1,6 @@
 import type { LoaderArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
+import { badRequest } from "remix-utils"
 
 import auth from "~/helpers/auth.server"
 import { ReasonPhrases, StatusCodes } from "~/utils/http.server"
@@ -18,10 +19,7 @@ export async function loader({ request }: LoaderArgs) {
   const imageUrl = url.searchParams.get("url")
 
   if (!imageUrl) {
-    throw json("Missing url parameter", {
-      status: StatusCodes.BAD_REQUEST,
-      statusText: ReasonPhrases.BAD_REQUEST,
-    })
+    throw badRequest("Missing url parameter")
   }
 
   const res = await fetch(imageUrl)
