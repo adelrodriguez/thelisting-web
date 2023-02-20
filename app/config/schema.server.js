@@ -24,6 +24,8 @@ module.exports = z.object({
 
   DATABASE_URL: z.string().url(),
 
+  GA_TRACKING_ID: z.string(),
+
   HOOKDECK_SIGNING_SECRET: z.string(),
 
   LOGIN_SENDER_EMAIL: z.string(),

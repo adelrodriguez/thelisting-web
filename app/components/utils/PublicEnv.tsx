@@ -3,6 +3,7 @@ type PublicEnvs = {
   shopifyStorefrontAccessToken: string
   shopifyStorefrontAPIEndpoint: string
   xStateVisualizer: boolean
+  gaTrackingId: string
 }
 
 declare global {

@@ -12,6 +12,7 @@ import {
 import { withSentry } from "@sentry/remix"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
+import type { ComponentProps } from "react"
 import { useTranslation } from "react-i18next"
 import remixImageStyles from "remix-image/remix-image.css"
 
@@ -19,6 +20,7 @@ import type { NotFoundBoundaryData } from "~/components/error"
 import { NotFound } from "~/components/error"
 import { PublicEnv } from "~/components/utils"
 import {
+  GA_TRACKING_ID,
   SHOPIFY_STORE,
   SHOPIFY_STOREFRONT_ACCESS_TOKEN,
 } from "~/config/env.server"
@@ -31,6 +33,8 @@ import stylesheet from "~/styles/app.css"
 import { useChangeLanguage } from "~/utils/hooks"
 import { i18nCookie } from "~/utils/i18next"
 import { json, useLoaderData } from "~/utils/remix"
+
+import { isProduction } from "./config/vars"
 
 const client = new QueryClient()
 
@@ -60,14 +64,17 @@ export function CatchBoundary() {
 export async function loader({ request }: LoaderArgs) {
   const locale = await i18next.getLocale(request)
 
+  const env: ComponentProps<typeof PublicEnv> = {
+    gaTrackingId: GA_TRACKING_ID,
+    shopifyStore: SHOPIFY_STORE,
+    shopifyStorefrontAPIEndpoint,
+    shopifyStorefrontAccessToken: SHOPIFY_STOREFRONT_ACCESS_TOKEN,
+    xStateVisualizer,
+  }
+
   return json(
     {
-      env: {
-        shopifyStore: SHOPIFY_STORE,
-        shopifyStorefrontAPIEndpoint,
-        shopifyStorefrontAccessToken: SHOPIFY_STOREFRONT_ACCESS_TOKEN,
-        xStateVisualizer,
-      },
+      env,
       locale,
     },
     {
@@ -91,6 +98,28 @@ function App() {
         <Links />
       </head>
       <body className="h-auto min-h-full">
+        {isProduction && (
+          <>
+            <script
+              async
+              src={`https://www.googletagmanager.com/gtag/js?id=${env.gaTrackingId}`}
+            />
+            <script
+              async
+              id="gtag-init"
+              dangerouslySetInnerHTML={{
+                __html: `
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${env.gaTrackingId}', {
+                  page_path: window.location.pathname,
+                });
+              `,
+              }}
+            />
+          </>
+        )}
         <QueryClientProvider client={client}>
           <Outlet />
           <ReactQueryDevtools initialIsOpen={false} />
