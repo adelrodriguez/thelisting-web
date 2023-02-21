@@ -19,6 +19,7 @@ import {
   FormSubmit,
   FormListRadioGroup,
   FormSelect,
+  FormImageInput,
 } from "~/components/form"
 import auth from "~/helpers/auth.server"
 import prisma from "~/helpers/prisma.server"
@@ -246,12 +247,12 @@ export default function DashboardListingPage() {
         ]}
         required
       />
-      <FormInput
+      <FormImageInput
         label="Cover Image"
         name="coverImage"
         description="The image that will be shown on the listing page"
       />
-      <FormInput
+      <FormImageInput
         label={'"Thank You" Image'}
         name="thankYouImage"
         description="The image that will be shown after someone purchases an item from your listing"

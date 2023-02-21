@@ -23,8 +23,9 @@ export default function ImagePicker({
   onClose: () => void
   onSelect: (image: UserImage) => void
 }) {
-  const { data, isLoading, isError, refetch } = useQuery(["images"], () =>
-    fetch("/api/user/images").then((res) => res.json() as Promise<UserImage[]>)
+  const { data, isLoading, isError, refetch } = useQuery<UserImage[]>(
+    ["images"],
+    () => fetch("/api/user/images").then((res) => res.json())
   )
   const [step, setStep] = useState<"choose" | "upload" | "name">("choose")
   const [file, setFile] = useState<File | null>(null)
@@ -125,7 +126,7 @@ function ImageGallery({
       </Dialog.Title>
 
       <div className="flex h-full flex-col gap-y-4 py-6 px-3">
-        <div className="overflow-auto p-4">
+        <div className="flex-1 overflow-auto p-4">
           <ul className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8">
             {images.map((image) => (
               <li key={image.id} className="relative">

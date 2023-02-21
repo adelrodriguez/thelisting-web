@@ -14,7 +14,7 @@ import {
 } from "remix-validated-form"
 import { z } from "zod"
 
-import { FormImageUpload, FormInput, FormSubmit } from "~/components/form"
+import { FormImageInput, FormInput, FormSubmit } from "~/components/form"
 import prisma from "~/helpers/prisma.server"
 import { generateCloudflareImageUrl } from "~/utils/cloudflare"
 import { uploadImageToCloudflare } from "~/utils/cloudflare.server"
@@ -134,7 +134,7 @@ export default function DashboardListingRibbonsPage() {
                     <div className="grid gap-3">
                       <FormInput name="properties.title" label="Title" />
                       <FormInput name="properties.subtitle" label="Subtitle" />
-                      <FormImageUpload
+                      <FormImageInput
                         name="properties.backgroundImage"
                         label="Background Image"
                       />

@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next"
 import { FormattedNumber } from "~/components/common"
 import { OrderItem } from "~/components/registry"
 import prisma from "~/helpers/prisma.server"
+import Sentry from "~/services/sentry"
 import useTrackPageview from "~/utils/hooks/use-track-pageview"
 import { ReasonPhrases, StatusCodes } from "~/utils/http.server"
 import { getPriceSymbol } from "~/utils/money"
@@ -24,20 +25,27 @@ export async function loader({ params, request }: LoaderArgs) {
 
   if (!orderId) throw redirect(`/${path}`)
 
-  const order = await getOrder(getShopifyId(orderId, "Order"))
+  try {
+    const order = await getOrder(getShopifyId(orderId, "Order"))
 
-  const listing = await prisma.listing.findFirst({
-    where: { path, status: "Published" },
-  })
-
-  if (!listing) {
-    throw json("Sorry, we couldn’t find the Listing you’re looking for.", {
-      status: StatusCodes.NOT_FOUND,
-      statusText: ReasonPhrases.NOT_FOUND,
+    const listing = await prisma.listing.findFirst({
+      where: { path, status: "Published" },
     })
-  }
 
-  return json({ listing, order })
+    if (!listing) {
+      throw json("Sorry, we couldn’t find the Listing you’re looking for.", {
+        status: StatusCodes.NOT_FOUND,
+        statusText: ReasonPhrases.NOT_FOUND,
+      })
+    }
+
+    return json({ listing, order })
+  } catch (error) {
+    Sentry.captureMessage(
+      `Error loading order on listing ${path}. Order id: ${orderId}`
+    )
+    throw redirect(`/${path}`)
+  }
 }
 
 export default function ListingThankYouPage() {
