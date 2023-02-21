@@ -17,7 +17,7 @@ import { z } from "zod"
 import { Alert, Button } from "~/components/common"
 import { FormSubmit, FormTextArea } from "~/components/form"
 import prisma from "~/helpers/prisma.server"
-import { useCart } from "~/utils/hooks"
+import { useCart, useTrackPageview } from "~/utils/hooks"
 import { getFormData, NotFound } from "~/utils/http.server"
 
 export const handle = {
@@ -89,6 +89,8 @@ export default function NotePage() {
   const { t } = useTranslation(handle.i18n)
   const fetcher = useFetcher<typeof action>()
   const cart = useCart()
+
+  useTrackPageview()
 
   useEffect(() => {
     if (fetcher.data?.type === NoteType.Text) {

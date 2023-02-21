@@ -11,6 +11,7 @@ import { Button, FormattedNumber } from "~/components/common"
 import { OrderItem } from "~/components/registry"
 import i18next from "~/helpers/i18next.server"
 import prisma from "~/helpers/prisma.server"
+import { useTrackPageview } from "~/utils/hooks"
 import { getPriceSymbol } from "~/utils/money"
 import { getParam, json, useLoaderData } from "~/utils/remix"
 
@@ -24,6 +25,7 @@ export async function loader({ request, params }: LoaderArgs) {
 
   const listing = await prisma.listing.findUnique({
     select: {
+      id: true,
       purchases: {
         include: {
           customer: true,
@@ -75,6 +77,8 @@ export async function loader({ request, params }: LoaderArgs) {
 export default function ListingReviewPage() {
   const { listing, stats } = useLoaderData<typeof loader>()
   const { t, i18n } = useTranslation(handle.i18n)
+
+  useTrackPageview({ listingId: listing.id })
 
   return (
     <main className="relative lg:min-h-full">

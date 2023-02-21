@@ -10,7 +10,9 @@ declare global {
   }
 }
 
-export const pageView = (url: string, trackingId: string) => {
+export const pageview = (
+  parameters: { page_path: string } & Record<string, string>
+) => {
   if (!window.gtag) {
     logger.warn(
       "window.gtag is not defined. This could mean your google analytics script has not loaded on the page yet."
@@ -18,8 +20,8 @@ export const pageView = (url: string, trackingId: string) => {
     return
   }
 
-  window.gtag("config", trackingId, {
-    page_path: url,
+  window.gtag("config", window.env.gaTrackingId, {
+    ...parameters,
   })
 }
 

@@ -15,7 +15,7 @@ import { useTranslation } from "react-i18next"
 import { Button, FormattedNumber } from "~/components/common"
 import Tooltip from "~/components/common/Tooltip"
 import { Spinner } from "~/components/loading"
-import { useCart } from "~/utils/hooks"
+import { useCart, useTrackPageview } from "~/utils/hooks"
 import { getPriceSymbol } from "~/utils/money"
 
 import CartItem from "./CartItem"
@@ -32,6 +32,8 @@ export default function ListingCartPage() {
   const submit = useSubmit()
   const navigation = useNavigation()
   const { t } = useTranslation(handle.i18n)
+
+  useTrackPageview({ listingId: listing.id })
 
   function handleSubmit() {
     const formData = new FormData()

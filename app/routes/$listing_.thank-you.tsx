@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next"
 import { FormattedNumber } from "~/components/common"
 import { OrderItem } from "~/components/registry"
 import prisma from "~/helpers/prisma.server"
+import useTrackPageview from "~/utils/hooks/use-track-pageview"
 import { ReasonPhrases, StatusCodes } from "~/utils/http.server"
 import { getPriceSymbol } from "~/utils/money"
 import { getParam, json, useLoaderData } from "~/utils/remix"
@@ -44,6 +45,8 @@ export default function ListingThankYouPage() {
   const { listing, order } = useLoaderData<typeof loader>()
 
   const total = order.totalPriceSet.presentmentMoney
+
+  useTrackPageview({ orderId: order.id })
 
   return (
     <main className="relative lg:min-h-full">
