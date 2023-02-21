@@ -10,7 +10,7 @@ import { renderToPipeableStream } from "react-dom/server"
 import { I18nextProvider, initReactI18next } from "react-i18next"
 import { PassThrough } from "stream"
 
-import { SENTRY_DSN } from "~/config/env.server"
+import { RAILWAY_GIT_COMMIT_SHA, SENTRY_DSN } from "~/config/env.server"
 import { isProduction } from "~/config/vars"
 import i18next from "~/helpers/i18next.server"
 import prisma from "~/helpers/prisma.server"
@@ -149,5 +149,6 @@ Sentry.init({
   dsn: isProduction ? SENTRY_DSN : undefined,
   environment: process.env.NODE_ENV,
   integrations: [new Sentry.Integrations.Prisma({ client: prisma })],
+  release: RAILWAY_GIT_COMMIT_SHA,
   tracesSampleRate: 1,
 })

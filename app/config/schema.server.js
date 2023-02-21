@@ -35,6 +35,7 @@ module.exports = z.object({
 
   NODE_ENV: z.enum(["development", "test", "production"]),
 
+  RAILWAY_GIT_COMMIT_SHA: z.string().optional(),
   RAILWAY_STATIC_URL: z.string().optional(),
 
   REDIS_URL: z.string().url(),

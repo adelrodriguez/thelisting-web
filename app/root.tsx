@@ -21,6 +21,8 @@ import { NotFound } from "~/components/error"
 import { PublicEnv } from "~/components/utils"
 import {
   GA_TRACKING_ID,
+  RAILWAY_GIT_COMMIT_SHA,
+  SENTRY_DSN,
   SHOPIFY_STORE,
   SHOPIFY_STOREFRONT_ACCESS_TOKEN,
 } from "~/config/env.server"
@@ -66,6 +68,8 @@ export async function loader({ request }: LoaderArgs) {
 
   const env: ComponentProps<typeof PublicEnv> = {
     gaTrackingId: GA_TRACKING_ID,
+    release: RAILWAY_GIT_COMMIT_SHA,
+    sentryDsn: SENTRY_DSN,
     shopifyStore: SHOPIFY_STORE,
     shopifyStorefrontAPIEndpoint,
     shopifyStorefrontAccessToken: SHOPIFY_STOREFRONT_ACCESS_TOKEN,

@@ -37,9 +37,7 @@ async function hydrate() {
 }
 
 Sentry.init({
-  dsn: isProduction
-    ? "https://0477a064aae041fcb5241599ca5b8935:715c0c4d64f441ce8f2a0f1a60ce40c5@o4504418880782336.ingest.sentry.io/4504418883338240"
-    : undefined,
+  dsn: window.env.sentryDsn,
   environment: process.env.NODE_ENV,
   integrations: [
     new Sentry.BrowserTracing({
@@ -51,6 +49,7 @@ Sentry.init({
     }),
     new Sentry.Replay(),
   ],
+  release: window.env.release,
   // If the entire session is not sampled, use the below sample rate to sample
   // sessions when an error occurs.
   replaysOnErrorSampleRate: 1.0,
