@@ -37,6 +37,7 @@ async function hydrate() {
 }
 
 Sentry.init({
+  dist: "client",
   dsn: window.env.sentryDsn,
   environment: process.env.NODE_ENV,
   integrations: [
