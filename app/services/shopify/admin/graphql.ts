@@ -14584,7 +14584,7 @@ export type LineItem = Node & {
   currentQuantity: Scalars['Int'];
   /** A list of attributes that represent custom features or special requests. */
   customAttributes: Array<Attribute>;
-  /** The discounts that have been allocated onto the line item by discount applications. */
+  /** The discounts that have been allocated onto the line item by discount applications, not including order edits and refunds. */
   discountAllocations: Array<DiscountAllocation>;
   /**
    * The total line price after discounts are applied, in shop currency.
@@ -19666,7 +19666,10 @@ export type Mutation = {
    *
    */
   privateMetafieldUpsert?: Maybe<PrivateMetafieldUpsertPayload>;
-  /** Appends images to a product. */
+  /**
+   * Appends images to a product.
+   * @deprecated Use `productCreateMedia` instead.
+   */
   productAppendImages?: Maybe<ProductAppendImagesPayload>;
   /** Changes the status of a product. This allows you to set the availability of the product across all channels. */
   productChangeStatus?: Maybe<ProductChangeStatusPayload>;
@@ -19725,7 +19728,10 @@ export type Mutation = {
    *
    */
   productDeleteAsync?: Maybe<ProductDeleteAsyncPayload>;
-  /** Removes product images from the product. */
+  /**
+   * Removes product images from the product.
+   * @deprecated Use `productDeleteMedia` instead.
+   */
   productDeleteImages?: Maybe<ProductDeleteImagesPayload>;
   /** Deletes media for a product. */
   productDeleteMedia?: Maybe<ProductDeleteMediaPayload>;
@@ -19747,7 +19753,10 @@ export type Mutation = {
    *
    */
   productDuplicateAsync?: Maybe<ProductDuplicateAsyncPayload>;
-  /** Updates an image of a product. */
+  /**
+   * Updates an image of a product.
+   * @deprecated Use `productUpdateMedia` instead.
+   */
   productImageUpdate?: Maybe<ProductImageUpdatePayload>;
   /**
    * Adds multiple selling plan groups to a product.
@@ -19764,7 +19773,10 @@ export type Mutation = {
    * @deprecated Use `publishablePublish` instead.
    */
   productPublish?: Maybe<ProductPublishPayload>;
-  /** Asynchronously reorders a set of images for a given product. */
+  /**
+   * Asynchronously reorders a set of images for a given product.
+   * @deprecated Use `productReorderMedia` instead.
+   */
   productReorderImages?: Maybe<ProductReorderImagesPayload>;
   /** Asynchronously reorders the media attached to a product. */
   productReorderMedia?: Maybe<ProductReorderMediaPayload>;
@@ -30976,7 +30988,11 @@ export type ResourcePublication = {
   isPublished: Scalars['Boolean'];
   /** The publication the resource publication is published to. */
   publication: Publication;
-  /** The date that the resource publication was or is going to be published to the publication. */
+  /**
+   * The date that the resource publication was or is going to be published to the publication.
+   * If the product isn't published, then this field returns an epoch timestamp.
+   *
+   */
   publishDate: Scalars['DateTime'];
   /** The resource published to the publication. */
   publishable: Publishable;

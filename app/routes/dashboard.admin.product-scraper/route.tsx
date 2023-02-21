@@ -1,8 +1,8 @@
 import { DocumentArrowDownIcon } from "@heroicons/react/24/outline"
 import { Outlet, useNavigate, useOutletContext } from "@remix-run/react"
 import clsx from "clsx"
-import { enqueueSnackbar } from "notistack"
-import { useState } from "react"
+import { enqueueSnackbar, useSnackbar } from "notistack"
+import { useEffect, useState } from "react"
 import { useDropzone } from "react-dropzone"
 import invariant from "tiny-invariant"
 
@@ -56,6 +56,41 @@ export default function AdminToolsProductScraperPage() {
       parse(files[0])
     },
   })
+  const { enqueueSnackbar } = useSnackbar()
+
+  // TODO(adelrodriguez): Check the data returned from the parser and show
+  // errors if we find duplicated ids or urls
+
+  useEffect(() => {
+    if (result && result.data) {
+      const ids = new Set()
+      const urls = new Map<string, string | number>()
+
+      result.data.forEach((row) => {
+        if (ids.has(row.id)) {
+          enqueueSnackbar("Duplicate ID", {
+            autoHideDuration: 15_000,
+            description: `Row ${row.id} has a duplicated ID`,
+            variant: "error",
+          })
+        } else {
+          ids.add(row.id)
+        }
+
+        const rowId = urls.get(row.url)
+
+        if (rowId) {
+          enqueueSnackbar("Duplicate URL", {
+            autoHideDuration: 15_000,
+            description: `Row ${row.id} has a duplicated URL with row ${rowId}`,
+            variant: "error",
+          })
+        } else {
+          urls.set(row.url, row.id)
+        }
+      })
+    }
+  }, [result, enqueueSnackbar])
 
   function handleExport(data: ScrapeProductsTableRow[]) {
     setProducts(data)

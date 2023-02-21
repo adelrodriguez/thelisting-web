@@ -258,6 +258,7 @@ export default function DashboardLayout() {
             vertical: "top",
           }}
           autoHideDuration={5 * 1000}
+          maxSnack={7}
         >
           <div className="mx-auto h-auto max-w-7xl py-6 px-4 sm:px-6 lg:px-8">
             <Outlet />

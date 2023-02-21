@@ -1,3 +1,4 @@
+import { CheckIcon } from "@heroicons/react/24/solid"
 import { Link } from "@remix-run/react"
 import type { RowSelectionState } from "@tanstack/react-table"
 import {
@@ -30,6 +31,22 @@ declare module "@tanstack/react-table" {
 const columnHelper = createColumnHelper<ScrapeProductsTableRow>()
 
 const columns = [
+  columnHelper.display({
+    cell: ({ row }) => {
+      const value = row.original.scrapedProductId
+
+      if (!value) return null
+
+      return (
+        <CheckIcon
+          className="h-5 w-5 text-green-500"
+          aria-hidden="true"
+          title={value}
+        />
+      )
+    },
+    id: "scrapedProductId",
+  }),
   columnHelper.display({
     cell: ({ row }) => (
       <Checkbox
