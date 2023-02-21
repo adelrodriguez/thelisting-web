@@ -9,3 +9,4 @@ node ./node_modules/@sentry/remix/scripts/sentry-upload-sourcemaps.js --release 
 echo "Removing sourcemaps"
 
 rm -v ./public/**/*.map
+rm -v ./public/build/**/*.map
