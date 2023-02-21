@@ -67,7 +67,7 @@ function handleBotRequest(
 
     const { pipe, abort } = renderToPipeableStream(
       <I18nextProvider i18n={i18nInstance}>
-        <RemixServer context={remixContext} url={request.url} />\
+        <RemixServer context={remixContext} url={request.url} />
       </I18nextProvider>,
       {
         onAllReady() {
