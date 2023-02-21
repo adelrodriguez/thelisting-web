@@ -24,5 +24,18 @@ jobs:
       - run: npm install
       - name: Build sourcemaps
         run: npm run build:remix -- --sourcemap
-      - name: Create release and upload sourcemaps to Sentry
-        run: node ./node_modules/@sentry/remix/scripts/sentry-upload-sourcemaps.js
+      - name: Create new release
+        run: |
+          npx sentry-cli releases new ${{ github.sha }}
+          npx sentry-cli releases set-commits --auto ${{ github.sha }}
+      - name: Upload server sourcemaps
+        run:
+          npx sentry-cli releases files ${{ github.sha }} upload-sourcemaps ./build
+          --ignore node_modules
+          --ignore public
+      - name: Upload client sourcemaps
+        run:
+          npx sentry-cli releases files ${{ github.sha }} upload-sourcemaps ./public
+          --dist "client"
+      - name: Finalize release
+        run: npx sentry-cli releases finalize ${{ github.sha }}
