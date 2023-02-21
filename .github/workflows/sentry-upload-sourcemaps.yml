@@ -1,0 +1,28 @@
+name: Upload sourcemaps to Sentry
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  upload-sourcemaps:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: oNaiPs/secrets-to-env-action@v1
+        with:
+          secrets: ${{ toJSON(secrets) }}
+      - name: Read .nvmrc
+        run: echo ::set-output name=NVMRC::$(cat .nvmrc)
+        id: nvm
+        shell: bash
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "${{ steps.nvm.outputs.NVMRC }}"
+          cache: npm
+      - run: npm install
+      - name: Build sourcemaps
+        run: npm run build:remix -- --sourcemap
+      - name: Create release and upload sourcemaps to Sentry
+        run: node ./node_modules/@sentry/remix/scripts/sentry-upload-sourcemaps.js
