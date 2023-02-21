@@ -57,7 +57,7 @@ export async function action({ request }: ActionArgs) {
   const fileId = multipartFormData.get("file")
 
   if (!fileId || typeof fileId !== "string") {
-    throw badRequest("Missing filename or image")
+    throw badRequest("Missing image")
   }
 
   const image = await prisma.image.create({

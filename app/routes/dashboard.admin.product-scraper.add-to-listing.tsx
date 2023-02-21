@@ -87,6 +87,7 @@ export async function action({ request }: ActionArgs) {
 }
 
 export default function AddToListingPage() {
+  const { enqueueSnackbar } = useSnackbar()
   const { products } = useScrapedProducts()
   const productFields = products.map(({ id, scrapedProductId, quantity }) => ({
     quantity,
@@ -96,10 +97,9 @@ export default function AddToListingPage() {
 
   const { listings, exchangeRate } = useLoaderData<typeof loader>()
   const { open, close, leave } = useDialogPage()
-  const { getValues } = useFormContext("addToListing")
+  const { getValues, fieldErrors } = useFormContext("addToListing")
   const listing = listings.find(({ id }) => id === getValues().get("listingId"))
   const margin = getValues().get("margin")
-  const { enqueueSnackbar } = useSnackbar()
 
   useEffect(() => {
     if (products.length === 0) {
@@ -230,6 +230,12 @@ export default function AddToListingPage() {
                           with a margin of{" "}
                           <span className="font-bold">{`${margin}%`}</span>.
                         </Alert>
+                        {Object.keys(fieldErrors).length > 0 && (
+                          <Alert type="error">
+                            Please fix the errors in the form.
+                            <pre>{JSON.stringify(fieldErrors)}</pre>
+                          </Alert>
+                        )}
                       </div>
                     </div>
                     <div className="flex flex-shrink-0 justify-end gap-x-4 px-4 py-4">
