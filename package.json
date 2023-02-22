@@ -7,7 +7,7 @@
   "private": true,
   "sideEffects": false,
   "scripts": {
-    "build:app": "npm run generate:shopify && ./scripts/build.sh",
+    "build:app": "./scripts/build.sh",
     "build:jobs": "tsc --project tsconfig.jobs.json && tsc-alias -p tsconfig.jobs.json",
     "build": "run-s build:*",
     "clean": "rimraf build lib",
@@ -28,6 +28,7 @@
     "generate:shopify": "DOTENV_CONFIG_PATH=.env graphql-codegen -r dotenv/config  --config app/services/shopify/codegen.ts",
     "lint": "eslint .",
     "logs": "railway logs",
+    "prebuild": "run-s clean generate:shopify",
     "serve": "remix-serve build",
     "start:jobs": "cross-env NODE_ENV=production node lib/jobs",
     "start": "run-s database:deploy database:generate serve",
