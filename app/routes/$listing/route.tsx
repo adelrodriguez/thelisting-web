@@ -22,7 +22,12 @@ export async function loader({ params }: LoaderArgs) {
   if (!path) return goHome()
 
   const listing = await prisma.listing.findFirst({
-    include: { items: true, ribbons: true },
+    include: {
+      items: {
+        orderBy: { sku: "asc" },
+      },
+      ribbons: true,
+    },
     where: { path, status: "Published" },
   })
 

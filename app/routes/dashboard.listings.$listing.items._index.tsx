@@ -21,7 +21,7 @@ export async function loader({ params }: LoaderArgs) {
 
   const items = await prisma.item.findMany({
     orderBy: {
-      sku: "desc",
+      sku: "asc",
     },
     where: {
       listing: {
