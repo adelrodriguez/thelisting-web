@@ -24,10 +24,14 @@ export default function FormImageInput({
   id?: string
 }) {
   const { error, getInputProps } = useField(name)
-  const [value, setValue] = useControlField<string>(name)
+  const [value, setValue] = useControlField<string | null>(name)
   const [open, setOpen] = useState(false)
-  const { data } = useQuery<Image>(["images", value], () =>
-    fetch(`/api/user/images/${value}`).then((res) => res.json())
+  const { data } = useQuery<Image>(
+    ["images", value],
+    () => fetch(`/api/user/images/${value}`).then((res) => res.json()),
+    {
+      enabled: !!value,
+    }
   )
 
   return (
