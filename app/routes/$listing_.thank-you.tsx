@@ -3,10 +3,11 @@ import { redirect } from "@remix-run/node"
 import { Link } from "@remix-run/react"
 import { useTranslation } from "react-i18next"
 
-import { FormattedNumber } from "~/components/common"
+import { FormattedNumber, Image } from "~/components/common"
 import { OrderItem } from "~/components/registry"
 import prisma from "~/helpers/prisma.server"
 import Sentry from "~/services/sentry"
+import { generateCloudflareImageUrl } from "~/utils/cloudflare"
 import useTrackPageview from "~/utils/hooks/use-track-pageview"
 import { ReasonPhrases, StatusCodes } from "~/utils/http.server"
 import { getPriceSymbol } from "~/utils/money"
@@ -59,8 +60,12 @@ export default function ListingThankYouPage() {
   return (
     <main className="relative lg:min-h-full">
       <div className="h-80 overflow-hidden lg:fixed lg:h-full lg:w-1/2 lg:pr-4 xl:pr-12">
-        <img
-          src="https://images.unsplash.com/photo-1625552186152-668cd2f0b707?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80"
+        <Image
+          src={
+            listing.thankYouImage
+              ? generateCloudflareImageUrl(listing.thankYouImage, "public")
+              : "https://images.unsplash.com/photo-1625552186152-668cd2f0b707?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80"
+          }
           alt=""
           className="h-full w-full object-cover object-center"
         />
