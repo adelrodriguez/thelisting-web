@@ -31,11 +31,13 @@ jobs:
       - name: Upload server sourcemaps
         run:
           npx sentry-cli releases files ${{ github.sha }} upload-sourcemaps ./build
+          --url-prefix "~/build"
           --ignore node_modules
           --ignore public
       - name: Upload client sourcemaps
         run:
           npx sentry-cli releases files ${{ github.sha }} upload-sourcemaps ./public
+          --url-prefix "~/"
           --dist "client"
       - name: Finalize release
         run: npx sentry-cli releases finalize ${{ github.sha }}
