@@ -63,8 +63,8 @@ export default function ListingThankYouPage() {
         <Image
           src={
             listing.thankYouImage
-              ? generateCloudflareImageUrl(listing.thankYouImage, "public")
-              : "https://images.unsplash.com/photo-1625552186152-668cd2f0b707?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80"
+              ? generateCloudflareImageUrl(listing.thankYouImage, "display")
+              : "https://imagedelivery.net/wHwwAqNxbuESOwdHNE6NsQ/2975847d-0983-43ab-7e0e-fb492e932700/display"
           }
           alt=""
           className="h-full w-full object-cover object-center"

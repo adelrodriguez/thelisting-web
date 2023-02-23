@@ -3,6 +3,7 @@ import { Outlet } from "@remix-run/react"
 import clsx from "clsx"
 import { notFound } from "remix-utils"
 
+import { Image } from "~/components/common"
 import type { NotFoundBoundaryData } from "~/components/error"
 import { Ribbons } from "~/components/ribbons"
 import { THE_LISTING_LOGO_BLACK } from "~/config/consts"
@@ -73,11 +74,11 @@ export default function ListingPage() {
           <div className="relative bg-gray-800">
             <div className="absolute inset-0">
               {listing.coverImage && (
-                <img
+                <Image
                   className="h-full w-full object-cover object-center"
                   src={generateCloudflareImageUrl(
                     listing.coverImage,
-                    CLOUDFLARE_IMAGE_VARIANTS.Public
+                    CLOUDFLARE_IMAGE_VARIANTS.Display
                   )}
                   alt=""
                 />

@@ -1,6 +1,7 @@
 import { CLOUDFLARE_IMAGES_ACCOUNT_HASH } from "~/config/consts"
 
 export const CLOUDFLARE_IMAGE_VARIANTS = {
+  Display: "display",
   Public: "public",
   Thumbnail: "thumbnail",
 } as const

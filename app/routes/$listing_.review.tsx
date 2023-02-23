@@ -82,9 +82,9 @@ export default function ListingReviewPage() {
 
   return (
     <main className="relative lg:min-h-full">
-      <div className="h-32 overflow-hidden lg:fixed lg:h-full lg:w-1/3 lg:pr-4 xl:pr-12">
+      <div className="h-48 overflow-hidden lg:fixed lg:h-full lg:w-1/3 lg:pr-4 xl:pr-12">
         <img
-          src="https://images.unsplash.com/photo-1589948516895-db76617cb753?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3024&q=80"
+          src="https://imagedelivery.net/wHwwAqNxbuESOwdHNE6NsQ/beaf377b-e29a-41b7-0c21-220601d67c00/display"
           alt=""
           className="h-full w-full object-cover object-center"
         />
