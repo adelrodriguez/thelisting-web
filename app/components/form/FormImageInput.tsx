@@ -28,7 +28,7 @@ export default function FormImageInput({
   const [open, setOpen] = useState(false)
   const { data } = useQuery<Image>(
     ["images", value],
-    () => fetch(`/api/user/images/${value}`).then((res) => res.json()),
+    () => fetch(`/api/images/${value}`).then((res) => res.json()),
     {
       enabled: !!value,
     }

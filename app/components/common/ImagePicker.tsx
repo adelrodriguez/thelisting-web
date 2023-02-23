@@ -24,7 +24,7 @@ export default function ImagePicker({
 }) {
   const { data, isLoading, isError, refetch } = useQuery<UserImage[]>(
     ["images"],
-    () => fetch("/api/user/images").then((res) => res.json())
+    () => fetch("/api/images").then((res) => res.json())
   )
   const [step, setStep] = useState<"choose" | "upload">("choose")
   const [file, setFile] = useState<File | null>(null)
@@ -233,7 +233,7 @@ function ImageSubmit({
     data.append("file", file)
 
     fetcher.submit(data, {
-      action: "/api/user/images",
+      action: "/api/images",
       encType: "multipart/form-data",
       method: "post",
     })
