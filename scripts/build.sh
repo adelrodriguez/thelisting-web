@@ -13,7 +13,7 @@ sentry-cli releases set-commits --auto "$VERSION"
 
 echo "Uploading server sourcemaps"
 
-sentry-cli releases files "$VERSION" upload-sourcemaps ./build --url-prefix "~/build" --ignore node_modules --ignore public
+sentry-cli releases files "$VERSION" upload-sourcemaps ./build --url-prefix "/app/build" --ignore node_modules --ignore public
 
 echo "Uploading client sourcemaps"
 
