@@ -1,4 +1,5 @@
-import { EyeIcon } from "@heroicons/react/20/solid"
+import { Menu, Transition } from "@headlessui/react"
+import { EllipsisVerticalIcon, EyeIcon } from "@heroicons/react/20/solid"
 import type { Listing } from "@prisma/client"
 import { Link } from "@remix-run/react"
 import {
@@ -7,6 +8,7 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table"
+import { Fragment } from "react"
 
 import { ViewOnShopify } from "~/components/admin"
 import { Button } from "~/components/common"
@@ -22,6 +24,9 @@ export async function loader() {
       owner: {
         select: { firstName: true, lastName: true },
       },
+      purchases: {
+        select: { id: true },
+      },
     },
     orderBy: { createdAt: "desc" },
     take: 100,
@@ -34,6 +39,7 @@ const columnHelper = createColumnHelper<
   Listing & {
     items: { id: string }[]
     owner: { firstName: string; lastName: string }
+    purchases: { id: string }[]
   }
 >()
 
@@ -76,6 +82,14 @@ const columns = [
   columnHelper.accessor("status", {
     header: "Status",
   }),
+  columnHelper.accessor("purchases", {
+    cell: (props) => {
+      const listing = props.row.original
+
+      return listing.purchases.length
+    },
+    header: "No. Purchases",
+  }),
   columnHelper.accessor("items", {
     cell: (props) => {
       const listing = props.row.original
@@ -94,15 +108,38 @@ const columns = [
   }),
   columnHelper.display({
     cell: (props) => {
-      const listing = props.row.original
+      const item = props.row.original
 
-      if (!listing.commerceId) {
-        return null
-      }
+      return (
+        <Menu as="div" className="inline-block text-left">
+          <Menu.Button>
+            <EllipsisVerticalIcon className="h-5 w-5 text-gray-400" />
+            <span className="sr-only">Open options</span>
+          </Menu.Button>
 
-      return <ViewOnShopify id={listing.commerceId} />
+          <Transition
+            as={Fragment}
+            enter="transition ease-out duration-100"
+            enterFrom="transform opacity-0 scale-95"
+            enterTo="transform opacity-100 scale-100"
+            leave="transition ease-in duration-75"
+            leaveFrom="transform opacity-100 scale-100"
+            leaveTo="transform opacity-0 scale-95"
+          >
+            <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white py-1 px-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+              {item.commerceId && (
+                <Menu.Item>
+                  <div className="px-2 py-2 ">
+                    <ViewOnShopify id={item.commerceId} />
+                  </div>
+                </Menu.Item>
+              )}
+            </Menu.Items>
+          </Transition>
+        </Menu>
+      )
     },
-    id: "viewOnShopify",
+    id: "options",
   }),
 ]
 
@@ -142,7 +179,7 @@ export default function DashboardListingsPage() {
                       {headerGroup.headers.map((header) => (
                         <th
                           scope="col"
-                          className="max-w-[500px] overflow-hidden text-ellipsis whitespace-nowrap py-3 px-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
+                          className="max-w-sm overflow-hidden text-ellipsis whitespace-nowrap py-3 px-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
                           key={header.id}
                         >
                           {flexRender(
@@ -156,10 +193,10 @@ export default function DashboardListingsPage() {
                 </thead>
                 <tbody className="divide-y divide-gray-200 bg-white">
                   {table.getRowModel().rows.map((row) => (
-                    <tr className="hover:bg-gray-50" key={row.id}>
+                    <tr className="relative hover:bg-gray-50" key={row.id}>
                       {row.getVisibleCells().map((cell) => (
                         <td
-                          className="max-w-[500px] overflow-hidden text-ellipsis whitespace-nowrap px-3 py-4 text-sm text-gray-500"
+                          className="max-w-sm overflow-hidden text-ellipsis whitespace-nowrap px-3 py-4 text-sm text-gray-500"
                           key={cell.id}
                         >
                           {flexRender(
