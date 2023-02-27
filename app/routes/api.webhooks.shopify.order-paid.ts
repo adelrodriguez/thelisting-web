@@ -43,12 +43,14 @@ export async function action({ request }: ActionArgs) {
       saveOrderCustomerQueue.add(`Order #${order.number}`, {
         orderId: order.id,
       }),
+      // TODO(adelrodriguez): Create a new queue to mark the purchase as paid,
+      // and then notify the customer from there.
       notifyPurchaseQueue.add(
         `Order #${order.number}`,
         {
           orderId: order.id,
         },
-        { attempts: 5, backoff: { delay: ONE_MINUTE, type: "exponential" } }
+        { attempts: 10, backoff: { delay: ONE_MINUTE, type: "exponential" } }
       ),
     ])
 
