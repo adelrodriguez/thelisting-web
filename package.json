@@ -119,7 +119,7 @@
     "@headlessui/tailwindcss": "^0.1.2",
     "@playwright/test": "1.30.0",
     "@railway/cli": "2.1.0",
-    "@remix-run/dev": "1.13.0",
+    "@remix-run/dev": "1.14.0",
     "@remix-run/eslint-config": "1.13.0",
     "@sentry/cli": "2.13.0",
     "@tailwindcss/aspect-ratio": "^0.4.2",
