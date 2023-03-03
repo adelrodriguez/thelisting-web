@@ -48,12 +48,9 @@ export default class Storage {
 
   get list(): Array<unknown> {
     return Object.entries(this.storage)
-      .map(([key, item]) => {
+      .map(([_, item]) => {
         try {
-          return {
-            id: key,
-            ...JSON.parse(item),
-          }
+          return SuperJSON.parse(item)
         } catch (error) {
           return null
         }

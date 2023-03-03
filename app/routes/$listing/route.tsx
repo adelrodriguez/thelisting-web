@@ -1,4 +1,4 @@
-import type { LoaderArgs, MetaFunction } from "@remix-run/node"
+import type { LoaderArgs } from "@remix-run/node"
 import { Outlet } from "@remix-run/react"
 import clsx from "clsx"
 import { notFound } from "remix-utils"
@@ -13,6 +13,7 @@ import {
   generateCloudflareImageUrl,
 } from "~/utils/cloudflare"
 import { CartProvider } from "~/utils/hooks"
+import type { MetaFunction } from "~/utils/remix"
 import { goHome, json, useLoaderData } from "~/utils/remix"
 
 import Registry from "./Registry"
@@ -43,8 +44,8 @@ export async function loader({ params }: LoaderArgs) {
 }
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => ({
-  description: data?.listing?.subtitle || "",
-  "og:description": data?.listing?.subtitle || "",
+  description: data.listing.subtitle || "",
+  "og:description": data.listing.subtitle || "",
   ...(data?.listing.coverImage
     ? {
         "og:image": generateCloudflareImageUrl(
@@ -53,8 +54,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => ({
         ),
       }
     : {}),
-  "og:title": `${data?.listing?.title} | The Listing` || "The Listing",
-  title: `${data?.listing?.title} | The Listing` || "The Listing",
+  "og:title": `${data.listing.title} | The Listing` || "The Listing",
 })
 
 export default function ListingPage() {

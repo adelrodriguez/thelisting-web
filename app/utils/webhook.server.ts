@@ -1,4 +1,5 @@
 import type { WebhookService } from "@prisma/client"
+import { invariant } from "@remix-run/router/dist/history"
 import Base64 from "crypto-js/enc-base64"
 import hmacSHA256 from "crypto-js/hmac-sha256"
 
@@ -54,8 +55,11 @@ export async function checkWebhookLog(
   webhookId: string,
   event: string,
   service: WebhookService,
-  payload?: string
+  payload?: unknown
 ) {
+  invariant(typeof payload === "object", "Payload must be an object")
+  invariant(payload !== null, "Payload must not be null")
+
   const webhook = await prisma.webhook.count({ where: { webhookId } })
 
   if (webhook) {

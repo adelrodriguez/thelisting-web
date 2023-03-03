@@ -1,16 +1,25 @@
+import { z } from "zod"
+
 import { CurrencySchema } from "~/utils/money"
 import { cleanText, cleanAmount } from "~/utils/scraper"
 
 import { BaseScraper } from "./base"
 
+const applicationSchema = z.object({
+  offers: z.object({
+    price: z.string(),
+    priceCurrency: z.string(),
+  }),
+})
+
 export default class CasaCool extends BaseScraper {
   static domain = "casacool.shop"
 
-  public get store(): string {
+  public get store() {
     return "Casa Cool"
   }
 
-  public get title(): Promise<string | null> {
+  public get title() {
     return this.page
       .$eval("title", (element) => element.textContent)
       .then((text) => text?.split("–")[0])
@@ -24,8 +33,9 @@ export default class CasaCool extends BaseScraper {
         'script[type="application/ld+json"]',
         (element) => element.textContent
       )
-      .then((content) => content && JSON.parse(content))
-      .then((content) => content.offers.price)
+      .then((content) => z.string().parse(content))
+      .then((content) => applicationSchema.parse(JSON.parse(content)))
+      .then((content) => (content ? content.offers.price : null))
       .then(cleanAmount)
       .catch((err) => this.logError("amount: " + err.message))
   }
@@ -36,8 +46,9 @@ export default class CasaCool extends BaseScraper {
         'script[type="application/ld+json"]',
         (element) => element.textContent
       )
-      .then((content) => content && JSON.parse(content))
-      .then((content) => content.offers.priceCurrency)
+      .then((content) => z.string().parse(content))
+      .then((content) => applicationSchema.parse(JSON.parse(content)))
+      .then((content) => (content ? content.offers.priceCurrency : null))
       .then(cleanText)
       .then(CurrencySchema.parse)
       .catch((err) => this.logError("currency: " + err.message))

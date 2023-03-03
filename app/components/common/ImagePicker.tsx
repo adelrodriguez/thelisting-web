@@ -22,10 +22,16 @@ export default function ImagePicker({
   onClose: () => void
   onSelect: (image: UserImage) => void
 }) {
-  const { data, isLoading, isError, refetch } = useQuery<UserImage[]>(
+  const { data, isLoading, isError, refetch } = useQuery(
     ["images"],
-    () => fetch("/api/images").then((res) => res.json())
+    async () => {
+      const res = await fetch("/api/images")
+      const data = await res.json()
+      // TODO(adelrodriguez): Fix this type
+      return data as UserImage[]
+    }
   )
+
   const [step, setStep] = useState<"choose" | "upload">("choose")
   const [file, setFile] = useState<File | null>(null)
 

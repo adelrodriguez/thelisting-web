@@ -36,4 +36,5 @@ const typedSessionStorage = createTypedSessionStorage({
 // you can also export the methods individually for your own usage
 export const { getSession, commitSession, destroySession } = typedSessionStorage
 
+export { sessionStorage as untypedSessionStorage }
 export default typedSessionStorage

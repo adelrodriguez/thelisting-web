@@ -21,21 +21,21 @@ export function loader() {
 }
 
 export async function action({ request }: ActionArgs) {
-  const clone = request.clone()
-  const json = await clone.json()
-  const headers = request.headers
-  const text = await request.text()
-
-  await verifyWebhook(headers, text)
-
-  const { webhookId, event } = getShopifyWebhookHeaders(headers)
-  logger.info(`Received ${event} webhook`, { webhookId })
-
-  const received = await checkWebhookLog(webhookId, event, "Shopify", json)
-
-  if (received) return Accepted
-
   try {
+    const clone = request.clone()
+    const json = await clone.json()
+    const headers = request.headers
+    const text = await request.text()
+
+    await verifyWebhook(headers, text)
+
+    const { webhookId, event } = getShopifyWebhookHeaders(headers)
+    logger.info(`Received ${event} webhook`, { webhookId })
+
+    const received = await checkWebhookLog(webhookId, event, "Shopify", json)
+
+    if (received) return Accepted
+
     const order = parseOrderCreationWebhookPayload(json)
 
     await Promise.all([

@@ -26,9 +26,14 @@ export default function FormImageInput({
   const { error, getInputProps } = useField(name)
   const [value, setValue] = useControlField<string | null>(name)
   const [open, setOpen] = useState(false)
-  const { data } = useQuery<Image>(
+  const { data } = useQuery(
     ["images", value],
-    () => fetch(`/api/images/${value}`).then((res) => res.json()),
+    async () => {
+      const res = await fetch(`/api/images/${value}`)
+      const data = await res.json()
+
+      return data as Image
+    },
     {
       enabled: !!value,
     }

@@ -51,12 +51,16 @@ export function CartProvider({
   listing: string
 }) {
   // We use a Map to store the carts for each listing
-  const { data } = useQuery<BaseCart>(
+  const { data } = useQuery(
     ["carts", listing],
-    () =>
-      fetch("/api/cart?" + new URLSearchParams({ listing }))
-        .then((res) => res.json())
-        .then((data) => SuperJSON.parse<BaseCart>(data.cart)),
+    async () => {
+      const res = await fetch("/api/cart?" + new URLSearchParams({ listing }))
+      // TODO(adelrodriguez): Fix this type
+      const data = (await res.json()) as { cart: string }
+      const cart = SuperJSON.parse<BaseCart>(data.cart)
+
+      return cart
+    },
     {
       initialData: createDefaultCart(listing),
     }
