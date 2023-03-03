@@ -45,16 +45,4 @@ export default class Storage {
   remove(key: string): void {
     this.storage.removeItem(key)
   }
-
-  get list(): Array<unknown> {
-    return Object.entries(this.storage)
-      .map(([_, item]) => {
-        try {
-          return SuperJSON.parse(item)
-        } catch (error) {
-          return null
-        }
-      })
-      .filter((item) => !!item)
-  }
 }
