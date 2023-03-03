@@ -1,7 +1,7 @@
 import type { WebhookService } from "@prisma/client"
-import { invariant } from "@remix-run/router/dist/history"
 import Base64 from "crypto-js/enc-base64"
 import hmacSHA256 from "crypto-js/hmac-sha256"
+import invariant from "tiny-invariant"
 
 import { HOOKDECK_SIGNING_SECRET } from "~/config/env.server"
 import prisma from "~/helpers/prisma.server"
