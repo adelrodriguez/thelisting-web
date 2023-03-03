@@ -43,19 +43,25 @@ export async function loader({ params }: LoaderArgs) {
   return json({ listing })
 }
 
-export const meta: MetaFunction<typeof loader> = ({ data }) => ({
-  description: data.listing.subtitle || "",
-  "og:description": data.listing.subtitle || "",
-  ...(data?.listing.coverImage
-    ? {
-        "og:image": generateCloudflareImageUrl(
-          data.listing.coverImage,
-          CLOUDFLARE_IMAGE_VARIANTS.Thumbnail
-        ),
-      }
-    : {}),
-  "og:title": `${data.listing.title} | The Listing` || "The Listing",
-})
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
+  try {
+    return {
+      description: data.listing.subtitle || "",
+      "og:description": data.listing.subtitle || "",
+      ...(data.listing.coverImage
+        ? {
+            "og:image": generateCloudflareImageUrl(
+              data.listing.coverImage,
+              CLOUDFLARE_IMAGE_VARIANTS.Thumbnail
+            ),
+          }
+        : {}),
+      "og:title": `${data.listing.title} | The Listing`,
+    }
+  } catch (error) {
+    return {}
+  }
+}
 
 export default function ListingPage() {
   const { listing } = useLoaderData<typeof loader>()
