@@ -168,7 +168,7 @@ export default function DashboardListingsPage() {
         </div>
       </div>
 
-      <div className="mt-8 flex flex-col">
+      <div className="relative mt-8 flex flex-col">
         <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
             <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
@@ -193,7 +193,7 @@ export default function DashboardListingsPage() {
                 </thead>
                 <tbody className="divide-y divide-gray-200 bg-white">
                   {table.getRowModel().rows.map((row) => (
-                    <tr className="relative hover:bg-gray-50" key={row.id}>
+                    <tr className="hover:bg-gray-50" key={row.id}>
                       {row.getVisibleCells().map((cell) => (
                         <td
                           className="max-w-sm overflow-hidden text-ellipsis whitespace-nowrap px-3 py-4 text-sm text-gray-500"
