@@ -15,11 +15,11 @@ export const EventDateSchema = z
 export const PathSchema = z
   .string()
   .min(1)
+  .regex(/^[a-z0-9-]+$/, {
+    message: "Path can only contain letters, numbers and dashes",
+  })
   .trim()
   .transform((value) => value.toLowerCase())
-  .transform((value) => value.replace(/[^a-z0-9]/g, "-"))
-  .transform((value) => value.replace(/-+/g, "-"))
-  .transform((value) => value.replace(/^-|-$/g, ""))
 
 export const TitleSchema = z.string().min(1)
 

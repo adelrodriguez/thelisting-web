@@ -72,18 +72,19 @@ export async function action({ request }: ActionArgs) {
 
   if (!user) throw unauthorized("You must be logged in to create a listing")
 
-  const CreateListingSchemaWithUniquePath = CreateListingSchema.refine(
-    async (data) => {
-      const result = await verifyPathIsUnique(data.path)
-      return result
-    },
-    {
-      message: "This path is already taken",
-      path: ["path"],
-    }
+  const serverValidator = withZod(
+    CreateListingSchema.refine(
+      async (data) => {
+        const result = await verifyPathIsUnique(data.path)
+        return result
+      },
+      {
+        message: "This path is already taken",
+        path: ["path"],
+      }
+    )
   )
 
-  const serverValidator = withZod(CreateListingSchemaWithUniquePath)
   const formData = await getFormData(request)
 
   const result = await serverValidator.validate(formData)
