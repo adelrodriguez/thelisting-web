@@ -56,6 +56,19 @@ export async function action({ request }: ActionArgs) {
       logger.error(error.message, { error })
     }
 
+    // TODO(adelrodriguez): Solve this issue There's an issue that's happening
+    // where the ReadableStream is being locked even though we're cloning the
+    // request. This is causing the request to throw a TypeError but it doesn't
+    // make any of the code fail. It only returns a 500 error. Since we're
+    // currently using Hookdeck, it's not a big deal since requests are not
+    // being duplicated. But if we didn't, Shopify would retry the request
+    // multiple times and it'd be a mess. So for now, we're just capturing the
+    // error. But we should fix this.
+    if (error instanceof TypeError) {
+      logger.error("ReadableStream is locked?")
+      Sentry.captureMessage(error.message)
+    }
+
     return InternalServerError
   }
 }
