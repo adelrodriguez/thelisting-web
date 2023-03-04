@@ -95,7 +95,7 @@ const navigation = {
 
 export default function MarketingFooter() {
   return (
-    <footer className="bg-gray-900">
+    <footer className="bg-gray-800">
       <div className="mx-auto max-w-7xl py-12 px-4 sm:px-6 lg:py-16 lg:px-8">
         <h2 className="sr-only">Footer</h2>
         <div className="pb-8 xl:grid xl:grid-cols-5 xl:gap-8">

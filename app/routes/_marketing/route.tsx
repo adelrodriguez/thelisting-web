@@ -1,7 +1,7 @@
 import { Outlet } from "@remix-run/react"
 import { useTranslation } from "react-i18next"
 
-import MarketingFooter from "./MarketingFooter"
+import Footer from "./Footer"
 import MarketingHeader from "./MarketingHeader"
 
 const headerNavigation = [
@@ -29,7 +29,7 @@ export default function MarketingLayout() {
       <main className="flex-1">
         <Outlet />
       </main>
-      <MarketingFooter />
+      <Footer />
     </>
   )
 }

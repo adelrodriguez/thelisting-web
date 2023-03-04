@@ -30,7 +30,7 @@ const CartNoteSchema = z.object({
 
 const validator = withZod(CartNoteSchema)
 
-export async function loader({ request }: ActionArgs) {
+export async function loader({ request, context }: ActionArgs) {
   const requestUrl = new URL(request.url)
   const noteId = requestUrl.searchParams.get("note_id")
 

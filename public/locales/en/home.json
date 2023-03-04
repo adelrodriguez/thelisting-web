@@ -4,5 +4,9 @@
     "h2": "Create your registry with items from different stores for your most important moment",
     "cta": "Create your registry",
     "findARegistry": "Find a registry"
+  },
+  "features": {
+    "h2": "Everything you want",
+    "title": "We're your new registry"
   }
 }

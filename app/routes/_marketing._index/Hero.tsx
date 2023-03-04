@@ -1,18 +1,11 @@
 import { Link } from "@remix-run/react"
+import { useTranslation } from "react-i18next"
 
 import { Button, Image } from "~/components/common"
 
-export default function Hero({
-  title,
-  subtitle,
-  cta,
-  searchText,
-}: {
-  title: string
-  subtitle: string
-  cta: string
-  searchText: string
-}) {
+export default function Hero() {
+  const { t } = useTranslation("home")
+
   return (
     <div className="relative isolate overflow-hidden bg-white">
       {/* We're adding an extra pixel due to a bug in Safari */}
@@ -29,19 +22,19 @@ export default function Hero({
         <div className="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
           <div className="text-center">
             <h1 className="font-header text-6xl font-bold tracking-tight text-white sm:text-6xl">
-              {title}
+              {t("hero.h1")}
             </h1>
             <p className="mt-6 font-body text-xl font-light leading-8 text-gray-300">
-              {subtitle}
+              {t("hero.h2")}
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
-              <Button size="xl">{cta}</Button>
+              <Button size="xl">{t("hero.cta")}</Button>
 
               <Link
                 to="#"
                 className="text-base font-semibold leading-7 text-white "
               >
-                {searchText} <span aria-hidden="true">→</span>
+                {t("hero.findARegistry")} <span aria-hidden="true">→</span>
               </Link>
             </div>
           </div>
