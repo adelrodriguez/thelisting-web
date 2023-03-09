@@ -4,6 +4,7 @@ import { format } from "date-fns"
 
 import prisma from "~/helpers/prisma.server"
 import { getPriceSymbol } from "~/utils/money"
+import { round } from "~/utils/number"
 import { json, useLoaderData } from "~/utils/remix"
 
 export async function loader() {
@@ -51,7 +52,10 @@ export async function loader() {
         { name: "Published Listings", stat: publishedListings },
         { name: "Draft Listings", stat: draftListings },
         { name: "Total Listings", stat: publishedListings + draftListings },
-        { name: "Average Items per Listing", stat: Number(item[0]!.average) },
+        {
+          name: "Average Items per Listing",
+          stat: round(Number(item[0]!.average)),
+        },
         { name: "Total Purchases", stat: purchases },
         {
           name: "Total Purchase Amount",

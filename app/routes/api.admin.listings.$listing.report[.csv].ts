@@ -4,6 +4,7 @@ import Papa from "papaparse"
 
 import { PRODUCT_METAFIELDS } from "~/config/consts"
 import prisma from "~/helpers/prisma.server"
+import { round } from "~/utils/number"
 import { getParam } from "~/utils/remix"
 import { getProduct } from "~/utils/shopify.server"
 
@@ -33,9 +34,11 @@ export async function loader({ params }: LoaderArgs) {
         if (!item.commerceId) return null
 
         const product = await getProduct(item.commerceId)
-        const price = flattenConnection(product?.metafields).find(
-          (field) => field.key === PRODUCT_METAFIELDS.OriginalPrice
-        )?.value
+        const price = Number(
+          flattenConnection(product?.metafields).find(
+            (field) => field.key === PRODUCT_METAFIELDS.OriginalPrice
+          )?.value
+        )
         const url = flattenConnection(product?.metafields).find(
           (field) => field.key === PRODUCT_METAFIELDS.OriginalUrl
         )?.value
@@ -43,8 +46,8 @@ export async function loader({ params }: LoaderArgs) {
         return {
           name: product?.title,
           numberPurchased,
-          price: Number(price).toFixed(2),
-          total: (numberPurchased * (Number(price) || 0)).toFixed(2),
+          price: round(isNaN(price) ? 0 : price),
+          total: round(numberPurchased * (Number(price) || 0)),
           url,
           vendor: product?.vendor,
         }
