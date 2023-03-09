@@ -1,5 +1,5 @@
 import type { Params } from "@remix-run/react"
-import type { TypedMetaFunction } from "remix-typedjson"
+import type { TypedMetaFunction, UseDataFunctionReturn } from "remix-typedjson"
 import {
   typedjson,
   useTypedActionData,
@@ -45,4 +45,4 @@ export {
   useTypedFetcher as useFetcher,
   useTypedLoaderData as useLoaderData,
 }
-export type { TypedMetaFunction as MetaFunction }
+export type { TypedMetaFunction as MetaFunction, UseDataFunctionReturn }

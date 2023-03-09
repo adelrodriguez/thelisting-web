@@ -1,6 +1,5 @@
 import { Menu, Transition } from "@headlessui/react"
 import { EllipsisVerticalIcon, EyeIcon } from "@heroicons/react/20/solid"
-import type { Listing } from "@prisma/client"
 import { Link } from "@remix-run/react"
 import {
   createColumnHelper,
@@ -8,12 +7,15 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table"
+import { format } from "date-fns"
 import { Fragment } from "react"
 
 import { ViewOnShopify } from "~/components/admin"
-import { Button } from "~/components/common"
+import { Button, FormattedNumber } from "~/components/common"
 import prisma from "~/helpers/prisma.server"
+import type { UseDataFunctionReturn } from "~/utils/remix"
 import { json, useLoaderData } from "~/utils/remix"
+import type { ArrayElement } from "~/utils/type"
 
 export async function loader() {
   const listings = await prisma.listing.findMany({
@@ -25,7 +27,7 @@ export async function loader() {
         select: { firstName: true, lastName: true },
       },
       purchases: {
-        select: { id: true },
+        select: { cost: true, id: true, total: true },
       },
     },
     orderBy: { createdAt: "desc" },
@@ -35,13 +37,9 @@ export async function loader() {
   return json({ listings })
 }
 
-const columnHelper = createColumnHelper<
-  Listing & {
-    items: { id: string }[]
-    owner: { firstName: string; lastName: string }
-    purchases: { id: string }[]
-  }
->()
+type LoaderReturn = UseDataFunctionReturn<typeof loader>["listings"]
+
+const columnHelper = createColumnHelper<ArrayElement<LoaderReturn>>()
 
 const columns = [
   columnHelper.accessor("sku", {
@@ -82,21 +80,56 @@ const columns = [
   columnHelper.accessor("status", {
     header: "Status",
   }),
+  columnHelper.accessor("eventDate", {
+    cell: (props) => {
+      const date = props.getValue()
+
+      return format(date, "MMM d, yyyy")
+    },
+    header: "Event Date",
+  }),
   columnHelper.accessor("purchases", {
     cell: (props) => {
-      const listing = props.row.original
+      const purchases = props.getValue()
 
-      return listing.purchases.length
+      return purchases.length
     },
     header: "No. Purchases",
   }),
   columnHelper.accessor("items", {
     cell: (props) => {
-      const listing = props.row.original
+      const items = props.getValue()
 
-      return listing.items.length
+      return items.length
     },
     header: "No. Items",
+  }),
+  columnHelper.accessor("purchases", {
+    cell: (props) => {
+      const purchases = props.getValue()
+
+      return (
+        <FormattedNumber prefix={"$"} thousands decimals={2}>
+          {purchases.reduce((acc, purchase) => acc + purchase.total, 0)}
+        </FormattedNumber>
+      )
+    },
+    header: "Total Sales",
+  }),
+  columnHelper.accessor("purchases", {
+    cell: (props) => {
+      const purchases = props.getValue()
+
+      return (
+        <FormattedNumber prefix={"$"} thousands decimals={2}>
+          {purchases.reduce(
+            (acc, purchase) => acc + (purchase.total - purchase.cost),
+            0
+          )}
+        </FormattedNumber>
+      )
+    },
+    header: "Total Revenue",
   }),
   columnHelper.accessor("owner", {
     cell: (props) => {
