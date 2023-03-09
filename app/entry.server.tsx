@@ -24,6 +24,10 @@ export default async function handleRequest(
   responseHeaders: Headers,
   remixContext: EntryContext
 ) {
+  const callbackName = isbot(request.headers.get("user-agent"))
+    ? "onAllReady"
+    : "onShellReady"
+
   const instance = createInstance()
   const lng = await i18next.getLocale(request)
   const ns = i18next.getRouteNamespaces(remixContext)
@@ -38,39 +42,15 @@ export default async function handleRequest(
       ns, // The namespaces the routes about to render wants to use
     })
 
-  return isbot(request.headers.get("user-agent"))
-    ? handleBotRequest(
-        request,
-        responseStatusCode,
-        responseHeaders,
-        remixContext,
-        instance
-      )
-    : handleBrowserRequest(
-        request,
-        responseStatusCode,
-        responseHeaders,
-        remixContext,
-        instance
-      )
-}
-
-function handleBotRequest(
-  request: Request,
-  responseStatusCode: number,
-  responseHeaders: Headers,
-  remixContext: EntryContext,
-  i18nInstance: ReturnType<typeof createInstance>
-) {
   return new Promise((resolve, reject) => {
     let didError = false
 
     const { pipe, abort } = renderToPipeableStream(
-      <I18nextProvider i18n={i18nInstance}>
+      <I18nextProvider i18n={instance}>
         <RemixServer context={remixContext} url={request.url} />
       </I18nextProvider>,
       {
-        onAllReady() {
+        [callbackName]() {
           const body = new PassThrough()
 
           responseHeaders.set("Content-Type", "text/html")
@@ -92,51 +72,6 @@ function handleBotRequest(
         },
         onShellError(error: unknown) {
           reject(error)
-        },
-      }
-    )
-
-    setTimeout(abort, ABORT_DELAY)
-  })
-}
-
-function handleBrowserRequest(
-  request: Request,
-  responseStatusCode: number,
-  responseHeaders: Headers,
-  remixContext: EntryContext,
-  i18nInstance: ReturnType<typeof createInstance>
-) {
-  return new Promise((resolve, reject) => {
-    let didError = false
-
-    const { pipe, abort } = renderToPipeableStream(
-      <I18nextProvider i18n={i18nInstance}>
-        <RemixServer context={remixContext} url={request.url} />
-      </I18nextProvider>,
-      {
-        onError(error: unknown) {
-          didError = true
-
-          // eslint-disable-next-line no-console
-          console.error(error)
-        },
-        onShellError(err: unknown) {
-          reject(err)
-        },
-        onShellReady() {
-          const body = new PassThrough()
-
-          responseHeaders.set("Content-Type", "text/html")
-
-          resolve(
-            new Response(body, {
-              headers: responseHeaders,
-              status: didError ? 500 : responseStatusCode,
-            })
-          )
-
-          pipe(body)
         },
       }
     )

@@ -24,6 +24,7 @@ async function hydrate() {
       },
       ns: getInitialNamespaces(),
     })
+
   startTransition(() => {
     hydrateRoot(
       document,
