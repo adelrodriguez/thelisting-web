@@ -2,23 +2,25 @@ import type { Listing } from "@prisma/client"
 import request from "graphql-request"
 
 import type { CustomAttribute } from "~/config/consts"
+import { PRODUCT_METAFIELDS } from "~/config/consts"
 import { CUSTOM_ATTRIBUTES } from "~/config/consts"
 import { SHOPIFY_SHIPPING_ITEM_1_ID } from "~/config/env.server"
 import {
-  shopifyAdminAPInHeaders,
+  shopifyAdminAPIHeaders,
   shopifyAdminAPIEndpoint,
   shopifyStorefrontAPIEndpoint,
-  shopifyStorefrontAPInHeaders,
+  shopifyStorefrontAPIHeaders,
 } from "~/config/vars.server"
 import Sentry from "~/services/sentry"
 import {
   getOrderCustomAttributesQuery,
   getOrderTagsQuery,
-  searchProducts,
+  getProductsByTagQuery,
   createProductMutation,
   publishToCurrentChannelMutation,
   createCollectionMutation,
   addProductsToCollectionMutation,
+  getProductQuery,
 } from "~/services/shopify/admin"
 import { getOrderQuery } from "~/services/shopify/admin"
 import { createCheckoutMutation } from "~/services/shopify/storefront"
@@ -72,7 +74,7 @@ export async function createCheckout(
     shopifyStorefrontAPIEndpoint,
     createCheckoutMutation,
     { input: { customAttributes, lineItems } },
-    shopifyStorefrontAPInHeaders
+    shopifyStorefrontAPIHeaders
   )
 
   const id = checkoutCreate?.checkout?.id
@@ -96,7 +98,7 @@ export async function getOrder(id: string) {
     {
       id,
     },
-    shopifyAdminAPInHeaders
+    shopifyAdminAPIHeaders
   )
 
   if (!order) {
@@ -113,7 +115,7 @@ export async function getOrderTags(id: string) {
     {
       id,
     },
-    shopifyAdminAPInHeaders
+    shopifyAdminAPIHeaders
   )
 
   if (!order) {
@@ -130,7 +132,7 @@ export async function getOrderCustomAttributes(id: string) {
     {
       id,
     },
-    shopifyAdminAPInHeaders
+    shopifyAdminAPIHeaders
   )
 
   if (!order) {
@@ -178,31 +180,31 @@ export async function createProduct({
         images,
         metafields: [
           {
-            key: "original_product_url",
+            key: PRODUCT_METAFIELDS.OriginalUrl,
             namespace: "original_product",
             type: "url",
             value: url,
           },
           {
-            key: "original_product_title",
+            key: PRODUCT_METAFIELDS.OriginalTitle,
             namespace: "original_product",
             type: "single_line_text_field",
             value: title,
           },
           {
-            key: "original_product_description",
+            key: PRODUCT_METAFIELDS.OriginalDescription,
             namespace: "original_product",
             type: "multi_line_text_field",
             value: description,
           },
           {
-            key: "original_product_price",
+            key: PRODUCT_METAFIELDS.OriginalPrice,
             namespace: "original_product",
             type: "number_decimal",
             value: originalAmount?.toString(),
           },
           {
-            key: "original_product_currency",
+            key: PRODUCT_METAFIELDS.OriginalCurrency,
             namespace: "original_product",
             type: "single_line_text_field",
             value: currency,
@@ -224,7 +226,7 @@ export async function createProduct({
         vendor: store,
       },
     },
-    shopifyAdminAPInHeaders
+    shopifyAdminAPIHeaders
   )
 
   if (!productCreate?.product) {
@@ -238,14 +240,31 @@ export async function createProduct({
   return productCreate.product
 }
 
+export async function getProduct(id: string) {
+  const { product } = await request(
+    shopifyAdminAPIEndpoint,
+    getProductQuery,
+    {
+      id,
+    },
+    shopifyAdminAPIHeaders
+  )
+
+  if (!product) {
+    throw new ShopifyError("Unable to get product", "product_get_error")
+  }
+
+  return product
+}
+
 export async function getProductsByTag(tag: string) {
   const { products } = await request(
     shopifyAdminAPIEndpoint,
-    searchProducts,
+    getProductsByTagQuery,
     {
       query: "tag:" + tag,
     },
-    shopifyAdminAPInHeaders
+    shopifyAdminAPIHeaders
   )
 
   return products.edges.map((product) => product!.node)
@@ -258,7 +277,7 @@ export async function publishToCurrentChannel(id: string) {
     {
       id,
     },
-    shopifyAdminAPInHeaders
+    shopifyAdminAPIHeaders
   )
 
   if (!publishablePublishToCurrentChannel?.publishable) {
@@ -281,7 +300,7 @@ export async function createCollection({ sku }: { sku: number }) {
         title: `Listing ${sku}`,
       },
     },
-    shopifyAdminAPInHeaders
+    shopifyAdminAPIHeaders
   )
 
   if (!collectionCreate?.collection) {
@@ -305,7 +324,7 @@ export async function addProductsToCollection(
       id: collectionId,
       productIds,
     },
-    shopifyAdminAPInHeaders
+    shopifyAdminAPIHeaders
   )
 
   if (!collectionAddProducts?.collection) {

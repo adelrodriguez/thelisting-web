@@ -52,4 +52,14 @@ export const CUSTOM_ATTRIBUTES = {
 export type CustomAttribute =
   (typeof CUSTOM_ATTRIBUTES)[keyof typeof CUSTOM_ATTRIBUTES]
 
+export const PRODUCT_METAFIELDS = {
+  OriginalCurrency: "original_product_currency",
+  OriginalDescription: "original_product_description",
+  OriginalPrice: "original_product_price",
+  OriginalTitle: "original_product_title",
+  OriginalUrl: "original_product_url",
+} as const
+export type ProductMetafield =
+  (typeof PRODUCT_METAFIELDS)[keyof typeof PRODUCT_METAFIELDS]
+
 export const CLOUDFLARE_IMAGES_ACCOUNT_HASH = "wHwwAqNxbuESOwdHNE6NsQ"

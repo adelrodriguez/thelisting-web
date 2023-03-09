@@ -86,12 +86,28 @@ export const getOrderQuery = graphql(`
   }
 `)
 
-export const searchProducts = graphql(`
+export const getProductsByTagQuery = graphql(`
   query getProductsByTag($query: String!) {
     products(first: 10, query: $query) {
       edges {
         node {
           id
+        }
+      }
+    }
+  }
+`)
+
+export const getProductQuery = graphql(`
+  query getProduct($id: ID!) {
+    product(id: $id) {
+      title
+      vendor
+      metafields(first: 10) {
+        nodes {
+          key
+          namespace
+          value
         }
       }
     }

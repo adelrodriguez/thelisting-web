@@ -128,6 +128,7 @@ export type ShopifyErrorCode =
   | "checkout_create_error"
   | "collection_create_error"
   | "order_get_error"
+  | "product_get_error"
   | "product_create_error"
   | "product_publish_error"
   | "add_products_to_collection_error"
