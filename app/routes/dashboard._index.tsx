@@ -1,5 +1,6 @@
 import { ListingStatus, UserRole } from "@prisma/client"
 import currency from "currency.js"
+import { format } from "date-fns"
 
 import prisma from "~/helpers/prisma.server"
 import { getPriceSymbol } from "~/utils/money"
@@ -14,6 +15,7 @@ export async function loader() {
     item,
     purchases,
     purchaseAmount,
+    lastPurchase,
   ] = await Promise.all([
     prisma.user.count({
       where: { role: UserRole.User },
@@ -37,6 +39,10 @@ export async function loader() {
       _avg: { total: true },
       _sum: { total: true },
     }),
+    prisma.purchase.findFirst({
+      orderBy: { createdAt: "desc" },
+      select: { createdAt: true },
+    }),
   ])
 
   return json([
@@ -58,6 +64,12 @@ export async function loader() {
           stat: currency(purchaseAmount._avg.total || 0)
             .format({ symbol: getPriceSymbol() })
             .toString(),
+        },
+        {
+          name: "Last Purchase",
+          stat: lastPurchase?.createdAt
+            ? format(lastPurchase?.createdAt, "MMM d, yyyy")
+            : "N/A",
         },
       ],
       title: "Listings (All Time)",
