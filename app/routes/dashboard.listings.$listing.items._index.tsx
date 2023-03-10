@@ -13,7 +13,7 @@ import { Fragment } from "react"
 
 import { ViewOnShopify } from "~/components/admin"
 import { Button } from "~/components/common"
-import prisma from "~/helpers/prisma.server"
+import db from "~/helpers/db.server"
 import { useProduct } from "~/utils/hooks"
 import { NotFound } from "~/utils/http.server"
 import { getParam, json, useLoaderData } from "~/utils/remix"
@@ -23,7 +23,7 @@ export async function loader({ params }: LoaderArgs) {
 
   if (isNaN(Number(sku))) throw NotFound
 
-  const items = await prisma.item.findMany({
+  const items = await db.item.findMany({
     orderBy: {
       sku: "asc",
     },

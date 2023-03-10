@@ -2,7 +2,7 @@ import { flattenConnection } from "@shopify/storefront-kit-react"
 import type { Processor } from "bullmq"
 
 import { SHOPIFY_SHIPPING_ITEM_1_ID } from "~/config/env.server"
-import prisma from "~/helpers/prisma.server"
+import db from "~/helpers/db.server"
 import { createQueue } from "~/helpers/queue.server"
 import { createItemPurchaseQueue } from "~/helpers/queues"
 import Sentry from "~/services/sentry"
@@ -47,7 +47,7 @@ export const processor: Processor<QueueData> = async (job) => {
         ),
       }))
 
-    const customer = await prisma.customer.upsert({
+    const customer = await db.customer.upsert({
       create: {
         commerceId: order.customer?.id!,
         email: order.customer?.email!,
@@ -57,7 +57,7 @@ export const processor: Processor<QueueData> = async (job) => {
       where: { email: order.customer?.email! },
     })
 
-    const purchase = await prisma.purchase.create({
+    const purchase = await db.purchase.create({
       data: {
         commerceId: order.id,
         cost: items.reduce((acc, item) => acc + item.cost * item.quantity, 0),
@@ -68,7 +68,7 @@ export const processor: Processor<QueueData> = async (job) => {
     })
 
     if (noteId) {
-      await prisma.note.update({
+      await db.note.update({
         data: {
           purchaseId: purchase.id,
         },

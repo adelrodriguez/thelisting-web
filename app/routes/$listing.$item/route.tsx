@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next"
 
 import { Button, Image } from "~/components/common"
 import { FormattedNumber } from "~/components/common"
-import prisma from "~/helpers/prisma.server"
+import db from "~/helpers/db.server"
 import { useCart, useProduct } from "~/utils/hooks"
 import { getPriceSymbol } from "~/utils/money"
 import { goToParent, json, useLoaderData } from "~/utils/remix"
@@ -22,7 +22,7 @@ export async function loader({ params }: LoaderArgs) {
   const sku = params.item
 
   try {
-    const item = await prisma.item.findFirst({
+    const item = await db.item.findFirst({
       where: { sku },
     })
 

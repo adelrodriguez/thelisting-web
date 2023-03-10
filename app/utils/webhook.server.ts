@@ -4,7 +4,7 @@ import hmacSHA256 from "crypto-js/hmac-sha256"
 import invariant from "tiny-invariant"
 
 import { HOOKDECK_SIGNING_SECRET } from "~/config/env.server"
-import prisma from "~/helpers/prisma.server"
+import db from "~/helpers/db.server"
 import { Unauthorized } from "~/utils/http.server"
 import { logger } from "~/utils/log"
 
@@ -60,7 +60,7 @@ export async function checkWebhookLog(
   invariant(typeof payload === "object", "Payload must be an object")
   invariant(payload !== null, "Payload must not be null")
 
-  const webhook = await prisma.webhook.count({ where: { webhookId } })
+  const webhook = await db.webhook.count({ where: { webhookId } })
 
   if (webhook) {
     logger.info("Webhook already received. Ignoring...", { webhookId })
@@ -68,7 +68,7 @@ export async function checkWebhookLog(
     return true
   }
 
-  await prisma.webhook.create({ data: { event, payload, service, webhookId } })
+  await db.webhook.create({ data: { event, payload, service, webhookId } })
 
   return false
 }

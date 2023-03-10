@@ -14,7 +14,7 @@ import { z } from "zod"
 import { Alert, Button } from "~/components/common"
 import { FormInput, FormSelect, FormSubmit } from "~/components/form"
 import { CURRENCIES } from "~/config/consts"
-import prisma from "~/helpers/prisma.server"
+import db from "~/helpers/db.server"
 import { addItemToListingQueue } from "~/helpers/queues"
 import { useScrapedProducts } from "~/routes/dashboard.admin.product-scraper/route"
 import alegra from "~/services/alegra.server"
@@ -40,7 +40,7 @@ const AddToListingSchema = z.object({
 const validator = withZod(AddToListingSchema)
 
 export async function loader() {
-  const listings = await prisma.listing.findMany({
+  const listings = await db.listing.findMany({
     where: { commerceId: { not: null } },
   })
 
@@ -64,7 +64,7 @@ export async function action({ request }: ActionArgs) {
 
   const { listingId, margin, products, exchangeRate } = result.data
 
-  const listing = await prisma.listing.findUniqueOrThrow({
+  const listing = await db.listing.findUniqueOrThrow({
     where: { id: listingId },
   })
 

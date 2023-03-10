@@ -13,7 +13,7 @@ import { forbidden } from "remix-utils"
 
 import { Button } from "~/components/common"
 import auth from "~/helpers/auth.server"
-import prisma from "~/helpers/prisma.server"
+import db from "~/helpers/db.server"
 import { goToLogin, json, useLoaderData } from "~/utils/remix"
 
 export async function loader({ request }: LoaderArgs) {
@@ -27,7 +27,7 @@ export async function loader({ request }: LoaderArgs) {
     throw forbidden("You do not have permission to access this page.")
   }
 
-  const users = await prisma.user.findMany({
+  const users = await db.user.findMany({
     orderBy: {
       createdAt: "desc",
     },

@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next"
 
 import { FormattedNumber, Image } from "~/components/common"
 import { OrderItem } from "~/components/registry"
-import prisma from "~/helpers/prisma.server"
+import db from "~/helpers/db.server"
 import Sentry from "~/services/sentry"
 import { generateCloudflareImageUrl } from "~/utils/cloudflare"
 import useTrackPageview from "~/utils/hooks/use-track-pageview"
@@ -29,7 +29,7 @@ export async function loader({ params, request }: LoaderArgs) {
   try {
     const order = await getOrder(getShopifyId(orderId, "Order"))
 
-    const listing = await prisma.listing.findFirst({
+    const listing = await db.listing.findFirst({
       where: { path, status: "Published" },
     })
 

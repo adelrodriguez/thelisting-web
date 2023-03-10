@@ -13,13 +13,13 @@ import { Fragment } from "react"
 
 import { ViewOnShopify } from "~/components/admin"
 import { Button, FormattedNumber } from "~/components/common"
-import prisma from "~/helpers/prisma.server"
+import db from "~/helpers/db.server"
 import type { UseDataFunctionReturn } from "~/utils/remix"
 import { json, useLoaderData } from "~/utils/remix"
 import type { ArrayElement } from "~/utils/type"
 
 export async function loader() {
-  const listings = await prisma.listing.findMany({
+  const listings = await db.listing.findMany({
     include: {
       items: {
         select: { id: true },

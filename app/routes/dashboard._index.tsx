@@ -2,7 +2,7 @@ import { ListingStatus, UserRole } from "@prisma/client"
 import currency from "currency.js"
 import { format } from "date-fns"
 
-import prisma from "~/helpers/prisma.server"
+import db from "~/helpers/db.server"
 import { getPriceSymbol } from "~/utils/money"
 import { round } from "~/utils/number"
 import { json, useLoaderData } from "~/utils/remix"
@@ -18,29 +18,29 @@ export async function loader() {
     purchaseAmount,
     lastPurchase,
   ] = await Promise.all([
-    prisma.user.count({
+    db.user.count({
       where: { role: UserRole.User },
     }),
-    prisma.user.count({
+    db.user.count({
       where: { role: UserRole.Admin },
     }),
-    prisma.listing.count({
+    db.listing.count({
       where: { status: ListingStatus.Published },
     }),
-    prisma.listing.count({
+    db.listing.count({
       where: { status: ListingStatus.Draft },
     }),
-    prisma.$queryRaw<
+    db.$queryRaw<
       {
         average: unknown
       }[]
     >`SELECT AVG(subquery.count) as average FROM (SELECT COUNT(*) as count FROM "Item" GROUP BY "listingId") subquery;`,
-    prisma.purchase.count(),
-    prisma.purchase.aggregate({
+    db.purchase.count(),
+    db.purchase.aggregate({
       _avg: { total: true },
       _sum: { total: true },
     }),
-    prisma.purchase.findFirst({
+    db.purchase.findFirst({
       orderBy: { createdAt: "desc" },
       select: { createdAt: true },
     }),

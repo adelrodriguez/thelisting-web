@@ -1,6 +1,6 @@
 import type { Processor } from "bullmq"
 
-import prisma from "~/helpers/prisma.server"
+import db from "~/helpers/db.server"
 import { createQueue } from "~/helpers/queue.server"
 import Sentry from "~/services/sentry"
 import {
@@ -16,7 +16,7 @@ export const processor: Processor<QueueData> = async (job) => {
   try {
     const listingId = job.data.listingId
 
-    const listing = await prisma.listing.findUniqueOrThrow({
+    const listing = await db.listing.findUniqueOrThrow({
       where: { id: listingId },
     })
 
@@ -26,7 +26,7 @@ export const processor: Processor<QueueData> = async (job) => {
 
     job.log(`Created collection ${collection.id}`)
 
-    await prisma.listing.update({
+    await db.listing.update({
       data: { commerceId: collection.id },
       where: { id: listingId },
     })

@@ -1,8 +1,8 @@
-import prisma from "~/helpers/prisma.server"
+import db from "~/helpers/db.server"
 import type { CartItem } from "~/utils/cart"
 
 export async function checkStock(cartItem: CartItem): Promise<boolean> {
-  const item = await prisma.item.findUniqueOrThrow({
+  const item = await db.item.findUniqueOrThrow({
     where: { id: cartItem.id },
   })
 

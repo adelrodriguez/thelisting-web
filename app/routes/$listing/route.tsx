@@ -7,7 +7,7 @@ import { Image } from "~/components/common"
 import type { NotFoundBoundaryData } from "~/components/error"
 import { Ribbons } from "~/components/ribbons"
 import { THE_LISTING_LOGO_BLACK } from "~/config/consts"
-import prisma from "~/helpers/prisma.server"
+import db from "~/helpers/db.server"
 import {
   CLOUDFLARE_IMAGE_VARIANTS,
   generateCloudflareImageUrl,
@@ -23,7 +23,7 @@ export async function loader({ params }: LoaderArgs) {
 
   if (!path) return goHome()
 
-  const listing = await prisma.listing.findFirst({
+  const listing = await db.listing.findFirst({
     include: {
       items: {
         orderBy: { sku: "asc" },

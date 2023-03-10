@@ -9,8 +9,8 @@ import { notFound } from "remix-utils"
 
 import { Button, FormattedNumber } from "~/components/common"
 import { OrderItem } from "~/components/registry"
+import db from "~/helpers/db.server"
 import i18next from "~/helpers/i18next.server"
-import prisma from "~/helpers/prisma.server"
 import { useTrackPageview } from "~/utils/hooks"
 import { getPriceSymbol } from "~/utils/money"
 import { getParam, json, useLoaderData } from "~/utils/remix"
@@ -23,7 +23,7 @@ export async function loader({ request, params }: LoaderArgs) {
   const path = getParam(params, "listing")
   const t = await i18next.getFixedT(request, "listing")
 
-  const listing = await prisma.listing.findUnique({
+  const listing = await db.listing.findUnique({
     select: {
       id: true,
       purchases: {

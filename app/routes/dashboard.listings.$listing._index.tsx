@@ -22,7 +22,7 @@ import {
   FormImageInput,
 } from "~/components/form"
 import auth from "~/helpers/auth.server"
-import prisma from "~/helpers/prisma.server"
+import db from "~/helpers/db.server"
 import { getFormData } from "~/utils/http.server"
 import {
   CommerceIdSchema,
@@ -71,10 +71,10 @@ export async function loader({ params }: LoaderArgs) {
     })
 
   const [listing, users] = await Promise.all([
-    prisma.listing.findUnique({
+    db.listing.findUnique({
       where: { sku: Number(sku) },
     }),
-    prisma.user.findMany({
+    db.user.findMany({
       orderBy: { firstName: "asc" },
       select: { firstName: true, id: true, lastName: true },
     }),
@@ -102,7 +102,7 @@ export async function action({ request, params }: ActionArgs) {
       title: "Listing not found",
     })
 
-  const listing = await prisma.listing.findUnique({
+  const listing = await db.listing.findUnique({
     where: { sku: Number(sku) },
   })
 
@@ -123,7 +123,7 @@ export async function action({ request, params }: ActionArgs) {
     })
   }
 
-  const updatedListing = await prisma.listing.update({
+  const updatedListing = await db.listing.update({
     data: result.data,
     where: { id: listing.id },
   })

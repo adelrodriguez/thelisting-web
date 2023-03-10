@@ -4,7 +4,7 @@ import currency from "currency.js"
 import invariant from "tiny-invariant"
 
 import { SHOPIFY_SHIPPING_ITEM_1_ID } from "~/config/env.server"
-import prisma from "~/helpers/prisma.server"
+import db from "~/helpers/db.server"
 import { createQueue } from "~/helpers/queue.server"
 import Sentry from "~/services/sentry"
 import whatsapp from "~/services/whatsapp.server"
@@ -19,7 +19,7 @@ export type QueueData = {
 export const processor: Processor<QueueData> = async (job) => {
   try {
     const order = await getOrder(getShopifyId(job.data.orderId, "Order"))
-    const purchase = await prisma.purchase.findFirstOrThrow({
+    const purchase = await db.purchase.findFirstOrThrow({
       include: { customer: true },
       where: { commerceId: order.id },
     })
@@ -28,7 +28,7 @@ export const processor: Processor<QueueData> = async (job) => {
       order.customAttributes
     )
 
-    const listing = await prisma.listing.findUniqueOrThrow({
+    const listing = await db.listing.findUniqueOrThrow({
       include: { owner: true },
       where: { id: listingId! },
     })

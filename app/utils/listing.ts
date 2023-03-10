@@ -3,7 +3,7 @@ import { ListingStatus, ListingType } from "@prisma/client"
 import { parse, startOfToday } from "date-fns"
 import { z } from "zod"
 
-import prisma from "~/helpers/prisma.server"
+import db from "~/helpers/db.server"
 
 export const EventDateSchema = z
   .string()
@@ -49,7 +49,7 @@ export const StatusSchema = z.enum(
 export const ImageSchema = z.string().nullish().optional()
 
 export async function verifyPathIsUnique(path: string) {
-  const listing = await prisma.listing.findUnique({
+  const listing = await db.listing.findUnique({
     select: { id: true },
     where: { path },
   })

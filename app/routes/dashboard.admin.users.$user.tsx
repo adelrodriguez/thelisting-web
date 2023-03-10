@@ -11,7 +11,7 @@ import {
 } from "remix-validated-form"
 
 import { FormInput, FormListRadioGroup, FormSubmit } from "~/components/form"
-import prisma from "~/helpers/prisma.server"
+import db from "~/helpers/db.server"
 import { isUserAdmin } from "~/utils/auth.server"
 import { getFormData } from "~/utils/http.server"
 import { getParam, json } from "~/utils/remix"
@@ -29,7 +29,7 @@ export const handle = {
 export async function loader({ params }: LoaderArgs) {
   const userId = getParam(params, "user")
 
-  const user = await prisma.user.findUnique({
+  const user = await db.user.findUnique({
     where: { id: userId },
   })
 
@@ -49,7 +49,7 @@ export async function action({ request, params }: ActionArgs) {
     throw notFound("User not found")
   }
 
-  const user = await prisma.user.findUnique({
+  const user = await db.user.findUnique({
     where: { id: userId },
   })
 
@@ -62,7 +62,7 @@ export async function action({ request, params }: ActionArgs) {
 
   if (result.error) return validationError(result.error)
 
-  const updatedUser = await prisma.user.update({
+  const updatedUser = await db.user.update({
     data: result.data,
     where: { id: user.id },
   })

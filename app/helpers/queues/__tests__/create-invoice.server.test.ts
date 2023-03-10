@@ -15,7 +15,7 @@ import queue, { processor } from "../create-invoice.server"
 
 let job: Job<QueueData>
 
-vi.mock("~/helpers/prisma.server")
+vi.mock("~/helpers/db.server")
 vi.mock("~/services/sentry")
 vi.mock("~/utils/shopify.server", () => ({
   getOrder: vi.fn(() =>

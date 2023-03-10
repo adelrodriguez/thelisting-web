@@ -15,7 +15,7 @@ import {
 import { z } from "zod"
 
 import { FormImageInput, FormInput, FormSubmit } from "~/components/form"
-import prisma from "~/helpers/prisma.server"
+import db from "~/helpers/db.server"
 import { generateCloudflareImageUrl } from "~/utils/cloudflare"
 import { uploadImageToCloudflare } from "~/utils/cloudflare.server"
 import type { ErrorBoundaryProps } from "~/utils/remix"
@@ -39,7 +39,7 @@ export async function loader({ params }: LoaderArgs) {
 
   if (isNaN(Number(sku))) throw notFound("Listing not found")
 
-  const ribbons = await prisma.ribbon.findMany({
+  const ribbons = await db.ribbon.findMany({
     where: { listing: { sku: Number(sku) } },
   })
 
@@ -73,7 +73,7 @@ export async function action({ request }: ActionArgs) {
 
   const formId = result.formId
 
-  const ribbon = await prisma.ribbon.update({
+  const ribbon = await db.ribbon.update({
     data: result.data,
     where: { id: formId },
   })

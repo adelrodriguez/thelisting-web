@@ -12,8 +12,8 @@ import { PassThrough } from "stream"
 
 import { RAILWAY_GIT_COMMIT_SHA, SENTRY_DSN } from "~/config/env.server"
 import { isProduction } from "~/config/vars"
+import db from "~/helpers/db.server"
 import i18next from "~/helpers/i18next.server"
-import prisma from "~/helpers/prisma.server"
 import i18n from "~/i18n"
 
 const ABORT_DELAY = 5000
@@ -83,7 +83,7 @@ export default async function handleRequest(
 Sentry.init({
   dsn: isProduction ? SENTRY_DSN : undefined,
   environment: process.env.NODE_ENV,
-  integrations: [new Sentry.Integrations.Prisma({ client: prisma })],
+  integrations: [new Sentry.Integrations.Prisma({ client: db })],
   release: RAILWAY_GIT_COMMIT_SHA,
   tracesSampleRate: 1,
 })

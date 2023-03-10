@@ -14,7 +14,7 @@ import { ViewOnShopify } from "~/components/admin"
 import { FormattedNumber, Image } from "~/components/common"
 import type { NotFoundBoundaryData } from "~/components/error"
 import { FormInput, FormSubmit, FormTextArea } from "~/components/form"
-import prisma from "~/helpers/prisma.server"
+import db from "~/helpers/db.server"
 import { useProduct } from "~/utils/hooks"
 import { getFormData } from "~/utils/http.server"
 import { getPriceSymbol } from "~/utils/money"
@@ -43,7 +43,7 @@ const validator = withZod(EditItemSchema)
 export async function loader({ params }: LoaderArgs) {
   const sku = getParam(params, "item", "Item not found")
 
-  const item = await prisma.item.findUnique({ where: { sku } })
+  const item = await db.item.findUnique({ where: { sku } })
 
   if (!item) {
     throw notFound<NotFoundBoundaryData>({
@@ -52,7 +52,7 @@ export async function loader({ params }: LoaderArgs) {
     })
   }
 
-  const itemPurchases = await prisma.itemPurchase.findMany({
+  const itemPurchases = await db.itemPurchase.findMany({
     where: { itemId: item.id },
   })
 
@@ -66,7 +66,7 @@ export async function action({ request, params }: ActionArgs) {
 
   if (result.error) return validationError(result.error)
 
-  const item = await prisma.item.update({
+  const item = await db.item.update({
     data: result.data,
     where: { sku },
   })

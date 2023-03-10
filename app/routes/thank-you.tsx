@@ -3,7 +3,7 @@ import { redirect } from "@remix-run/node"
 import * as Sentry from "@sentry/node"
 
 import { CUSTOM_ATTRIBUTES } from "~/config/consts"
-import prisma from "~/helpers/prisma.server"
+import db from "~/helpers/db.server"
 import { goHome } from "~/utils/remix"
 import { getShopifyId } from "~/utils/shopify"
 import { getOrderCustomAttributes } from "~/utils/shopify.server"
@@ -22,7 +22,7 @@ export async function loader({ request }: LoaderArgs) {
 
     if (!listingId) throw goHome()
 
-    const listing = await prisma.listing.findFirst({
+    const listing = await db.listing.findFirst({
       select: { path: true },
       where: { id: listingId },
     })

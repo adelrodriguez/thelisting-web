@@ -9,7 +9,7 @@ import { encodeWebhookSignature } from "~/utils/webhook.server"
 
 import { action } from "../api.webhooks.shopify.order-paid"
 
-vi.mock("~/helpers/prisma.server")
+vi.mock("~/helpers/db.server")
 vi.mock("~/helpers/queues")
 vi.mock("~/utils/webhook.server", async () => {
   const actual = (await vi.importActual("~/utils/webhook.server")) as {}

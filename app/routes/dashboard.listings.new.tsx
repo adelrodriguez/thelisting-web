@@ -14,7 +14,7 @@ import { z } from "zod"
 
 import { FormDate, FormInput, FormSelect, FormSubmit } from "~/components/form"
 import auth from "~/helpers/auth.server"
-import prisma from "~/helpers/prisma.server"
+import db from "~/helpers/db.server"
 import { createListingCommerceEntityQueue } from "~/helpers/queues"
 import { getFormData } from "~/utils/http.server"
 import {
@@ -50,7 +50,7 @@ export async function loader({ request }: LoaderArgs) {
 
   if (!user) throw unauthorized("You must be logged in to create a listing")
 
-  const users = await prisma.user.findMany({
+  const users = await db.user.findMany({
     orderBy: { firstName: "asc" },
     select: { firstName: true, id: true, lastName: true },
   })
@@ -91,7 +91,7 @@ export async function action({ request }: ActionArgs) {
 
   if (result.error) return validationError(result.error)
 
-  const listing = await prisma.listing.create({
+  const listing = await db.listing.create({
     data: result.data,
   })
 

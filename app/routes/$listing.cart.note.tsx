@@ -16,7 +16,7 @@ import { z } from "zod"
 
 import { Alert, Button } from "~/components/common"
 import { FormSubmit, FormTextArea } from "~/components/form"
-import prisma from "~/helpers/prisma.server"
+import db from "~/helpers/db.server"
 import { useCart, useTrackPageview } from "~/utils/hooks"
 import { getFormData, NotFound } from "~/utils/http.server"
 
@@ -36,7 +36,7 @@ export async function loader({ request, context }: ActionArgs) {
 
   if (!noteId) return null
 
-  const note = await prisma.note.findUnique({
+  const note = await db.note.findUnique({
     select: { text: true },
     where: { id: noteId },
   })
@@ -57,21 +57,21 @@ export async function action({ request, params }: ActionArgs) {
   if (result.error) return validationError(result.error)
 
   if (noteId) {
-    const note = await prisma.note.update({
+    const note = await db.note.update({
       data: { text: result.data.text, type: NoteType.Text },
       where: { id: noteId },
     })
 
     return note
   } else if (listingPath) {
-    const listing = await prisma.listing.findUnique({
+    const listing = await db.listing.findUnique({
       select: { id: true },
       where: { path: listingPath },
     })
 
     if (!listing) throw NotFound
 
-    const note = await prisma.note.create({
+    const note = await db.note.create({
       data: {
         listingId: listing.id,
         text: result.data.text,

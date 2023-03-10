@@ -5,7 +5,7 @@ import { ValidatedForm, validationError } from "remix-validated-form"
 import { z } from "zod"
 
 import { FormInput, FormSubmit } from "~/components/form"
-import prisma from "~/helpers/prisma.server"
+import db from "~/helpers/db.server"
 import { isUserAdmin } from "~/utils/auth.server"
 import { getParam, json, redirect, useLoaderData } from "~/utils/remix"
 import { getShopifyId } from "~/utils/shopify"
@@ -45,12 +45,12 @@ export async function action({ request, params }: ActionArgs) {
 
   if (result.error) return validationError(result.error)
 
-  const listing = await prisma.listing.findUniqueOrThrow({
+  const listing = await db.listing.findUniqueOrThrow({
     select: { id: true },
     where: { sku: Number(listingSku) },
   })
 
-  const item = await prisma.item.create({
+  const item = await db.item.create({
     data: {
       commerceId: getShopifyId(result.data.commerceId, "Product"),
       description: result.data.description,

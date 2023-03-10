@@ -3,7 +3,7 @@ import { json } from "@remix-run/node"
 
 import { ONE_DAY, REDIS_KEYS } from "~/config/consts"
 import auth from "~/helpers/auth.server"
-import prisma from "~/helpers/prisma.server"
+import db from "~/helpers/db.server"
 import redis from "~/helpers/redis.server"
 import { productScraper } from "~/helpers/scraper.server"
 import { ReasonPhrases, StatusCodes } from "~/utils/http.server"
@@ -49,7 +49,7 @@ export async function loader({ request }: LoaderArgs) {
     logger.success(`${url} scrapped successfully`)
   }
 
-  const scrapedProduct = await prisma.scrapedProduct.create({
+  const scrapedProduct = await db.scrapedProduct.create({
     data: {
       duration: payload.duration,
       errors: payload.errors,

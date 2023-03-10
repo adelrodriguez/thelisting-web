@@ -3,7 +3,7 @@ import type { Processor } from "bullmq"
 import { MD5 } from "crypto-js"
 import invariant from "tiny-invariant"
 
-import prisma from "~/helpers/prisma.server"
+import db from "~/helpers/db.server"
 import { createQueue } from "~/helpers/queue.server"
 import Sentry from "~/services/sentry"
 import {
@@ -31,7 +31,7 @@ export const processor: Processor<QueueData> = async (job) => {
 
   try {
     // Get listing
-    const listing = await prisma.listing.findUniqueOrThrow({
+    const listing = await db.listing.findUniqueOrThrow({
       where: { id: listingId },
     })
 
@@ -40,13 +40,13 @@ export const processor: Processor<QueueData> = async (job) => {
       `Listing ${listingId} doesn't have a commerceId`
     )
 
-    const scrapedProduct = await prisma.scrapedProduct.findUniqueOrThrow({
+    const scrapedProduct = await db.scrapedProduct.findUniqueOrThrow({
       where: { id: scrapedProductId },
     })
 
     const sku = `${listing.sku}-${rowId}`
 
-    const existingItem = await prisma.item.findFirst({
+    const existingItem = await db.item.findFirst({
       where: { sku },
     })
 
@@ -120,7 +120,7 @@ export const processor: Processor<QueueData> = async (job) => {
     }
 
     // Create or update item
-    const item = await prisma.item.upsert({
+    const item = await db.item.upsert({
       create: {
         commerceId,
         listingId: listing.id,

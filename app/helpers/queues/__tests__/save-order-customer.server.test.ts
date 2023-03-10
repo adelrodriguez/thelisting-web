@@ -3,7 +3,7 @@ import { faker } from "@faker-js/faker"
 import { Job } from "bullmq"
 import { beforeEach, expect, test, vi } from "vitest"
 
-import prisma from "~/helpers/__mocks__/prisma.server"
+import db from "~/helpers/__mocks__/db.server"
 import { Alegra } from "~/services/alegra.server"
 import {
   CreateContactResponseSchema,
@@ -16,7 +16,7 @@ import queue, { processor } from "../save-order-customer.server"
 let job: Job<QueueData>
 const email = faker.internet.email()
 
-vi.mock("~/helpers/prisma.server")
+vi.mock("~/helpers/db.server")
 vi.mock("~/utils/shopify.server", () => ({
   getOrder: vi.fn(() =>
     Promise.resolve({
@@ -70,7 +70,7 @@ test("calls the GET /contacts/:id endpoint if the contact already exists", async
     Promise.resolve(generateMock(GetContactResponseSchema))
   )
 
-  prisma.customer.findUnique.mockResolvedValue({
+  db.customer.findUnique.mockResolvedValue({
     alegraId: faker.datatype.uuid(),
     commerceId: faker.datatype.uuid(),
     createdAt: faker.date.past(),

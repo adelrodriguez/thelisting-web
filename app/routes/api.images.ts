@@ -8,7 +8,7 @@ import {
 import { badRequest } from "remix-utils"
 
 import auth from "~/helpers/auth.server"
-import prisma from "~/helpers/prisma.server"
+import db from "~/helpers/db.server"
 import { uploadImageToCloudflare } from "~/utils/cloudflare.server"
 import { getFormData, Unauthorized } from "~/utils/http.server"
 
@@ -19,7 +19,7 @@ export async function loader({ request }: LoaderArgs) {
     return Unauthorized
   }
 
-  const images = await prisma.image.findMany({
+  const images = await db.image.findMany({
     where: {
       userId: user.id,
     },
@@ -60,7 +60,7 @@ export async function action({ request }: ActionArgs) {
     throw badRequest("Missing image")
   }
 
-  const image = await prisma.image.create({
+  const image = await db.image.create({
     data: {
       filename,
       id: fileId,

@@ -3,7 +3,7 @@ import { Authenticator } from "remix-auth"
 import { EmailLinkStrategy } from "remix-auth-email-link"
 
 import { REMIX_AUTH_SECRET } from "~/config/env.server"
-import prisma from "~/helpers/prisma.server"
+import db from "~/helpers/db.server"
 import { untypedSessionStorage } from "~/helpers/session.server"
 import { sendLoginEmail } from "~/utils/email.server"
 
@@ -18,11 +18,11 @@ auth.use(
       sendEmail: sendLoginEmail,
     },
     async ({ email }) => {
-      const user = await prisma.user.findFirstOrThrow({
+      const user = await db.user.findFirstOrThrow({
         where: { email },
       })
 
-      await prisma.user.update({
+      await db.user.update({
         data: { lastLoginAt: new Date() },
         where: { id: user.id },
       })

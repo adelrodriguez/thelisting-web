@@ -1,6 +1,6 @@
 import type { Processor } from "bullmq"
 
-import prisma from "~/helpers/prisma.server"
+import db from "~/helpers/db.server"
 import { createQueue } from "~/helpers/queue.server"
 import Sentry from "~/services/sentry"
 
@@ -16,18 +16,18 @@ export type QueueData = {
 
 export const processor: Processor<QueueData> = async (job) => {
   try {
-    const purchase = await prisma.purchase.findUniqueOrThrow({
+    const purchase = await db.purchase.findUniqueOrThrow({
       where: { id: job.data.purchaseId },
     })
 
-    const item = await prisma.item.findFirstOrThrow({
+    const item = await db.item.findFirstOrThrow({
       where: {
         commerceId: job.data.item.commerceId,
         listingId: purchase.listingId,
       },
     })
 
-    await prisma.itemPurchase.create({
+    await db.itemPurchase.create({
       data: {
         cost: job.data.item.cost,
         itemId: item.id,
@@ -39,7 +39,7 @@ export const processor: Processor<QueueData> = async (job) => {
 
     job.log(`Created item purchase ${purchase.id} → ${item.id}`)
 
-    await prisma.item.update({
+    await db.item.update({
       data: {
         stock: { decrement: job.data.item.quantity },
       },

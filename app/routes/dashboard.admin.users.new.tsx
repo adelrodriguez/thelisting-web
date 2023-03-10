@@ -7,7 +7,7 @@ import { ValidatedForm, validationError } from "remix-validated-form"
 
 import { FormInput, FormListRadioGroup, FormSubmit } from "~/components/form"
 import auth from "~/helpers/auth.server"
-import prisma from "~/helpers/prisma.server"
+import db from "~/helpers/db.server"
 import { getFormData } from "~/utils/http.server"
 import { redirect } from "~/utils/remix"
 import { UserSchema } from "~/utils/user"
@@ -32,7 +32,7 @@ export async function action({ request }: ActionArgs) {
 
   if (result.error) return validationError(result.error)
 
-  await prisma.user.create({
+  await db.user.create({
     data: result.data,
   })
 

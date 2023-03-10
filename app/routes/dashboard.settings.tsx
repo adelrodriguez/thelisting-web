@@ -12,7 +12,7 @@ import { z } from "zod"
 
 import { FormInput, FormSubmit } from "~/components/form"
 import auth from "~/helpers/auth.server"
-import prisma from "~/helpers/prisma.server"
+import db from "~/helpers/db.server"
 import { getFormData } from "~/utils/http.server"
 
 export const handle = {
@@ -36,7 +36,7 @@ export async function loader({ request }: LoaderArgs) {
     failureRedirect: "/login",
   })
 
-  const user = await prisma.user.findUniqueOrThrow({
+  const user = await db.user.findUniqueOrThrow({
     where: { id },
   })
 
@@ -54,7 +54,7 @@ export async function action({ request }: LoaderArgs) {
 
   if (result.error) return validationError(result.error)
 
-  await prisma.user.update({
+  await db.user.update({
     data: result.data,
     where: { id: user.id },
   })

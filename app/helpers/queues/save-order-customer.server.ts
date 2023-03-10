@@ -1,6 +1,6 @@
 import type { Processor } from "bullmq"
 
-import prisma from "~/helpers/prisma.server"
+import db from "~/helpers/db.server"
 import { createQueue } from "~/helpers/queue.server"
 import { createInvoiceQueue } from "~/helpers/queues"
 import alegra from "~/services/alegra.server"
@@ -19,7 +19,7 @@ export const processor: Processor<QueueData> = async (job) => {
 
     let contactId: string
 
-    const customer = await prisma.customer.findUnique({
+    const customer = await db.customer.findUnique({
       where: { email: order.customer?.email ?? undefined },
     })
 
@@ -44,7 +44,7 @@ export const processor: Processor<QueueData> = async (job) => {
         })
       )
 
-      await prisma.customer.upsert({
+      await db.customer.upsert({
         create: {
           alegraId: contact.id,
           commerceId: order.customer?.id,
