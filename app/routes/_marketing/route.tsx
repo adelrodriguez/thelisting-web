@@ -1,5 +1,9 @@
 import { Outlet } from "@remix-run/react"
+import { StatusCodes } from "http-status-codes"
 import { useTranslation } from "react-i18next"
+import { redirect } from "remix-typedjson"
+
+import { isProduction } from "~/config/vars"
 
 import Footer from "./Footer"
 import MarketingHeader from "./MarketingHeader"
@@ -13,6 +17,17 @@ const headerNavigation = [
 ]
 
 export const handle = { i18n: "common" }
+
+export function loader() {
+  // TODO: remove this once we're live
+  if (isProduction) {
+    return redirect("https://thelisting.do", {
+      status: StatusCodes.TEMPORARY_REDIRECT,
+    })
+  }
+
+  return null
+}
 
 export default function MarketingLayout() {
   const { t } = useTranslation(handle.i18n)
