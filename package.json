@@ -115,7 +115,7 @@
     "@anatine/zod-mock": "3.9.0",
     "@faker-js/faker": "^7.6.0",
     "@graphql-codegen/cli": "3.2.1",
-    "@graphql-codegen/client-preset": "2.1.0",
+    "@graphql-codegen/client-preset": "2.1.1",
     "@headlessui/tailwindcss": "^0.1.2",
     "@playwright/test": "1.31.1",
     "@railway/cli": "3.0.6",
