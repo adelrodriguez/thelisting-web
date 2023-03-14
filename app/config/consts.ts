@@ -32,7 +32,9 @@ export const ONE_DAY = 60 * 60 * 24
 export const ONE_WEEK = ONE_DAY * 7
 
 // Fees
-export const PAYMENT_FEE = 0.055
+export const SHOPIFY_FEE = 1 // 1%
+export const CREDIT_CARD_FEE = 6.5 // 6.5%
+export const DEFAULT_MARGIN = SHOPIFY_FEE + CREDIT_CARD_FEE // 7.5%
 export const SHIPPING_FEE = 300 // 300 DOP
 export const SHIPPING_METHOD = "Gestión y Entrega"
 

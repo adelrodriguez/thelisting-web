@@ -48,30 +48,30 @@ export async function loader() {
 
   return json([
     {
-      stats: [
-        { name: "Published Listings", stat: publishedListings },
-        { name: "Draft Listings", stat: draftListings },
-        { name: "Total Listings", stat: publishedListings + draftListings },
+      data: [
+        { label: "Published Listings", value: publishedListings },
+        { label: "Draft Listings", value: draftListings },
+        { label: "Total Listings", value: publishedListings + draftListings },
         {
-          name: "Average Items per Listing",
-          stat: round(Number(item[0]!.average)),
+          label: "Average Items per Listing",
+          value: round(Number(item[0]!.average)),
         },
-        { name: "Total Purchases", stat: purchases },
+        { label: "Total Purchases", value: purchases },
         {
-          name: "Total Purchase Amount",
-          stat: currency(purchaseAmount._sum.total || 0)
-            .format({ symbol: getPriceSymbol() })
-            .toString(),
-        },
-        {
-          name: "Average Purchase Amount",
-          stat: currency(purchaseAmount._avg.total || 0)
-            .format({ symbol: getPriceSymbol() })
-            .toString(),
+          label: "Total Purchase Amount",
+          value: currency(purchaseAmount._sum.total || 0).format({
+            symbol: getPriceSymbol(),
+          }),
         },
         {
-          name: "Last Purchase",
-          stat: lastPurchase?.createdAt
+          label: "Average Purchase Amount",
+          value: currency(purchaseAmount._avg.total || 0).format({
+            symbol: getPriceSymbol(),
+          }),
+        },
+        {
+          label: "Last Purchase",
+          value: lastPurchase?.createdAt
             ? format(lastPurchase?.createdAt, "MMM d, yyyy")
             : "N/A",
         },
@@ -79,9 +79,9 @@ export async function loader() {
       title: "Listings (All Time)",
     },
     {
-      stats: [
-        { name: "Total Users", stat: users },
-        { name: "Total Admins", stat: admins },
+      data: [
+        { label: "Total Users", value: users },
+        { label: "Total Admins", value: admins },
       ],
       title: "Users",
     },
@@ -99,16 +99,16 @@ export default function DashboardIndexPage() {
             {item.title}
           </h3>
           <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3 lg:grid-cols-4">
-            {item.stats.map((stat) => (
+            {item.data.map((stat) => (
               <div
-                key={stat.name}
+                key={stat.label}
                 className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6"
               >
                 <dt className="truncate text-sm font-medium text-gray-500">
-                  {stat.name}
+                  {stat.label}
                 </dt>
                 <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
-                  {stat.stat}
+                  {stat.value}
                 </dd>
               </div>
             ))}

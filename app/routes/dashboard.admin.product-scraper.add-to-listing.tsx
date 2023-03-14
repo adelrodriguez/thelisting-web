@@ -13,7 +13,7 @@ import { z } from "zod"
 
 import { Alert, Button } from "~/components/common"
 import { FormInput, FormSelect, FormSubmit } from "~/components/form"
-import { CURRENCIES } from "~/config/consts"
+import { CURRENCIES, DEFAULT_MARGIN } from "~/config/consts"
 import db from "~/helpers/db.server"
 import { addItemToListingQueue } from "~/helpers/queues"
 import { useScrapedProducts } from "~/routes/dashboard.admin.product-scraper/route"
@@ -133,7 +133,7 @@ export default function AddToListingPage() {
                     defaultValues={{
                       exchangeRate,
                       listingId: undefined,
-                      margin: 7.5,
+                      margin: DEFAULT_MARGIN,
                       products: productFields,
                     }}
                     method="post"
