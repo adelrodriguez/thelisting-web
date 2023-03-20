@@ -6,20 +6,24 @@ import { BaseScraper } from "./base"
 export default class AmazonScraper extends BaseScraper {
   static domain = "amazon.com"
 
+  protected async waitFor(): Promise<void> {
+    await this.page.waitForLoadState("domcontentloaded")
+  }
+
   public get store(): string | null {
     return "Amazon"
   }
 
   public get title(): Promise<string | null> {
     return this.page
-      .$eval("span#productTitle", (element) => element.textContent)
+      .$eval("h1#title", (element) => element.textContent)
       .then(cleanText)
       .catch((err) => this.logError("title: " + err.message))
   }
 
   public get image(): Promise<string | null> {
     return this.page
-      .$eval("img.a-dynamic-image", (element) => element.getAttribute("src"))
+      .$eval("#landingImage", (element) => element.getAttribute("src"))
       .catch((err) => this.logError("image: " + err.message))
   }
 
