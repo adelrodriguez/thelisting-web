@@ -23,7 +23,7 @@ export default function RegistryItem({
   if (isLoading) {
     return (
       <div className="animate-pulse">
-        <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden sm:rounded-lg xl:aspect-w-7 xl:aspect-h-8">
+        <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden xl:aspect-w-7 xl:aspect-h-8 sm:rounded-lg">
           <div className="h-full w-full bg-gray-200" />
         </div>
         <div className="mt-4 space-y-4">
@@ -47,7 +47,7 @@ export default function RegistryItem({
   return (
     <Link className="group text-center font-body" to={sku} preventScrollReset>
       <div className="relative">
-        <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-sm sm:rounded-md xl:aspect-w-7 xl:aspect-h-8">
+        <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-sm xl:aspect-w-7 xl:aspect-h-8 sm:rounded-md">
           <Image
             src={imageUrl}
             alt={title}
