@@ -1,7 +1,6 @@
 import { CURRENCIES } from "~/config/consts"
+import { BaseScraper } from "~/helpers/scrapers/product/base.server"
 import { cleanAmount } from "~/utils/scraper"
-
-import { BaseScraper } from "./base"
 
 export default class BabylistScraper extends BaseScraper {
   static domain = "babylist.com"

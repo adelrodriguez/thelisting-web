@@ -1,4 +1,4 @@
-import { BaseScraper } from "./base"
+import { BaseScraper } from "~/helpers/scrapers/product/base.server"
 
 export default class CasaCuestaScraper extends BaseScraper {
   static domain = "casacuesta.com"

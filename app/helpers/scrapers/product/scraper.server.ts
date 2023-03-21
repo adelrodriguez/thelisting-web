@@ -1,5 +1,7 @@
 import { parse } from "tldts"
 
+import type { ScraperInterface } from "./base.server"
+import createScraperFactory, { BaseScraper } from "./base.server"
 // Stores
 import {
   AmazonScraper,
@@ -8,6 +10,7 @@ import {
   BuybuyBaby,
   CasaCoolScraper,
   CasaCuestaScraper,
+  CabuyaScraper,
   CorripioScraper,
   ElectrodomesticosComDo,
   ElEstudioStoreScraper,
@@ -26,8 +29,6 @@ import {
   TwinkleRDScraper,
   ZaraHomeScraper,
 } from "./stores"
-import type { ScraperInterface } from "./stores/base"
-import createScraperFactory, { BaseScraper } from "./stores/base"
 
 export default async function createScraper(
   url: URL
@@ -41,6 +42,7 @@ export default async function createScraper(
     [BabylistScraper.domain]: BabylistScraper,
     [BebeMundoScraper.domain]: BebeMundoScraper,
     [BuybuyBaby.domain]: BuybuyBaby,
+    [CabuyaScraper.domain]: CabuyaScraper,
     [CasaCoolScraper.domain]: CasaCoolScraper,
     [CasaCuestaScraper.domain]: CasaCuestaScraper,
     [CorripioScraper.domain]: CorripioScraper,

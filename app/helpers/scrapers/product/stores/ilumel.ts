@@ -1,4 +1,4 @@
-import { BaseScraper } from "./base"
+import { BaseScraper } from "~/helpers/scrapers/product/base.server"
 
 export default class IlumelScraper extends BaseScraper {
   static domain = "ilumel.com"

@@ -1,6 +1,5 @@
+import { BaseScraper } from "~/helpers/scrapers/product/base.server"
 import { cleanText } from "~/utils/scraper"
-
-import { BaseScraper } from "./base"
 
 export default class IkeaScraper extends BaseScraper {
   static domain = "ikea.com.do"

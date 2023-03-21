@@ -1,9 +1,8 @@
 import { z } from "zod"
 
+import { BaseScraper } from "~/helpers/scrapers/product/base.server"
 import { CurrencySchema } from "~/utils/money"
 import { cleanText, cleanAmount } from "~/utils/scraper"
-
-import { BaseScraper } from "./base"
 
 const applicationSchema = z.object({
   offers: z.object({

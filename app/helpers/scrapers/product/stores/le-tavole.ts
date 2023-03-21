@@ -1,7 +1,6 @@
 import { CURRENCIES } from "~/config/consts"
+import { BaseScraper } from "~/helpers/scrapers/product/base.server"
 import { cleanAmount, cleanText } from "~/utils/scraper"
-
-import { BaseScraper } from "./base"
 
 export default class LeTavole extends BaseScraper {
   static domain = "letavole.com"
@@ -16,17 +15,14 @@ export default class LeTavole extends BaseScraper {
       .catch((err) => this.logError("title: " + err.message))
   }
 
-  public get description(): Promise<string | null> {
+  public get description() {
     return this.page
-      .$eval(
-        'div[data-widget_type="woocommerce-product-content.default"]',
-        (element) => element.textContent
-      )
+      .$eval(".elementor-toggle-item", (element) => element.textContent)
       .then(cleanText)
       .catch((err) => this.logError("description: " + err.message))
   }
 
-  public get amount(): Promise<number | null> {
+  public get amount() {
     return this.page
       .$eval(
         ".elementor-widget-container > p.price",
