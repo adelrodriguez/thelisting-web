@@ -57,6 +57,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
           }
         : {}),
       "og:title": `${data.listing.title} | The Listing`,
+      title: `${data.listing.title} | The Listing`,
     }
   } catch (error) {
     return {}
