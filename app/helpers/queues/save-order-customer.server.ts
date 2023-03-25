@@ -51,7 +51,9 @@ export const processor: Processor<QueueData> = async (job) => {
           email: contact.email,
           name: order.customer?.displayName,
         },
-        update: {},
+        update: {
+          alegraId: contact.id,
+        },
         where: { email: order.customer?.email! },
       })
 
