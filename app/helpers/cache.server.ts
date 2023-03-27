@@ -1,7 +1,7 @@
 import type { Redis as RedisType, RedisOptions } from "ioredis"
 import Redis from "ioredis"
 
-import { REDIS_URL } from "~/config/env.server"
+import { REDIS_CACHE_URL } from "~/config/env.server"
 import { isProduction } from "~/config/vars"
 
 let redis: RedisType
@@ -19,10 +19,10 @@ const redisOptions: RedisOptions = {
 // with every change, but we want to make sure we don't create a new connection
 // to the Redis with every change either.
 if (isProduction) {
-  redis = new Redis(REDIS_URL, redisOptions)
+  redis = new Redis(REDIS_CACHE_URL, redisOptions)
 } else {
   if (!global.__redis) {
-    global.__redis = new Redis(REDIS_URL, redisOptions)
+    global.__redis = new Redis(REDIS_CACHE_URL, redisOptions)
   }
   redis = global.__redis
 }

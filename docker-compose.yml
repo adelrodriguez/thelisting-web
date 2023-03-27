@@ -1,7 +1,7 @@
 version: "3.8"
 name: thelisting
 services:
-  postgres:
+  database:
     image: postgres:latest
     restart: always
     environment:
@@ -12,11 +12,18 @@ services:
       - "5432:5432"
     volumes:
       - ./postgres-data:/var/lib/postgresql/data
-  redis:
+  redis-jobs:
     image: redis:latest
     restart: always
     ports:
       - "6379:6379"
+    volumes:
+      - ./redis-data:/data
+  redis-cache:
+    image: redis:latest
+    restart: always
+    ports:
+      - "6380:6379"
     volumes:
       - ./redis-data:/data
   browserless:

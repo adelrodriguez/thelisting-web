@@ -38,7 +38,8 @@ module.exports = z.object({
   RAILWAY_GIT_COMMIT_SHA: z.string().optional(),
   RAILWAY_STATIC_URL: z.string().optional(),
 
-  REDIS_URL: z.string().url(),
+  REDIS_CACHE_URL: z.string().url(),
+  REDIS_JOBS_URL: z.string().url(),
 
   REMIX_AUTH_SECRET: z.string(),
 

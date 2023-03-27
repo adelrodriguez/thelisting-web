@@ -1,7 +1,8 @@
 import type { Processor } from "bullmq"
 import { Queue, Worker } from "bullmq"
+import { Redis } from "ioredis"
 
-import redis from "~/helpers/redis.server"
+import { REDIS_JOBS_URL } from "~/config/env.server"
 
 export type RegisteredQueue = {
   queue: Queue
@@ -15,6 +16,11 @@ declare global {
 const registeredQueues =
   global.__registeredQueues || (global.__registeredQueues = {})
 
+const connection = new Redis(REDIS_JOBS_URL, {
+  enableReadyCheck: false,
+  maxRetriesPerRequest: null,
+})
+
 export function createQueue<Payload>(
   name: string,
   handler: Processor<Payload>
@@ -25,18 +31,14 @@ export function createQueue<Payload>(
     return registeredQueue.queue
   }
 
-  // TODO(adelrodriguez): We should probably use a different redis connection for
-  // this, since right now we are using the same connection for both the app
-  // cache and the queue.
-
   // BullMQ queues are the storage container managing jobs.
-  const queue = new Queue<Payload>(name, { connection: redis })
+  const queue = new Queue<Payload>(name, { connection })
 
   // Workers are where the meat of our processing lives within a queue.
   // They reach out to our redis connection and pull jobs off the queue
   // in an order determined by factors such as job priority, delay, etc.
   // The scheduler plays an important role in helping workers stay busy.
-  const worker = new Worker<Payload>(name, handler, { connection: redis })
+  const worker = new Worker<Payload>(name, handler, { connection })
 
   registeredQueues[name] = { queue, worker }
 

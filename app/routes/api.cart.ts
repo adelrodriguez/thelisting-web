@@ -3,7 +3,7 @@ import type { ActionArgs, LoaderArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
 
 import { ONE_DAY, REDIS_KEYS } from "~/config/consts"
-import redis from "~/helpers/redis.server"
+import redis from "~/helpers/cache.server"
 import { commitSession, getSession } from "~/helpers/session.server"
 import { getHeaders } from "~/utils/http.server"
 import { generateKey } from "~/utils/redis"

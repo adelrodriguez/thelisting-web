@@ -2,7 +2,7 @@ import type { Redis } from "ioredis"
 import type { CacheConfig } from "remix-image/server"
 import { CacheStatus } from "remix-image/server"
 
-import redis from "~/helpers/redis.server"
+import cache from "~/helpers/cache.server"
 
 abstract class Cache {
   abstract config: CacheConfig
@@ -33,7 +33,7 @@ export class ImageCache extends Cache {
       ttl: 24 * 60 * 60,
     }
 
-    this.cache = redis
+    this.cache = cache
   }
 
   async has(key: string): Promise<boolean> {
@@ -73,9 +73,6 @@ export class ImageCache extends Cache {
   }
 
   async clear(): Promise<void> {
-    // TODO(adelrodriguez): Implement this
-    // It's currently not implemented since we do not want to flush the entire
-    // Redis cache, since job queues are also stored there at the moment
-    // await this.cache.flushall()
+    await this.cache.flushall()
   }
 }

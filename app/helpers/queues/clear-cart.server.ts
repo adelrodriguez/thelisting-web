@@ -1,7 +1,7 @@
 import type { Processor } from "bullmq"
 
 import { REDIS_KEYS } from "~/config/consts"
-import redis from "~/helpers/redis.server"
+import redis from "~/helpers/cache.server"
 import Sentry from "~/services/sentry"
 import { GenericError } from "~/utils/error"
 import { generateKey } from "~/utils/redis"
