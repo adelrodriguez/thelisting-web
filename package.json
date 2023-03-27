@@ -117,7 +117,7 @@
     "@graphql-codegen/cli": "3.2.1",
     "@graphql-codegen/client-preset": "2.1.1",
     "@headlessui/tailwindcss": "^0.1.2",
-    "@playwright/test": "1.31.1",
+    "@playwright/test": "1.32.1",
     "@railway/cli": "3.0.6",
     "@remix-run/dev": "1.14.3",
     "@remix-run/eslint-config": "1.14.3",
