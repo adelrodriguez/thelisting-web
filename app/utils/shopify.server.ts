@@ -73,7 +73,12 @@ export async function createCheckout(
   const { checkoutCreate } = await request(
     shopifyStorefrontAPIEndpoint,
     createCheckoutMutation,
-    { input: { customAttributes, lineItems } },
+    {
+      input: {
+        customAttributes,
+        lineItems,
+      },
+    },
     shopifyStorefrontAPIHeaders
   )
 

@@ -313,6 +313,63 @@ export type AvailableShippingRates = {
   shippingRates?: Maybe<Array<ShippingRate>>;
 };
 
+/** Represents a cart line common fields. */
+export type BaseCartLine = {
+  /** An attribute associated with the cart line. */
+  attribute?: Maybe<Attribute>;
+  /** The attributes associated with the cart line. Attributes are represented as key-value pairs. */
+  attributes: Array<Attribute>;
+  /** The cost of the merchandise that the buyer will pay for at checkout. The costs are subject to change and changes will be reflected at checkout. */
+  cost: CartLineCost;
+  /** The discounts that have been applied to the cart line. */
+  discountAllocations: Array<CartDiscountAllocation>;
+  /**
+   * The estimated cost of the merchandise that the buyer will pay for at checkout. The estimated costs are subject to change and changes will be reflected at checkout.
+   * @deprecated Use `cost` instead.
+   */
+  estimatedCost: CartLineEstimatedCost;
+  /** A globally-unique identifier. */
+  id: Scalars['ID'];
+  /** The merchandise that the buyer intends to purchase. */
+  merchandise: Merchandise;
+  /** The quantity of the merchandise that the customer intends to purchase. */
+  quantity: Scalars['Int'];
+  /** The selling plan associated with the cart line and the effect that each selling plan has on variants when they're purchased. */
+  sellingPlanAllocation?: Maybe<SellingPlanAllocation>;
+};
+
+
+/** Represents a cart line common fields. */
+export type BaseCartLineAttributeArgs = {
+  key: Scalars['String'];
+};
+
+/**
+ * An auto-generated type for paginating through multiple BaseCartLines.
+ *
+ */
+export type BaseCartLineConnection = {
+  __typename?: 'BaseCartLineConnection';
+  /** A list of edges. */
+  edges: Array<BaseCartLineEdge>;
+  /** A list of the nodes contained in BaseCartLineEdge. */
+  nodes: Array<BaseCartLine>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/**
+ * An auto-generated type which holds one BaseCartLine and a cursor during pagination.
+ *
+ */
+export type BaseCartLineEdge = {
+  __typename?: 'BaseCartLineEdge';
+  /** A cursor for use in pagination. */
+  cursor: Scalars['String'];
+  /** The item at the end of BaseCartLineEdge. */
+  node: BaseCartLine;
+};
+
 /** An online store blog. */
 export type Blog = HasMetafields & Node & OnlineStorePublishable & {
   __typename?: 'Blog';
@@ -523,7 +580,7 @@ export type Cart = Node & {
   /** A globally-unique identifier. */
   id: Scalars['ID'];
   /** A list of lines containing information about the items the customer intends to purchase. */
-  lines: CartLineConnection;
+  lines: BaseCartLineConnection;
   /** A note that is associated with the cart. For example, the note can be a personalized message to the buyer. */
   note?: Maybe<Scalars['String']>;
   /** The total number of items in the cart. */
@@ -612,6 +669,12 @@ export type CartBuyerIdentity = {
   email?: Maybe<Scalars['String']>;
   /** The phone number of the buyer that is interacting with the cart. */
   phone?: Maybe<Scalars['String']>;
+  /**
+   * A set of wallet preferences tied to the buyer that is interacting with the cart.
+   * Preferences can be used to populate relevant payment fields in the checkout flow.
+   *
+   */
+  walletPreferences: Array<Scalars['String']>;
 };
 
 /**
@@ -637,6 +700,12 @@ export type CartBuyerIdentityInput = {
   email?: InputMaybe<Scalars['String']>;
   /** The phone number of the buyer that is interacting with the cart. */
   phone?: InputMaybe<Scalars['String']>;
+  /**
+   * A set of wallet preferences tied to the buyer that is interacting with the cart.
+   * Preferences can be used to populate relevant payment fields in the checkout flow.
+   *
+   */
+  walletPreferences?: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** Return type for `cartBuyerIdentityUpdate` mutation. */
@@ -707,7 +776,7 @@ export type CartCustomDiscountAllocation = CartDiscountAllocation & {
 export type CartDeliveryGroup = {
   __typename?: 'CartDeliveryGroup';
   /** A list of cart lines for the delivery group. */
-  cartLines: CartLineConnection;
+  cartLines: BaseCartLineConnection;
   /** The destination address for the delivery group. */
   deliveryAddress: MailingAddress;
   /** The delivery options available for the delivery group. */
@@ -799,6 +868,10 @@ export type CartDiscountCodesUpdatePayload = {
 export enum CartErrorCode {
   /** The input value is invalid. */
   Invalid = 'INVALID',
+  /** Delivery group was not found in cart. */
+  InvalidDeliveryGroup = 'INVALID_DELIVERY_GROUP',
+  /** Delivery option was not valid. */
+  InvalidDeliveryOption = 'INVALID_DELIVERY_OPTION',
   /** Merchandise line was not found in cart. */
   InvalidMerchandiseLine = 'INVALID_MERCHANDISE_LINE',
   /** The input value should be less than the maximum value allowed. */
@@ -854,7 +927,7 @@ export type CartInput = {
 };
 
 /** Represents information about the merchandise in the cart. */
-export type CartLine = Node & {
+export type CartLine = BaseCartLine & Node & {
   __typename?: 'CartLine';
   /** An attribute associated with the cart line. */
   attribute?: Maybe<Attribute>;
@@ -885,20 +958,6 @@ export type CartLineAttributeArgs = {
   key: Scalars['String'];
 };
 
-/**
- * An auto-generated type for paginating through multiple CartLines.
- *
- */
-export type CartLineConnection = {
-  __typename?: 'CartLineConnection';
-  /** A list of edges. */
-  edges: Array<CartLineEdge>;
-  /** A list of the nodes contained in CartLineEdge. */
-  nodes: Array<CartLine>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-};
-
 /** The cost of the merchandise line that the buyer will pay at checkout. */
 export type CartLineCost = {
   __typename?: 'CartLineCost';
@@ -910,18 +969,6 @@ export type CartLineCost = {
   subtotalAmount: MoneyV2;
   /** The total cost of the merchandise line. */
   totalAmount: MoneyV2;
-};
-
-/**
- * An auto-generated type which holds one CartLine and a cursor during pagination.
- *
- */
-export type CartLineEdge = {
-  __typename?: 'CartLineEdge';
-  /** A cursor for use in pagination. */
-  cursor: Scalars['String'];
-  /** The item at the end of CartLineEdge. */
-  node: CartLine;
 };
 
 /** The estimated cost of the merchandise line that the buyer will pay at checkout. */
@@ -1434,6 +1481,8 @@ export enum CheckoutErrorCode {
   NotSupported = 'NOT_SUPPORTED',
   /** The input value needs to be blank. */
   Present = 'PRESENT',
+  /** Product is not published for this customer. */
+  ProductNotAvailable = 'PRODUCT_NOT_AVAILABLE',
   /** Shipping rate expired. */
   ShippingRateExpired = 'SHIPPING_RATE_EXPIRED',
   /** Throttled during checkout. */
@@ -1803,6 +1852,8 @@ export type Country = {
   currency: Currency;
   /** The ISO code of the country. */
   isoCode: CountryCode;
+  /** The market that includes this country. */
+  market?: Maybe<Market>;
   /** The name of the country. */
   name: Scalars['String'];
   /** The unit system used in the country. */
@@ -3125,6 +3176,11 @@ export type DeliveryAddress = MailingAddress;
  *
  */
 export type DeliveryAddressInput = {
+  /**
+   * The ID of a customer address that is associated with the buyer that is interacting with the cart.
+   *
+   */
+  customerAddressId?: InputMaybe<Scalars['ID']>;
   /** A delivery address preference of a buyer that is interacting with the cart. */
   deliveryAddress?: InputMaybe<MailingAddressInput>;
 };
@@ -3311,6 +3367,8 @@ export type ExternalVideo = Media & Node & {
   mediaContentType: MediaContentType;
   /** The origin URL of the video on the respective host. */
   originUrl: Scalars['URL'];
+  /** The presentation for a media. */
+  presentation?: Maybe<MediaPresentation>;
   /** The preview image for the media. */
   previewImage?: Maybe<Image>;
 };
@@ -3931,17 +3989,39 @@ export type Localization = {
   country: Country;
   /** The language of the active localized experience. Use the `@inContext` directive to change this value. */
   language: Language;
+  /** The market including the country of the active localized experience. Use the `@inContext` directive to change this value. */
+  market: Market;
 };
 
 /** Represents a location where product inventory is held. */
-export type Location = Node & {
+export type Location = HasMetafields & Node & {
   __typename?: 'Location';
   /** The address of the location. */
   address: LocationAddress;
   /** A globally-unique identifier. */
   id: Scalars['ID'];
+  /** Returns a metafield found by namespace and key. */
+  metafield?: Maybe<Metafield>;
+  /**
+   * The metafields associated with the resource matching the supplied list of namespaces and keys.
+   *
+   */
+  metafields: Array<Maybe<Metafield>>;
   /** The name of the location. */
   name: Scalars['String'];
+};
+
+
+/** Represents a location where product inventory is held. */
+export type LocationMetafieldArgs = {
+  key: Scalars['String'];
+  namespace: Scalars['String'];
+};
+
+
+/** Represents a location where product inventory is held. */
+export type LocationMetafieldsArgs = {
+  identifiers: Array<HasMetafieldsIdentifier>;
 };
 
 /**
@@ -4190,12 +4270,46 @@ export type ManualDiscountApplication = DiscountApplication & {
   value: PricingValue;
 };
 
+/** A group of one or more regions of the world that a merchant is targeting for sales. To learn more about markets, refer to [the Shopify Markets conceptual overview](/docs/apps/markets). */
+export type Market = HasMetafields & Node & {
+  __typename?: 'Market';
+  /**
+   * A human-readable unique string for the market automatically generated from its title.
+   *
+   */
+  handle: Scalars['String'];
+  /** A globally-unique identifier. */
+  id: Scalars['ID'];
+  /** Returns a metafield found by namespace and key. */
+  metafield?: Maybe<Metafield>;
+  /**
+   * The metafields associated with the resource matching the supplied list of namespaces and keys.
+   *
+   */
+  metafields: Array<Maybe<Metafield>>;
+};
+
+
+/** A group of one or more regions of the world that a merchant is targeting for sales. To learn more about markets, refer to [the Shopify Markets conceptual overview](/docs/apps/markets). */
+export type MarketMetafieldArgs = {
+  key: Scalars['String'];
+  namespace: Scalars['String'];
+};
+
+
+/** A group of one or more regions of the world that a merchant is targeting for sales. To learn more about markets, refer to [the Shopify Markets conceptual overview](/docs/apps/markets). */
+export type MarketMetafieldsArgs = {
+  identifiers: Array<HasMetafieldsIdentifier>;
+};
+
 /** Represents a media interface. */
 export type Media = {
   /** A word or phrase to share the nature or contents of a media. */
   alt?: Maybe<Scalars['String']>;
   /** The media content type. */
   mediaContentType: MediaContentType;
+  /** The presentation for a media. */
+  presentation?: Maybe<MediaPresentation>;
   /** The preview image for the media. */
   previewImage?: Maybe<Image>;
 };
@@ -4257,9 +4371,34 @@ export type MediaImage = Media & Node & {
   image?: Maybe<Image>;
   /** The media content type. */
   mediaContentType: MediaContentType;
+  /** The presentation for a media. */
+  presentation?: Maybe<MediaPresentation>;
   /** The preview image for the media. */
   previewImage?: Maybe<Image>;
 };
+
+/** A media presentation. */
+export type MediaPresentation = Node & {
+  __typename?: 'MediaPresentation';
+  /** A JSON object representing a presentation view. */
+  asJson?: Maybe<Scalars['JSON']>;
+  /** A globally-unique identifier. */
+  id: Scalars['ID'];
+};
+
+
+/** A media presentation. */
+export type MediaPresentationAsJsonArgs = {
+  format: MediaPresentationFormat;
+};
+
+/** The possible formats for a media presentation. */
+export enum MediaPresentationFormat {
+  /** A media image presentation. */
+  Image = 'IMAGE',
+  /** A model viewer presentation. */
+  ModelViewer = 'MODEL_VIEWER'
+}
 
 /**
  * A menu used for navigation within a storefront.
@@ -4398,7 +4537,7 @@ export type MetafieldFilter = {
 };
 
 /** A resource that the metafield belongs to. */
-export type MetafieldParentResource = Article | Blog | Collection | Customer | Order | Page | Product | ProductVariant | Shop;
+export type MetafieldParentResource = Article | Blog | Collection | Customer | Location | Market | Order | Page | Product | ProductVariant | Shop;
 
 /**
  * Returns the resource which is being referred to by a metafield.
@@ -4530,6 +4669,8 @@ export type Model3d = Media & Node & {
   id: Scalars['ID'];
   /** The media content type. */
   mediaContentType: MediaContentType;
+  /** The presentation for a media. */
+  presentation?: Maybe<MediaPresentation>;
   /** The preview image for the media. */
   previewImage?: Maybe<Image>;
   /** The sources for a 3d model. */
@@ -5005,6 +5146,8 @@ export type OnlineStorePublishable = {
 /** An order is a customer’s completed request to purchase one or more products from a shop. An order is created when a customer completes the checkout process, during which time they provides an email address, billing address and payment information. */
 export type Order = HasMetafields & Node & {
   __typename?: 'Order';
+  /** The address associated with the payment method. */
+  billingAddress?: Maybe<MailingAddress>;
   /** The reason for the order's cancellation. Returns `null` if the order wasn't canceled. */
   cancelReason?: Maybe<OrderCancelReason>;
   /** The date and time when the order was canceled. Returns null if the order wasn't canceled. */
@@ -5824,6 +5967,18 @@ export type ProductPriceRange = {
   minVariantPrice: MoneyV2;
 };
 
+/**
+ * The recommendation intent that is used to generate product recommendations.
+ * You can use intent to generate product recommendations according to different strategies.
+ *
+ */
+export enum ProductRecommendationIntent {
+  /** Offer customers products that are complementary to a product for which recommendations are to be fetched. An example is add-on products that display in a Pair it with section. */
+  Complementary = 'COMPLEMENTARY',
+  /** Offer customers a mix of products that are similar or complementary to a product for which recommendations are to be fetched. An example is substitutable products that display in a You may also like section. */
+  Related = 'RELATED'
+}
+
 /** The set of valid sort keys for the Product query. */
 export enum ProductSortKeys {
   /** Sort by the `best_selling` value. */
@@ -5994,6 +6149,8 @@ export enum ProductVariantSortKeys {
 /** The schema’s entry-point for queries. This acts as the public, top-level API from which all queries must start. */
 export type QueryRoot = {
   __typename?: 'QueryRoot';
+  /** Fetch a specific Article by its ID. */
+  article?: Maybe<Article>;
   /** List of the shop's articles. */
   articles: ArticleConnection;
   /** Fetch a specific `Blog` by one of its unique attributes. */
@@ -6080,6 +6237,12 @@ export type QueryRoot = {
   shop: Shop;
   /** A list of redirects for a shop. */
   urlRedirects: UrlRedirectConnection;
+};
+
+
+/** The schema’s entry-point for queries. This acts as the public, top-level API from which all queries must start. */
+export type QueryRootArticleArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -6246,6 +6409,7 @@ export type QueryRootProductByHandleArgs = {
 
 /** The schema’s entry-point for queries. This acts as the public, top-level API from which all queries must start. */
 export type QueryRootProductRecommendationsArgs = {
+  intent?: InputMaybe<ProductRecommendationIntent>;
   productId: Scalars['ID'];
 };
 
@@ -6930,6 +7094,8 @@ export type Video = Media & Node & {
   id: Scalars['ID'];
   /** The media content type. */
   mediaContentType: MediaContentType;
+  /** The presentation for a media. */
+  presentation?: Maybe<MediaPresentation>;
   /** The preview image for the media. */
   previewImage?: Maybe<Image>;
   /** The sources for a video. */
