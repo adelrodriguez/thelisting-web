@@ -35,6 +35,10 @@ model Listing {
   purchases Purchase[]
   notes     Note[]
   ribbons   Ribbon[]
+
+  // Internal Listings are used to showcase the platform, and shouldn't be
+  // accounted for in the analytics
+  isInternal Boolean @default(false)
 }
 
 enum ListingType {

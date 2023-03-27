@@ -25,24 +25,28 @@ export async function loader() {
       where: { role: UserRole.Admin },
     }),
     db.listing.count({
-      where: { status: ListingStatus.Published },
+      where: { isInternal: false, status: ListingStatus.Published },
     }),
     db.listing.count({
-      where: { status: ListingStatus.Draft },
+      where: { isInternal: false, status: ListingStatus.Draft },
     }),
     db.$queryRaw<
       {
         average: unknown
       }[]
     >`SELECT AVG(subquery.count) as average FROM (SELECT COUNT(*) as count FROM "Item" GROUP BY "listingId") subquery;`,
-    db.purchase.count(),
+    db.purchase.count({
+      where: { listing: { isInternal: false } },
+    }),
     db.purchase.aggregate({
       _avg: { total: true },
       _sum: { total: true },
+      where: { listing: { isInternal: false } },
     }),
     db.purchase.findFirst({
       orderBy: { createdAt: "desc" },
       select: { createdAt: true },
+      where: { listing: { isInternal: false } },
     }),
   ])
 

@@ -6,6 +6,7 @@ import * as Sentry from "@sentry/remix"
 import { z } from "zod"
 
 import { Alert } from "~/components/common"
+import db from "~/helpers/db.server"
 import { getSession } from "~/helpers/session.server"
 import { CartItemsSchema } from "~/utils/cart"
 import { checkStock } from "~/utils/checkout.server"
@@ -37,6 +38,12 @@ export async function action({ request }: ActionArgs): Promise<Response> {
     // Check that all items are available, in case someone messed with the cart
     const hasStock = await Promise.all(cartItems.map(checkStock))
     const cartsKey = session.get("cartsKey")
+
+    const listing = await db.listing.findUnique({ where: { id: listingId } })
+
+    if (!listing || listing.isInternal) {
+      throw new Error("Listing not available for purchase.")
+    }
 
     if (!cartsKey) {
       throw new Error("No cartsKey found.")
