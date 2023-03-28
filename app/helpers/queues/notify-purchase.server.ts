@@ -3,6 +3,7 @@ import type { Processor } from "bullmq"
 import currency from "currency.js"
 import invariant from "tiny-invariant"
 
+import { QUEUE_NAMES } from "~/config/consts"
 import { SHOPIFY_SHIPPING_ITEM_1_ID } from "~/config/env.server"
 import db from "~/helpers/db.server"
 import { createQueue } from "~/helpers/queue.server"
@@ -58,4 +59,4 @@ export const processor: Processor<QueueData> = async (job) => {
   }
 }
 
-export default createQueue("NOTIFY_PURCHASE", processor)
+export default createQueue(QUEUE_NAMES.CreatePurchase, processor)

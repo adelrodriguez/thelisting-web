@@ -65,3 +65,14 @@ export type ProductMetafield =
   (typeof PRODUCT_METAFIELDS)[keyof typeof PRODUCT_METAFIELDS]
 
 export const CLOUDFLARE_IMAGES_ACCOUNT_HASH = "wHwwAqNxbuESOwdHNE6NsQ"
+
+export const QUEUE_NAMES = {
+  AddItemToListing: "ADD_ITEM_TO_LISTING",
+  ClearCart: "CLEAR_CART",
+  CreateInvoice: "CREATE_INVOICE",
+  CreateItemPurchase: "CREATE_LISTING",
+  CreateListingCommerceEntity: "CREATE_LISTING_COMMERCE_ENTITY",
+  CreatePurchase: "CREATE_PURCHASE",
+  NotifyPurchase: "NOTIFY_PURCHASE",
+  SaveOrderCustomer: "SAVE_ORDER_CUSTOMER",
+}

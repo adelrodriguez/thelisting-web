@@ -1868,6 +1868,8 @@ export type BuyerExperienceConfiguration = {
 export type BuyerExperienceConfigurationInput = {
   /** Whether to checkout to draft order for merchant review. */
   checkoutToDraft?: InputMaybe<Scalars['Boolean']>;
+  /** Whether to allow customers to edit their shipping address at checkout. */
+  editableShippingAddress?: InputMaybe<Scalars['Boolean']>;
   /** Represents the merchant configured payment terms. */
   paymentTermsTemplateId?: InputMaybe<Scalars['ID']>;
 };
@@ -19218,8 +19220,6 @@ export type MetafieldEdge = {
  *
  */
 export type MetafieldInput = {
-  /** The description of the metafield. */
-  description?: InputMaybe<Scalars['String']>;
   /**
    * The unique ID of the metafield. You don't include an ID when you create a metafield because the metafield ID
    * is created automatically. The ID is required when you update a metafield.
@@ -27260,6 +27260,8 @@ export enum PriceListUserErrorCode {
   CurrencyMarketMismatch = 'CURRENCY_MARKET_MISMATCH',
   /** The price list currency is not supported by the shop's payment gateway. */
   CurrencyNotSupported = 'CURRENCY_NOT_SUPPORTED',
+  /** Something went wrong when trying to save the price list. Please try again. */
+  GenericError = 'GENERIC_ERROR',
   /** The input value isn't included in the list. */
   Inclusion = 'INCLUSION',
   /** The adjustment value must not be greater than 1000% for `type` `PERCENTAGE_INCREASE`. */

@@ -541,7 +541,7 @@ export enum CardBrand {
  * during a customer's session.
  *
  */
-export type Cart = Node & {
+export type Cart = HasMetafields & Node & {
   __typename?: 'Cart';
   /** An attribute associated with the cart. */
   attribute?: Maybe<Attribute>;
@@ -581,6 +581,13 @@ export type Cart = Node & {
   id: Scalars['ID'];
   /** A list of lines containing information about the items the customer intends to purchase. */
   lines: BaseCartLineConnection;
+  /** Returns a metafield found by namespace and key. */
+  metafield?: Maybe<Metafield>;
+  /**
+   * The metafields associated with the resource matching the supplied list of namespaces and keys.
+   *
+   */
+  metafields: Array<Maybe<Metafield>>;
   /** A note that is associated with the cart. For example, the note can be a personalized message to the buyer. */
   note?: Maybe<Scalars['String']>;
   /** The total number of items in the cart. */
@@ -631,6 +638,31 @@ export type CartLinesArgs = {
   first?: InputMaybe<Scalars['Int']>;
   last?: InputMaybe<Scalars['Int']>;
   reverse?: InputMaybe<Scalars['Boolean']>;
+};
+
+
+/**
+ * A cart represents the merchandise that a buyer intends to purchase,
+ * and the estimated cost associated with the cart. Learn how to
+ * [interact with a cart](https://shopify.dev/custom-storefronts/internationalization/international-pricing)
+ * during a customer's session.
+ *
+ */
+export type CartMetafieldArgs = {
+  key: Scalars['String'];
+  namespace: Scalars['String'];
+};
+
+
+/**
+ * A cart represents the merchandise that a buyer intends to purchase,
+ * and the estimated cost associated with the cart. Learn how to
+ * [interact with a cart](https://shopify.dev/custom-storefronts/internationalization/international-pricing)
+ * during a customer's session.
+ *
+ */
+export type CartMetafieldsArgs = {
+  identifiers: Array<HasMetafieldsIdentifier>;
 };
 
 /** Return type for `cartAttributesUpdate` mutation. */
@@ -874,6 +906,8 @@ export enum CartErrorCode {
   InvalidDeliveryOption = 'INVALID_DELIVERY_OPTION',
   /** Merchandise line was not found in cart. */
   InvalidMerchandiseLine = 'INVALID_MERCHANDISE_LINE',
+  /** The metafields were not valid. */
+  InvalidMetafields = 'INVALID_METAFIELDS',
   /** The input value should be less than the maximum value allowed. */
   LessThan = 'LESS_THAN',
   /** Missing discount code. */
@@ -922,8 +956,27 @@ export type CartInput = {
   discountCodes?: InputMaybe<Array<Scalars['String']>>;
   /** A list of merchandise lines to add to the cart. */
   lines?: InputMaybe<Array<CartLineInput>>;
+  /** The metafields to associate with this cart. */
+  metafields?: InputMaybe<Array<CartInputMetafieldInput>>;
   /** A note that is associated with the cart. For example, the note can be a personalized message to the buyer. */
   note?: InputMaybe<Scalars['String']>;
+};
+
+/** Specifies the input fields for a cart metafield value to set. */
+export type CartInputMetafieldInput = {
+  /** The key name of the metafield. */
+  key: Scalars['String'];
+  /**
+   * The type of data that the cart metafield stores.
+   * The type of data must be a [supported type](https://shopify.dev/apps/metafields/types).
+   *
+   */
+  type: Scalars['String'];
+  /**
+   * The data to store in the cart metafield. The data is always stored as a string, regardless of the metafield's type.
+   *
+   */
+  value: Scalars['String'];
 };
 
 /** Represents information about the merchandise in the cart. */
@@ -1035,6 +1088,51 @@ export type CartLinesUpdatePayload = {
   cart?: Maybe<Cart>;
   /** The list of errors that occurred from executing the mutation. */
   userErrors: Array<CartUserError>;
+};
+
+/** Specifies the input fields to delete a cart metafield. */
+export type CartMetafieldDeleteInput = {
+  /** The key name of the cart metafield. */
+  key: Scalars['String'];
+  /** The ID of the cart resource. */
+  ownerId: Scalars['ID'];
+};
+
+/** Return type for `cartMetafieldDelete` mutation. */
+export type CartMetafieldDeletePayload = {
+  __typename?: 'CartMetafieldDeletePayload';
+  /** The ID of the deleted cart metafield. */
+  deletedId?: Maybe<Scalars['ID']>;
+  /** The list of errors that occurred from executing the mutation. */
+  userErrors: Array<MetafieldDeleteUserError>;
+};
+
+/** Specifies the input fields for a cart metafield value to set. */
+export type CartMetafieldsSetInput = {
+  /** The key name of the cart metafield. */
+  key: Scalars['String'];
+  /** The ID of the cart resource. */
+  ownerId: Scalars['ID'];
+  /**
+   * The type of data that the cart metafield stores.
+   * The type of data must be a [supported type](https://shopify.dev/apps/metafields/types).
+   *
+   */
+  type: Scalars['String'];
+  /**
+   * The data to store in the cart metafield. The data is always stored as a string, regardless of the metafield's type.
+   *
+   */
+  value: Scalars['String'];
+};
+
+/** Return type for `cartMetafieldsSet` mutation. */
+export type CartMetafieldsSetPayload = {
+  __typename?: 'CartMetafieldsSetPayload';
+  /** The list of cart metafields that were set. */
+  metafields?: Maybe<Array<Metafield>>;
+  /** The list of errors that occurred from executing the mutation. */
+  userErrors: Array<MetafieldsSetUserError>;
 };
 
 /** Return type for `cartNoteUpdate` mutation. */
@@ -4517,6 +4615,25 @@ export type MetafieldReferencesArgs = {
   last?: InputMaybe<Scalars['Int']>;
 };
 
+/** Possible error codes that can be returned by `MetafieldDeleteUserError`. */
+export enum MetafieldDeleteErrorCode {
+  /** The owner ID is invalid. */
+  InvalidOwner = 'INVALID_OWNER',
+  /** Metafield not found. */
+  MetafieldDoesNotExist = 'METAFIELD_DOES_NOT_EXIST'
+}
+
+/** An error that occurs during the execution of cart metafield deletion. */
+export type MetafieldDeleteUserError = DisplayableError & {
+  __typename?: 'MetafieldDeleteUserError';
+  /** The error code. */
+  code?: Maybe<MetafieldDeleteErrorCode>;
+  /** The path to the input field that caused the error. */
+  field?: Maybe<Array<Scalars['String']>>;
+  /** The error message. */
+  message: Scalars['String'];
+};
+
 /**
  * A filter used to view a subset of products in a collection matching a specific metafield value.
  *
@@ -4537,7 +4654,7 @@ export type MetafieldFilter = {
 };
 
 /** A resource that the metafield belongs to. */
-export type MetafieldParentResource = Article | Blog | Collection | Customer | Location | Market | Order | Page | Product | ProductVariant | Shop;
+export type MetafieldParentResource = Article | Blog | Cart | Collection | Customer | Location | Market | Order | Page | Product | ProductVariant | Shop;
 
 /**
  * Returns the resource which is being referred to by a metafield.
@@ -4570,6 +4687,41 @@ export type MetafieldReferenceEdge = {
   /** The item at the end of MetafieldReferenceEdge. */
   node: MetafieldReference;
 };
+
+/** An error that occurs during the execution of `MetafieldsSet`. */
+export type MetafieldsSetUserError = DisplayableError & {
+  __typename?: 'MetafieldsSetUserError';
+  /** The error code. */
+  code?: Maybe<MetafieldsSetUserErrorCode>;
+  /** The index of the array element that's causing the error. */
+  elementIndex?: Maybe<Scalars['Int']>;
+  /** The path to the input field that caused the error. */
+  field?: Maybe<Array<Scalars['String']>>;
+  /** The error message. */
+  message: Scalars['String'];
+};
+
+/** Possible error codes that can be returned by `MetafieldsSetUserError`. */
+export enum MetafieldsSetUserErrorCode {
+  /** The input value is blank. */
+  Blank = 'BLANK',
+  /** The input value isn't included in the list. */
+  Inclusion = 'INCLUSION',
+  /** The owner ID is invalid. */
+  InvalidOwner = 'INVALID_OWNER',
+  /** The type is invalid. */
+  InvalidType = 'INVALID_TYPE',
+  /** The value is invalid for metafield type or for definition options. */
+  InvalidValue = 'INVALID_VALUE',
+  /** The input value should be less than or equal to the maximum value allowed. */
+  LessThanOrEqualTo = 'LESS_THAN_OR_EQUAL_TO',
+  /** The input value needs to be blank. */
+  Present = 'PRESENT',
+  /** The input value is too long. */
+  TooLong = 'TOO_LONG',
+  /** The input value is too short. */
+  TooShort = 'TOO_SHORT'
+}
 
 /** An instance of a user-defined model based on a MetaobjectDefinition. */
 export type Metaobject = Node & {
@@ -4733,6 +4885,15 @@ export type Mutation = {
   cartLinesRemove?: Maybe<CartLinesRemovePayload>;
   /** Updates one or more merchandise lines on a cart. */
   cartLinesUpdate?: Maybe<CartLinesUpdatePayload>;
+  /** Deletes a cart metafield. */
+  cartMetafieldDelete?: Maybe<CartMetafieldDeletePayload>;
+  /**
+   * Sets cart metafield values. Cart metafield values will be set regardless if they were previously created or not.
+   *
+   * Allows a maximum of 25 cart metafields to be set at a time.
+   *
+   */
+  cartMetafieldsSet?: Maybe<CartMetafieldsSetPayload>;
   /** Updates the note on the cart. */
   cartNoteUpdate?: Maybe<CartNoteUpdatePayload>;
   /** Update the selected delivery options for a delivery group. */
@@ -4886,6 +5047,18 @@ export type MutationCartLinesRemoveArgs = {
 export type MutationCartLinesUpdateArgs = {
   cartId: Scalars['ID'];
   lines: Array<CartLineUpdateInput>;
+};
+
+
+/** The schema’s entry-point for mutations. This acts as the public, top-level API from which all mutation queries must start. */
+export type MutationCartMetafieldDeleteArgs = {
+  input: CartMetafieldDeleteInput;
+};
+
+
+/** The schema’s entry-point for mutations. This acts as the public, top-level API from which all mutation queries must start. */
+export type MutationCartMetafieldsSetArgs = {
+  metafields: Array<CartMetafieldsSetInput>;
 };
 
 

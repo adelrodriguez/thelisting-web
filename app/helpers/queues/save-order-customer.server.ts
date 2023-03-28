@@ -1,5 +1,6 @@
 import type { Processor } from "bullmq"
 
+import { QUEUE_NAMES } from "~/config/consts"
 import db from "~/helpers/db.server"
 import { createQueue } from "~/helpers/queue.server"
 import { createInvoiceQueue } from "~/helpers/queues"
@@ -74,4 +75,4 @@ export const processor: Processor<QueueData> = async (job) => {
   }
 }
 
-export default createQueue("SAVE_ORDER_CUSTOMER", processor)
+export default createQueue(QUEUE_NAMES.SaveOrderCustomer, processor)

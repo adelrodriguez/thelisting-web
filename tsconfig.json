@@ -3,7 +3,6 @@
     "remix.env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "jobs/index.js",
   ],
   "compilerOptions": {
     "lib": [

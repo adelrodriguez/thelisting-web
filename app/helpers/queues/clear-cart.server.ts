@@ -1,6 +1,6 @@
 import type { Processor } from "bullmq"
 
-import { REDIS_KEYS } from "~/config/consts"
+import { QUEUE_NAMES, REDIS_KEYS } from "~/config/consts"
 import redis from "~/helpers/cache.server"
 import Sentry from "~/services/sentry"
 import { GenericError } from "~/utils/error"
@@ -57,4 +57,4 @@ export const processor: Processor<QueueData> = async (job) => {
   }
 }
 
-export default createQueue("CLEAR_CART", processor)
+export default createQueue(QUEUE_NAMES.ClearCart, processor)

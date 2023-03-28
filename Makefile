@@ -1,3 +1,8 @@
+bootstrap:
+	npm install
+	doppler run -- npm run clean
+	doppler run -- npm run bootstrap
+
 dev:
 	doppler run -- npm run dev
 

@@ -3,6 +3,7 @@ import type { Processor } from "bullmq"
 import { MD5 } from "crypto-js"
 import invariant from "tiny-invariant"
 
+import { QUEUE_NAMES } from "~/config/consts"
 import db from "~/helpers/db.server"
 import { createQueue } from "~/helpers/queue.server"
 import Sentry from "~/services/sentry"
@@ -144,4 +145,4 @@ export const processor: Processor<QueueData> = async (job) => {
   }
 }
 
-export default createQueue("ADD_ITEM_TO_LISTING", processor)
+export default createQueue(QUEUE_NAMES.AddItemToListing, processor)

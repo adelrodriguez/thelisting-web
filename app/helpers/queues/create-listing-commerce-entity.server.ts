@@ -1,5 +1,6 @@
 import type { Processor } from "bullmq"
 
+import { QUEUE_NAMES } from "~/config/consts"
 import db from "~/helpers/db.server"
 import { createQueue } from "~/helpers/queue.server"
 import Sentry from "~/services/sentry"
@@ -47,4 +48,4 @@ export const processor: Processor<QueueData> = async (job) => {
   }
 }
 
-export default createQueue("CREATE_LISTING_COMMERCE_ENTITY", processor)
+export default createQueue(QUEUE_NAMES.CreateListingCommerceEntity, processor)
