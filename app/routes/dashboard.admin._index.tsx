@@ -1,11 +1,10 @@
 import {
   AcademicCapIcon,
-  ReceiptRefundIcon,
   PhoneIcon,
   PhotoIcon,
   GiftIcon,
 } from "@heroicons/react/24/outline"
-import { UserGroupIcon } from "@heroicons/react/24/solid"
+import { QueueListIcon, UserGroupIcon } from "@heroicons/react/24/solid"
 import { Link } from "@remix-run/react"
 import clsx from "clsx"
 
@@ -47,11 +46,12 @@ const tools = [
     title: "User Management",
   },
   {
-    href: "#coming-soon2",
-    icon: ReceiptRefundIcon,
+    description: "Open the jobs dashboard.",
+    href: "./jobs",
+    icon: QueueListIcon,
     iconBackground: "bg-rose-50",
     iconForeground: "text-rose-700",
-    title: "Coming Soon",
+    title: "Jobs Dashboard",
   },
   {
     href: "#coming-soon1",
