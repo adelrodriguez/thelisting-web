@@ -5,8 +5,8 @@ import invariant from "tiny-invariant"
 
 import { HOOKDECK_SIGNING_SECRET } from "~/config/env.server"
 import db from "~/helpers/db.server"
+import logger from "~/helpers/logger.server"
 import { Unauthorized } from "~/utils/http.server"
-import { logger } from "~/utils/log"
 
 /**
  * Verify that the webhook is originating from Hookdeck.

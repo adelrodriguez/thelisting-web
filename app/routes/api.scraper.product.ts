@@ -7,12 +7,12 @@ import redis from "~/helpers/cache.server"
 import db from "~/helpers/db.server"
 import { productScraper } from "~/helpers/scraper.server"
 import { ReasonPhrases, StatusCodes } from "~/utils/http.server"
-import { logger } from "~/utils/log"
 import { generateKey } from "~/utils/redis"
 import { parseScrapedProductResult } from "~/utils/scraper"
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request, context }: LoaderArgs) {
   const user = await auth.isAuthenticated(request)
+  const logger = context.logger
 
   if (!user) {
     throw json("You must be logged in to access this resource", {
@@ -46,7 +46,7 @@ export async function loader({ request }: LoaderArgs) {
   if (payload.errors.length > 0) {
     logger.warn(`${url} scrapped with errors: ${payload.errors.join(", ")}`)
   } else {
-    logger.success(`${url} scrapped successfully`)
+    logger.info(`${url} scrapped successfully`)
   }
 
   const scrapedProduct = await db.scrapedProduct.create({

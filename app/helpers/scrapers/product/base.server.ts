@@ -5,8 +5,8 @@ import UserAgent from "user-agents"
 
 import type { Currency } from "~/config/consts"
 import { BROWSERLESS_TOKEN, BROWSERLESS_URL } from "~/config/env.server"
+import logger from "~/helpers/logger.server"
 import Sentry from "~/services/sentry"
-import { logger } from "~/utils/log"
 import { CurrencySchema } from "~/utils/money"
 import { cleanAmount, cleanText } from "~/utils/scraper"
 

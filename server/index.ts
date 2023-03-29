@@ -23,8 +23,7 @@ import {
   RAILWAY_STATIC_URL,
   REDIS_JOBS_URL,
 } from "~/config/env.server"
-// import { clearCartQueue } from "~/helpers/queues"
-import { logger } from "~/utils/log"
+import logger from "~/helpers/logger.server"
 
 const port = process.env.PORT || 3000
 
@@ -83,7 +82,13 @@ app.use(
 // more aggressive with this caching.
 app.use(express.static("public", { maxAge: "1h" }))
 
-app.use(morgan("tiny"))
+app.use(
+  morgan("tiny", {
+    stream: {
+      write: (message) => logger.http(message),
+    },
+  })
+)
 
 app.all(
   "*",
@@ -93,20 +98,20 @@ app.all(
 
         return createRequestHandler({
           build: require(BUILD_DIR),
+          getLoadContext: () => ({ logger }),
           mode: process.env.NODE_ENV,
         })(req, res, next)
       }
     : createRequestHandler({
         build: require(BUILD_DIR),
+        getLoadContext: () => ({ logger }),
         mode: process.env.NODE_ENV,
       })
 )
 
 app.listen(port, () => {
   logger.info(`Express server listening on port ${port}`)
-  logger.info(
-    `Bull Board is listening on port ${port}. For the UI, open http://localhost:${port}/jobs`
-  )
+  logger.info(`Bull Board is listening on port ${port}`)
 })
 
 function purgeRequireCache() {

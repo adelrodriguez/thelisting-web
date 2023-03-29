@@ -1,4 +1,5 @@
 import { ALEGRA_API_TOKEN, ALEGRA_API_USERNAME } from "~/config/env.server"
+import logger from "~/helpers/logger.server"
 import Sentry from "~/services/sentry"
 import type {
   CreateContactRequest,
@@ -20,7 +21,6 @@ import {
   parseCreateContactResponse,
 } from "~/utils/alegra"
 import { AlegraError } from "~/utils/error"
-import { logger } from "~/utils/log"
 
 export class Alegra {
   private baseUrl: string

@@ -49,3 +49,6 @@ dump.rdb
 # email
 .react-email
 /emails/*
+
+# logs
+*.log

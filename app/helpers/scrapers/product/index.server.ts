@@ -1,5 +1,5 @@
+import logger from "~/helpers/logger.server"
 import { UnknownError } from "~/utils/error"
-import { logger } from "~/utils/log"
 import type { ScrapedProductPayload } from "~/utils/scraper"
 
 import createScraper from "./scraper.server"

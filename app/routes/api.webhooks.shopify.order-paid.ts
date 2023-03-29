@@ -10,7 +10,6 @@ import {
   NotAllowed,
   OK,
 } from "~/utils/http.server"
-import { logger } from "~/utils/log"
 import {
   getShopifyWebhookHeaders,
   parseOrderPaymentWebhookPayload,
@@ -21,7 +20,9 @@ export function loader() {
   throw NotAllowed
 }
 
-export async function action({ request }: ActionArgs) {
+export async function action({ request, context }: ActionArgs) {
+  const logger = context.logger
+
   try {
     const clone = request.clone()
     const json = await clone.json()

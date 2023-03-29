@@ -4,7 +4,7 @@ import {
   CLOUDFLARE_ACCOUNT_ID,
   CLOUDFLARE_IMAGES_API_TOKEN,
 } from "~/config/env.server"
-import { logger } from "~/utils/log"
+import logger from "~/helpers/logger.server"
 
 const UploadImageToCloudflareResponseSchema = z.object({
   errors: z.array(

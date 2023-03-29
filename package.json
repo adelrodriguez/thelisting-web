@@ -112,6 +112,7 @@
     "tldts": "5.7.110",
     "user-agents": "^1.0.1325",
     "whatsapp-cloud-api": "^0.2.6",
+    "winston": "^3.8.2",
     "xstate": "4.37.0",
     "zod": "3.20.6"
   },

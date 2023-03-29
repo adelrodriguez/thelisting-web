@@ -8,10 +8,10 @@ import {
   ALEGRA_INVOICE_BACKUP_EMAIL,
   ALEGRA_SERVICE_ITEM_ID,
 } from "~/config/env.server"
+import logger from "~/helpers/logger.server"
 import { createQueue } from "~/helpers/queue.server"
 import alegra from "~/services/alegra.server"
 import { CreateInvoiceRequestSchema } from "~/utils/alegra"
-import { logger } from "~/utils/log"
 import { getShopifyId } from "~/utils/shopify"
 import { getOrder } from "~/utils/shopify.server"
 

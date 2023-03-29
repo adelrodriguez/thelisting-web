@@ -11,6 +11,7 @@ import {
   shopifyStorefrontAPIEndpoint,
   shopifyStorefrontAPIHeaders,
 } from "~/config/vars.server"
+import logger from "~/helpers/logger.server"
 import Sentry from "~/services/sentry"
 import {
   getOrderCustomAttributesQuery,
@@ -26,7 +27,6 @@ import { getOrderQuery } from "~/services/shopify/admin"
 import { createCheckoutMutation } from "~/services/shopify/storefront"
 import type { CartItem } from "~/utils/cart"
 import { ShopifyError } from "~/utils/error"
-import { logger } from "~/utils/log"
 import { transformCustomAttributes } from "~/utils/shopify"
 
 export async function createCheckout(
