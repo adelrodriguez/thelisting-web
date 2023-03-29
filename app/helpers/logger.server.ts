@@ -1,3 +1,4 @@
+import { WinstonTransport as AxiomTransport } from "@axiomhq/axiom-node"
 import { createLogger, transports, addColors, format } from "winston"
 
 import { isDevelopment } from "~/config/vars"
@@ -54,14 +55,8 @@ const logger = createLogger({
     isDevelopment
       ? new transports.Console({ format: format.simple() })
       : new transports.Console({ format: format.json() }),
-    // Allow to print all the error level messages inside the error.log file
-    new transports.File({
-      filename: "logs/error.log",
-      level: "error",
-    }),
-    // Allow to print all the error message inside the all.log file (also the
-    // error log that are also printed inside the error.log)
-    new transports.File({ filename: "logs/all.log" }),
+
+    new AxiomTransport(),
   ],
 })
 

@@ -11,6 +11,10 @@ module.exports = z.object({
   ALEGRA_INVOICE_BACKUP_EMAIL: z.string(),
   ALEGRA_SERVICE_ITEM_ID: z.string(),
 
+  AXIOM_DATASET: z.string(),
+  AXIOM_ORG_ID: z.string(),
+  AXIOM_TOKEN: z.string(),
+
   BROWSERLESS_TOKEN: z.string(),
   BROWSERLESS_URL: z.string(),
 
