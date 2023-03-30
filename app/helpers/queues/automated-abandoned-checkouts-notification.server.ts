@@ -30,10 +30,10 @@ export const processor: Processor = async (job) => {
 
     for (const checkout of abandonedCheckouts) {
       const message = await twilio.messages.create({
-        body: `Customer has abandoned their checkout at: ${format(
+        body: `Customer has abandoned their checkout. Last update: ${format(
           checkout.updatedAt,
           "hh:mm aa"
-        )}\n\nName: ${checkout.name}\nEmail: ${checkout.email}\nPhone: ${
+        )} UTC.\n\nName: ${checkout.name}\nEmail: ${checkout.email}\nPhone: ${
           checkout.phone
         }\n\nMore details: https://admin.shopify.com/store/${SHOPIFY_STORE}/checkouts/${getShopifyIdNumber(
           checkout.commerceId!
