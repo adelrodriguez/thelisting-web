@@ -1,0 +1,71 @@
+import type { ActionArgs } from "@remix-run/node"
+import { z } from "zod"
+
+import db from "~/helpers/db.server"
+import Sentry from "~/services/sentry"
+import {
+  Accepted,
+  BadRequest,
+  InternalServerError,
+  NotAllowed,
+  OK,
+} from "~/utils/http.server"
+import {
+  getShopifyId,
+  getShopifyWebhookHeaders,
+  parseCheckoutUpdateWebhookPayload,
+} from "~/utils/shopify"
+import { checkWebhookLog, verifyWebhook } from "~/utils/webhook.server"
+
+export function loader() {
+  throw NotAllowed
+}
+
+export async function action({ request, context }: ActionArgs) {
+  const logger = context.logger
+
+  try {
+    const clone = request.clone()
+    const json = await clone.json()
+    const text = await request.text()
+    const headers = request.headers
+
+    await verifyWebhook(headers, text)
+
+    const { webhookId, event } = getShopifyWebhookHeaders(headers)
+
+    logger.info(`Received ${event} webhook`, { webhookId })
+
+    const received = await checkWebhookLog(webhookId, event, "Shopify", json)
+
+    if (received) return Accepted
+
+    const checkout = parseCheckoutUpdateWebhookPayload(json)
+
+    await db.checkout.upsert({
+      create: {
+        commerceId: getShopifyId(checkout.id, "Checkout"),
+        email: checkout.email,
+        name: checkout.billing_address?.name,
+        phone: checkout.billing_address?.phone,
+      },
+      update: {
+        completedAt: checkout.completed_at,
+        email: checkout.email,
+        name: checkout.billing_address?.name,
+        phone: checkout.billing_address?.phone,
+      },
+      where: { commerceId: getShopifyId(checkout.id, "Checkout") },
+    })
+
+    return OK
+  } catch (error) {
+    Sentry.captureException(error)
+
+    if (error instanceof z.ZodError) {
+      return BadRequest
+    }
+
+    return InternalServerError
+  }
+}

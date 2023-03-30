@@ -5,9 +5,10 @@ const z = require("zod")
  * This way we can ensure that the app is not built with invalid env vars.
  */
 module.exports = z.object({
+  ADMIN_PHONE_NUMBER: z.string(),
+
   ALEGRA_API_TOKEN: z.string(),
   ALEGRA_API_USERNAME: z.string(),
-
   ALEGRA_INVOICE_BACKUP_EMAIL: z.string(),
   ALEGRA_SERVICE_ITEM_ID: z.string(),
 
@@ -61,6 +62,10 @@ module.exports = z.object({
   SHOPIFY_STORE: z.string(),
   SHOPIFY_STOREFRONT_ACCESS_TOKEN: z.string(),
   SHOPIFY_STORE_DOMAIN: z.string(),
+
+  TWILIO_ACCOUNT_SID: z.string(),
+  TWILIO_AUTH_TOKEN: z.string(),
+  TWILIO_PHONE_NUMBER: z.string(),
 
   WHATSAPP_PHONE_NUMBER_ID: z.string(),
 })

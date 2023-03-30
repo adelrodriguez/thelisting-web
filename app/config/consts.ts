@@ -68,6 +68,8 @@ export const CLOUDFLARE_IMAGES_ACCOUNT_HASH = "wHwwAqNxbuESOwdHNE6NsQ"
 
 export const QUEUE_NAMES = {
   AddItemToListing: "ADD_ITEM_TO_LISTING",
+  AutomatedAbandonedCheckoutsNotification:
+    "AUTOMATED_ABANDONED_CHECKOUTS_NOTIFICATION",
   ClearCart: "CLEAR_CART",
   CreateInvoice: "CREATE_INVOICE",
   CreateItemPurchase: "CREATE_LISTING",

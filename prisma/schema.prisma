@@ -239,3 +239,19 @@ model Webhook {
 enum WebhookService {
   Shopify
 }
+
+model Checkout {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  commerceId String? @unique @db.VarChar(255)
+
+  completedAt DateTime?
+
+  name  String?
+  email String?
+  phone String?
+
+  notified Boolean @default(false)
+}

@@ -15259,7 +15259,10 @@ export type InventoryItemUpdatePayload = {
  */
 export type InventoryLevel = Node & {
   __typename?: 'InventoryLevel';
-  /** The quantity of inventory items that are available at the inventory level's associated location. */
+  /**
+   * The quantity of inventory items that are available at the inventory level's associated location.
+   * @deprecated Use `quantities` instead.
+   */
   available: Scalars['Int'];
   /** Whether the inventory items associated with the inventory level can be deactivated. */
   canDeactivate: Scalars['Boolean'];
@@ -15267,11 +15270,17 @@ export type InventoryLevel = Node & {
   createdAt: Scalars['DateTime'];
   /** Describes either the impact of deactivating the inventory level, or why the inventory level can't be deactivated. */
   deactivationAlert?: Maybe<Scalars['String']>;
-  /** Describes, in HTML with embedded URLs, either the impact of deactivating the inventory level or why the inventory level can't be deactivated. */
+  /**
+   * Describes, in HTML with embedded URLs, either the impact of deactivating the inventory level or why the inventory level can't be deactivated.
+   * @deprecated Use `deactivationAlert` instead.
+   */
   deactivationAlertHtml?: Maybe<Scalars['FormattedString']>;
   /** A globally-unique identifier. */
   id: Scalars['ID'];
-  /** The quantity of inventory items that are going to the inventory level's associated location. */
+  /**
+   * The quantity of inventory items that are going to the inventory level's associated location.
+   * @deprecated Use `quantities` instead.
+   */
   incoming: Scalars['Int'];
   /** Inventory item associated with the inventory level. */
   item: InventoryItem;
@@ -20787,9 +20796,15 @@ export type Mutation = {
   inventoryActivate?: Maybe<InventoryActivatePayload>;
   /** Apply changes to inventory quantities. */
   inventoryAdjustQuantities?: Maybe<InventoryAdjustQuantitiesPayload>;
-  /** Adjusts the inventory by a certain quantity. */
+  /**
+   * Adjusts the inventory by a certain quantity.
+   * @deprecated Use `inventoryAdjustQuantities` instead.
+   */
   inventoryAdjustQuantity?: Maybe<InventoryAdjustQuantityPayload>;
-  /** Adjusts the inventory at a location for multiple inventory items. */
+  /**
+   * Adjusts the inventory at a location for multiple inventory items.
+   * @deprecated Use `inventoryAdjustQuantities` instead.
+   */
   inventoryBulkAdjustQuantityAtLocation?: Maybe<InventoryBulkAdjustQuantityAtLocationPayload>;
   /** Modify the activation status of an inventory item at locations. Activating an inventory item at a particular location allows that location to stock that inventory item. Deactivating an inventory item at a location removes the inventory item's quantities and turns off the inventory item from that location. */
   inventoryBulkToggleActivation?: Maybe<InventoryBulkToggleActivationPayload>;
@@ -37875,10 +37890,7 @@ export type ShopifyPaymentsBankAccount = Node & {
   id: Scalars['ID'];
   /** All current and previous payouts made between the account and the bank account. */
   payouts: ShopifyPaymentsPayoutConnection;
-  /**
-   * The routing number of the bank account.
-   *
-   */
+  /** The routing number of the bank account. */
   routingNumber: Scalars['String'];
   /**
    * The status of the bank account.

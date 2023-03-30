@@ -3,10 +3,7 @@ import invariant from "tiny-invariant"
 import { z } from "zod"
 
 import { CurrencySchema } from "~/utils/money"
-
-function undefinedToNull<T>(value: T | undefined): T | null {
-  return value === undefined ? null : value
-}
+import { undefinedToNull } from "~/utils/undefined"
 
 export const ScrapedFieldsSchema = z.object({
   amount: z.preprocess(undefinedToNull, z.coerce.number().nullable()),

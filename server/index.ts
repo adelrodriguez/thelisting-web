@@ -24,6 +24,7 @@ import {
   REDIS_JOBS_URL,
 } from "~/config/env.server"
 import logger from "~/helpers/logger.server"
+import { automatedAbandonedCheckoutsNotification } from "~/helpers/queues"
 
 const port = process.env.PORT || 3000
 
@@ -109,10 +110,23 @@ app.all(
       })
 )
 
+// Start cron jobs
+cron()
+
 app.listen(port, () => {
   logger.info(`Express server listening on port ${port}`)
   logger.info(`Bull Board is listening on port ${port}`)
 })
+
+async function cron() {
+  logger.info("Starting cron jobs")
+
+  await automatedAbandonedCheckoutsNotification.add("abandoned", null, {
+    repeat: {
+      pattern: "*/5 * * * *", // every 5 minutes
+    },
+  })
+}
 
 function purgeRequireCache() {
   // purge require cache on requests for "server side HMR" this won't let

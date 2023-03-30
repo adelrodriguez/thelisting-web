@@ -3,6 +3,7 @@ import { z } from "zod"
 import type { CustomAttribute } from "~/config/consts"
 import { CUSTOM_ATTRIBUTES } from "~/config/consts"
 import { BadRequest } from "~/utils/http.server"
+import { undefinedToNull } from "~/utils/undefined"
 
 export const OrderPaymentWebhookPayloadSchema = z.object({
   id: z.number(),
@@ -11,9 +12,7 @@ export const OrderPaymentWebhookPayloadSchema = z.object({
 export type OrderPaymentWebhookPayload = z.infer<
   typeof OrderPaymentWebhookPayloadSchema
 >
-export function parseOrderPaymentWebhookPayload(
-  body: unknown
-): OrderPaymentWebhookPayload {
+export function parseOrderPaymentWebhookPayload(body: unknown) {
   return OrderPaymentWebhookPayloadSchema.parse(body)
 }
 
@@ -24,10 +23,26 @@ export const OrderCreationWebhookPayloadSchema = z.object({
 export type OrderCreationWebhookPayload = z.infer<
   typeof OrderCreationWebhookPayloadSchema
 >
-export function parseOrderCreationWebhookPayload(
-  body: unknown
-): OrderCreationWebhookPayload {
+export function parseOrderCreationWebhookPayload(body: unknown) {
   return OrderCreationWebhookPayloadSchema.parse(body)
+}
+
+export const CheckoutUpdateWebhookPayloadSchema = z.object({
+  billing_address: z
+    .object({
+      name: z.preprocess(undefinedToNull, z.string().nullable()),
+      phone: z.preprocess(undefinedToNull, z.string().nullable()),
+    })
+    .optional(),
+  completed_at: z.string().nullable(),
+  email: z.preprocess(undefinedToNull, z.string().nullable()),
+  id: z.number(),
+})
+export type CheckoutUpdateWebhookPayload = z.infer<
+  typeof CheckoutUpdateWebhookPayloadSchema
+>
+export function parseCheckoutUpdateWebhookPayload(body: unknown) {
+  return CheckoutUpdateWebhookPayloadSchema.parse(body)
 }
 
 export function getShopifyWebhookHeaders(headers: Headers) {
@@ -43,7 +58,7 @@ export function getShopifyWebhookHeaders(headers: Headers) {
 
 export function getShopifyId(
   id: string | number,
-  type: "Order" | "Product" | "Collection"
+  type: "Order" | "Product" | "Collection" | "Checkout"
 ) {
   return `gid://shopify/${type}/${id}`
 }
