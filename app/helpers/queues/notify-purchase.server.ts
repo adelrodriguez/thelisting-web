@@ -6,6 +6,7 @@ import invariant from "tiny-invariant"
 import { QUEUE_NAMES } from "~/config/consts"
 import { SHOPIFY_SHIPPING_ITEM_1_ID } from "~/config/env.server"
 import db from "~/helpers/db.server"
+import logger from "~/helpers/logger.server"
 import { createQueue } from "~/helpers/queue.server"
 import Sentry from "~/services/sentry"
 import whatsapp from "~/services/whatsapp.server"
@@ -36,6 +37,10 @@ export const processor: Processor<QueueData> = async (job) => {
 
     invariant(listing.owner.phone, "Owner phone is missing")
 
+    job.log(
+      `Sending purchase notification to ${listing.owner.firstName} ${listing.owner.lastName} at ${listing.owner.phone}`
+    )
+
     await whatsapp.sendGiftPurchaseNotification(listing.owner.phone, {
       amount: currency(purchase.cost).format({
         symbol: getPriceSymbol(order.totalPriceSet.shopMoney.currencyCode),
@@ -53,6 +58,7 @@ export const processor: Processor<QueueData> = async (job) => {
       recipient: listing.owner.firstName,
     })
   } catch (error) {
+    logger.error(error)
     Sentry.captureException(error)
 
     throw error
