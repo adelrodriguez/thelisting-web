@@ -72,7 +72,7 @@ export const QUEUE_NAMES = {
     "AUTOMATED_ABANDONED_CHECKOUTS_NOTIFICATION",
   ClearCart: "CLEAR_CART",
   CreateInvoice: "CREATE_INVOICE",
-  CreateItemPurchase: "CREATE_LISTING",
+  CreateItemPurchase: "CREATE_ITEM_PURCHASE",
   CreateListingCommerceEntity: "CREATE_LISTING_COMMERCE_ENTITY",
   CreatePurchase: "CREATE_PURCHASE",
   NotifyPurchase: "NOTIFY_PURCHASE",
