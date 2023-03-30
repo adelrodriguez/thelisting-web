@@ -1,5 +1,3 @@
-import { logger } from "./log"
-
 declare global {
   interface Window {
     gtag: (
@@ -14,7 +12,8 @@ export const pageview = (
   parameters: { page_path: string } & Record<string, string>
 ) => {
   if (!window.gtag) {
-    logger.warn(
+    // eslint-disable-next-line no-console
+    console.warn(
       "window.gtag is not defined. This could mean your google analytics script has not loaded on the page yet."
     )
     return
@@ -51,7 +50,8 @@ export const event = ({
   parameters?: Record<string, unknown>
 }) => {
   if (!window.gtag) {
-    logger.warn(
+    // eslint-disable-next-line no-console
+    console.warn(
       "window.gtag is not defined. This could mean your google analytics script has not loaded on the page yet."
     )
     return
