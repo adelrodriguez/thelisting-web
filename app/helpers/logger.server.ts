@@ -3,16 +3,6 @@ import { createLogger, transports, addColors, format } from "winston"
 
 import { isDevelopment } from "~/config/vars"
 
-// Define your severity levels. With them, You can create log files, see or hide
-// levels based on the running ENV.
-const levels = {
-  debug: 4,
-  error: 0,
-  http: 3,
-  info: 2,
-  warn: 1,
-}
-
 // Define different colors for each level. Colors make the log message more
 // visible, adding the ability to focus or ignore messages.
 const colors = {
@@ -34,12 +24,10 @@ const logger = createLogger({
     // Add the message timestamp with the preferred format
     format.timestamp({ format: "YYYY-MM-DD HH:mm:ss:ms" }),
     // Tell Winston that the logs must be colored
-    format.colorize({ all: true }),
-    // Define the format of the message showing the timestamp, the level and the message
-    format.printf((info) => `${info.timestamp} ${info.level}: ${info.message}`)
+    format.colorize({ all: true })
   ),
 
-  levels,
+  level: isDevelopment ? "silly" : "http",
 
   // Define which transports the logger must use to print out messages. We are
   // using three different transports.
