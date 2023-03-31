@@ -39,11 +39,6 @@ const logger = createLogger({
     format.printf((info) => `${info.timestamp} ${info.level}: ${info.message}`)
   ),
 
-  // This method set the current severity based on the current NODE_ENV: show all
-  // the log levels if the server was run in development mode; otherwise, if it
-  // was run in production, show only warn and error messages.
-  level: isDevelopment ? "debug" : "warn",
-
   levels,
 
   // Define which transports the logger must use to print out messages. We are
