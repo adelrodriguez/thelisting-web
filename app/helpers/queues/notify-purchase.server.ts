@@ -65,4 +65,4 @@ export const processor: Processor<QueueData> = async (job) => {
   }
 }
 
-export default createQueue(QUEUE_NAMES.CreatePurchase, processor)
+export default createQueue(QUEUE_NAMES.NotifyPurchase, processor)
