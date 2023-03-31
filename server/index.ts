@@ -117,6 +117,10 @@ async function cron() {
   logger.info("Starting cron jobs")
 
   await automatedAbandonedCheckoutsNotification.add("abandoned", null, {
+    removeOnComplete: {
+      age: 1000 * 60 * 60 * 24 * 7, // 7 days
+    },
+    removeOnFail: 5000,
     repeat: {
       pattern: "*/5 * * * *", // every 5 minutes
     },
