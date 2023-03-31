@@ -5,7 +5,7 @@ import clsx from "clsx"
 import { Select } from "~/components/common"
 import { handle as detailsHandle } from "~/routes/dashboard.listings.$listing.details"
 import { handle as itemsHandle } from "~/routes/dashboard.listings.$listing.items"
-import { handle as ribbonsHandle } from "~/routes/dashboard.listings.$listing.ribbons"
+import { handle as ribbonsHandle } from "~/routes/dashboard.listings.$listing.ribbons/route"
 import { handle as statsHandle } from "~/routes/dashboard.listings.$listing.stats"
 
 export const handle = {
