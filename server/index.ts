@@ -105,12 +105,12 @@ app.all(
       })
 )
 
-// Start cron jobs
-cron()
-
 app.listen(port, () => {
   logger.info(`Express server listening on port ${port}`)
   logger.info(`Bull Board is listening on port ${port}`)
+
+  // Start cron jobs
+  cron()
 })
 
 async function cron() {
