@@ -24,7 +24,7 @@ import { automatedAbandonedCheckoutsNotification } from "~/helpers/queues"
 const port = process.env.PORT || 3000
 
 const serverAdapter = new ExpressAdapter()
-const jobBoardPath = "/dashboard/admin/jobs"
+const jobBoardPath = "/dashboard/admin/bullboard"
 serverAdapter.setBasePath(jobBoardPath)
 
 const connection = new Redis(REDIS_JOBS_URL, {
