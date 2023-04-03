@@ -1,33 +1,74 @@
 import { PlusIcon } from "@heroicons/react/20/solid"
 import type { Ribbon, RibbonType } from "@prisma/client"
 import { Link, Outlet } from "@remix-run/react"
+import { useCallback, useEffect, useState } from "react"
+import { useDrop } from "react-dnd"
 
-import RibbonCard from "./RibbonCard"
+import RibbonCard, { ItemTypes } from "./RibbonCard"
 
-export const ItemTypes = {
-  NEW_RIBBON: "ribbon",
-  PAGE_RIBBON: "existing-ribbon",
-}
-
-export type PageRibbon = {
-  type: RibbonType
-  id: string
-  index: number
+export type RibbonOrder = {
+  ribbonId: string
+  previous: number
+  new: number
 }
 
 export default function PageRibbons({
-  ribbons,
-  move,
+  ribbons: originalRibbons,
+  onMove,
 }: {
   ribbons: Ribbon[]
-  move: (dragIndex: number, hoverIndex: number) => void
+  onMove: (orderedRibbons: RibbonOrder[]) => void
 }) {
+  // We need to keep track of the ribbons in state so that we can show the preview when moving them around
+  const [ribbons, setRibbons] = useState(originalRibbons)
+  const [, drop] = useDrop(() => ({ accept: ItemTypes.RIBBON }))
+
+  const findCard = useCallback(
+    (id: string) => {
+      const index = ribbons.findIndex((c) => c.id === id)
+
+      const card = ribbons[index]
+
+      if (!card) throw new Error("Card not found")
+
+      return [index, card] as const
+    },
+    [ribbons]
+  )
+
+  const moveCard = useCallback(
+    (id: string, atIndex: number) => {
+      const [index, card] = findCard(id)
+
+      const newRibbons = [...ribbons]
+
+      newRibbons.splice(index, 1)
+      newRibbons.splice(atIndex, 0, card)
+
+      setRibbons(newRibbons)
+    },
+    [findCard, ribbons]
+  )
+
+  useEffect(() => {
+    console.log("You moved them!!!")
+    // const orderedRibbons: RibbonOrder[] = newRibbons.map(
+    //   ({ id, position }, index) => ({
+    //     new: index,
+    //     previous: position,
+    //     ribbonId: id,
+    //   })
+    // )
+
+    // onMove(orderedRibbons)
+  }, [ribbons])
+
   return (
     <div className="h-auto">
-      <ul>
+      <ul ref={drop}>
         {ribbons.map((ribbon) => (
           <li key={ribbon.id} className="py-2">
-            <RibbonCard ribbon={ribbon} move={move} />
+            <RibbonCard ribbon={ribbon} move={moveCard} find={findCard} />
           </li>
         ))}
       </ul>

@@ -10,6 +10,7 @@ import { useLoaderData } from "~/utils/remix"
 import { getParam } from "~/utils/remix"
 import { json } from "~/utils/remix"
 
+import type { RibbonOrder } from "./PageRibbons"
 import PageRibbons from "./PageRibbons"
 
 export const handle = {
@@ -25,12 +26,6 @@ export async function loader({ params }: LoaderArgs) {
   })
 
   return json({ ribbons })
-}
-
-type RibbonOrder = {
-  ribbonId: string
-  previous: number
-  new: number
 }
 
 export async function action({ params, context, request }: ActionArgs) {
@@ -63,27 +58,7 @@ export default function DashboardListingRibbonsPage() {
   const { ribbons } = useLoaderData<typeof loader>()
   const fetcher = useFetcher()
 
-  function handleMove(dragIndex: number, hoverIndex: number) {
-    const newRibbons = ribbons.map(({ position, id }) => ({
-      id,
-      position,
-    }))
-
-    const draggedRibbon = newRibbons[dragIndex]
-
-    if (!draggedRibbon) return
-
-    newRibbons.splice(dragIndex, 1)
-    newRibbons.splice(hoverIndex, 0, draggedRibbon)
-
-    const orderedRibbons: RibbonOrder[] = newRibbons.map(
-      ({ id, position }, index) => ({
-        new: index,
-        previous: position,
-        ribbonId: id,
-      })
-    )
-
+  function handleMove(orderedRibbons: RibbonOrder[]) {
     fetcher.submit(
       { orderedRibbons: SuperJSON.stringify(orderedRibbons) },
       { method: "post" }
@@ -103,7 +78,7 @@ export default function DashboardListingRibbonsPage() {
               </div>
               <div className="overflow-hidden rounded-lg bg-white shadow">
                 <div className="p-6">
-                  <PageRibbons ribbons={ribbons} move={handleMove} />
+                  <PageRibbons ribbons={ribbons} onMove={handleMove} />
                 </div>
               </div>
             </section>

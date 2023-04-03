@@ -10,28 +10,40 @@ export const ItemTypes = {
 export default function RibbonCard({
   ribbon,
   move,
+  find,
 }: {
   ribbon: Ribbon
-  move: (dragIndex: number, hoverIndex: number) => void
+  move: (id: string, atIndex: number) => void
+  find: (id: string) => readonly [number, Ribbon]
 }) {
+  const originalIndex = find(ribbon.id)[0]
+
   const [{ isDragging }, drag] = useDrag(() => ({
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
-    item: { id: ribbon.id, position: ribbon.position, type: ItemTypes.RIBBON },
+    end: (item, monitor) => {
+      const { id: droppedId, originalIndex } = item
+      const didDrop = monitor.didDrop()
+
+      if (!didDrop) {
+        move(droppedId, originalIndex)
+      } else {
+        console.log("You dropped it!")
+      }
+    },
+    item: { id: ribbon.id, originalIndex },
     type: ItemTypes.RIBBON,
   }))
 
-  const [{ isOver }, drop] = useDrop<Ribbon, unknown, { isOver: boolean }>(
+  const [, drop] = useDrop(
     () => ({
       accept: ItemTypes.RIBBON,
-
-      collect: (monitor) => ({
-        isOver: !!monitor.isOver(),
-      }),
-      drop: ({ id: draggedId, position: draggedPosition }) => {
+      hover({ id: draggedId }: Ribbon) {
         if (draggedId !== ribbon.id) {
-          move(draggedPosition, ribbon.position)
+          const [overIndex] = find(ribbon.id)
+
+          move(draggedId, overIndex)
         }
       },
     }),
@@ -41,9 +53,10 @@ export default function RibbonCard({
   return (
     <>
       <div
-        className={clsx("col-span-1 flex rounded-md shadow-sm", {
-          "opacity-50": isDragging,
-        })}
+        className={clsx(
+          "col-span-1 flex rounded-md shadow-sm",
+          isDragging ? "opacity-0" : "opacity-100"
+        )}
         ref={(node) => drag(drop(node))}
       >
         <div
@@ -62,15 +75,14 @@ export default function RibbonCard({
             <p className="text-gray-500">Some description</p>
           </div>
           <div className="flex flex-shrink-0 pr-2 hover:cursor-grab">
+            <EllipsisVerticalIcon
+              className="-mr-3 h-5 w-auto"
+              aria-hidden="true"
+            />
             <EllipsisVerticalIcon className="h-5 w-auto" aria-hidden="true" />
           </div>
         </div>
       </div>
-      <div
-        className={clsx("h-0 w-full transition-all", {
-          "h-16": isOver,
-        })}
-      />
     </>
   )
 }
