@@ -1,5 +1,8 @@
 import { ReasonPhrases, StatusCodes } from "http-status-codes"
 
+/**
+ * @deprecated just do this in the handler
+ */
 export function getFormData(request: Request) {
   return request.clone().formData()
 }

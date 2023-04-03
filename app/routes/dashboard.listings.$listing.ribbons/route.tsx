@@ -1,14 +1,16 @@
-import { EllipsisVerticalIcon, TvIcon } from "@heroicons/react/20/solid"
-import { RibbonType } from "@prisma/client"
-import type { LoaderArgs } from "@remix-run/node"
-import clsx from "clsx"
-import { notFound } from "remix-utils"
-import { setFormDefaults } from "remix-validated-form"
+import type { ActionArgs, LoaderArgs } from "@remix-run/node"
+import { DndProvider } from "react-dnd"
+import { HTML5Backend } from "react-dnd-html5-backend"
+import SuperJSON from "superjson"
 
 import db from "~/helpers/db.server"
 import type { ErrorBoundaryProps } from "~/utils/remix"
+import { useFetcher } from "~/utils/remix"
+import { useLoaderData } from "~/utils/remix"
 import { getParam } from "~/utils/remix"
 import { json } from "~/utils/remix"
+
+import PageRibbons from "./PageRibbons"
 
 export const handle = {
   id: "dashboard-listings-ribbons",
@@ -17,99 +19,110 @@ export const handle = {
 export async function loader({ params }: LoaderArgs) {
   const sku = getParam(params, "listing")
 
-  if (isNaN(Number(sku))) throw notFound("Listing not found")
-
   const ribbons = await db.ribbon.findMany({
+    orderBy: { position: "asc" },
     where: { listing: { sku: Number(sku) } },
   })
 
-  return json({
-    ribbons,
-    ...ribbons.reduce((acc, curr) => {
-      return { ...acc, ...setFormDefaults(curr.id, curr) }
-    }, {}),
-  })
+  return json({ ribbons })
+}
+
+type RibbonOrder = {
+  ribbonId: string
+  previous: number
+  new: number
+}
+
+export async function action({ params, context, request }: ActionArgs) {
+  const logger = context.logger
+  const formData = await request.clone().formData()
+
+  // TODO(adelrodriguez): Fix this type
+  const orderedRibbonsData = formData.get("orderedRibbons") as string
+  const orderedRibbons = SuperJSON.parse<RibbonOrder[]>(orderedRibbonsData)
+
+  for (const order of orderedRibbons) {
+    await db.ribbon.update({
+      data: { position: order.new },
+      where: { id: order.ribbonId },
+    })
+
+    logger.info(
+      `Updated ribbon ${order.ribbonId} moved position: ${order.previous} → ${order.new}`
+    )
+  }
+
+  return null
 }
 
 export function ErrorBoundary({ error }: ErrorBoundaryProps) {
   return <div>There was an error. Error: {error.message}</div>
 }
 
-const ribbons = [
-  {
-    color: "bg-red-500",
-    description: "Large ribbon with image",
-    icon: TvIcon,
-    name: RibbonType.Banner,
-  },
-]
-
 export default function DashboardListingRibbonsPage() {
+  const { ribbons } = useLoaderData<typeof loader>()
+  const fetcher = useFetcher()
+
+  function handleMove(dragIndex: number, hoverIndex: number) {
+    const newRibbons = ribbons.map(({ position, id }) => ({
+      id,
+      position,
+    }))
+
+    const draggedRibbon = newRibbons[dragIndex]
+
+    if (!draggedRibbon) return
+
+    newRibbons.splice(dragIndex, 1)
+    newRibbons.splice(hoverIndex, 0, draggedRibbon)
+
+    const orderedRibbons: RibbonOrder[] = newRibbons.map(
+      ({ id, position }, index) => ({
+        new: index,
+        previous: position,
+        ribbonId: id,
+      })
+    )
+
+    fetcher.submit(
+      { orderedRibbons: SuperJSON.stringify(orderedRibbons) },
+      { method: "post" }
+    )
+  }
+
   return (
-    <div className="h-screen pt-5">
-      <div className="grid grid-cols-1 items-start gap-4 md:grid-cols-3 md:gap-8">
-        <div className="grid grid-cols-1 gap-4">
-          <section>
-            <div className="overflow-hidden rounded-lg bg-white shadow">
+    <DndProvider backend={HTML5Backend}>
+      <div className="h-screen pt-5">
+        <div className="grid grid-cols-1 items-start gap-4 md:grid-cols-3 md:gap-8">
+          <div className="grid grid-cols-1 gap-4 md:col-span-2">
+            <section aria-labelledby="section-1-title">
               <div className="border-b border-gray-200 bg-white px-4 py-5 sm:px-6">
                 <h2 className="text-base font-semibold leading-6 text-gray-700">
-                  Ribbon Types
+                  Page
                 </h2>
               </div>
-              <div className="p-6">
-                <ul>
-                  {ribbons.map((ribbon) => (
-                    <li
-                      key={ribbon.name}
-                      className="col-span-1 flex rounded-md shadow-sm"
-                    >
-                      <div
-                        className={clsx(
-                          ribbon.color,
-                          "flex w-16 flex-shrink-0 items-center justify-center rounded-l-md text-sm font-medium text-white"
-                        )}
-                      >
-                        <ribbon.icon className="h-6 w-6" aria-hidden="true" />
-                      </div>
-                      <div className="flex flex-1 items-center justify-between truncate rounded-r-md border-b border-r border-t border-gray-200 bg-white">
-                        <div className="flex-1 truncate px-4 py-2 text-sm">
-                          <h3 className="font-medium text-gray-900 hover:text-gray-600">
-                            {ribbon.name}
-                          </h3>
-                          <p className="text-gray-500">{ribbon.description}</p>
-                        </div>
-                        <div className="flex flex-shrink-0 pr-2 hover:cursor-grab">
-                          <EllipsisVerticalIcon
-                            className="-mr-3 h-5 w-auto"
-                            aria-hidden="true"
-                          />
-                          <EllipsisVerticalIcon
-                            className="h-5 w-auto"
-                            aria-hidden="true"
-                          />
-                        </div>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
+              <div className="overflow-hidden rounded-lg bg-white shadow">
+                <div className="p-6">
+                  <PageRibbons ribbons={ribbons} move={handleMove} />
+                </div>
               </div>
-            </div>
-          </section>
-        </div>
+            </section>
+          </div>
 
-        <div className="grid grid-cols-1 gap-4 md:col-span-2">
-          <section aria-labelledby="section-1-title">
-            <div className="border-b border-gray-200 bg-white px-4 py-5 sm:px-6">
-              <h2 className="text-base font-semibold leading-6 text-gray-700">
-                Page
-              </h2>
-            </div>
-            <div className="overflow-hidden rounded-lg bg-white shadow">
-              <div className="p-6">{/* Your content */}</div>
-            </div>
-          </section>
+          <div className="grid grid-cols-1 gap-4">
+            <section>
+              <div className="overflow-hidden rounded-lg bg-white shadow">
+                <div className="border-b border-gray-200 bg-white px-4 py-5 sm:px-6">
+                  <h2 className="text-base font-semibold leading-6 text-gray-700">
+                    Preview
+                  </h2>
+                </div>
+                <div className="p-6">Preview goes here</div>
+              </div>
+            </section>
+          </div>
         </div>
       </div>
-    </div>
+    </DndProvider>
   )
 }

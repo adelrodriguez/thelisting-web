@@ -14,8 +14,12 @@ module.exports = {
     "**/*.d.ts",
     "**/*.stories.*",
   ],
-  // appDirectory: "app",
-  // assetsBuildDirectory: "public/build",
-  // serverBuildPath: "build/index.js",
-  // publicPath: "/build/",
+  serverDependenciesToBundle: [
+    "react-dnd",
+    "@react-dnd/invariant",
+    "@react-dnd/shallowequal",
+    "dnd-core",
+    "@react-dnd/asap",
+    "react-dnd-html5-backend",
+  ],
 }
