@@ -89,7 +89,7 @@
     "ioredis": "5.3.1",
     "isbot": "3.6.7",
     "morgan": "^1.10.0",
-    "notistack": "3.0.0-alpha.11",
+    "notistack": "3.0.1",
     "papaparse": "^5.3.2",
     "playwright": "1.31.1",
     "react": "^18.2.0",
