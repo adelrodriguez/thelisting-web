@@ -58,8 +58,8 @@ export default function DashboardListingRibbonsPage() {
   const { ribbons } = useLoaderData<typeof loader>()
   const fetcher = useFetcher()
 
-  function handleMove(orderedRibbons: RibbonOrder[]) {
-    fetcher.submit(
+  async function submitOrder(orderedRibbons: RibbonOrder[]) {
+    await fetcher.submit(
       { orderedRibbons: SuperJSON.stringify(orderedRibbons) },
       { method: "post" }
     )
@@ -78,7 +78,7 @@ export default function DashboardListingRibbonsPage() {
               </div>
               <div className="overflow-hidden rounded-lg bg-white shadow">
                 <div className="p-6">
-                  <PageRibbons ribbons={ribbons} onMove={handleMove} />
+                  <PageRibbons ribbons={ribbons} onMove={submitOrder} />
                 </div>
               </div>
             </section>

@@ -11,14 +11,16 @@ export default function RibbonCard({
   ribbon,
   move,
   find,
+  onFinish,
 }: {
   ribbon: Ribbon
   move: (id: string, atIndex: number) => void
   find: (id: string) => readonly [number, Ribbon]
+  onFinish: () => void
 }) {
   const originalIndex = find(ribbon.id)[0]
 
-  const [{ isDragging }, drag] = useDrag(() => ({
+  const [{ isDragging }, drag, preview] = useDrag(() => ({
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
@@ -29,7 +31,7 @@ export default function RibbonCard({
       if (!didDrop) {
         move(droppedId, originalIndex)
       } else {
-        console.log("You dropped it!")
+        onFinish()
       }
     },
     item: { id: ribbon.id, originalIndex },
@@ -54,10 +56,10 @@ export default function RibbonCard({
     <>
       <div
         className={clsx(
-          "col-span-1 flex rounded-md shadow-sm",
+          "col-span-1 flex rounded-md shadow-sm transition-opacity",
           isDragging ? "opacity-0" : "opacity-100"
         )}
-        ref={(node) => drag(drop(node))}
+        ref={(node) => preview(drop(node))}
       >
         <div
           className={clsx(
@@ -74,7 +76,7 @@ export default function RibbonCard({
             </h3>
             <p className="text-gray-500">Some description</p>
           </div>
-          <div className="flex flex-shrink-0 pr-2 hover:cursor-grab">
+          <div className="flex flex-shrink-0 pr-2 hover:cursor-grab" ref={drag}>
             <EllipsisVerticalIcon
               className="-mr-3 h-5 w-auto"
               aria-hidden="true"

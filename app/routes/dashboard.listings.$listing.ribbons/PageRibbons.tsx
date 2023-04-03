@@ -1,5 +1,5 @@
 import { PlusIcon } from "@heroicons/react/20/solid"
-import type { Ribbon, RibbonType } from "@prisma/client"
+import type { Ribbon } from "@prisma/client"
 import { Link, Outlet } from "@remix-run/react"
 import { useCallback, useEffect, useState } from "react"
 import { useDrop } from "react-dnd"
@@ -19,9 +19,25 @@ export default function PageRibbons({
   ribbons: Ribbon[]
   onMove: (orderedRibbons: RibbonOrder[]) => void
 }) {
-  // We need to keep track of the ribbons in state so that we can show the preview when moving them around
+  // We need to keep track of the ribbons in state so that we can show the
+  // preview when moving them around
   const [ribbons, setRibbons] = useState(originalRibbons)
   const [, drop] = useDrop(() => ({ accept: ItemTypes.RIBBON }))
+  const [isFinished, setIsFinished] = useState(false)
+
+  useEffect(() => {
+    if (isFinished) {
+      onMove(
+        ribbons.map(({ id, position }, index) => ({
+          new: index,
+          previous: position,
+          ribbonId: id,
+        }))
+      )
+      setIsFinished(false)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFinished])
 
   const findCard = useCallback(
     (id: string) => {
@@ -50,25 +66,21 @@ export default function PageRibbons({
     [findCard, ribbons]
   )
 
-  useEffect(() => {
-    console.log("You moved them!!!")
-    // const orderedRibbons: RibbonOrder[] = newRibbons.map(
-    //   ({ id, position }, index) => ({
-    //     new: index,
-    //     previous: position,
-    //     ribbonId: id,
-    //   })
-    // )
-
-    // onMove(orderedRibbons)
-  }, [ribbons])
+  const handleFinish = useCallback(() => {
+    setIsFinished(true)
+  }, [])
 
   return (
     <div className="h-auto">
       <ul ref={drop}>
         {ribbons.map((ribbon) => (
           <li key={ribbon.id} className="py-2">
-            <RibbonCard ribbon={ribbon} move={moveCard} find={findCard} />
+            <RibbonCard
+              ribbon={ribbon}
+              move={moveCard}
+              find={findCard}
+              onFinish={handleFinish}
+            />
           </li>
         ))}
       </ul>
