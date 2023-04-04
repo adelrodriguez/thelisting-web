@@ -110,11 +110,11 @@ export default function ListingPage() {
             </div>
           </div>
         </section>
-        <Ribbons ribbons={listing.ribbons} />
+        {/*  TODO(adelrodriguez): Enable when ribbons are ready */}
+        {/* <Ribbons ribbons={listing.ribbons} /> */}
         <div className="mx-4 py-16 sm:mx-12 xl:px-32 2xl:px-64">
           <Registry items={listing.items} />
         </div>
-
         <Outlet context={listing} />
       </main>
     </CartProvider>
