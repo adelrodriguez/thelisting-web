@@ -173,6 +173,7 @@ export default function ListingCartPage() {
                           }
                           relative="route"
                           className="font-medium text-gray-600 hover:text-gray-500"
+                          preventScrollReset
                         >
                           {cart.noteId ? t("messageAdded") : t("addAMessage")}
                         </Link>
