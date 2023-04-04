@@ -1,5 +1,6 @@
 import type { Ribbon } from "@prisma/client"
 import { RibbonType } from "@prisma/client"
+import type { z } from "zod"
 
 import { Banner, Countdown } from "~/components/ribbons"
 import { parseBannerProperties, parseCountdownProperties } from "~/utils/ribbon"
@@ -14,14 +15,18 @@ export default function Ribbons({ ribbons }: { ribbons: Ribbon[] }) {
           case RibbonType.Banner: {
             const parseResult = parseBannerProperties(ribbon.properties)
 
-            if (!parseResult.success) return null
+            if (!parseResult.success) {
+              return <RibbonError error={parseResult.error} key={ribbon.id} />
+            }
 
             return <Banner {...parseResult.data} key={ribbon.id} />
           }
           case RibbonType.Countdown: {
             const parseResult = parseCountdownProperties(ribbon.properties)
 
-            if (!parseResult.success) return null
+            if (!parseResult.success) {
+              return <RibbonError error={parseResult.error} key={ribbon.id} />
+            }
 
             return <Countdown {...parseResult.data} key={ribbon.id} />
           }
@@ -31,4 +36,11 @@ export default function Ribbons({ ribbons }: { ribbons: Ribbon[] }) {
       })}
     </>
   )
+}
+
+export function RibbonError({ error }: { error: z.ZodError }) {
+  // TODO(adelrodriguez): Capture the error
+  console.log(error.issues)
+
+  return null
 }

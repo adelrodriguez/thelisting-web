@@ -22,6 +22,9 @@ export async function action({ params, context }: ActionArgs) {
       listingId: listing.id,
       name: `New Ribbon ${ribbons}`,
       position: ribbons,
+      properties: {
+        title: "New Ribbon",
+      },
       type: RibbonType.Banner,
     },
   })

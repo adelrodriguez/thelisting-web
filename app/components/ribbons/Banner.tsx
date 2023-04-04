@@ -1,5 +1,9 @@
 import clsx from "clsx"
 
+import {
+  CLOUDFLARE_IMAGE_VARIANTS,
+  generateCloudflareImageUrl,
+} from "~/utils/cloudflare"
 import type { BannerProperties } from "~/utils/ribbon"
 
 export default function Banner({
@@ -14,7 +18,10 @@ export default function Banner({
           {backgroundImage && (
             <img
               className="h-full w-full object-cover object-center"
-              src={backgroundImage}
+              src={generateCloudflareImageUrl(
+                backgroundImage,
+                CLOUDFLARE_IMAGE_VARIANTS.Display
+              )}
               alt=""
             />
           )}

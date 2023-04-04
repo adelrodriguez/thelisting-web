@@ -1,7 +1,10 @@
+import { ClockIcon } from "@heroicons/react/20/solid"
+import { ComputerDesktopIcon } from "@heroicons/react/24/solid"
+import { RibbonType } from "@prisma/client"
 import { z } from "zod"
 
 export const BannerPropertiesSchema = z.object({
-  backgroundImage: z.any().optional(),
+  backgroundImage: z.string().optional(),
   subtitle: z.string().nullish().optional(),
   title: z.string(),
 })
@@ -20,4 +23,16 @@ export function parseCountdownProperties(
   data: unknown
 ): z.SafeParseReturnType<unknown, CountdownProperties> {
   return CountdownSchema.safeParse(data)
+}
+
+// Ribbon Cards
+export const RIBBON_CARD = {
+  [RibbonType.Banner]: {
+    bgColor: "bg-amber-500",
+    icon: <ComputerDesktopIcon className="h-6 w-6" aria-hidden="true" />,
+  },
+  [RibbonType.Countdown]: {
+    bgColor: "bg-sky-500",
+    icon: <ClockIcon className="h-6 w-6" aria-hidden="true" />,
+  },
 }
