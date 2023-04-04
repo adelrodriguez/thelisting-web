@@ -18,7 +18,6 @@ export default function Banner({
               alt=""
             />
           )}
-
           <div
             className={clsx("absolute inset-0 bg-gray-500", {
               "mix-blend-multiply": !!backgroundImage,

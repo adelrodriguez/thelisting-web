@@ -71,6 +71,7 @@ model Ribbon {
 
 enum RibbonType {
   Banner
+  Countdown
 }
 
 model Item {
