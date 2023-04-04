@@ -1,4 +1,5 @@
 import type { ActionArgs, LoaderArgs } from "@remix-run/node"
+import { Outlet } from "@remix-run/react"
 import { DndProvider } from "react-dnd"
 import { HTML5Backend } from "react-dnd-html5-backend"
 import SuperJSON from "superjson"
@@ -67,37 +68,36 @@ export default function DashboardListingRibbonsPage() {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <div className="h-screen pt-5">
-        <div className="grid grid-cols-1 items-start gap-4 md:grid-cols-3 md:gap-8">
-          <div className="grid grid-cols-1 gap-4 md:col-span-2">
-            <section aria-labelledby="section-1-title">
+      <div className="grid grid-cols-1 items-start gap-4 md:grid-cols-3 md:gap-8">
+        <div className="grid grid-cols-1 gap-4 md:col-span-2">
+          <section aria-labelledby="section-1-title">
+            <div className=" rounded-lg bg-white shadow">
               <div className="border-b border-gray-200 bg-white px-4 py-5 sm:px-6">
                 <h2 className="text-base font-semibold leading-6 text-gray-700">
                   Page
                 </h2>
               </div>
-              <div className="overflow-hidden rounded-lg bg-white shadow">
-                <div className="p-6">
-                  <PageRibbons ribbons={ribbons} onMove={submitOrder} />
-                </div>
+              <div className="p-6">
+                <PageRibbons ribbons={ribbons} onMove={submitOrder} />
               </div>
-            </section>
-          </div>
+            </div>
+          </section>
+        </div>
 
-          <div className="grid grid-cols-1 gap-4">
-            <section>
-              <div className="overflow-hidden rounded-lg bg-white shadow">
-                <div className="border-b border-gray-200 bg-white px-4 py-5 sm:px-6">
-                  <h2 className="text-base font-semibold leading-6 text-gray-700">
-                    Preview
-                  </h2>
-                </div>
-                <div className="p-6">Preview goes here</div>
+        <div className="grid grid-cols-1 gap-4">
+          <section>
+            <div className=" rounded-lg bg-white shadow">
+              <div className="border-b border-gray-200 bg-white px-4 py-5 sm:px-6">
+                <h2 className="text-base font-semibold leading-6 text-gray-700">
+                  Preview
+                </h2>
               </div>
-            </section>
-          </div>
+              <div className="p-6">Preview goes here</div>
+            </div>
+          </section>
         </div>
       </div>
+      <Outlet />
     </DndProvider>
   )
 }

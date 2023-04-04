@@ -1,6 +1,6 @@
 import { PlusIcon } from "@heroicons/react/20/solid"
 import type { Ribbon } from "@prisma/client"
-import { Link, Outlet } from "@remix-run/react"
+import { Link } from "@remix-run/react"
 import { useCallback, useEffect, useState } from "react"
 import { useDrop } from "react-dnd"
 
@@ -89,7 +89,7 @@ export default function PageRibbons({
           <div className="w-full border-t border-gray-300" />
         </div>
         <div className="relative flex justify-center">
-          <Link to="add" relative="path" preventScrollReset>
+          <Link to="add" relative="route" preventScrollReset>
             <button className="inline-flex items-center gap-x-1.5 rounded-full bg-white px-3 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
               <PlusIcon
                 className="-ml-1 -mr-0.5 h-5 w-5 text-gray-400"
@@ -100,7 +100,6 @@ export default function PageRibbons({
           </Link>
         </div>
       </div>
-      <Outlet />
     </div>
   )
 }

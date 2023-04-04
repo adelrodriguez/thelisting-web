@@ -1,7 +1,11 @@
-import { EllipsisVerticalIcon } from "@heroicons/react/20/solid"
+import { Disclosure } from "@headlessui/react"
+import { EllipsisVerticalIcon, TvIcon } from "@heroicons/react/20/solid"
 import type { Ribbon } from "@prisma/client"
+import { Link } from "@remix-run/react"
 import clsx from "clsx"
 import { useDrag, useDrop } from "react-dnd"
+
+import { Button } from "~/components/common"
 
 export const ItemTypes = {
   RIBBON: "ribbon",
@@ -53,38 +57,56 @@ export default function RibbonCard({
   )
 
   return (
-    <>
-      <div
-        className={clsx(
-          "col-span-1 flex rounded-md shadow-sm transition-opacity",
-          isDragging ? "opacity-0" : "opacity-100"
-        )}
-        ref={(node) => preview(drop(node))}
-      >
-        <div
-          className={clsx(
-            "flex w-16 flex-shrink-0 items-center justify-center rounded-l-md text-sm font-medium text-white"
-            // color
-          )}
-        >
-          {/* {icon} */}
-        </div>
-        <div className="flex flex-1 items-center justify-between truncate rounded-r-md border-b border-r border-t border-gray-200 bg-white">
-          <div className="flex-1 truncate px-4 py-2 text-sm">
-            <h3 className="font-medium text-gray-900 hover:text-gray-600">
-              {ribbon.name}
-            </h3>
-            <p className="text-gray-500">Some description</p>
+    <Disclosure>
+      {({ open }) => (
+        <Disclosure.Button className="w-full text-left">
+          <div
+            className={clsx(
+              "col-span-1 flex rounded-md shadow-sm transition-opacity",
+              isDragging ? "opacity-0" : "opacity-100"
+            )}
+            ref={(node) => preview(drop(node))}
+          >
+            <div
+              className={clsx(
+                "flex w-16 flex-shrink-0 items-center justify-center rounded-l-md text-sm font-medium text-white",
+                "bg-red-500"
+                // color
+              )}
+            >
+              <TvIcon className="h-6 w-6" aria-hidden="true" />
+              {/* {icon} */}
+            </div>
+            <div className="flex flex-1 items-center justify-between truncate rounded-r-md border-b border-r border-t border-gray-200 bg-white">
+              <div className="flex-1 truncate px-4 py-2 text-sm">
+                <h3 className="font-medium text-gray-900 hover:text-gray-600">
+                  {ribbon.name}
+                </h3>
+                <p className="text-gray-500">Some description</p>
+                <Disclosure.Panel className="px-4 pt-4 pb-2">
+                  <pre>{JSON.stringify(ribbon.properties)}</pre>
+                  <Link to={ribbon.id} relative="route">
+                    <Button>Edit</Button>
+                  </Link>
+                </Disclosure.Panel>
+              </div>
+              <div
+                className="flex flex-shrink-0 pr-2 hover:cursor-grab"
+                ref={drag}
+              >
+                <EllipsisVerticalIcon
+                  className="-mr-3 h-5 w-auto"
+                  aria-hidden="true"
+                />
+                <EllipsisVerticalIcon
+                  className="h-5 w-auto"
+                  aria-hidden="true"
+                />
+              </div>
+            </div>
           </div>
-          <div className="flex flex-shrink-0 pr-2 hover:cursor-grab" ref={drag}>
-            <EllipsisVerticalIcon
-              className="-mr-3 h-5 w-auto"
-              aria-hidden="true"
-            />
-            <EllipsisVerticalIcon className="h-5 w-auto" aria-hidden="true" />
-          </div>
-        </div>
-      </div>
-    </>
+        </Disclosure.Button>
+      )}
+    </Disclosure>
   )
 }

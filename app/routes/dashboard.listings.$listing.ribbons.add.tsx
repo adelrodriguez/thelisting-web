@@ -31,7 +31,7 @@ export async function action({ params, context }: ActionArgs) {
   return redirect(`/dashboard/listings/${sku}/ribbons`)
 }
 
-export default function DashboardListingRibbonsPageAddPage() {
+export default function DashboardListingRibbonsAddPage() {
   return (
     <form method="post">
       <button type="submit">Add</button>
