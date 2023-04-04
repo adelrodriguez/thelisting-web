@@ -1,23 +1,15 @@
-import { PlusIcon } from "@heroicons/react/20/solid"
 import type { Ribbon } from "@prisma/client"
-import { Link } from "@remix-run/react"
 import { useCallback, useEffect, useState } from "react"
 import { useDrop } from "react-dnd"
 
 import RibbonCard, { ItemTypes } from "./RibbonCard"
-
-export type RibbonOrder = {
-  ribbonId: string
-  previous: number
-  new: number
-}
 
 export default function PageRibbons({
   ribbons: originalRibbons,
   onMove,
 }: {
   ribbons: Ribbon[]
-  onMove: (orderedRibbons: RibbonOrder[]) => void
+  onMove: (ribbonIds: string[]) => void
 }) {
   // We need to keep track of the ribbons in state so that we can show the
   // preview when moving them around
@@ -26,14 +18,14 @@ export default function PageRibbons({
   const [isFinished, setIsFinished] = useState(false)
 
   useEffect(() => {
+    if (originalRibbons.length !== ribbons.length) {
+      setRibbons(originalRibbons)
+    }
+  }, [originalRibbons, ribbons.length])
+
+  useEffect(() => {
     if (isFinished) {
-      onMove(
-        ribbons.map(({ id, position }, index) => ({
-          new: index,
-          previous: position,
-          ribbonId: id,
-        }))
-      )
+      onMove(ribbons.map((r) => r.id))
       setIsFinished(false)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -84,22 +76,6 @@ export default function PageRibbons({
           </li>
         ))}
       </ul>
-      <div className="relative">
-        <div className="absolute inset-0 flex items-center" aria-hidden="true">
-          <div className="w-full border-t border-gray-300" />
-        </div>
-        <div className="relative flex justify-center">
-          <Link to="add" relative="route" preventScrollReset>
-            <button className="inline-flex items-center gap-x-1.5 rounded-full bg-white px-3 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-              <PlusIcon
-                className="-ml-1 -mr-0.5 h-5 w-5 text-gray-400"
-                aria-hidden="true"
-              />
-              Add new ribbon
-            </button>
-          </Link>
-        </div>
-      </div>
     </div>
   )
 }
