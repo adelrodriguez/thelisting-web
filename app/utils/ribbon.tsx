@@ -3,6 +3,11 @@ import { ComputerDesktopIcon } from "@heroicons/react/24/solid"
 import { RibbonType } from "@prisma/client"
 import { z } from "zod"
 
+export const RibbonTypeSchema = z.enum([
+  RibbonType.Banner,
+  RibbonType.Countdown,
+])
+
 export const BannerPropertiesSchema = z.object({
   backgroundImage: z.string().optional(),
   subtitle: z.string().nullish().optional(),
