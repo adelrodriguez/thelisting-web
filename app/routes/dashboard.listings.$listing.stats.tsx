@@ -62,15 +62,20 @@ export async function loader({ params }: LoaderArgs) {
           label: "Purchases",
           value: purchaseAggregates._count,
         },
-
         {
-          label: "Average Purchase",
+          label: "Total Purchase Amount",
+          value: currency(purchaseAggregates._sum.total || 0).format({
+            symbol: getPriceSymbol(),
+          }),
+        },
+        {
+          label: "Average Purchase Amount",
           value: currency(purchaseAggregates._avg.total || 0).format({
             symbol: getPriceSymbol(),
           }),
         },
         {
-          label: "Largest Purchase",
+          label: "Largest Purchase Amount",
           value: currency(largestPurchase?.total || 0).format({
             symbol: getPriceSymbol(),
           }),
@@ -92,11 +97,11 @@ export async function loader({ params }: LoaderArgs) {
         },
         {
           label: "Total Stock",
-          value: itemAggregates._sum.quantity,
+          value: itemAggregates._sum.quantity || 0,
         },
         {
           label: "Remaining Stock",
-          value: itemAggregates._sum.stock,
+          value: itemAggregates._sum.stock || 0,
         },
       ],
       title: "Items",
@@ -104,13 +109,7 @@ export async function loader({ params }: LoaderArgs) {
     {
       data: [
         {
-          label: "Sales",
-          value: currency(purchaseAggregates._sum.total || 0).format({
-            symbol: getPriceSymbol(),
-          }),
-        },
-        {
-          label: "Revenue",
+          label: "Total Revenue",
           value: currency(purchaseAggregates._sum.total || 0)
             .subtract(purchaseAggregates._sum.cost || 0)
             .format({ symbol: getPriceSymbol() }),
@@ -146,7 +145,7 @@ export async function loader({ params }: LoaderArgs) {
             .format({ symbol: getPriceSymbol() }),
         },
       ],
-      title: "Sales",
+      title: "Revenue",
     },
   ])
 }
