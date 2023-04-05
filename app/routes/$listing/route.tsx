@@ -5,7 +5,6 @@ import { notFound } from "remix-utils"
 
 import { Image } from "~/components/common"
 import type { NotFoundBoundaryData } from "~/components/error"
-import { Ribbons } from "~/components/ribbons"
 import { THE_LISTING_LOGO_BLACK } from "~/config/consts"
 import db from "~/helpers/db.server"
 import {
@@ -14,21 +13,19 @@ import {
 } from "~/utils/cloudflare"
 import { CartProvider } from "~/utils/hooks"
 import type { MetaFunction } from "~/utils/remix"
-import { goHome, json, useLoaderData } from "~/utils/remix"
+import { getParam } from "~/utils/remix"
+import { json, useLoaderData } from "~/utils/remix"
 
 import Registry from "./Registry"
 
 export async function loader({ params }: LoaderArgs) {
-  const path = params.listing
-
-  if (!path) return goHome()
+  const path = getParam(params, "listing")
 
   const listing = await db.listing.findFirst({
     include: {
       items: {
         orderBy: { sku: "asc" },
       },
-      ribbons: true,
     },
     where: { path, status: "Published" },
   })
@@ -110,8 +107,6 @@ export default function ListingPage() {
             </div>
           </div>
         </section>
-        {/*  TODO(adelrodriguez): Enable when ribbons are ready */}
-        {/* <Ribbons ribbons={listing.ribbons} /> */}
         <div className="mx-4 py-16 sm:mx-12 xl:px-32 2xl:px-64">
           <Registry items={listing.items} />
         </div>
