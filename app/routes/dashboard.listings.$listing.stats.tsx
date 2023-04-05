@@ -160,7 +160,7 @@ export default function DashboardListingStatsPage() {
           <h3 className="text-lg font-medium leading-6 text-gray-900">
             {item.title}
           </h3>
-          <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3 lg:grid-cols-4">
+          <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
             {item.data.map((stat) => (
               <div
                 key={stat.label}
