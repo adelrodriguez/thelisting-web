@@ -18,6 +18,8 @@ import {
   RAILWAY_STATIC_URL,
   REDIS_JOBS_URL,
 } from "~/config/env.server"
+import cache from "~/helpers/cache.server"
+import db from "~/helpers/db.server"
 import logger from "~/helpers/logger.server"
 import { automatedAbandonedCheckoutsNotification } from "~/helpers/queues"
 
@@ -94,13 +96,13 @@ app.all(
 
         return createRequestHandler({
           build: require(BUILD_DIR),
-          getLoadContext: () => ({ logger }),
+          getLoadContext: () => ({ cache, db, logger }),
           mode: process.env.NODE_ENV,
         })(req, res, next)
       }
     : createRequestHandler({
         build: require(BUILD_DIR),
-        getLoadContext: () => ({ logger }),
+        getLoadContext: () => ({ cache, db, logger }),
         mode: process.env.NODE_ENV,
       })
 )

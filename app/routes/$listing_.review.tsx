@@ -9,7 +9,6 @@ import { notFound } from "remix-utils"
 
 import { Button, FormattedNumber } from "~/components/common"
 import { OrderItem } from "~/components/registry"
-import db from "~/helpers/db.server"
 import i18next from "~/helpers/i18next.server"
 import { useTrackPageview } from "~/utils/hooks"
 import { getPriceSymbol } from "~/utils/money"
@@ -19,7 +18,8 @@ export const handle = {
   i18n: ["common", "listing"],
 }
 
-export async function loader({ request, params }: LoaderArgs) {
+export async function loader({ request, params, context }: LoaderArgs) {
+  const db = context.db
   const path = getParam(params, "listing")
   const t = await i18next.getFixedT(request, "listing")
 

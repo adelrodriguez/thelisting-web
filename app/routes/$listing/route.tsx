@@ -6,7 +6,6 @@ import { notFound } from "remix-utils"
 import { Image } from "~/components/common"
 import type { NotFoundBoundaryData } from "~/components/error"
 import { THE_LISTING_LOGO_BLACK } from "~/config/consts"
-import db from "~/helpers/db.server"
 import {
   CLOUDFLARE_IMAGE_VARIANTS,
   generateCloudflareImageUrl,
@@ -18,7 +17,8 @@ import { json, useLoaderData } from "~/utils/remix"
 
 import Registry from "./Registry"
 
-export async function loader({ params }: LoaderArgs) {
+export async function loader({ params, context }: LoaderArgs) {
+  const db = context.db
   const path = getParam(params, "listing")
 
   const listing = await db.listing.findFirst({

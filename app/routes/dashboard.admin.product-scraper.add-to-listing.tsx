@@ -1,6 +1,6 @@
 import { Dialog, Transition } from "@headlessui/react"
 import { XMarkIcon } from "@heroicons/react/24/outline"
-import type { ActionArgs } from "@remix-run/node"
+import type { ActionArgs, LoaderArgs } from "@remix-run/node"
 import { withZod } from "@remix-validated-form/with-zod"
 import { useSnackbar } from "notistack"
 import { Fragment, useEffect } from "react"
@@ -14,7 +14,6 @@ import { z } from "zod"
 import { Alert, Button } from "~/components/common"
 import { FormInput, FormSelect, FormSubmit } from "~/components/form"
 import { CURRENCIES, DEFAULT_MARGIN } from "~/config/consts"
-import db from "~/helpers/db.server"
 import { addItemToListingQueue } from "~/helpers/queues"
 import { useScrapedProducts } from "~/routes/dashboard.admin.product-scraper/route"
 import alegra from "~/services/alegra.server"
@@ -39,7 +38,9 @@ const AddToListingSchema = z.object({
 
 const validator = withZod(AddToListingSchema)
 
-export async function loader() {
+export async function loader({ context }: LoaderArgs) {
+  const db = context.db
+
   const listings = await db.listing.findMany({
     where: { commerceId: { not: null } },
   })
@@ -56,7 +57,9 @@ export async function loader() {
   return json({ exchangeRate, listings })
 }
 
-export async function action({ request }: ActionArgs) {
+export async function action({ request, context }: ActionArgs) {
+  const db = context.db
+
   const formData = await getFormData(request)
   const result = await validator.validate(formData)
 

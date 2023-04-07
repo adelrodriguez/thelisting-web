@@ -11,7 +11,6 @@ import {
 } from "remix-validated-form"
 
 import { FormInput, FormListRadioGroup, FormSubmit } from "~/components/form"
-import db from "~/helpers/db.server"
 import { isUserAdmin } from "~/utils/auth.server"
 import { getFormData } from "~/utils/http.server"
 import { getParam, json } from "~/utils/remix"
@@ -26,7 +25,8 @@ export const handle = {
   }),
 }
 
-export async function loader({ params }: LoaderArgs) {
+export async function loader({ params, context }: LoaderArgs) {
+  const { db } = context
   const userId = getParam(params, "user")
 
   const user = await db.user.findUnique({
@@ -40,7 +40,8 @@ export async function loader({ params }: LoaderArgs) {
   return json({ user, ...setFormDefaults("editUser", user) })
 }
 
-export async function action({ request, params }: ActionArgs) {
+export async function action({ request, params, context }: ActionArgs) {
+  const { db } = context
   const userId = params.userId
 
   await isUserAdmin(request)

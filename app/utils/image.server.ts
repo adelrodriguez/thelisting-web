@@ -2,8 +2,6 @@ import type { Redis } from "ioredis"
 import type { CacheConfig } from "remix-image/server"
 import { CacheStatus } from "remix-image/server"
 
-import cache from "~/helpers/cache.server"
-
 abstract class Cache {
   abstract config: CacheConfig
 
@@ -25,7 +23,7 @@ export class ImageCache extends Cache {
   config: CacheConfig
   cache: Redis
 
-  constructor() {
+  constructor(_cache: Redis) {
     super()
 
     this.config = {
@@ -33,7 +31,7 @@ export class ImageCache extends Cache {
       ttl: 24 * 60 * 60,
     }
 
-    this.cache = cache
+    this.cache = _cache
   }
 
   async has(key: string): Promise<boolean> {

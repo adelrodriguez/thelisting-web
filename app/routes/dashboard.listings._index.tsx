@@ -1,6 +1,7 @@
 import { Menu, Transition } from "@headlessui/react"
 import { EllipsisVerticalIcon, EyeIcon } from "@heroicons/react/20/solid"
 import { ArrowDownOnSquareIcon } from "@heroicons/react/24/outline"
+import type { LoaderArgs } from "@remix-run/node"
 import { Link } from "@remix-run/react"
 import {
   createColumnHelper,
@@ -13,12 +14,13 @@ import { Fragment } from "react"
 
 import { ViewOnShopify } from "~/components/admin"
 import { Button, FormattedNumber } from "~/components/common"
-import db from "~/helpers/db.server"
 import type { UseDataFunctionReturn } from "~/utils/remix"
 import { json, useLoaderData } from "~/utils/remix"
 import type { ArrayElement } from "~/utils/type"
 
-export async function loader() {
+export async function loader({ context }: LoaderArgs) {
+  const { db } = context
+
   const listings = await db.listing.findMany({
     include: {
       items: {

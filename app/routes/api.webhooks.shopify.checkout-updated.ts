@@ -1,7 +1,6 @@
 import type { ActionArgs } from "@remix-run/node"
 import { z } from "zod"
 
-import db from "~/helpers/db.server"
 import Sentry from "~/services/sentry"
 import {
   Accepted,
@@ -22,7 +21,7 @@ export function loader() {
 }
 
 export async function action({ request, context }: ActionArgs) {
-  const logger = context.logger
+  const { logger, db } = context
 
   try {
     const clone = request.clone()

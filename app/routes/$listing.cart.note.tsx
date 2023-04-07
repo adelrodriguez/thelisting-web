@@ -16,9 +16,8 @@ import { z } from "zod"
 
 import { Alert, Button } from "~/components/common"
 import { FormSubmit, FormTextArea } from "~/components/form"
-import db from "~/helpers/db.server"
 import { useCart, useTrackPageview } from "~/utils/hooks"
-import { getFormData, NotFound } from "~/utils/http.server"
+import { NotFound } from "~/utils/http.server"
 
 export const handle = {
   i18n: ["listing", "common"],
@@ -31,6 +30,7 @@ const CartNoteSchema = z.object({
 const validator = withZod(CartNoteSchema)
 
 export async function loader({ request, context }: ActionArgs) {
+  const db = context.db
   const requestUrl = new URL(request.url)
   const noteId = requestUrl.searchParams.get("note_id")
 
@@ -46,13 +46,13 @@ export async function loader({ request, context }: ActionArgs) {
   return json(setFormDefaults("noteForm", { text: note.text! }))
 }
 
-export async function action({ request, params }: ActionArgs) {
+export async function action({ request, params, context }: ActionArgs) {
+  const db = context.db
   const requestUrl = new URL(request.url)
   const listingPath = params.listing
   const noteId = requestUrl.searchParams.get("note_id")
 
-  const formData = await getFormData(request)
-  const result = await validator.validate(formData)
+  const result = await validator.validate(await request.formData())
 
   if (result.error) return validationError(result.error)
 

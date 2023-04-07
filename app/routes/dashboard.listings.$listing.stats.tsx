@@ -5,7 +5,6 @@ import { format } from "date-fns"
 
 import { NotFound } from "~/components/error"
 import { CREDIT_CARD_FEE, SHIPPING_FEE, SHOPIFY_FEE } from "~/config/consts"
-import db from "~/helpers/db.server"
 import { getPriceSymbol } from "~/utils/money"
 import { getParam, json, useLoaderData } from "~/utils/remix"
 
@@ -17,7 +16,8 @@ export const handle = {
   id: "dashboard-listings-stats",
 }
 
-export async function loader({ params }: LoaderArgs) {
+export async function loader({ params, context }: LoaderArgs) {
+  const db = context.db
   const sku = getParam(params, "listing")
 
   const listing = await db.listing.findUnique({ where: { sku: +sku } })

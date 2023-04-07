@@ -5,7 +5,6 @@ import { useTranslation } from "react-i18next"
 
 import { FormattedNumber, Image } from "~/components/common"
 import { OrderItem } from "~/components/registry"
-import db from "~/helpers/db.server"
 import Sentry from "~/services/sentry"
 import { generateCloudflareImageUrl } from "~/utils/cloudflare"
 import useTrackPageview from "~/utils/hooks/use-track-pageview"
@@ -19,7 +18,8 @@ export const handle = {
   i18n: ["listing", "common"],
 }
 
-export async function loader({ params, request }: LoaderArgs) {
+export async function loader({ params, request, context }: LoaderArgs) {
+  const db = context.db
   const requestUrl = new URL(request.url)
   const path = getParam(params, "listing")
   const orderId = requestUrl.searchParams.get("order_id")

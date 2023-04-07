@@ -6,11 +6,9 @@ import * as Sentry from "@sentry/remix"
 import { z } from "zod"
 
 import { Alert } from "~/components/common"
-import db from "~/helpers/db.server"
 import { getSession } from "~/helpers/session.server"
 import { CartItemsSchema } from "~/utils/cart"
 import { checkStock } from "~/utils/checkout.server"
-import { getFormData, getHeaders } from "~/utils/http.server"
 import { goToParent } from "~/utils/remix"
 import { createCheckout } from "~/utils/shopify.server"
 
@@ -28,15 +26,22 @@ const CheckoutDataSchema = z.object({
   sku: z.string(),
 })
 
-export async function action({ request }: ActionArgs): Promise<Response> {
+export async function action({
+  request,
+  context,
+}: ActionArgs): Promise<Response> {
+  const { db, logger } = context
   try {
-    const formData = await getFormData(request)
+    const headers = request.headers
+    const formData = await request.formData()
     const data = Object.fromEntries(formData.entries())
-    const session = await getSession(getHeaders(request).get("cookie"))
+    const session = await getSession(headers.get("cookie"))
     const { cartItems, sku, listingId, noteId } = CheckoutDataSchema.parse(data)
 
     // Check that all items are available, in case someone messed with the cart
-    const hasStock = await Promise.all(cartItems.map(checkStock))
+    const hasStock = await Promise.all(
+      cartItems.map((item) => checkStock(db, item))
+    )
     const cartsKey = session.get("cartsKey")
 
     const listing = await db.listing.findUnique({ where: { id: listingId } })
@@ -50,7 +55,7 @@ export async function action({ request }: ActionArgs): Promise<Response> {
     }
 
     if (hasStock.some((isAvailable) => !isAvailable)) {
-      throw json("Some items are no longer available.")
+      throw json("Some items are no longer available.", { status: 400 })
     }
 
     const checkout = await createCheckout(cartItems, {
@@ -62,8 +67,9 @@ export async function action({ request }: ActionArgs): Promise<Response> {
 
     return redirect(checkout.url)
   } catch (error) {
+    logger.error(error)
     Sentry.captureException(error)
-    throw json("There was an error creating your order.")
+    throw json("There was an error creating your order.", { status: 500 })
   }
 }
 

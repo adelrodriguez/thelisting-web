@@ -7,7 +7,6 @@ import { useTranslation } from "react-i18next"
 
 import { Button, Image } from "~/components/common"
 import { FormattedNumber } from "~/components/common"
-import db from "~/helpers/db.server"
 import { useCart, useProduct } from "~/utils/hooks"
 import { getPriceSymbol } from "~/utils/money"
 import { goToParent, json, useLoaderData } from "~/utils/remix"
@@ -18,7 +17,8 @@ export const handle = {
   i18n: "listing",
 }
 
-export async function loader({ params }: LoaderArgs) {
+export async function loader({ params, context }: LoaderArgs) {
+  const db = context.db
   const sku = params.item
 
   try {

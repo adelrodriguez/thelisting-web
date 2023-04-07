@@ -3,12 +3,12 @@ import { redirect } from "@remix-run/node"
 import * as Sentry from "@sentry/node"
 
 import { CUSTOM_ATTRIBUTES } from "~/config/consts"
-import db from "~/helpers/db.server"
 import { goHome } from "~/utils/remix"
 import { getShopifyId } from "~/utils/shopify"
 import { getOrderCustomAttributes } from "~/utils/shopify.server"
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request, context }: LoaderArgs) {
+  const db = context.db
   const requestUrl = new URL(request.url)
   const orderId = requestUrl.searchParams.get("order_id")
 

@@ -1,14 +1,16 @@
 import { ListingStatus, UserRole } from "@prisma/client"
+import type { LoaderArgs } from "@remix-run/node"
 import currency from "currency.js"
 import { format, sub } from "date-fns"
 
 import { CREDIT_CARD_FEE, SHIPPING_FEE, SHOPIFY_FEE } from "~/config/consts"
-import db from "~/helpers/db.server"
 import { getPriceSymbol } from "~/utils/money"
 import { round } from "~/utils/number"
 import { json, useLoaderData } from "~/utils/remix"
 
-export async function loader() {
+export async function loader({ context }: LoaderArgs) {
+  const db = context.db
+
   const [
     users,
     admins,

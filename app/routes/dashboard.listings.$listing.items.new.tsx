@@ -5,7 +5,6 @@ import { ValidatedForm, validationError } from "remix-validated-form"
 import { z } from "zod"
 
 import { FormInput, FormSubmit } from "~/components/form"
-import db from "~/helpers/db.server"
 import { isUserAdmin } from "~/utils/auth.server"
 import { getParam, json, redirect, useLoaderData } from "~/utils/remix"
 import { getShopifyId } from "~/utils/shopify"
@@ -36,7 +35,9 @@ export async function loader({ request, params }: LoaderArgs) {
   })
 }
 
-export async function action({ request, params }: ActionArgs) {
+export async function action({ request, params, context }: ActionArgs) {
+  const { db } = context
+
   await isUserAdmin(request)
   const listingSku = getParam(params, "listing")
 

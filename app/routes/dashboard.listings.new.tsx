@@ -14,7 +14,6 @@ import { z } from "zod"
 
 import { FormDate, FormInput, FormSelect, FormSubmit } from "~/components/form"
 import auth from "~/helpers/auth.server"
-import db from "~/helpers/db.server"
 import { createListingCommerceEntityQueue } from "~/helpers/queues"
 import { getFormData } from "~/utils/http.server"
 import {
@@ -45,7 +44,8 @@ const CreateListingSchema = z.object({
 
 const validator = withZod(CreateListingSchema)
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request, context }: LoaderArgs) {
+  const { db } = context
   const user = await auth.isAuthenticated(request)
 
   if (!user) throw unauthorized("You must be logged in to create a listing")
@@ -67,7 +67,8 @@ export async function loader({ request }: LoaderArgs) {
   })
 }
 
-export async function action({ request }: ActionArgs) {
+export async function action({ request, context }: ActionArgs) {
+  const { db } = context
   const user = await auth.isAuthenticated(request)
 
   if (!user) throw unauthorized("You must be logged in to create a listing")

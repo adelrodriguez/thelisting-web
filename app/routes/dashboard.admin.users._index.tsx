@@ -13,10 +13,10 @@ import { forbidden } from "remix-utils"
 
 import { Button } from "~/components/common"
 import auth from "~/helpers/auth.server"
-import db from "~/helpers/db.server"
 import { goToLogin, json, useLoaderData } from "~/utils/remix"
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request, context }: LoaderArgs) {
+  const { db } = context
   const user = await auth.isAuthenticated(request)
 
   if (!user) {

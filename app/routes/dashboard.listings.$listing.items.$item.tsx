@@ -14,7 +14,6 @@ import { ViewOnShopify } from "~/components/admin"
 import { FormattedNumber, Image } from "~/components/common"
 import type { NotFoundBoundaryData } from "~/components/error"
 import { FormInput, FormSubmit, FormTextArea } from "~/components/form"
-import db from "~/helpers/db.server"
 import { useProduct } from "~/utils/hooks"
 import { getFormData } from "~/utils/http.server"
 import { getPriceSymbol } from "~/utils/money"
@@ -40,7 +39,8 @@ const EditItemSchema = z
 
 const validator = withZod(EditItemSchema)
 
-export async function loader({ params }: LoaderArgs) {
+export async function loader({ params, context }: LoaderArgs) {
+  const { db } = context
   const sku = getParam(params, "item", "Item not found")
 
   const item = await db.item.findUnique({ where: { sku } })
@@ -59,7 +59,8 @@ export async function loader({ params }: LoaderArgs) {
   return json({ item, itemPurchases, ...setFormDefaults("editItem", item) })
 }
 
-export async function action({ request, params }: ActionArgs) {
+export async function action({ request, params, context }: ActionArgs) {
+  const { db } = context
   const formData = await getFormData(request)
   const result = await validator.validate(formData)
   const sku = getParam(params, "item")

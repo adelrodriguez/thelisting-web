@@ -3,12 +3,12 @@ import { flattenConnection } from "@shopify/storefront-kit-react"
 import Papa from "papaparse"
 
 import { PRODUCT_METAFIELDS } from "~/config/consts"
-import db from "~/helpers/db.server"
 import { round } from "~/utils/number"
 import { getParam } from "~/utils/remix"
 import { getProduct } from "~/utils/shopify.server"
 
-export async function loader({ params }: LoaderArgs) {
+export async function loader({ params, context }: LoaderArgs) {
+  const db = context.db
   const listing = getParam(params, "listing")
 
   const items = await db.item.findMany({

@@ -13,12 +13,12 @@ import { Fragment } from "react"
 
 import { ViewOnShopify } from "~/components/admin"
 import { Button } from "~/components/common"
-import db from "~/helpers/db.server"
 import { useProduct } from "~/utils/hooks"
 import { NotFound } from "~/utils/http.server"
 import { getParam, json, useLoaderData } from "~/utils/remix"
 
-export async function loader({ params }: LoaderArgs) {
+export async function loader({ params, context }: LoaderArgs) {
+  const { db } = context
   const sku = getParam(params, "listing")
 
   if (isNaN(Number(sku))) throw NotFound

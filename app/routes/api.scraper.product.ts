@@ -3,8 +3,6 @@ import { json } from "@remix-run/node"
 
 import { ONE_DAY, REDIS_KEYS } from "~/config/consts"
 import auth from "~/helpers/auth.server"
-import redis from "~/helpers/cache.server"
-import db from "~/helpers/db.server"
 import { productScraper } from "~/helpers/scraper.server"
 import { ReasonPhrases, StatusCodes } from "~/utils/http.server"
 import { generateKey } from "~/utils/redis"
@@ -12,7 +10,7 @@ import { parseScrapedProductResult } from "~/utils/scraper"
 
 export async function loader({ request, context }: LoaderArgs) {
   const user = await auth.isAuthenticated(request)
-  const logger = context.logger
+  const { logger, cache, db } = context
 
   if (!user) {
     throw json("You must be logged in to access this resource", {
@@ -33,7 +31,7 @@ export async function loader({ request, context }: LoaderArgs) {
 
   const key = generateKey(REDIS_KEYS.ProductScraper, url)
 
-  const cachedPayload = await redis.get(key)
+  const cachedPayload = await cache.get(key)
 
   if (cachedPayload) {
     const result = parseScrapedProductResult(JSON.parse(cachedPayload))
@@ -60,7 +58,7 @@ export async function loader({ request, context }: LoaderArgs) {
   })
 
   if (payload.errors.length === 0) {
-    await redis.set(
+    await cache.set(
       key,
       JSON.stringify({ id: scrapedProduct.id, payload }),
       "EX",

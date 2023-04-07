@@ -5,7 +5,6 @@ import { notFound } from "remix-utils"
 import type { NotFoundBoundaryData } from "~/components/error"
 import { Ribbons } from "~/components/ribbons"
 import { isProduction } from "~/config/vars"
-import db from "~/helpers/db.server"
 import {
   CLOUDFLARE_IMAGE_VARIANTS,
   generateCloudflareImageUrl,
@@ -13,12 +12,13 @@ import {
 import type { MetaFunction } from "~/utils/remix"
 import { getParam, json, useLoaderData } from "~/utils/remix"
 
-export async function loader({ params }: LoaderArgs) {
+export async function loader({ params, context }: LoaderArgs) {
+  const db = context.db
   const path = getParam(params, "listing")
 
   // TODO(adelrodriguez): Remove this when ribbons are ready
-  if (isProduction) {
-    return redirect(`/${path}`, { status: 302 })
+  if (!isProduction) {
+    throw redirect(`/${path}`, { status: 302 })
   }
 
   const listing = await db.listing.findFirst({

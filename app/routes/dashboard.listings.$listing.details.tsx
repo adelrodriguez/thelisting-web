@@ -22,7 +22,6 @@ import {
   FormImageInput,
 } from "~/components/form"
 import auth from "~/helpers/auth.server"
-import db from "~/helpers/db.server"
 import { getFormData } from "~/utils/http.server"
 import {
   CommerceIdSchema,
@@ -61,7 +60,8 @@ const EditListingSchema = z.object({
 
 const validator = withZod(EditListingSchema)
 
-export async function loader({ params }: LoaderArgs) {
+export async function loader({ params, context }: LoaderArgs) {
+  const db = context.db
   const sku = getParam(params, "listing")
 
   if (isNaN(Number(sku)))
@@ -89,7 +89,8 @@ export async function loader({ params }: LoaderArgs) {
   return json({ listing, users, ...setFormDefaults("editListing", listing) })
 }
 
-export async function action({ request, params }: ActionArgs) {
+export async function action({ request, params, context }: ActionArgs) {
+  const db = context.db
   const user = await auth.isAuthenticated(request)
 
   if (!user) throw unauthorized("You must be logged in to update a listing.")

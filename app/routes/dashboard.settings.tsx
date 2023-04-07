@@ -12,7 +12,6 @@ import { z } from "zod"
 
 import { FormInput, FormSubmit } from "~/components/form"
 import auth from "~/helpers/auth.server"
-import db from "~/helpers/db.server"
 import { getFormData } from "~/utils/http.server"
 
 export const handle = {
@@ -31,7 +30,9 @@ const EditUserSchema = z.object({
 
 const validator = withZod(EditUserSchema)
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request, context }: LoaderArgs) {
+  const { db } = context
+
   const { id } = await auth.isAuthenticated(request, {
     failureRedirect: "/login",
   })
@@ -43,7 +44,8 @@ export async function loader({ request }: LoaderArgs) {
   return json(setFormDefaults("editUser", user))
 }
 
-export async function action({ request }: LoaderArgs) {
+export async function action({ request, context }: LoaderArgs) {
+  const { db } = context
   const user = await auth.isAuthenticated(request)
 
   if (!user)

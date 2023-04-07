@@ -8,11 +8,11 @@ import {
 import { badRequest } from "remix-utils"
 
 import auth from "~/helpers/auth.server"
-import db from "~/helpers/db.server"
 import { uploadImageToCloudflare } from "~/utils/cloudflare.server"
 import { getFormData, Unauthorized } from "~/utils/http.server"
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request, context }: LoaderArgs) {
+  const db = context.db
   const user = await auth.isAuthenticated(request)
 
   if (!user) {
@@ -28,7 +28,8 @@ export async function loader({ request }: LoaderArgs) {
   return json(images)
 }
 
-export async function action({ request }: ActionArgs) {
+export async function action({ request, context }: ActionArgs) {
+  const db = context.db
   const user = await auth.isAuthenticated(request)
 
   if (!user) {
