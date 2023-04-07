@@ -112,7 +112,7 @@
     "sharp": "^0.31.3",
     "superjson": "^1.12.2",
     "tiny-invariant": "^1.3.1",
-    "tldts": "5.7.110",
+    "tldts": "6.0.1",
     "twilio": "^4.9.0",
     "user-agents": "^1.0.1325",
     "whatsapp-cloud-api": "^0.2.6",
