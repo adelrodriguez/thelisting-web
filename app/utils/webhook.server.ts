@@ -1,50 +1,29 @@
-import type { WebhookService } from "@prisma/client"
+import type { PrismaClient, WebhookService } from "@prisma/client"
 import Base64 from "crypto-js/enc-base64"
 import hmacSHA256 from "crypto-js/hmac-sha256"
 import invariant from "tiny-invariant"
 
 import { HOOKDECK_SIGNING_SECRET } from "~/config/env.server"
-import db from "~/helpers/db.server"
-import logger from "~/helpers/logger.server"
-import { Unauthorized } from "~/utils/http.server"
 
 /**
  * Verify that the webhook is originating from Hookdeck.
  */
-export async function verifyWebhook(
-  headers: Headers,
-  requestText: string
-): Promise<void> {
+export function verifyWebhook(headers: Headers, requestText: string): boolean {
   const isHookdeckVerified = headers.get("x-hookdeck-verified") === "true"
 
-  if (!isHookdeckVerified) {
-    logger.error("Webhook not verified by Hookdeck", { headers })
-    throw Unauthorized
-  }
+  if (!isHookdeckVerified) return false
 
   const hmacHeader = headers.get("x-hookdeck-signature")
   const hmacHeader2 = headers.get("x-hookdeck-signature-2")
 
-  const hmac = encodeWebhookSignature(requestText, HOOKDECK_SIGNING_SECRET)
+  // Encode the request body with the signing secret.
+  const hmac = Base64.stringify(
+    hmacSHA256(requestText, HOOKDECK_SIGNING_SECRET)
+  )
 
   const isPayloadVerified = hmac === hmacHeader || hmac === hmacHeader2
 
-  if (!isPayloadVerified) {
-    logger.error("Webhook payload not verified", {
-      hmac,
-      hmacHeader,
-      hmacHeader2,
-    })
-
-    throw Unauthorized
-  }
-}
-
-export function encodeWebhookSignature(
-  payload: string,
-  secret: string
-): string {
-  return Base64.stringify(hmacSHA256(payload, secret))
+  return isPayloadVerified
 }
 
 /**
@@ -52,6 +31,7 @@ export function encodeWebhookSignature(
  * database.
  */
 export async function checkWebhookLog(
+  db: PrismaClient,
   webhookId: string,
   event: string,
   service: WebhookService,
@@ -62,11 +42,7 @@ export async function checkWebhookLog(
 
   const webhook = await db.webhook.count({ where: { webhookId } })
 
-  if (webhook) {
-    logger.info("Webhook already received. Ignoring...", { webhookId })
-
-    return true
-  }
+  if (webhook) return true
 
   await db.webhook.create({ data: { event, payload, service, webhookId } })
 

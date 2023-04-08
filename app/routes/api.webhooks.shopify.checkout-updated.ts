@@ -1,14 +1,9 @@
 import type { ActionArgs } from "@remix-run/node"
+import { badRequest, serverError, unauthorized } from "remix-utils"
 import { z } from "zod"
 
 import Sentry from "~/services/sentry"
-import {
-  Accepted,
-  BadRequest,
-  InternalServerError,
-  NotAllowed,
-  OK,
-} from "~/utils/http.server"
+import { Accepted, NotAllowed, OK } from "~/utils/http.server"
 import {
   getShopifyId,
   getShopifyWebhookHeaders,
@@ -23,22 +18,30 @@ export function loader() {
 export async function action({ request, context }: ActionArgs) {
   const { logger, db } = context
 
+  const clone = request.clone()
+  const [json, text] = await Promise.all([clone.json(), request.text()])
+  const headers = request.headers
+
+  const isVerified = verifyWebhook(headers, text)
+
+  if (!isVerified) {
+    logger.error("Webhook not verified", { headers })
+
+    throw unauthorized({ message: "Webhook not verified" })
+  }
+
+  const { webhookId, event } = getShopifyWebhookHeaders(headers)
+  logger.info(`Received ${event} webhook`, { webhookId })
+
+  const received = await checkWebhookLog(db, webhookId, event, "Shopify", json)
+
+  if (received) {
+    logger.info("Webhook already received. Ignoring...", { webhookId })
+
+    return Accepted
+  }
+
   try {
-    const clone = request.clone()
-    const json = await clone.json()
-    const text = await request.text()
-    const headers = request.headers
-
-    await verifyWebhook(headers, text)
-
-    const { webhookId, event } = getShopifyWebhookHeaders(headers)
-
-    logger.info(`Received ${event} webhook`, { webhookId })
-
-    const received = await checkWebhookLog(webhookId, event, "Shopify", json)
-
-    if (received) return Accepted
-
     const checkout = parseCheckoutUpdateWebhookPayload(json)
 
     await db.checkout.upsert({
@@ -62,9 +65,9 @@ export async function action({ request, context }: ActionArgs) {
     Sentry.captureException(error)
 
     if (error instanceof z.ZodError) {
-      return BadRequest
+      return badRequest(error.message)
     }
 
-    return InternalServerError
+    return serverError({ message: (error as Error).message })
   }
 }
