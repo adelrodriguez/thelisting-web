@@ -4,12 +4,11 @@ import { json } from "@remix-run/node"
 
 import { ONE_DAY, REDIS_KEYS } from "~/config/consts"
 import { commitSession, getSession } from "~/helpers/session.server"
-import { getHeaders } from "~/utils/http.server"
 import { generateKey } from "~/utils/redis"
 
 export async function loader({ request, context }: LoaderArgs) {
   const cache = context.cache
-  const session = await getSession(getHeaders(request).get("cookie"))
+  const session = await getSession(request.headers.get("cookie"))
   const url = new URL(request.url)
   const listing = url.searchParams.get("listing")
   const cartId = session.get("cartsKey")
@@ -22,6 +21,8 @@ export async function loader({ request, context }: LoaderArgs) {
     return json(
       { cart: null },
       {
+        // TODO(adelrodriguez): Set the expiration date to be the same as the
+        // previous one
         headers: {
           "Set-Cookie": await commitSession(session),
         },
@@ -36,7 +37,7 @@ export async function loader({ request, context }: LoaderArgs) {
 
 export async function action({ request, context }: ActionArgs) {
   const cache = context.cache
-  const session = await getSession(getHeaders(request).get("cookie"))
+  const session = await getSession(request.headers.get("cookie"))
   const url = new URL(request.url)
   const listing = url.searchParams.get("listing")
   const text = await request.text()

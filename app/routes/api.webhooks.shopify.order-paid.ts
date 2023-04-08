@@ -1,11 +1,12 @@
 import type { ActionArgs } from "@remix-run/node"
+import { json } from "@remix-run/node"
 import * as Sentry from "@sentry/remix"
-import { serverError, unauthorized } from "remix-utils"
+import { ReasonPhrases, StatusCodes } from "http-status-codes"
+import { badRequest, serverError, unauthorized } from "remix-utils"
 import { z } from "zod"
 
 import { ONE_MINUTE } from "~/config/consts"
 import { notifyPurchaseQueue, saveOrderCustomerQueue } from "~/helpers/queues"
-import { Accepted, NotAllowed, OK } from "~/utils/http.server"
 import {
   getShopifyWebhookHeaders,
   parseOrderPaymentWebhookPayload,
@@ -13,17 +14,23 @@ import {
 import { checkWebhookLog, verifyWebhook } from "~/utils/webhook.server"
 
 export function loader() {
-  throw NotAllowed
+  throw json(
+    { message: "This method is not allowed" },
+    {
+      status: StatusCodes.METHOD_NOT_ALLOWED,
+      statusText: ReasonPhrases.METHOD_NOT_ALLOWED,
+    }
+  )
 }
 
 export async function action({ request, context }: ActionArgs) {
   const { db, logger } = context
 
   const clone = request.clone()
-  const [json, text] = await Promise.all([clone.json(), request.text()])
+  const [jsonBody, textBody] = await Promise.all([clone.json(), request.text()])
   const headers = request.headers
 
-  const isVerified = verifyWebhook(headers, text)
+  const isVerified = verifyWebhook(headers, textBody)
 
   if (!isVerified) {
     logger.error("Webhook not verified", { headers })
@@ -34,16 +41,28 @@ export async function action({ request, context }: ActionArgs) {
   const { webhookId, event } = getShopifyWebhookHeaders(headers)
   logger.info(`Received ${event} webhook`, { webhookId })
 
-  const received = await checkWebhookLog(db, webhookId, event, "Shopify", json)
+  const received = await checkWebhookLog(
+    db,
+    webhookId,
+    event,
+    "Shopify",
+    jsonBody
+  )
 
   if (received) {
     logger.info("Webhook already received. Ignoring...", { webhookId })
 
-    return Accepted
+    return json(
+      { message: "Webhook already received. Ignoring..." },
+      {
+        status: StatusCodes.ACCEPTED,
+        statusText: ReasonPhrases.ACCEPTED,
+      }
+    )
   }
 
   try {
-    const order = parseOrderPaymentWebhookPayload(json)
+    const order = parseOrderPaymentWebhookPayload(jsonBody)
 
     await Promise.all([
       saveOrderCustomerQueue.add(`Order #${order.number}`, {
@@ -60,28 +79,28 @@ export async function action({ request, context }: ActionArgs) {
       ),
     ])
 
-    return OK
+    return json(
+      { message: "Processed webhook successfully" },
+      {
+        status: StatusCodes.OK,
+        statusText: ReasonPhrases.OK,
+      }
+    )
   } catch (error) {
     Sentry.captureException(error)
 
     if (error instanceof z.ZodError) {
       logger.error("Error parsing request body")
-      logger.error(error.message, { error })
+      logger.error(error.message)
+
+      return badRequest(error.message, {
+        statusText: ReasonPhrases.BAD_REQUEST,
+      })
     }
 
-    // TODO(adelrodriguez): Solve this issue There's an issue that's happening
-    // where the ReadableStream is being locked even though we're cloning the
-    // request. This is causing the request to throw a TypeError but it doesn't
-    // make any of the code fail. It only returns a 500 error. Since we're
-    // currently using Hookdeck, it's not a big deal since requests are not
-    // being duplicated. But if we didn't, Shopify would retry the request
-    // multiple times and it'd be a mess. So for now, we're just capturing the
-    // error. But we should fix this.
-    if (error instanceof TypeError) {
-      logger.error("ReadableStream is locked?")
-      Sentry.captureMessage(error.message)
-    }
-
-    return serverError({ message: (error as Error).message })
+    return serverError(
+      { message: (error as Error).message },
+      { statusText: ReasonPhrases.INTERNAL_SERVER_ERROR }
+    )
   }
 }

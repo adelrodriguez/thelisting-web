@@ -90,9 +90,17 @@ export async function action({ request, context }: ActionArgs) {
     Sentry.captureException(error)
 
     if (error instanceof z.ZodError) {
-      return badRequest(error.message)
+      logger.error("Error parsing request body")
+      logger.error(error.message)
+
+      return badRequest(error.message, {
+        statusText: ReasonPhrases.BAD_REQUEST,
+      })
     }
 
-    return serverError({ message: (error as Error).message })
+    return serverError(
+      { message: (error as Error).message },
+      { statusText: ReasonPhrases.INTERNAL_SERVER_ERROR }
+    )
   }
 }

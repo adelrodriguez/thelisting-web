@@ -7,6 +7,7 @@ import { useFetcher, useNavigate } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
 import { Fragment, useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
+import { notFound } from "remix-utils"
 import {
   setFormDefaults,
   ValidatedForm,
@@ -17,7 +18,6 @@ import { z } from "zod"
 import { Alert, Button } from "~/components/common"
 import { FormSubmit, FormTextArea } from "~/components/form"
 import { useCart, useTrackPageview } from "~/utils/hooks"
-import { NotFound } from "~/utils/http.server"
 
 export const handle = {
   i18n: ["listing", "common"],
@@ -69,7 +69,7 @@ export async function action({ request, params, context }: ActionArgs) {
       where: { path: listingPath },
     })
 
-    if (!listing) throw NotFound
+    if (!listing) throw notFound({ message: "Listing not found" })
 
     const note = await db.note.create({
       data: {

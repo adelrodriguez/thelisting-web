@@ -1,9 +1,9 @@
 import type { LoaderArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
+import { ReasonPhrases, StatusCodes } from "http-status-codes"
 import { badRequest } from "remix-utils"
 
 import auth from "~/helpers/auth.server"
-import { ReasonPhrases, StatusCodes } from "~/utils/http.server"
 
 export async function loader({ request }: LoaderArgs) {
   const user = await auth.isAuthenticated(request)

@@ -1,10 +1,10 @@
 import type { LoaderArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
+import { ReasonPhrases, StatusCodes } from "http-status-codes"
 
 import { ONE_DAY, REDIS_KEYS } from "~/config/consts"
 import auth from "~/helpers/auth.server"
 import { productScraper } from "~/helpers/scraper.server"
-import { ReasonPhrases, StatusCodes } from "~/utils/http.server"
 import { generateKey } from "~/utils/redis"
 import { parseScrapedProductResult } from "~/utils/scraper"
 
