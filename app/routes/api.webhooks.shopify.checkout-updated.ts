@@ -1,5 +1,6 @@
 import type { ActionArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
+import { ReasonPhrases, StatusCodes } from "http-status-codes"
 import { badRequest, serverError, unauthorized } from "remix-utils"
 import { z } from "zod"
 
@@ -68,7 +69,13 @@ export async function action({ request, context }: ActionArgs) {
   //     where: { commerceId: getShopifyId(checkout.id, "Checkout") },
   //   })
 
-  return json({ message: "OK" }, { status: 200 })
+  return json(
+    { message: "Processed webhook successfully" },
+    {
+      status: StatusCodes.OK,
+      statusText: ReasonPhrases.OK,
+    }
+  )
   // } catch (error) {
   //   Sentry.captureException(error)
 
