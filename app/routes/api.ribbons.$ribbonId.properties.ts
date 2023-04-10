@@ -6,7 +6,12 @@ import { z } from "zod"
 import { zx } from "zodix"
 
 import auth from "~/helpers/auth.server"
-import { BannerPropertiesSchema } from "~/utils/ribbon"
+import { flattenErrors } from "~/utils/form"
+import { json } from "~/utils/remix"
+import {
+  BannerPropertiesSchema,
+  CountdownPropertiesSchema,
+} from "~/utils/ribbon"
 
 export async function action({ params, request, context }: ActionArgs) {
   const { db } = context
@@ -28,18 +33,32 @@ export async function action({ params, request, context }: ActionArgs) {
     return notFound("No ribbon found")
   }
 
+  let schema: z.ZodSchema<any>
+
   switch (ribbon.type) {
     case RibbonType.Banner: {
-      const properties = await zx.parseForm(request, BannerPropertiesSchema)
-
-      const ribbon = await db.ribbon.update({
-        data: { properties },
-        where: { id: ribbonId },
-      })
-      return ribbon
+      schema = BannerPropertiesSchema
+      break
+    }
+    case RibbonType.Countdown: {
+      schema = CountdownPropertiesSchema
+      break
     }
     default: {
-      return null
+      return json({ error: "Invalid ribbon type" }, { status: 400 })
     }
   }
+
+  const result = await zx.parseFormSafe(request, schema)
+
+  if (!result.success) {
+    return json({ error: flattenErrors(result.error) }, { status: 400 })
+  }
+
+  const updatedRibbon = await db.ribbon.update({
+    data: { properties: result.data },
+    where: { id: ribbonId },
+  })
+
+  return json({ values: updatedRibbon.properties })
 }

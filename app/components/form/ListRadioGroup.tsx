@@ -10,14 +10,14 @@ type ListRadioOption = {
 export default function ListRadioGroup<T extends ListRadioOption>({
   options,
   label,
-  isRequired,
+  required,
   description,
   name,
   defaultValue,
 }: {
   options: T[]
   label: string
-  isRequired?: boolean
+  required?: boolean
   description?: string
   name: string
   defaultValue: T["value"]
@@ -26,7 +26,7 @@ export default function ListRadioGroup<T extends ListRadioOption>({
     <RadioGroup name={name} defaultValue={defaultValue}>
       <RadioGroup.Label className="flex justify-between text-sm font-medium leading-6 text-gray-900">
         {label}
-        {isRequired && (
+        {required && (
           <span className="text-sm leading-6 text-gray-500">Required</span>
         )}
       </RadioGroup.Label>

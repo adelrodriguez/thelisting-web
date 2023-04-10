@@ -7,11 +7,12 @@ import { z } from "zod"
 import { zx } from "zodix"
 
 import {
-  TextField,
+  Input,
   SubmitButton,
   ValidationErrors,
   ListRadioGroup,
 } from "~/components/form"
+import { flattenErrors } from "~/utils/form"
 import { useDialogPage } from "~/utils/hooks"
 import {
   getParam,
@@ -46,7 +47,7 @@ export async function action({ params, context, request }: ActionArgs) {
   const result = await zx.parseFormSafe(request, AddRibbonSchema)
 
   if (!result.success) {
-    return json({ errors: result.error.flatten().fieldErrors })
+    return json({ errors: flattenErrors(result.error) })
   }
 
   const ribbons = await db.ribbon.findMany({
@@ -139,12 +140,12 @@ export default function DashboardListingRibbonsEditPage() {
                     defaultValue={position ?? "0"}
                   />
 
-                  <TextField
+                  <Input
                     description="The name of the ribbon"
                     label="Name"
                     name="name"
                     schema={RibbonNameSchema}
-                    isRequired
+                    required
                   />
                   <ListRadioGroup
                     description="The type of ribbon"
@@ -154,7 +155,7 @@ export default function DashboardListingRibbonsEditPage() {
                       label: type,
                       value: type,
                     }))}
-                    isRequired
+                    required
                     defaultValue={RibbonType.Banner}
                   />
                   <SubmitButton />

@@ -18,10 +18,8 @@ export default function PageRibbons({
   const [isFinished, setIsFinished] = useState(false)
 
   useEffect(() => {
-    if (originalRibbons.length !== ribbons.length) {
-      setRibbons(originalRibbons)
-    }
-  }, [originalRibbons, ribbons.length])
+    setRibbons(originalRibbons)
+  }, [originalRibbons])
 
   useEffect(() => {
     if (isFinished) {

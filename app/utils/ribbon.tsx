@@ -8,10 +8,16 @@ export const RibbonTypeSchema = z.enum([
   RibbonType.Countdown,
 ])
 
+// === Banner ===
+export const BannerTitleSchema = z
+  .string()
+  .min(3, "Title must be at least 3 characters")
+export const BannerSubtitleSchema = z.string().optional()
+
 export const BannerPropertiesSchema = z.object({
   backgroundImage: z.string().optional(),
-  subtitle: z.string().nullish().optional(),
-  title: z.string(),
+  subtitle: BannerSubtitleSchema,
+  title: BannerTitleSchema,
 })
 export type BannerProperties = z.infer<typeof BannerPropertiesSchema>
 export function parseBannerProperties(
@@ -20,15 +26,41 @@ export function parseBannerProperties(
   return BannerPropertiesSchema.safeParse(data)
 }
 
-export const CountdownSchema = z.object({
-  eventDatetime: z.coerce.date(),
+// === Countdown ===
+export const CountdownEventDatetimeSchema = z.coerce
+  .date()
+  .min(new Date(), { message: "Event date and time must be in the future" })
+
+export const CountdownPropertiesSchema = z.object({
+  eventDatetime: CountdownEventDatetimeSchema,
 })
-export type CountdownProperties = z.infer<typeof CountdownSchema>
+
+export type CountdownProperties = z.infer<typeof CountdownPropertiesSchema>
 export function parseCountdownProperties(
   data: unknown
 ): z.SafeParseReturnType<unknown, CountdownProperties> {
-  return CountdownSchema.safeParse(data)
+  return CountdownPropertiesSchema.safeParse(data)
 }
+
+export const RibbonNameSchema = z
+  .string()
+  .min(3, "You must provide a name for the ribbon")
+  .max(50, "Ribbon name must be less than 50 characters")
+
+export const RibbonPositionSchema = z.coerce.number()
+
+const RibbonBaseSchema = z.object({
+  name: z.string(),
+  position: z.coerce.number().int().positive(),
+})
+
+export const BannerRibbonSchema = RibbonBaseSchema.extend({
+  properties: BannerPropertiesSchema,
+})
+
+export const CountdownRibbonSchema = RibbonBaseSchema.extend({
+  properties: CountdownPropertiesSchema,
+})
 
 // Ribbon Cards
 export const RIBBON_CARD = {

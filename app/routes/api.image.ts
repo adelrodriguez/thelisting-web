@@ -1,4 +1,4 @@
-import type { LoaderArgs } from "@remix-run/server-runtime"
+import type { LoaderArgs } from "@remix-run/node"
 import { sharpTransformer } from "remix-image-sharp"
 import { fetchResolver, imageLoader } from "remix-image/server"
 

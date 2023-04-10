@@ -16,7 +16,13 @@ export default function Ribbons({ ribbons }: { ribbons: Ribbon[] }) {
             const parseResult = parseBannerProperties(ribbon.properties)
 
             if (!parseResult.success) {
-              return <RibbonError error={parseResult.error} key={ribbon.id} />
+              return (
+                <RibbonError
+                  name={ribbon.name}
+                  error={parseResult.error}
+                  key={ribbon.id}
+                />
+              )
             }
 
             return <Banner {...parseResult.data} key={ribbon.id} />
@@ -25,7 +31,13 @@ export default function Ribbons({ ribbons }: { ribbons: Ribbon[] }) {
             const parseResult = parseCountdownProperties(ribbon.properties)
 
             if (!parseResult.success) {
-              return <RibbonError error={parseResult.error} key={ribbon.id} />
+              return (
+                <RibbonError
+                  name={ribbon.name}
+                  error={parseResult.error}
+                  key={ribbon.id}
+                />
+              )
             }
 
             return <Countdown {...parseResult.data} key={ribbon.id} />
@@ -38,9 +50,15 @@ export default function Ribbons({ ribbons }: { ribbons: Ribbon[] }) {
   )
 }
 
-export function RibbonError({ error }: { error: z.ZodError }) {
+export function RibbonError({
+  error,
+  name,
+}: {
+  error: z.ZodError
+  name: string
+}) {
   // TODO(adelrodriguez): Capture the error
-  console.log(error.issues)
+  console.log(name, error.issues)
 
   return null
 }

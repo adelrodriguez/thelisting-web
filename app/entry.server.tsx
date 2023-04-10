@@ -30,6 +30,9 @@ export default async function handleRequest(
 
   const instance = createInstance()
   const lng = await i18next.getLocale(request)
+  // TODO(adelrodriguez): Check back later
+  // @ts-ignore: is erroring out for some reason. Maybe an update is needed for
+  // remix-i18next
   const ns = i18next.getRouteNamespaces(remixContext)
 
   await instance

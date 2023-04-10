@@ -1,13 +1,15 @@
 import { Disclosure } from "@headlessui/react"
 import { EllipsisVerticalIcon, PlusIcon } from "@heroicons/react/20/solid"
-import type { Prisma, Ribbon } from "@prisma/client"
+import type { Ribbon } from "@prisma/client"
+import { RibbonType } from "@prisma/client"
 import { Link } from "@remix-run/react"
 import clsx from "clsx"
 import { useDrag, useDrop } from "react-dnd"
 
-import { Button } from "~/components/common"
 import { RIBBON_CARD } from "~/utils/ribbon"
-import { capitalize } from "~/utils/string"
+
+import BannerRibbonForm from "./BannerRibbonForm"
+import CountdownRibbonForm from "./CountdownRibbonForm"
 
 export const ItemTypes = {
   RIBBON: "ribbon",
@@ -83,20 +85,6 @@ export default function RibbonCard({
                   {ribbon.name}
                 </h3>
                 <p className="text-gray-500">{ribbon.type}</p>
-                <Disclosure.Panel className="py-2">
-                  <ul className="mb-2">
-                    {isJsonObject(ribbon.properties) &&
-                      Object.entries(ribbon.properties).map(([key, value]) => (
-                        <li key={key}>
-                          <span className="font-bold">{capitalize(key)}: </span>
-                          <span>{`${value}`}</span>
-                        </li>
-                      ))}
-                  </ul>
-                  <Link to={ribbon.id} relative="route">
-                    <Button>Edit</Button>
-                  </Link>
-                </Disclosure.Panel>
               </div>
               <div
                 className="flex flex-shrink-0 pr-2 hover:cursor-grab"
@@ -114,6 +102,18 @@ export default function RibbonCard({
             </div>
           </div>
         </Disclosure.Button>
+        <Disclosure.Panel className="py-2">
+          {!isDragging && (
+            <>
+              {ribbon.type === RibbonType.Banner && (
+                <BannerRibbonForm ribbon={ribbon} />
+              )}
+              {ribbon.type === RibbonType.Countdown && (
+                <CountdownRibbonForm ribbon={ribbon} />
+              )}
+            </>
+          )}
+        </Disclosure.Panel>
       </Disclosure>
       <div
         className={clsx("relative mt-2 hidden", {
@@ -125,7 +125,7 @@ export default function RibbonCard({
         </div>
         <div className="relative flex justify-center">
           <Link
-            to={`add?position=${ribbon.position + 1}`}
+            to={`new?position=${ribbon.position + 1}`}
             relative="route"
             preventScrollReset
           >
@@ -140,16 +140,5 @@ export default function RibbonCard({
         </div>
       </div>
     </div>
-  )
-}
-
-function isJsonObject(
-  jsonValue: Prisma.JsonValue
-): jsonValue is Prisma.JsonObject {
-  // Check if it's an object and not an array
-  return (
-    typeof jsonValue === "object" &&
-    jsonValue !== null &&
-    !Array.isArray(jsonValue)
   )
 }

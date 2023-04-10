@@ -17,7 +17,7 @@ export async function loader({ params, context }: LoaderArgs) {
   const path = getParam(params, "listing")
 
   // TODO(adelrodriguez): Remove this when ribbons are ready
-  if (!isProduction) {
+  if (isProduction) {
     throw redirect(`/${path}`, { status: 302 })
   }
 

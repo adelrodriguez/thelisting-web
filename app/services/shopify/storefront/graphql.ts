@@ -91,6 +91,40 @@ export type ApiVersion = {
   supported: Scalars['Boolean'];
 };
 
+/**
+ * The input fields for submitting Apple Pay payment method information for checkout.
+ *
+ */
+export type ApplePayWalletContentInput = {
+  /** The customer's billing address. */
+  billingAddress: MailingAddressInput;
+  /** The data for the Apple Pay wallet. */
+  data: Scalars['String'];
+  /** The header data for the Apple Pay wallet. */
+  header: ApplePayWalletHeaderInput;
+  /** The last digits of the card used to create the payment. */
+  lastDigits?: InputMaybe<Scalars['String']>;
+  /** The signature for the Apple Pay wallet. */
+  signature: Scalars['String'];
+  /** The version for the Apple Pay wallet. */
+  version: Scalars['String'];
+};
+
+/**
+ * The input fields for submitting wallet payment method information for checkout.
+ *
+ */
+export type ApplePayWalletHeaderInput = {
+  /** The application data for the Apple Pay wallet. */
+  applicationData?: InputMaybe<Scalars['String']>;
+  /** The ephemeral public key for the Apple Pay wallet. */
+  ephemeralPublicKey: Scalars['String'];
+  /** The public key hash for the Apple Pay wallet. */
+  publicKeyHash: Scalars['String'];
+  /** The transaction ID for the Apple Pay wallet. */
+  transactionId: Scalars['String'];
+};
+
 /** Details about the gift card used on the checkout. */
 export type AppliedGiftCard = Node & {
   __typename?: 'AppliedGiftCard';
@@ -758,6 +792,52 @@ export type CartCodeDiscountAllocation = CartDiscountAllocation & {
   discountedAmount: MoneyV2;
 };
 
+/** The completion action to checkout a cart. */
+export type CartCompletionAction = CompletePaymentChallenge;
+
+/** The required completion action to checkout a cart. */
+export type CartCompletionActionRequired = {
+  __typename?: 'CartCompletionActionRequired';
+  /** The action required to complete the cart completion attempt. */
+  action?: Maybe<CartCompletionAction>;
+  /** The ID of the cart completion attempt. */
+  id: Scalars['String'];
+};
+
+/** The result of a cart completion attempt. */
+export type CartCompletionAttemptResult = CartCompletionActionRequired | CartCompletionFailed | CartCompletionProcessing | CartCompletionSuccess;
+
+/** A failed completion to checkout a cart. */
+export type CartCompletionFailed = {
+  __typename?: 'CartCompletionFailed';
+  /** The errors that caused the checkout to fail. */
+  errors: Array<CompletionError>;
+  /** The ID of the cart completion attempt. */
+  id: Scalars['String'];
+};
+
+/** A cart checkout completion that's still processing. */
+export type CartCompletionProcessing = {
+  __typename?: 'CartCompletionProcessing';
+  /** The ID of the cart completion attempt. */
+  id: Scalars['String'];
+  /** The number of milliseconds to wait before polling again. */
+  pollDelay: Scalars['Int'];
+};
+
+/** A successful completion to checkout a cart and a created order. */
+export type CartCompletionSuccess = {
+  __typename?: 'CartCompletionSuccess';
+  /** The date and time when the job completed. */
+  completedAt?: Maybe<Scalars['DateTime']>;
+  /** The ID of the cart completion attempt. */
+  id: Scalars['String'];
+  /** The ID of the order that's created in Shopify. */
+  orderId: Scalars['ID'];
+  /** The URL of the order confirmation in Shopify. */
+  orderUrl: Scalars['URL'];
+};
+
 /**
  * The costs that the buyer will pay at checkout.
  * The cart cost uses [`CartBuyerIdentity`](https://shopify.dev/api/storefront/reference/cart/cartbuyeridentity) to determine
@@ -872,6 +952,17 @@ export type CartDeliveryOption = {
   title?: Maybe<Scalars['String']>;
 };
 
+/**
+ * The input fields for submitting direct payment method information for checkout.
+ *
+ */
+export type CartDirectPaymentMethodInput = {
+  /** The customer's billing address. */
+  billingAddress: MailingAddressInput;
+  /** The session ID for the direct payment method used to create the payment. */
+  sessionId: Scalars['String'];
+};
+
 /** The discounts that have been applied to the cart line. */
 export type CartDiscountAllocation = {
   /** The discounted amount that has been applied to the cart line. */
@@ -908,12 +999,18 @@ export enum CartErrorCode {
   InvalidMerchandiseLine = 'INVALID_MERCHANDISE_LINE',
   /** The metafields were not valid. */
   InvalidMetafields = 'INVALID_METAFIELDS',
+  /** The payment wasn't valid. */
+  InvalidPayment = 'INVALID_PAYMENT',
+  /** Cannot update payment on an empty cart */
+  InvalidPaymentEmptyCart = 'INVALID_PAYMENT_EMPTY_CART',
   /** The input value should be less than the maximum value allowed. */
   LessThan = 'LESS_THAN',
   /** Missing discount code. */
   MissingDiscountCode = 'MISSING_DISCOUNT_CODE',
   /** Missing note. */
-  MissingNote = 'MISSING_NOTE'
+  MissingNote = 'MISSING_NOTE',
+  /** The payment method is not supported. */
+  PaymentMethodNotSupported = 'PAYMENT_METHOD_NOT_SUPPORTED'
 }
 
 /**
@@ -936,6 +1033,15 @@ export type CartEstimatedCost = {
   totalDutyAmount?: Maybe<MoneyV2>;
   /** The estimated tax amount for the customer to pay at checkout. */
   totalTaxAmount?: Maybe<MoneyV2>;
+};
+
+/**
+ * The input fields for submitting a billing address without a selected payment method.
+ *
+ */
+export type CartFreePaymentMethodInput = {
+  /** The customer's billing address. */
+  billingAddress: MailingAddressInput;
 };
 
 /** Specifies the input fields to create a cart. */
@@ -1145,6 +1251,46 @@ export type CartNoteUpdatePayload = {
 };
 
 /**
+ * The input fields for updating the payment method that will be used to checkout.
+ *
+ */
+export type CartPaymentInput = {
+  /** The amount that the customer will be charged at checkout. */
+  amount: MoneyInput;
+  /**
+   * The input fields to use when checking out a cart with a direct payment method (like a credit card).
+   *
+   */
+  directPaymentMethod?: InputMaybe<CartDirectPaymentMethodInput>;
+  /**
+   * The input fields to use to checkout a cart without providing a payment method.
+   * Use this payment method input if the total cost of the cart is 0.
+   *
+   */
+  freePaymentMethod?: InputMaybe<CartFreePaymentMethodInput>;
+  /**
+   * An ID of the order placed on the originating platform.
+   * Note that this value doesn't correspond to the Shopify Order ID.
+   *
+   */
+  sourceIdentifier?: InputMaybe<Scalars['String']>;
+  /**
+   * The input fields to use when checking out a cart with a wallet payment method (like Shop Pay or Apple Pay).
+   *
+   */
+  walletPaymentMethod?: InputMaybe<CartWalletPaymentMethodInput>;
+};
+
+/** Return type for `cartPaymentUpdate` mutation. */
+export type CartPaymentUpdatePayload = {
+  __typename?: 'CartPaymentUpdatePayload';
+  /** The updated cart. */
+  cart?: Maybe<Cart>;
+  /** The list of errors that occurred from executing the mutation. */
+  userErrors: Array<CartUserError>;
+};
+
+/**
  * The input fields for updating the selected delivery options for a delivery group.
  *
  */
@@ -1164,6 +1310,18 @@ export type CartSelectedDeliveryOptionsUpdatePayload = {
   userErrors: Array<CartUserError>;
 };
 
+/** Return type for `cartSubmitForCompletion` mutation. */
+export type CartSubmitForCompletionPayload = {
+  __typename?: 'CartSubmitForCompletionPayload';
+  /** The result of cart submission for completion. */
+  result?: Maybe<CartSubmitForCompletionResult>;
+  /** The list of errors that occurred from executing the mutation. */
+  userErrors: Array<CartUserError>;
+};
+
+/** The result of cart submit completion. */
+export type CartSubmitForCompletionResult = SubmitAlreadyAccepted | SubmitFailed | SubmitSuccess | SubmitThrottled;
+
 /** Represents an error that happens during execution of a cart mutation. */
 export type CartUserError = DisplayableError & {
   __typename?: 'CartUserError';
@@ -1173,6 +1331,17 @@ export type CartUserError = DisplayableError & {
   field?: Maybe<Array<Scalars['String']>>;
   /** The error message. */
   message: Scalars['String'];
+};
+
+/**
+ * The input fields for submitting wallet payment method information for checkout.
+ *
+ */
+export type CartWalletPaymentMethodInput = {
+  /** The payment method information for the Apple Pay wallet. */
+  applePayWalletContent?: InputMaybe<ApplePayWalletContentInput>;
+  /** The payment method information for the Shop Pay wallet. */
+  shopPayWalletContent?: InputMaybe<ShopPayWalletContentInput>;
 };
 
 /** A container for all the information required to checkout items and pay. */
@@ -1940,6 +2109,39 @@ export type CommentEdge = {
   /** The item at the end of CommentEdge. */
   node: Comment;
 };
+
+/** The action for the 3DS payment redirect. */
+export type CompletePaymentChallenge = {
+  __typename?: 'CompletePaymentChallenge';
+  /** The URL for the 3DS payment redirect. */
+  redirectUrl?: Maybe<Scalars['URL']>;
+};
+
+/** An error that occurred during a cart completion attempt. */
+export type CompletionError = {
+  __typename?: 'CompletionError';
+  /** The error code. */
+  code: CompletionErrorCode;
+  /** The error message. */
+  message?: Maybe<Scalars['String']>;
+};
+
+/** The code of the error that occurred during a cart completion attempt. */
+export enum CompletionErrorCode {
+  Error = 'ERROR',
+  InventoryReservationError = 'INVENTORY_RESERVATION_ERROR',
+  PaymentAmountTooSmall = 'PAYMENT_AMOUNT_TOO_SMALL',
+  PaymentCallIssuer = 'PAYMENT_CALL_ISSUER',
+  PaymentCardDeclined = 'PAYMENT_CARD_DECLINED',
+  PaymentError = 'PAYMENT_ERROR',
+  PaymentGatewayNotEnabledError = 'PAYMENT_GATEWAY_NOT_ENABLED_ERROR',
+  PaymentInsufficientFunds = 'PAYMENT_INSUFFICIENT_FUNDS',
+  PaymentInvalidBillingAddress = 'PAYMENT_INVALID_BILLING_ADDRESS',
+  PaymentInvalidCreditCard = 'PAYMENT_INVALID_CREDIT_CARD',
+  PaymentInvalidCurrency = 'PAYMENT_INVALID_CURRENCY',
+  PaymentInvalidPaymentMethod = 'PAYMENT_INVALID_PAYMENT_METHOD',
+  PaymentTransientError = 'PAYMENT_TRANSIENT_ERROR'
+}
 
 /** A country. */
 export type Country = {
@@ -4896,8 +5098,12 @@ export type Mutation = {
   cartMetafieldsSet?: Maybe<CartMetafieldsSetPayload>;
   /** Updates the note on the cart. */
   cartNoteUpdate?: Maybe<CartNoteUpdatePayload>;
+  /** Update the customer's payment method that will be used to checkout. */
+  cartPaymentUpdate?: Maybe<CartPaymentUpdatePayload>;
   /** Update the selected delivery options for a delivery group. */
   cartSelectedDeliveryOptionsUpdate?: Maybe<CartSelectedDeliveryOptionsUpdatePayload>;
+  /** Submit the cart for checkout completion. */
+  cartSubmitForCompletion?: Maybe<CartSubmitForCompletionPayload>;
   /** Updates the attributes of a checkout if `allowPartialAddresses` is `true`. */
   checkoutAttributesUpdateV2?: Maybe<CheckoutAttributesUpdateV2Payload>;
   /** Completes a checkout without providing payment information. You can use this mutation for free items or items whose purchase price is covered by a gift card. */
@@ -5070,9 +5276,23 @@ export type MutationCartNoteUpdateArgs = {
 
 
 /** The schema’s entry-point for mutations. This acts as the public, top-level API from which all mutation queries must start. */
+export type MutationCartPaymentUpdateArgs = {
+  cartId: Scalars['ID'];
+  payment: CartPaymentInput;
+};
+
+
+/** The schema’s entry-point for mutations. This acts as the public, top-level API from which all mutation queries must start. */
 export type MutationCartSelectedDeliveryOptionsUpdateArgs = {
   cartId: Scalars['ID'];
   selectedDeliveryOptions: Array<CartSelectedDeliveryOptionInput>;
+};
+
+
+/** The schema’s entry-point for mutations. This acts as the public, top-level API from which all mutation queries must start. */
+export type MutationCartSubmitForCompletionArgs = {
+  attemptToken: Scalars['String'];
+  cartId: Scalars['ID'];
 };
 
 
@@ -6341,6 +6561,8 @@ export type QueryRoot = {
    *
    */
   cart?: Maybe<Cart>;
+  /** A poll for the status of the cart checkout completion and order creation. */
+  cartCompletionAttempt?: Maybe<CartCompletionAttemptResult>;
   /** Fetch a specific `Collection` by one of its unique attributes. */
   collection?: Maybe<Collection>;
   /**
@@ -6459,6 +6681,12 @@ export type QueryRootBlogsArgs = {
 /** The schema’s entry-point for queries. This acts as the public, top-level API from which all queries must start. */
 export type QueryRootCartArgs = {
   id: Scalars['ID'];
+};
+
+
+/** The schema’s entry-point for queries. This acts as the public, top-level API from which all queries must start. */
+export type QueryRootCartCompletionAttemptArgs = {
+  attemptId: Scalars['String'];
 };
 
 
@@ -6965,6 +7193,17 @@ export type ShopMetafieldsArgs = {
   identifiers: Array<HasMetafieldsIdentifier>;
 };
 
+/**
+ * The input fields for submitting Shop Pay payment method information for checkout.
+ *
+ */
+export type ShopPayWalletContentInput = {
+  /** The customer's billing address. */
+  billingAddress: MailingAddressInput;
+  /** Session token for transaction. */
+  sessionToken: Scalars['String'];
+};
+
 /** Policy that a merchant has configured for their store, such as their refund or privacy policy. */
 export type ShopPolicy = Node & {
   __typename?: 'ShopPolicy';
@@ -7063,6 +7302,147 @@ export type StringEdge = {
   cursor: Scalars['String'];
   /** The item at the end of StringEdge. */
   node: Scalars['String'];
+};
+
+/** An error that occurred during cart submit for completion. */
+export type SubmissionError = {
+  __typename?: 'SubmissionError';
+  /** The error code. */
+  code: SubmissionErrorCode;
+  /** The error message. */
+  message?: Maybe<Scalars['String']>;
+};
+
+/** The code of the error that occurred during cart submit for completion. */
+export enum SubmissionErrorCode {
+  BuyerIdentityEmailIsInvalid = 'BUYER_IDENTITY_EMAIL_IS_INVALID',
+  BuyerIdentityEmailRequired = 'BUYER_IDENTITY_EMAIL_REQUIRED',
+  BuyerIdentityPhoneIsInvalid = 'BUYER_IDENTITY_PHONE_IS_INVALID',
+  DeliveryAddress1Invalid = 'DELIVERY_ADDRESS1_INVALID',
+  DeliveryAddress1Required = 'DELIVERY_ADDRESS1_REQUIRED',
+  DeliveryAddress1TooLong = 'DELIVERY_ADDRESS1_TOO_LONG',
+  DeliveryAddress2Invalid = 'DELIVERY_ADDRESS2_INVALID',
+  DeliveryAddress2Required = 'DELIVERY_ADDRESS2_REQUIRED',
+  DeliveryAddress2TooLong = 'DELIVERY_ADDRESS2_TOO_LONG',
+  DeliveryAddressRequired = 'DELIVERY_ADDRESS_REQUIRED',
+  DeliveryCityInvalid = 'DELIVERY_CITY_INVALID',
+  DeliveryCityRequired = 'DELIVERY_CITY_REQUIRED',
+  DeliveryCityTooLong = 'DELIVERY_CITY_TOO_LONG',
+  DeliveryCompanyInvalid = 'DELIVERY_COMPANY_INVALID',
+  DeliveryCompanyRequired = 'DELIVERY_COMPANY_REQUIRED',
+  DeliveryCompanyTooLong = 'DELIVERY_COMPANY_TOO_LONG',
+  DeliveryCountryRequired = 'DELIVERY_COUNTRY_REQUIRED',
+  DeliveryFirstNameInvalid = 'DELIVERY_FIRST_NAME_INVALID',
+  DeliveryFirstNameRequired = 'DELIVERY_FIRST_NAME_REQUIRED',
+  DeliveryFirstNameTooLong = 'DELIVERY_FIRST_NAME_TOO_LONG',
+  DeliveryInvalidPostalCodeForCountry = 'DELIVERY_INVALID_POSTAL_CODE_FOR_COUNTRY',
+  DeliveryInvalidPostalCodeForZone = 'DELIVERY_INVALID_POSTAL_CODE_FOR_ZONE',
+  DeliveryLastNameInvalid = 'DELIVERY_LAST_NAME_INVALID',
+  DeliveryLastNameRequired = 'DELIVERY_LAST_NAME_REQUIRED',
+  DeliveryLastNameTooLong = 'DELIVERY_LAST_NAME_TOO_LONG',
+  DeliveryNoDeliveryAvailable = 'DELIVERY_NO_DELIVERY_AVAILABLE',
+  DeliveryNoDeliveryAvailableForMerchandiseLine = 'DELIVERY_NO_DELIVERY_AVAILABLE_FOR_MERCHANDISE_LINE',
+  DeliveryOptionsPhoneNumberInvalid = 'DELIVERY_OPTIONS_PHONE_NUMBER_INVALID',
+  DeliveryOptionsPhoneNumberRequired = 'DELIVERY_OPTIONS_PHONE_NUMBER_REQUIRED',
+  DeliveryPhoneNumberInvalid = 'DELIVERY_PHONE_NUMBER_INVALID',
+  DeliveryPhoneNumberRequired = 'DELIVERY_PHONE_NUMBER_REQUIRED',
+  DeliveryPostalCodeInvalid = 'DELIVERY_POSTAL_CODE_INVALID',
+  DeliveryPostalCodeRequired = 'DELIVERY_POSTAL_CODE_REQUIRED',
+  DeliveryZoneNotFound = 'DELIVERY_ZONE_NOT_FOUND',
+  DeliveryZoneRequiredForCountry = 'DELIVERY_ZONE_REQUIRED_FOR_COUNTRY',
+  Error = 'ERROR',
+  MerchandiseLineLimitReached = 'MERCHANDISE_LINE_LIMIT_REACHED',
+  MerchandiseNotApplicable = 'MERCHANDISE_NOT_APPLICABLE',
+  MerchandiseNotEnoughStockAvailable = 'MERCHANDISE_NOT_ENOUGH_STOCK_AVAILABLE',
+  MerchandiseOutOfStock = 'MERCHANDISE_OUT_OF_STOCK',
+  MerchandiseProductNotPublished = 'MERCHANDISE_PRODUCT_NOT_PUBLISHED',
+  NoDeliveryGroupSelected = 'NO_DELIVERY_GROUP_SELECTED',
+  PaymentsAddress1Invalid = 'PAYMENTS_ADDRESS1_INVALID',
+  PaymentsAddress1Required = 'PAYMENTS_ADDRESS1_REQUIRED',
+  PaymentsAddress1TooLong = 'PAYMENTS_ADDRESS1_TOO_LONG',
+  PaymentsAddress2Invalid = 'PAYMENTS_ADDRESS2_INVALID',
+  PaymentsAddress2Required = 'PAYMENTS_ADDRESS2_REQUIRED',
+  PaymentsAddress2TooLong = 'PAYMENTS_ADDRESS2_TOO_LONG',
+  PaymentsBillingAddressZoneNotFound = 'PAYMENTS_BILLING_ADDRESS_ZONE_NOT_FOUND',
+  PaymentsBillingAddressZoneRequiredForCountry = 'PAYMENTS_BILLING_ADDRESS_ZONE_REQUIRED_FOR_COUNTRY',
+  PaymentsCityInvalid = 'PAYMENTS_CITY_INVALID',
+  PaymentsCityRequired = 'PAYMENTS_CITY_REQUIRED',
+  PaymentsCityTooLong = 'PAYMENTS_CITY_TOO_LONG',
+  PaymentsCompanyInvalid = 'PAYMENTS_COMPANY_INVALID',
+  PaymentsCompanyRequired = 'PAYMENTS_COMPANY_REQUIRED',
+  PaymentsCompanyTooLong = 'PAYMENTS_COMPANY_TOO_LONG',
+  PaymentsCountryRequired = 'PAYMENTS_COUNTRY_REQUIRED',
+  PaymentsCreditCardBaseExpired = 'PAYMENTS_CREDIT_CARD_BASE_EXPIRED',
+  PaymentsCreditCardBaseGatewayNotSupported = 'PAYMENTS_CREDIT_CARD_BASE_GATEWAY_NOT_SUPPORTED',
+  PaymentsCreditCardBaseInvalidStartDateOrIssueNumberForDebit = 'PAYMENTS_CREDIT_CARD_BASE_INVALID_START_DATE_OR_ISSUE_NUMBER_FOR_DEBIT',
+  PaymentsCreditCardBrandNotSupported = 'PAYMENTS_CREDIT_CARD_BRAND_NOT_SUPPORTED',
+  PaymentsCreditCardFirstNameBlank = 'PAYMENTS_CREDIT_CARD_FIRST_NAME_BLANK',
+  PaymentsCreditCardGeneric = 'PAYMENTS_CREDIT_CARD_GENERIC',
+  PaymentsCreditCardLastNameBlank = 'PAYMENTS_CREDIT_CARD_LAST_NAME_BLANK',
+  PaymentsCreditCardMonthInclusion = 'PAYMENTS_CREDIT_CARD_MONTH_INCLUSION',
+  PaymentsCreditCardNameInvalid = 'PAYMENTS_CREDIT_CARD_NAME_INVALID',
+  PaymentsCreditCardNumberInvalid = 'PAYMENTS_CREDIT_CARD_NUMBER_INVALID',
+  PaymentsCreditCardNumberInvalidFormat = 'PAYMENTS_CREDIT_CARD_NUMBER_INVALID_FORMAT',
+  PaymentsCreditCardSessionId = 'PAYMENTS_CREDIT_CARD_SESSION_ID',
+  PaymentsCreditCardVerificationValueBlank = 'PAYMENTS_CREDIT_CARD_VERIFICATION_VALUE_BLANK',
+  PaymentsCreditCardVerificationValueInvalidForCardType = 'PAYMENTS_CREDIT_CARD_VERIFICATION_VALUE_INVALID_FOR_CARD_TYPE',
+  PaymentsCreditCardYearExpired = 'PAYMENTS_CREDIT_CARD_YEAR_EXPIRED',
+  PaymentsCreditCardYearInvalidExpiryYear = 'PAYMENTS_CREDIT_CARD_YEAR_INVALID_EXPIRY_YEAR',
+  PaymentsFirstNameInvalid = 'PAYMENTS_FIRST_NAME_INVALID',
+  PaymentsFirstNameRequired = 'PAYMENTS_FIRST_NAME_REQUIRED',
+  PaymentsFirstNameTooLong = 'PAYMENTS_FIRST_NAME_TOO_LONG',
+  PaymentsInvalidPostalCodeForCountry = 'PAYMENTS_INVALID_POSTAL_CODE_FOR_COUNTRY',
+  PaymentsInvalidPostalCodeForZone = 'PAYMENTS_INVALID_POSTAL_CODE_FOR_ZONE',
+  PaymentsLastNameInvalid = 'PAYMENTS_LAST_NAME_INVALID',
+  PaymentsLastNameRequired = 'PAYMENTS_LAST_NAME_REQUIRED',
+  PaymentsLastNameTooLong = 'PAYMENTS_LAST_NAME_TOO_LONG',
+  PaymentsMethodRequired = 'PAYMENTS_METHOD_REQUIRED',
+  PaymentsMethodUnavailable = 'PAYMENTS_METHOD_UNAVAILABLE',
+  PaymentsPhoneNumberInvalid = 'PAYMENTS_PHONE_NUMBER_INVALID',
+  PaymentsPhoneNumberRequired = 'PAYMENTS_PHONE_NUMBER_REQUIRED',
+  PaymentsPostalCodeInvalid = 'PAYMENTS_POSTAL_CODE_INVALID',
+  PaymentsPostalCodeRequired = 'PAYMENTS_POSTAL_CODE_REQUIRED',
+  PaymentsShopifyPaymentsRequired = 'PAYMENTS_SHOPIFY_PAYMENTS_REQUIRED',
+  PaymentsUnacceptablePaymentAmount = 'PAYMENTS_UNACCEPTABLE_PAYMENT_AMOUNT',
+  PaymentsWalletContentMissing = 'PAYMENTS_WALLET_CONTENT_MISSING',
+  TaxesDeliveryGroupIdNotFound = 'TAXES_DELIVERY_GROUP_ID_NOT_FOUND',
+  TaxesLineIdNotFound = 'TAXES_LINE_ID_NOT_FOUND',
+  TaxesMustBeDefined = 'TAXES_MUST_BE_DEFINED'
+}
+
+/** Cart submit for checkout completion is successful. */
+export type SubmitAlreadyAccepted = {
+  __typename?: 'SubmitAlreadyAccepted';
+  /** The id of the cart completion attempt that will be used for polling for the result. */
+  attemptId: Scalars['String'];
+};
+
+/** Cart submit for checkout completion failed. */
+export type SubmitFailed = {
+  __typename?: 'SubmitFailed';
+  /** The URL of the checkout for the cart. */
+  checkoutUrl?: Maybe<Scalars['URL']>;
+  /** The list of errors that occurred from executing the mutation. */
+  errors: Array<SubmissionError>;
+};
+
+/** Cart submit for checkout completion is already accepted. */
+export type SubmitSuccess = {
+  __typename?: 'SubmitSuccess';
+  /** The id of the cart completion attempt that will be used for polling for the result. */
+  attemptId: Scalars['String'];
+};
+
+/** Cart submit for checkout completion is throttled. */
+export type SubmitThrottled = {
+  __typename?: 'SubmitThrottled';
+  /**
+   * UTC date time string that indicates the time after which clients should make their next
+   * poll request. Any poll requests sent before this time will be ignored. Use this value to schedule the
+   * next poll request.
+   *
+   */
+  pollAfter: Scalars['DateTime'];
 };
 
 /**

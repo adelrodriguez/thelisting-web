@@ -8,5 +8,5 @@ export { default as FormTextArea } from "./FormTextArea"
 
 export { default as ListRadioGroup } from "./ListRadioGroup"
 export { default as SubmitButton } from "./SubmitButton"
-export { default as TextField } from "./TextField"
+export { default as Input } from "./Input"
 export { default as ValidationErrors } from "./ValidationErrors"
