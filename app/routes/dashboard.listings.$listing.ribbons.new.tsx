@@ -1,25 +1,36 @@
 import { Dialog, Transition } from "@headlessui/react"
 import { RibbonType } from "@prisma/client"
 import type { ActionArgs, LoaderArgs } from "@remix-run/node"
-import { withZod } from "@remix-validated-form/with-zod"
+import { Form } from "@remix-run/react"
 import { Fragment } from "react"
-import { redirect } from "react-router"
-import { ValidatedForm, validationError } from "remix-validated-form"
 import { z } from "zod"
+import { zx } from "zodix"
 
-import { FormInput, FormListRadioGroup, FormSubmit } from "~/components/form"
-import db from "~/helpers/db.server"
+import {
+  TextField,
+  SubmitButton,
+  ValidationErrors,
+  ListRadioGroup,
+} from "~/components/form"
 import { useDialogPage } from "~/utils/hooks"
-import { getParam, useLoaderData } from "~/utils/remix"
-import { RibbonTypeSchema } from "~/utils/ribbon"
+import {
+  getParam,
+  json,
+  redirect,
+  useActionData,
+  useLoaderData,
+} from "~/utils/remix"
+import {
+  RibbonTypeSchema,
+  RibbonNameSchema,
+  RibbonPositionSchema,
+} from "~/utils/ribbon"
 
 const AddRibbonSchema = z.object({
-  name: z.string(),
-  position: z.coerce.number(),
+  name: RibbonNameSchema,
+  position: RibbonPositionSchema,
   type: RibbonTypeSchema,
 })
-
-const validator = withZod(AddRibbonSchema)
 
 export async function loader({ request }: LoaderArgs) {
   const requestUrl = new URL(request.url)
@@ -29,12 +40,14 @@ export async function loader({ request }: LoaderArgs) {
 }
 
 export async function action({ params, context, request }: ActionArgs) {
-  const logger = context.logger
+  const { db, logger } = context
   const sku = getParam(params, "listing")
 
-  const result = await validator.validate(await request.formData())
+  const result = await zx.parseFormSafe(request, AddRibbonSchema)
 
-  if (result.error) return validationError(result.error)
+  if (!result.success) {
+    return json({ errors: result.error.flatten().fieldErrors })
+  }
 
   const ribbons = await db.ribbon.findMany({
     orderBy: { position: "asc" },
@@ -77,6 +90,7 @@ export async function action({ params, context, request }: ActionArgs) {
 export default function DashboardListingRibbonsEditPage() {
   const { position } = useLoaderData<typeof loader>()
   const { close, leave, open } = useDialogPage()
+  const actionData = useActionData<typeof action>()
 
   return (
     <Transition.Root appear show={open} as={Fragment}>
@@ -112,33 +126,39 @@ export default function DashboardListingRibbonsEditPage() {
                 >
                   Add a new ribbon
                 </Dialog.Title>
-                <div className="mt-2">
-                  <p className="text-sm text-gray-500">
-                    Your payment has been successfully submitted. We’ve sent you
-                    an email with all of the details of your order.
-                  </p>
-                </div>
 
-                <ValidatedForm
-                  className="mx-auto flex flex-col gap-y-6"
-                  validator={validator}
-                  defaultValues={{ position: Number(position) }}
-                  method="post"
-                  reloadDocument
+                <Form
+                  className="mx-auto mt-4 flex flex-col gap-y-3"
+                  method="POST"
                 >
-                  <FormInput type="hidden" name="position" />
-                  <FormInput label="Name" name="name" required />
-                  <FormListRadioGroup
-                    name="type"
+                  <ValidationErrors errors={actionData?.errors} />
+                  <input
+                    type="hidden"
+                    name="position"
+                    className="hidden"
+                    defaultValue={position ?? "0"}
+                  />
+
+                  <TextField
+                    description="The name of the ribbon"
+                    label="Name"
+                    name="name"
+                    schema={RibbonNameSchema}
+                    isRequired
+                  />
+                  <ListRadioGroup
+                    description="The type of ribbon"
                     label="Type"
+                    name="type"
                     options={Object.values(RibbonType).map((type) => ({
                       label: type,
                       value: type,
                     }))}
-                    required
+                    isRequired
+                    defaultValue={RibbonType.Banner}
                   />
-                  <FormSubmit />
-                </ValidatedForm>
+                  <SubmitButton />
+                </Form>
               </Dialog.Panel>
             </Transition.Child>
           </div>
