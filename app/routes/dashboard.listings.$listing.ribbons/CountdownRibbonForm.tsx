@@ -11,6 +11,13 @@ import {
 export default function BannerRibbonForm({ ribbon }: { ribbon: Ribbon }) {
   const fetcher = useFetcher()
   const result = CountdownPropertiesSchema.safeParse(ribbon.properties)
+  let defaultValues
+
+  if (result.success) {
+    defaultValues = {
+      eventDatetime: format(result.data.eventDatetime, "yyyy-MM-dd HH:mm"),
+    }
+  }
 
   return (
     <fetcher.Form
@@ -22,14 +29,10 @@ export default function BannerRibbonForm({ ribbon }: { ribbon: Ribbon }) {
         label="Event Date & Time"
         type="datetime-local"
         name="eventDatetime"
-        defaultValue={
-          result.success
-            ? format(result.data.eventDatetime, "yyyy-MM-dd HH:MM")
-            : undefined
-        }
+        defaultValue={defaultValues?.eventDatetime}
         required
         schema={CountdownEventDatetimeSchema}
-        min={format(startOfToday(), "yyyy-MM-dd HH:MM")}
+        min={format(startOfToday(), "yyyy-MM-dd HH:mm")}
       />
       <SubmitButton>Save</SubmitButton>
     </fetcher.Form>
