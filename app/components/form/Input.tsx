@@ -5,9 +5,6 @@ import type { FocusEvent, InputHTMLAttributes } from "react"
 import type { z } from "zod"
 
 export default function Input({
-  /**
-   * The Zod schema used to validate the input client-side
-   */
   schema,
   label,
   className,
@@ -17,6 +14,9 @@ export default function Input({
 }: {
   label: string
   description?: string
+  /**
+   * The Zod schema used to validate the input client-side
+   */
   schema?: z.ZodSchema
 } & InputHTMLAttributes<HTMLInputElement>) {
   const [validationError, setValidationError] = useState("")
@@ -68,9 +68,11 @@ export default function Input({
             aria-hidden="true"
           />
         </div>
-        <p className="text-sm text-gray-500 peer-invalid:hidden">
-          {description}
-        </p>
+        {description && (
+          <p className="text-sm text-gray-500 peer-invalid:hidden">
+            {description}
+          </p>
+        )}
         <p className="hidden text-sm text-red-600 peer-invalid:block">
           {validationError}
         </p>
