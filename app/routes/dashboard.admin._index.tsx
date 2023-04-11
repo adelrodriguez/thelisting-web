@@ -54,11 +54,11 @@ const tools = [
     title: "Jobs Dashboard",
   },
   {
-    href: "#coming-soon1",
+    href: "./webhooks",
     icon: AcademicCapIcon,
     iconBackground: "bg-gray-50",
     iconForeground: "text-gray-700",
-    title: "Coming Soon",
+    title: "Webhooks",
   },
 ]
 
