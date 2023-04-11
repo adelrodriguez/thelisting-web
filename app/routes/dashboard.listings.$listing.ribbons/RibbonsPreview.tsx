@@ -2,27 +2,71 @@ import {
   ComputerDesktopIcon,
   DevicePhoneMobileIcon,
 } from "@heroicons/react/24/solid"
-import type { Ribbon } from "@prisma/client"
+import type { Listing, Ribbon } from "@prisma/client"
 import clsx from "clsx"
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
-import { Ribbons } from "~/components/ribbons"
-
-export default function RibbonsPreview({ ribbons }: { ribbons: Ribbon[] }) {
+export default function RibbonsPreview({
+  ribbons,
+  path,
+}: {
+  ribbons: Ribbon[]
+  path: Listing["path"]
+}) {
   const [previewSize, setPreviewSize] = useState<"mobile" | "desktop">(
     "desktop"
   )
+  const [containerWidth, setContainerWidth] = useState(0)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const ref = useRef<HTMLIFrameElement>(null)
+  const SCALE = 4
+  const PREVIEW_HEIGHT = 600
+
+  useEffect(() => {
+    function handleResize() {
+      setContainerWidth(containerRef.current?.clientWidth ?? 0)
+    }
+
+    window.addEventListener("resize", handleResize)
+
+    return () => {
+      window.removeEventListener("resize", handleResize)
+    }
+  }, [])
+
+  useEffect(() => {
+    // When the ribbons change, reload the iframe to show the latest changes
+    if (ref.current && ref.current.contentWindow) {
+      ref.current.contentWindow.location.reload()
+    }
+  }, [ribbons])
+
+  useEffect(() => {
+    setContainerWidth(containerRef.current?.clientWidth ?? 0)
+  }, [containerRef.current?.clientWidth])
 
   return (
     <>
-      <div className="max-w-full overflow-y-auto overflow-x-hidden">
+      <div className="border border-gray-300" ref={containerRef}>
         <div
-          className={clsx("h-[500px]", {
-            "w-[100%] origin-[0_0] scale-[100%]": previewSize === "mobile",
-            "w-[200%] origin-[0_0] scale-[50%]": previewSize === "desktop",
-          })}
+          className="overflow-hidden"
+          style={{ height: PREVIEW_HEIGHT, width: containerWidth }}
         >
-          <Ribbons ribbons={ribbons} />
+          <iframe
+            src={`/${path}/page`}
+            title="preview"
+            className={clsx({
+              "h-full w-full": previewSize === "mobile",
+              "origin-[0_0] scale-[25%]": previewSize === "desktop",
+            })}
+            {...(previewSize === "desktop" && {
+              style: {
+                height: PREVIEW_HEIGHT * SCALE,
+                width: containerWidth * SCALE,
+              },
+            })}
+            ref={ref}
+          />
         </div>
       </div>
       <div className="flex justify-center py-2">

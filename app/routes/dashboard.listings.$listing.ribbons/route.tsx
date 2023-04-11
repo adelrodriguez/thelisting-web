@@ -25,12 +25,17 @@ export async function loader({ params, context }: LoaderArgs) {
     z.object({ listing: z.coerce.number() })
   )
 
+  const listing = await db.listing.findUniqueOrThrow({
+    select: { path: true },
+    where: { sku },
+  })
+
   const ribbons = await db.ribbon.findMany({
     orderBy: { position: "asc" },
     where: { listing: { sku } },
   })
 
-  return json({ ribbons })
+  return json({ listing, ribbons })
 }
 
 export async function action({ request, context }: ActionArgs) {
@@ -56,7 +61,7 @@ export function ErrorBoundary({ error }: ErrorBoundaryProps) {
 }
 
 export default function DashboardListingRibbonsPage() {
-  const { ribbons } = useLoaderData<typeof loader>()
+  const { listing, ribbons } = useLoaderData<typeof loader>()
   const fetcher = useFetcher()
 
   async function submitOrder(ribbonIds: string[]) {
@@ -103,7 +108,7 @@ export default function DashboardListingRibbonsPage() {
                   Preview
                 </h2>
               </div>
-              <RibbonsPreview ribbons={ribbons} />
+              <RibbonsPreview ribbons={ribbons} path={listing.path} />
             </div>
           </section>
         </div>
