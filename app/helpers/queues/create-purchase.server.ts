@@ -30,6 +30,15 @@ export const processor: Processor<QueueData> = async (job) => {
       })
     }
 
+    const existingPurchase = await db.purchase.findFirst({
+      where: { commerceId: order.id },
+    })
+
+    if (existingPurchase) {
+      job.log(`Purchase ${existingPurchase.id} already exists. Skipping...`)
+      return
+    }
+
     const items = flattenConnection(order.lineItems)
       .filter(
         (lineItem) =>
