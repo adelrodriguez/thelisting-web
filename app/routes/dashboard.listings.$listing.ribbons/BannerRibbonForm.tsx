@@ -1,7 +1,7 @@
 import type { Ribbon } from "@prisma/client"
 import { useFetcher } from "@remix-run/react"
 
-import { Input, SubmitButton } from "~/components/form"
+import { ImageInput, Input, SubmitButton } from "~/components/form"
 import {
   BannerPropertiesSchema,
   BannerSubtitleSchema,
@@ -11,6 +11,11 @@ import {
 export default function BannerRibbonForm({ ribbon }: { ribbon: Ribbon }) {
   const fetcher = useFetcher()
   const result = BannerPropertiesSchema.safeParse(ribbon.properties)
+  let defaultValues
+
+  if (result.success) {
+    defaultValues = result.data
+  }
 
   return (
     <fetcher.Form
@@ -22,7 +27,7 @@ export default function BannerRibbonForm({ ribbon }: { ribbon: Ribbon }) {
         label="Title"
         type="text"
         name="title"
-        defaultValue={result.success ? result.data.title : ""}
+        defaultValue={defaultValues?.title}
         required
         schema={BannerTitleSchema}
       />
@@ -31,8 +36,13 @@ export default function BannerRibbonForm({ ribbon }: { ribbon: Ribbon }) {
         label="Subtitle"
         type="text"
         name="subtitle"
-        defaultValue={(result.success && result.data.subtitle) || ""}
+        defaultValue={defaultValues?.subtitle}
         schema={BannerSubtitleSchema}
+      />
+      <ImageInput
+        name="backgroundImage"
+        defaultValue={defaultValues?.backgroundImage}
+        label="Background Image"
       />
       <SubmitButton>Save</SubmitButton>
     </fetcher.Form>
