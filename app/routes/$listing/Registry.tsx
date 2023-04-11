@@ -3,7 +3,7 @@ import type { Item } from "@prisma/client"
 import { Link } from "@remix-run/react"
 
 import { useCart } from "~/utils/hooks"
-import { sortByQuantity } from "~/utils/listing"
+import { sortByQuantity } from "~/utils/item"
 
 import RegistryItem from "./RegistryItem"
 
