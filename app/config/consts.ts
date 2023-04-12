@@ -75,6 +75,7 @@ export const QUEUE_NAMES = {
   CreateItemPurchase: "CREATE_ITEM_PURCHASE",
   CreateListingCommerceEntity: "CREATE_LISTING_COMMERCE_ENTITY",
   CreatePurchase: "CREATE_PURCHASE",
+  MarkPurchaseAsPaid: "MARK_PURCHASE_AS_PAID",
   NotifyPurchase: "NOTIFY_PURCHASE",
   SaveOrderCustomer: "SAVE_ORDER_CUSTOMER",
 }
