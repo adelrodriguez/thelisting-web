@@ -1,0 +1,46 @@
+import type { Processor } from "bullmq"
+
+import { QUEUE_NAMES } from "~/config/consts"
+import db from "~/helpers/db.server"
+import { createQueue } from "~/helpers/queue.server"
+import { notifyPurchaseQueue } from "~/helpers/queues"
+import Sentry from "~/services/sentry"
+import { getShopifyId } from "~/utils/shopify"
+
+export type QueueData = {
+  orderId: string | number
+}
+
+export const processor: Processor<QueueData> = async (job) => {
+  try {
+    const { orderId } = job.data
+    const commerceId = getShopifyId(orderId, "Order")
+
+    const purchase = await db.purchase.findFirstOrThrow({
+      select: { id: true, paid: true },
+      where: { commerceId },
+    })
+
+    if (purchase.paid) {
+      job.log(`Purchase ${purchase.id} is already paid. Skipping...`)
+      return
+    }
+
+    await db.purchase.update({
+      data: { paid: true },
+      where: { id: purchase.id },
+    })
+
+    job.log(`Purchase ${purchase.id} marked as paid. Notifying user...`)
+
+    await notifyPurchaseQueue.add(`Purchase ID: ${purchase.id}`, {
+      orderId,
+    })
+  } catch (error) {
+    Sentry.captureException(error)
+
+    throw error
+  }
+}
+
+export default createQueue(QUEUE_NAMES.MarkPurchaseAsPaid, processor)

@@ -6,7 +6,10 @@ import { badRequest, serverError, unauthorized } from "remix-utils"
 import { z } from "zod"
 
 import { ONE_MINUTE } from "~/config/consts"
-import { notifyPurchaseQueue, saveOrderCustomerQueue } from "~/helpers/queues"
+import {
+  markPurchaseAsPaidQueue,
+  saveOrderCustomerQueue,
+} from "~/helpers/queues"
 import {
   getShopifyWebhookHeaders,
   parseOrderPaymentWebhookPayload,
@@ -68,14 +71,12 @@ export async function action({ request, context }: ActionArgs) {
       saveOrderCustomerQueue.add(`Order #${order.number}`, {
         orderId: order.id,
       }),
-      // TODO(adelrodriguez): Create a new queue to mark the purchase as paid,
-      // and then notify the customer from there.
-      notifyPurchaseQueue.add(
+      markPurchaseAsPaidQueue.add(
         `Order #${order.number}`,
         {
           orderId: order.id,
         },
-        { attempts: 10, backoff: { delay: ONE_MINUTE, type: "exponential" } }
+        { attempts: 20, backoff: { delay: ONE_MINUTE, type: "exponential" } }
       ),
     ])
 
