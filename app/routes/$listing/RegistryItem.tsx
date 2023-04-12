@@ -18,7 +18,7 @@ export default function RegistryItem({
   sku: Item["sku"]
 }) {
   const { data, isLoading, isError, error } = useProduct(commerceId)
-  const { t } = useTranslation("listing")
+  const { t } = useTranslation("registry")
 
   if (isLoading) {
     return (

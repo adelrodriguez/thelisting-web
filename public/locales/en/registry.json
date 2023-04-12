@@ -16,9 +16,10 @@
   "itemInformation": "Item information",
   "leftYouANote": "{{name}} left you a message:",
   "note": {
-    "placeholder": "Write your note here...",
-    "subtitle": "Your note will be delivered to the recipient when the order is processed",
-    "title": "Add a note to your gift"
+    "placeholder": "Write your message here...",
+    "subtitle": "Your message will be delivered to the recipient when the order is processed",
+    "title": "Add a message to your gift",
+    "lengthError": "The message cannot be longer than 500 characters"
   },
   "orderConfirmation": "Your gift will be sent with much love. We'll send you an email with the invoice for the shipping and handling.",
   "outOfStock": "Gifted ✨",
@@ -34,5 +35,11 @@
   "yourGifts": "Your gifts",
   "yourGiftsDescription": "Here you can see the gifts you've received, and the messages that came with them.",
   "yourGiftsEmpty": "You haven't received any gifts yet.",
-  "itemsGifted": "Items gifted"
+  "itemsGifted": "Items gifted",
+  "addNoteReminder": {
+    "title": "Your gift has no message 👀",
+    "description": "We see that you haven't left a personalized message for your gift. Would you like to add a message?",
+    "confirm": "Add a message ✨",
+    "cancel": "Proceed to pay 🎁"
+  }
 }

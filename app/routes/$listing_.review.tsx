@@ -15,13 +15,13 @@ import { getPriceSymbol } from "~/utils/money"
 import { getParam, json, useLoaderData } from "~/utils/remix"
 
 export const handle = {
-  i18n: ["common", "listing"],
+  i18n: ["common", "registry"],
 }
 
 export async function loader({ request, params, context }: LoaderArgs) {
   const db = context.db
   const path = getParam(params, "listing")
-  const t = await i18next.getFixedT(request, "listing")
+  const t = await i18next.getFixedT(request, "registry")
 
   const listing = await db.listing.findUnique({
     select: {

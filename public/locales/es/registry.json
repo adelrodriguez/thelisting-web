@@ -18,7 +18,8 @@
   "note": {
     "placeholder": "Escribe tu mensaje aquí...",
     "subtitle": "Tu mensaje sera enviado al destinatario cuando la orden sea procesada",
-    "title": "Añade un mensaje personalizado a tu regalo"
+    "title": "Añade un mensaje personalizado a tu regalo",
+    "lengthError": "El mensaje no puede tener más de 500 caracteres"
   },
   "orderConfirmation": "Tu regalo será enviado con mucho amor. Te enviaremos un correo con la factura de gestión y entrega.",
   "outOfStock": "Regalado ✨",
@@ -34,5 +35,11 @@
   "yourGifts": "Tus regalos",
   "yourGiftsDescription": "Aquí puedes ver los regalos que has recibido y los mensajes que te han dejado.",
   "yourGiftsEmpty": "Todavía no has recibido ningún regalo.",
-  "itemsGifted": "Artículos regalados"
+  "itemsGifted": "Artículos regalados",
+  "addNoteReminder": {
+    "title": "Tu regalo no tiene mensaje 👀",
+    "description": "Vemos que no has dejado un mensaje personalizado para tu regalo. ¿Deseas agregar un mensaje?",
+    "confirm": "Agregar un mensaje ✨",
+    "cancel": "Ir a pagar 🎁"
+  }
 }

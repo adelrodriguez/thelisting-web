@@ -14,7 +14,7 @@ import { goToParent, json, useLoaderData } from "~/utils/remix"
 import QuantityInput from "./QuantityInput"
 
 export const handle = {
-  i18n: "listing",
+  i18n: "registry",
 }
 
 export async function loader({ params, context }: LoaderArgs) {

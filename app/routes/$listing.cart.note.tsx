@@ -2,107 +2,113 @@ import { Dialog, Transition } from "@headlessui/react"
 import { XMarkIcon } from "@heroicons/react/24/outline"
 import { NoteType } from "@prisma/client"
 import type { ActionArgs } from "@remix-run/node"
-import { json } from "@remix-run/node"
-import { useFetcher, useNavigate } from "@remix-run/react"
-import { withZod } from "@remix-validated-form/with-zod"
-import { Fragment, useEffect, useState } from "react"
+import { Form, useNavigate } from "@remix-run/react"
+import { Fragment, useEffect } from "react"
 import { useTranslation } from "react-i18next"
-import { notFound } from "remix-utils"
-import {
-  setFormDefaults,
-  ValidatedForm,
-  validationError,
-} from "remix-validated-form"
 import { z } from "zod"
+import { zx } from "zodix"
 
 import { Alert, Button } from "~/components/common"
-import { FormSubmit, FormTextArea } from "~/components/form"
-import { useCart, useTrackPageview } from "~/utils/hooks"
+import { SubmitButton, TextArea, ValidationErrors } from "~/components/form"
+import { flattenErrors } from "~/utils/form"
+import { useCart, useDialogPage, useTrackPageview } from "~/utils/hooks"
+import { json, useActionData, useLoaderData } from "~/utils/remix"
 
 export const handle = {
-  i18n: ["listing", "common"],
+  i18n: ["registry", "common"],
 }
-
-const CartNoteSchema = z.object({
-  text: z.string().max(500),
-})
-
-const validator = withZod(CartNoteSchema)
 
 export async function loader({ request, context }: ActionArgs) {
   const db = context.db
-  const requestUrl = new URL(request.url)
-  const noteId = requestUrl.searchParams.get("note_id")
+  const query = zx.parseQuerySafe(request, z.object({ note_id: z.string() }))
 
-  if (!noteId) return null
+  if (!query.success) return json({ note: null })
 
   const note = await db.note.findUnique({
     select: { text: true },
-    where: { id: noteId },
+    where: { id: query.data.note_id },
   })
 
-  if (!note) return null
-
-  return json(setFormDefaults("noteForm", { text: note.text! }))
+  return json({ note })
 }
 
 export async function action({ request, params, context }: ActionArgs) {
   const db = context.db
-  const requestUrl = new URL(request.url)
-  const listingPath = params.listing
-  const noteId = requestUrl.searchParams.get("note_id")
+  const parsedQuery = zx.parseQuerySafe(
+    request,
+    z.object({ note_id: z.string() })
+  )
+  const { listing: listingPath } = zx.parseParams(
+    params,
+    z.object({ listing: z.string() })
+  )
+  const parsedFormData = await zx.parseFormSafe(
+    request,
+    z.object({ text: z.string().max(500) })
+  )
 
-  const result = await validator.validate(await request.formData())
-
-  if (result.error) return validationError(result.error)
-
-  if (noteId) {
-    const note = await db.note.update({
-      data: { text: result.data.text, type: NoteType.Text },
-      where: { id: noteId },
+  if (!parsedFormData.success) {
+    return json({
+      errors: flattenErrors(parsedFormData.error),
+      note: null,
     })
+  }
 
-    return note
-  } else if (listingPath) {
-    const listing = await db.listing.findUnique({
+  if (parsedFormData.data.text.length === 0) {
+    return json({ errors: null, note: null })
+  }
+
+  if (!parsedQuery.success) {
+    const listing = await db.listing.findUniqueOrThrow({
       select: { id: true },
       where: { path: listingPath },
     })
 
-    if (!listing) throw notFound({ message: "Listing not found" })
-
     const note = await db.note.create({
       data: {
         listingId: listing.id,
-        text: result.data.text,
+        text: parsedFormData.data.text,
         type: NoteType.Text,
       },
     })
 
-    return note
+    return json({ errors: null, note })
   }
+
+  const note = await db.note.update({
+    data: { text: parsedFormData.data.text, type: NoteType.Text },
+    where: { id: parsedQuery.data.note_id },
+  })
+
+  return json({ errors: null, note })
 }
 
-export default function NotePage() {
-  const [open, setOpen] = useState(true)
-  const navigate = useNavigate()
+export default function ListingCartNotePage() {
   const { t } = useTranslation(handle.i18n)
-  const fetcher = useFetcher<typeof action>()
+  const { note } = useLoaderData<typeof loader>()
+  const data = useActionData<typeof action>()
+  const { open, close, leave } = useDialogPage()
   const cart = useCart()
+
+  useEffect(() => {
+    if (!data) return
+
+    if (data.errors !== null) return
+
+    cart.attachNoteId(data.note === null ? null : data.note.id)
+
+    close()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data, close])
+
+  // Translations
+  const lengthError = t("registry:note.lengthError")
 
   useTrackPageview()
 
-  useEffect(() => {
-    if (fetcher.data?.type === NoteType.Text) {
-      cart.attachNoteId(fetcher.data.id)
-      setOpen(false)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fetcher.data?.type])
-
   return (
     <Transition.Root appear show={open} as={Fragment}>
-      <Dialog as="div" className="relative z-30" onClose={setOpen}>
+      <Dialog as="div" className="relative z-30" onClose={close}>
         <div className="fixed inset-0 overflow-hidden">
           <div className="absolute inset-0 overflow-hidden">
             <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10 sm:pl-16">
@@ -114,15 +120,12 @@ export default function NotePage() {
                 leave="transform transition ease-in-out duration-500 sm:duration-700"
                 leaveFrom="translate-x-0"
                 leaveTo="translate-x-full"
-                afterLeave={() => navigate("../", { preventScrollReset: true })}
+                afterLeave={leave}
               >
                 <Dialog.Panel className="pointer-events-auto w-screen max-w-md">
-                  <ValidatedForm
+                  <Form
                     className="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl"
-                    method="post"
-                    validator={validator}
-                    id="noteForm"
-                    fetcher={fetcher}
+                    method="POST"
                   >
                     <div className="h-0 flex-1 overflow-y-auto">
                       <div className="bg-gray-700 py-6 px-4 sm:px-6">
@@ -134,11 +137,9 @@ export default function NotePage() {
                             <button
                               type="button"
                               className="rounded-md bg-gray-700 text-gray-200 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
-                              onClick={() => setOpen(false)}
+                              onClick={close}
                             >
-                              <span className="sr-only">
-                                {t("Close panel")}
-                              </span>
+                              <span className="sr-only">{t("close")}</span>
                               <XMarkIcon
                                 className="h-6 w-6"
                                 aria-hidden="true"
@@ -155,29 +156,28 @@ export default function NotePage() {
                       <div className="flex flex-1 flex-col justify-between">
                         <div className="divide-y divide-gray-200 px-4 sm:px-6">
                           <div className="space-y-6 pt-6 pb-5">
-                            <FormTextArea
+                            <ValidationErrors errors={data?.errors} />
+                            <TextArea
                               label="Nota"
                               name="text"
                               rows={20}
                               placeholder={`${t("note.placeholder")}`}
+                              defaultValue={note?.text || ""}
+                              schema={z.string().max(500, lengthError)}
                             />
                           </div>
                         </div>
                       </div>
                     </div>
                     <div className="flex flex-shrink-0 justify-end gap-4 px-4 py-4">
-                      <Button
-                        variant="secondary"
-                        onClick={() => setOpen(false)}
-                      >
+                      <Button variant="secondary" onClick={close} type="button">
                         {t("common:cancel")}
                       </Button>
-                      <FormSubmit
-                        text={`${t("common:save")}`}
-                        loadingText={`${t("common:saving")}`}
-                      />
+                      <SubmitButton loadingText={`${t("common:saving")}`}>{`${t(
+                        "common:save"
+                      )}`}</SubmitButton>
                     </div>
-                  </ValidatedForm>
+                  </Form>
                 </Dialog.Panel>
               </Transition.Child>
             </div>

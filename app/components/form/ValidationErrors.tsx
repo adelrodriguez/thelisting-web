@@ -3,7 +3,7 @@ import { XCircleIcon } from "@heroicons/react/20/solid"
 export default function ValidationErrors({
   errors,
 }: {
-  errors?: Record<string, string[] | undefined>
+  errors: Record<string, string[] | undefined> | null | undefined
 }) {
   if (!errors) return null
 
@@ -15,7 +15,8 @@ export default function ValidationErrors({
         </div>
         <div className="ml-3">
           <h3 className="text-sm font-medium text-red-800">
-            There were {Object.keys(errors).length} errors with your submission
+            There were {Object.keys(errors).length} error(s) with your
+            submission
           </h3>
           <div className="mt-2 text-sm text-red-700">
             <ul className="list-disc space-y-1 pl-5">

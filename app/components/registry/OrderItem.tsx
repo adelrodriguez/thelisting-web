@@ -15,7 +15,7 @@ export default function OrderItem({
   cost?: number
 }) {
   const { data, isLoading, isError } = useProduct(commerceId!)
-  const { t } = useTranslation(["listing", "common"])
+  const { t } = useTranslation(["registry", "common"])
 
   if (isLoading) {
     return (

@@ -15,7 +15,7 @@ import { getShopifyId } from "~/utils/shopify"
 import { getOrder } from "~/utils/shopify.server"
 
 export const handle = {
-  i18n: ["listing", "common"],
+  i18n: ["registry", "common"],
 }
 
 export async function loader({ params, request, context }: LoaderArgs) {

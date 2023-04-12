@@ -13,7 +13,7 @@ export default function QuantityInput({
   value?: number
   onChange: (quantity: number) => void
 }) {
-  const { t } = useTranslation("listing")
+  const { t } = useTranslation("registry")
 
   return (
     <div className="isolate inline-flex rounded-md shadow-sm">

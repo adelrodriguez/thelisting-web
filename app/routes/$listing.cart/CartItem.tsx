@@ -14,7 +14,7 @@ export default function CartItem({
 }: Pick<Item, "id" | "commerceId" | "quantity" | "sku">) {
   const { data, isLoading, isError } = useProduct(commerceId!)
   const cart = useCart()
-  const { t } = useTranslation("listing")
+  const { t } = useTranslation("registry")
 
   // TODO(adelrodriguez): Handle loading and error states
   if (isLoading) return <div>Loading...</div>

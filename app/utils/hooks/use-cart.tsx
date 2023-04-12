@@ -63,6 +63,7 @@ export function CartProvider({
     },
     {
       initialData: createDefaultCart(listing),
+      refetchOnWindowFocus: true,
     }
   )
 
