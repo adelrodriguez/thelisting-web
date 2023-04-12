@@ -62,10 +62,11 @@ export async function loader({ context }: LoaderArgs) {
       where: {
         createdAt: { gt: sub(Date.now(), { days: 30 }) },
         listing: { isInternal: false },
+        paid: true,
       },
     }),
     db.purchase.count({
-      where: { listing: { isInternal: false } },
+      where: { listing: { isInternal: false }, paid: true },
     }),
     db.purchase.aggregate({
       _avg: { total: true },
@@ -73,17 +74,18 @@ export async function loader({ context }: LoaderArgs) {
       where: {
         createdAt: { gt: sub(Date.now(), { days: 30 }) },
         listing: { isInternal: false },
+        paid: true,
       },
     }),
     db.purchase.aggregate({
       _avg: { total: true },
       _sum: { total: true },
-      where: { listing: { isInternal: false } },
+      where: { listing: { isInternal: false }, paid: true },
     }),
     db.purchase.findFirst({
       include: { listing: true },
       orderBy: { createdAt: "desc" },
-      where: { listing: { isInternal: false } },
+      where: { listing: { isInternal: false }, paid: true },
     }),
     db.purchase.aggregate({
       _avg: { cost: true, total: true },
@@ -92,6 +94,7 @@ export async function loader({ context }: LoaderArgs) {
       where: {
         createdAt: { gt: sub(Date.now(), { days: 30 }) },
         listing: { isInternal: false },
+        paid: true,
       },
     }),
     db.purchase.aggregate({
@@ -100,6 +103,7 @@ export async function loader({ context }: LoaderArgs) {
       _sum: { cost: true, total: true },
       where: {
         listing: { isInternal: false },
+        paid: true,
       },
     }),
   ])

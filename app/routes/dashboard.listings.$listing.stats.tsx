@@ -32,18 +32,21 @@ export async function loader({ params, context }: LoaderArgs) {
         _sum: { cost: true, total: true },
         where: {
           listingId: listing.id,
+          paid: true,
         },
       }),
       db.purchase.findFirst({
         orderBy: { total: "desc" },
         where: {
           listingId: listing.id,
+          paid: true,
         },
       }),
       db.purchase.findFirst({
         orderBy: { createdAt: "desc" },
         where: {
           listingId: listing.id,
+          paid: true,
         },
       }),
       db.item.aggregate({

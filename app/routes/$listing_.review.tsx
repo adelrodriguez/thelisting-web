@@ -39,6 +39,9 @@ export async function loader({ request, params, context }: LoaderArgs) {
         orderBy: {
           createdAt: "desc",
         },
+        where: {
+          paid: true,
+        },
       },
       status: true,
       title: true,
