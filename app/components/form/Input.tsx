@@ -55,10 +55,12 @@ export default function Input({
           id={name}
           onBlur={validate}
           className={clsx(
-            "peer my-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm",
-            "focus:border-gray-500 focus:ring-gray-500",
+            "peer my-1 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-slate-300",
+            "placeholder:text-gray-400",
+            "sm:text-sm sm:leading-6",
+            "focus:ring-2 focus:ring-inset focus:ring-slate-600",
             "disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500",
-            "invalid:border-red-300 invalid:pr-10 invalid:text-red-900 invalid:placeholder-red-300 invalid:focus:border-red-500 invalid:focus:outline-none invalid:focus:ring-red-500"
+            "invalid:pr-10 invalid:text-red-900 invalid:placeholder-red-300 invalid:ring-red-300 invalid:focus:outline-none invalid:focus:ring-red-500"
           )}
           type={props.type ?? "text"}
         />

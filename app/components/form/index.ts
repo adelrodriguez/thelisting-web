@@ -8,6 +8,7 @@ export { default as FormTextArea } from "./FormTextArea"
 
 export { default as ImageInput } from "./ImageInput"
 export { default as Input } from "./Input"
+export { default as InputWithAddOn } from "./InputWithAddOn"
 export { default as ListRadioGroup } from "./ListRadioGroup"
 export { default as SubmitButton } from "./SubmitButton"
 export { default as TextArea } from "./TextArea"
