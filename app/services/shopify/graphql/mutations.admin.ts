@@ -47,3 +47,17 @@ export const addProductsToCollectionMutation = graphql(`
     }
   }
 `)
+
+export const addTagsMutation = graphql(`
+  mutation addTags($id: ID!, $tags: [String!]!) {
+    tagsAdd(id: $id, tags: $tags) {
+      node {
+        id
+      }
+      userErrors {
+        field
+        message
+      }
+    }
+  }
+`)

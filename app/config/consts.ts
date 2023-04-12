@@ -68,6 +68,7 @@ export const CLOUDFLARE_IMAGES_ACCOUNT_HASH = "wHwwAqNxbuESOwdHNE6NsQ"
 
 export const QUEUE_NAMES = {
   AddItemToListing: "ADD_ITEM_TO_LISTING",
+  AddTagsToOrder: "ADD_TAGS_TO_ORDER",
   AutomatedAbandonedCheckoutsNotification:
     "AUTOMATED_ABANDONED_CHECKOUTS_NOTIFICATION",
   ClearCart: "CLEAR_CART",
@@ -79,3 +80,5 @@ export const QUEUE_NAMES = {
   NotifyPurchase: "NOTIFY_PURCHASE",
   SaveOrderCustomer: "SAVE_ORDER_CUSTOMER",
 }
+
+export const THE_LISTING_TIMEZONE = "America/Santo_Domingo"

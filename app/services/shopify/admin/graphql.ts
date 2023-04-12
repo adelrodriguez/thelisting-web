@@ -8643,11 +8643,11 @@ export type DeliveryMethod = Node & {
   __typename?: 'DeliveryMethod';
   /** A globally-unique identifier. */
   id: Scalars['ID'];
-  /** The maximum date and time by which the delivery is expected to be completed. */
+  /** The latest delivery date and time when the fulfillment is expected to arrive at the buyer's location. */
   maxDeliveryDateTime?: Maybe<Scalars['DateTime']>;
   /** The type of the delivery method. */
   methodType: DeliveryMethodType;
-  /** The minimum date and time by which the delivery is expected to be completed. */
+  /** The earliest delivery date and time when the fulfillment is expected to arrive at the buyer's location. */
   minDeliveryDateTime?: Maybe<Scalars['DateTime']>;
 };
 
@@ -13041,10 +13041,155 @@ export type FulfillmentLineItemEdge = {
 };
 
 /**
- * Represents a fulfillment order. In Shopify, a fulfillment order represents a group of one or more items
- * in an order that are to be fulfilled from the same location. There can be more than one fulfillment order
- * for an order at a given location. Fulfillment orders are created automatically when an order is created.
- * To learn how to build a fulfillment app, refer to [Fulfillment apps](https://shopify.dev/apps/fulfillment).
+ * The FulfillmentOrder object represents either an item or a group of items in an
+ * [Order](https://shopify.dev/api/admin-graphql/latest/objects/Order)
+ * that are expected to be fulfilled from the same location.
+ * There can be more than one fulfillment order for an
+ * [order](https://shopify.dev/api/admin-graphql/latest/objects/Order)
+ * at a given location.
+ *
+ * {{ '/api/reference/fulfillment_order_relationships.png' | image }}
+ *
+ * Fulfillment orders represent the work which is intended to be done in relation to an order.
+ * When fulfillment has started for one or more line items, a
+ * [Fulfillment](https://shopify.dev/api/admin-graphql/latest/objects/Fulfillment)
+ * is created by a merchant or third party to represent the ongoing or completed work of fulfillment.
+ *
+ * [See below for more details on creating fulfillments](#the-lifecycle-of-a-fulfillment-order-at-a-location-which-is-managed-by-a-fulfillment-service).
+ *
+ * > Note:
+ * > Shopify creates fulfillment orders automatically when an order is created.
+ * > It is not possible to manually create fulfillment orders.
+ * >
+ * > [See below for more details on the lifecycle of a fulfillment order](#the-lifecycle-of-a-fulfillment-order).
+ *
+ * ## Retrieving fulfillment orders
+ *
+ * All fulfillment orders related to a given order can be retrieved with the
+ * [Order.fulfillmentOrders](https://shopify.dev/api/admin-graphql/latest/objects/Order#connection-order-fulfillmentorders)
+ * connection.
+ *
+ * [API access scopes](#api-access-scopes)
+ * govern which fulfillments orders are returned to clients.
+ * An API client will only receive a subset of the fulfillment orders which belong to an order
+ * if they don't have the necessary access scopes to view all of the fulfillment orders.
+ *
+ * Fulfillment service apps can retrieve the fulfillment orders which have been assigned to their locations with the
+ * [Shop.assignedFulfillmentOrders](https://shopify.dev/api/admin-graphql/latest/objects/Shop#connection-shop-assignedfulfillmentorders)
+ * connection.
+ * Use the `assignmentStatus` argument to control whether all assigned fulfillment orders
+ * should be returned or only those where a merchant has sent a
+ * [fulfillment request](https://shopify.dev/api/admin-graphql/latest/objects/FulfillmentOrderMerchantRequest)
+ * and it has yet to be responded to.
+ *
+ * The API client must be granted the `read_assigned_fulfillment_orders` access scope to access
+ * the assigned fulfillment orders.
+ *
+ * ## The lifecycle of a fulfillment order
+ *
+ * ### Fulfillment Order Creation
+ *
+ * After an order is created, a background worker performs the order routing process which determines
+ * which locations will be responsible for fulfilling the purchased items.
+ * Once the order routing process is complete, one or more fulfillment orders will be created
+ * and assigned to these locations. It is not possible to manually create fulfillment orders.
+ *
+ * Once a fulfillment order has been created, it will have one of two different lifecycles depending on
+ * the type of location which the fulfillment order is assigned to.
+ *
+ * ### The lifecycle of a fulfillment order at a merchant managed location
+ *
+ * Fulfillment orders are completed by creating
+ * [fulfillments](https://shopify.dev/api/admin-graphql/latest/objects/Fulfillment).
+ * Fulfillments represents the work done.
+ *
+ * For digital products a merchant or an order management app would create a fulfilment once the digital asset
+ * has been provisioned.
+ * For example, in the case of a digital gift card, a merchant would to do this once
+ * the gift card has been activated - before the email has been shipped.
+ *
+ * On the other hand, for a traditional shipped order,
+ * a merchant or an order management app would create a fulfillment after picking and packing the items relating
+ * to a fulfillment order, but before the courier has collected the goods.
+ *
+ * [Learn about managing fulfillment orders as an order management app](https://shopify.dev/apps/fulfillment/order-management-apps/manage-fulfillments).
+ *
+ * ### The lifecycle of a fulfillment order at a location which is managed by a fulfillment service
+ *
+ * For fulfillment orders which are assigned to a location that is managed by a fulfillment service,
+ * a merchant or an Order Management App can
+ * [send a fulfillment request](https://shopify.dev/api/admin-graphql/latest/mutations/fulfillmentOrderSubmitFulfillmentRequest)
+ * to the fulfillment service which operates the location to request that they fulfill the associated items.
+ * A fulfillment service has the option to
+ * [accept](https://shopify.dev/api/admin-graphql/latest/mutations/fulfillmentOrderAcceptFulfillmentRequest)
+ * or [reject](https://shopify.dev/api/admin-graphql/latest/mutations/fulfillmentOrderRejectFulfillmentRequest)
+ * this fulfillment request.
+ *
+ * Once the fulfillment service has accepted the request, the request can no longer be cancelled by the merchant
+ * or order management app and instead a
+ * [cancellation request must be submitted](https://shopify.dev/api/admin-graphql/latest/mutations/fulfillmentOrderSubmitCancellationRequest)
+ * to the fulfillment service.
+ *
+ * Once a fulfillment service accepts a fulfillment request,
+ * then after they are ready to pack items and send them for delivery, they create fulfillments with the
+ * [fulfillmentCreateV2](https://shopify.dev/api/admin-graphql/latest/mutations/fulfillmentCreateV2)
+ * mutation.
+ * They can provide tracking information right away or create fulfillments without it and then
+ * update the tracking information for fulfillments with the
+ * [fulfillmentTrackingInfoUpdateV2](https://shopify.dev/api/admin-graphql/latest/mutations/fulfillmentTrackingInfoUpdateV2)
+ * mutation.
+ *
+ * [Learn about managing fulfillment orders as a fulfillment service](https://shopify.dev/apps/fulfillment/fulfillment-service-apps/manage-fulfillments).
+ *
+ * ## API access scopes
+ *
+ * Fulfillment orders are governed by the following API access scopes:
+ *
+ * * The `read_merchant_managed_fulfillment_orders` and
+ *   `write_merchant_managed_fulfillment_orders` access scopes
+ *   grant access to fulfillment orders assigned to merchant-managed locations.
+ * * The `read_assigned_fulfillment_orders` and `write_assigned_fulfillment_orders`
+ *   access scopes are intended for fulfillment services.
+ *   These scopes grant access to fulfillment orders assigned to locations that are being managed
+ *   by fulfillment services.
+ * * The `read_third_party_fulfillment_orders` and `write_third_party_fulfillment_orders`
+ *   access scopes grant access to fulfillment orders
+ *   assigned to locations managed by other fulfillment services.
+ *
+ * ### Fulfillment service app access scopes
+ *
+ * Usually, **fulfillment services** have the `write_assigned_fulfillment_orders` access scope
+ * and don't have the `*_third_party_fulfillment_orders`
+ * or `*_merchant_managed_fulfillment_orders` access scopes.
+ * The app will only have access to the fulfillment orders assigned to their location
+ * (or multiple locations if the app registers multiple fulfillment services on the shop).
+ * The app will not have access to fulfillment orders assigned to merchant-managed locations
+ * or locations owned by other fulfillment service apps.
+ *
+ * ### Order management app access scopes
+ *
+ * **Order management apps** will usually request `write_merchant_managed_fulfillment_orders` and
+ * `write_third_party_fulfillment_orders` access scopes. This will allow them to manage all fulfillment orders
+ * on behalf of a merchant.
+ *
+ * If an app combines the functions of an order management app and a fulfillment service,
+ * then the app should request all
+ * access scopes to manage all assigned and all unassigned fulfillment orders.
+ *
+ * ## Notifications about fulfillment orders
+ *
+ * Fulfillment services are required to
+ * [register](https://shopify.dev/api/admin-graphql/latest/objects/FulfillmentService)
+ * a self-hosted callback URL which has a number of uses. One of these uses is that this callback URL will be notified
+ * whenever a merchant submits a fulfillment or cancellation request.
+ *
+ * Both merchants and apps can
+ * [subscribe](https://shopify.dev/apps/fulfillment/fulfillment-service-apps/manage-fulfillments#webhooks)
+ * to the
+ * [fulfillment order webhooks](https://shopify.dev/api/admin-graphql/latest/enums/WebhookSubscriptionTopic#value-fulfillmentorderscancellationrequestaccepted)
+ * to be notified whenever fulfillment order related domain events occur.
+ *
+ * [Learn about fulfillment workflows](https://shopify.dev/apps/fulfillment).
  *
  */
 export type FulfillmentOrder = Node & {
@@ -13105,10 +13250,155 @@ export type FulfillmentOrder = Node & {
 
 
 /**
- * Represents a fulfillment order. In Shopify, a fulfillment order represents a group of one or more items
- * in an order that are to be fulfilled from the same location. There can be more than one fulfillment order
- * for an order at a given location. Fulfillment orders are created automatically when an order is created.
- * To learn how to build a fulfillment app, refer to [Fulfillment apps](https://shopify.dev/apps/fulfillment).
+ * The FulfillmentOrder object represents either an item or a group of items in an
+ * [Order](https://shopify.dev/api/admin-graphql/latest/objects/Order)
+ * that are expected to be fulfilled from the same location.
+ * There can be more than one fulfillment order for an
+ * [order](https://shopify.dev/api/admin-graphql/latest/objects/Order)
+ * at a given location.
+ *
+ * {{ '/api/reference/fulfillment_order_relationships.png' | image }}
+ *
+ * Fulfillment orders represent the work which is intended to be done in relation to an order.
+ * When fulfillment has started for one or more line items, a
+ * [Fulfillment](https://shopify.dev/api/admin-graphql/latest/objects/Fulfillment)
+ * is created by a merchant or third party to represent the ongoing or completed work of fulfillment.
+ *
+ * [See below for more details on creating fulfillments](#the-lifecycle-of-a-fulfillment-order-at-a-location-which-is-managed-by-a-fulfillment-service).
+ *
+ * > Note:
+ * > Shopify creates fulfillment orders automatically when an order is created.
+ * > It is not possible to manually create fulfillment orders.
+ * >
+ * > [See below for more details on the lifecycle of a fulfillment order](#the-lifecycle-of-a-fulfillment-order).
+ *
+ * ## Retrieving fulfillment orders
+ *
+ * All fulfillment orders related to a given order can be retrieved with the
+ * [Order.fulfillmentOrders](https://shopify.dev/api/admin-graphql/latest/objects/Order#connection-order-fulfillmentorders)
+ * connection.
+ *
+ * [API access scopes](#api-access-scopes)
+ * govern which fulfillments orders are returned to clients.
+ * An API client will only receive a subset of the fulfillment orders which belong to an order
+ * if they don't have the necessary access scopes to view all of the fulfillment orders.
+ *
+ * Fulfillment service apps can retrieve the fulfillment orders which have been assigned to their locations with the
+ * [Shop.assignedFulfillmentOrders](https://shopify.dev/api/admin-graphql/latest/objects/Shop#connection-shop-assignedfulfillmentorders)
+ * connection.
+ * Use the `assignmentStatus` argument to control whether all assigned fulfillment orders
+ * should be returned or only those where a merchant has sent a
+ * [fulfillment request](https://shopify.dev/api/admin-graphql/latest/objects/FulfillmentOrderMerchantRequest)
+ * and it has yet to be responded to.
+ *
+ * The API client must be granted the `read_assigned_fulfillment_orders` access scope to access
+ * the assigned fulfillment orders.
+ *
+ * ## The lifecycle of a fulfillment order
+ *
+ * ### Fulfillment Order Creation
+ *
+ * After an order is created, a background worker performs the order routing process which determines
+ * which locations will be responsible for fulfilling the purchased items.
+ * Once the order routing process is complete, one or more fulfillment orders will be created
+ * and assigned to these locations. It is not possible to manually create fulfillment orders.
+ *
+ * Once a fulfillment order has been created, it will have one of two different lifecycles depending on
+ * the type of location which the fulfillment order is assigned to.
+ *
+ * ### The lifecycle of a fulfillment order at a merchant managed location
+ *
+ * Fulfillment orders are completed by creating
+ * [fulfillments](https://shopify.dev/api/admin-graphql/latest/objects/Fulfillment).
+ * Fulfillments represents the work done.
+ *
+ * For digital products a merchant or an order management app would create a fulfilment once the digital asset
+ * has been provisioned.
+ * For example, in the case of a digital gift card, a merchant would to do this once
+ * the gift card has been activated - before the email has been shipped.
+ *
+ * On the other hand, for a traditional shipped order,
+ * a merchant or an order management app would create a fulfillment after picking and packing the items relating
+ * to a fulfillment order, but before the courier has collected the goods.
+ *
+ * [Learn about managing fulfillment orders as an order management app](https://shopify.dev/apps/fulfillment/order-management-apps/manage-fulfillments).
+ *
+ * ### The lifecycle of a fulfillment order at a location which is managed by a fulfillment service
+ *
+ * For fulfillment orders which are assigned to a location that is managed by a fulfillment service,
+ * a merchant or an Order Management App can
+ * [send a fulfillment request](https://shopify.dev/api/admin-graphql/latest/mutations/fulfillmentOrderSubmitFulfillmentRequest)
+ * to the fulfillment service which operates the location to request that they fulfill the associated items.
+ * A fulfillment service has the option to
+ * [accept](https://shopify.dev/api/admin-graphql/latest/mutations/fulfillmentOrderAcceptFulfillmentRequest)
+ * or [reject](https://shopify.dev/api/admin-graphql/latest/mutations/fulfillmentOrderRejectFulfillmentRequest)
+ * this fulfillment request.
+ *
+ * Once the fulfillment service has accepted the request, the request can no longer be cancelled by the merchant
+ * or order management app and instead a
+ * [cancellation request must be submitted](https://shopify.dev/api/admin-graphql/latest/mutations/fulfillmentOrderSubmitCancellationRequest)
+ * to the fulfillment service.
+ *
+ * Once a fulfillment service accepts a fulfillment request,
+ * then after they are ready to pack items and send them for delivery, they create fulfillments with the
+ * [fulfillmentCreateV2](https://shopify.dev/api/admin-graphql/latest/mutations/fulfillmentCreateV2)
+ * mutation.
+ * They can provide tracking information right away or create fulfillments without it and then
+ * update the tracking information for fulfillments with the
+ * [fulfillmentTrackingInfoUpdateV2](https://shopify.dev/api/admin-graphql/latest/mutations/fulfillmentTrackingInfoUpdateV2)
+ * mutation.
+ *
+ * [Learn about managing fulfillment orders as a fulfillment service](https://shopify.dev/apps/fulfillment/fulfillment-service-apps/manage-fulfillments).
+ *
+ * ## API access scopes
+ *
+ * Fulfillment orders are governed by the following API access scopes:
+ *
+ * * The `read_merchant_managed_fulfillment_orders` and
+ *   `write_merchant_managed_fulfillment_orders` access scopes
+ *   grant access to fulfillment orders assigned to merchant-managed locations.
+ * * The `read_assigned_fulfillment_orders` and `write_assigned_fulfillment_orders`
+ *   access scopes are intended for fulfillment services.
+ *   These scopes grant access to fulfillment orders assigned to locations that are being managed
+ *   by fulfillment services.
+ * * The `read_third_party_fulfillment_orders` and `write_third_party_fulfillment_orders`
+ *   access scopes grant access to fulfillment orders
+ *   assigned to locations managed by other fulfillment services.
+ *
+ * ### Fulfillment service app access scopes
+ *
+ * Usually, **fulfillment services** have the `write_assigned_fulfillment_orders` access scope
+ * and don't have the `*_third_party_fulfillment_orders`
+ * or `*_merchant_managed_fulfillment_orders` access scopes.
+ * The app will only have access to the fulfillment orders assigned to their location
+ * (or multiple locations if the app registers multiple fulfillment services on the shop).
+ * The app will not have access to fulfillment orders assigned to merchant-managed locations
+ * or locations owned by other fulfillment service apps.
+ *
+ * ### Order management app access scopes
+ *
+ * **Order management apps** will usually request `write_merchant_managed_fulfillment_orders` and
+ * `write_third_party_fulfillment_orders` access scopes. This will allow them to manage all fulfillment orders
+ * on behalf of a merchant.
+ *
+ * If an app combines the functions of an order management app and a fulfillment service,
+ * then the app should request all
+ * access scopes to manage all assigned and all unassigned fulfillment orders.
+ *
+ * ## Notifications about fulfillment orders
+ *
+ * Fulfillment services are required to
+ * [register](https://shopify.dev/api/admin-graphql/latest/objects/FulfillmentService)
+ * a self-hosted callback URL which has a number of uses. One of these uses is that this callback URL will be notified
+ * whenever a merchant submits a fulfillment or cancellation request.
+ *
+ * Both merchants and apps can
+ * [subscribe](https://shopify.dev/apps/fulfillment/fulfillment-service-apps/manage-fulfillments#webhooks)
+ * to the
+ * [fulfillment order webhooks](https://shopify.dev/api/admin-graphql/latest/enums/WebhookSubscriptionTopic#value-fulfillmentorderscancellationrequestaccepted)
+ * to be notified whenever fulfillment order related domain events occur.
+ *
+ * [Learn about fulfillment workflows](https://shopify.dev/apps/fulfillment).
  *
  */
 export type FulfillmentOrderFulfillmentsArgs = {
@@ -13121,10 +13411,155 @@ export type FulfillmentOrderFulfillmentsArgs = {
 
 
 /**
- * Represents a fulfillment order. In Shopify, a fulfillment order represents a group of one or more items
- * in an order that are to be fulfilled from the same location. There can be more than one fulfillment order
- * for an order at a given location. Fulfillment orders are created automatically when an order is created.
- * To learn how to build a fulfillment app, refer to [Fulfillment apps](https://shopify.dev/apps/fulfillment).
+ * The FulfillmentOrder object represents either an item or a group of items in an
+ * [Order](https://shopify.dev/api/admin-graphql/latest/objects/Order)
+ * that are expected to be fulfilled from the same location.
+ * There can be more than one fulfillment order for an
+ * [order](https://shopify.dev/api/admin-graphql/latest/objects/Order)
+ * at a given location.
+ *
+ * {{ '/api/reference/fulfillment_order_relationships.png' | image }}
+ *
+ * Fulfillment orders represent the work which is intended to be done in relation to an order.
+ * When fulfillment has started for one or more line items, a
+ * [Fulfillment](https://shopify.dev/api/admin-graphql/latest/objects/Fulfillment)
+ * is created by a merchant or third party to represent the ongoing or completed work of fulfillment.
+ *
+ * [See below for more details on creating fulfillments](#the-lifecycle-of-a-fulfillment-order-at-a-location-which-is-managed-by-a-fulfillment-service).
+ *
+ * > Note:
+ * > Shopify creates fulfillment orders automatically when an order is created.
+ * > It is not possible to manually create fulfillment orders.
+ * >
+ * > [See below for more details on the lifecycle of a fulfillment order](#the-lifecycle-of-a-fulfillment-order).
+ *
+ * ## Retrieving fulfillment orders
+ *
+ * All fulfillment orders related to a given order can be retrieved with the
+ * [Order.fulfillmentOrders](https://shopify.dev/api/admin-graphql/latest/objects/Order#connection-order-fulfillmentorders)
+ * connection.
+ *
+ * [API access scopes](#api-access-scopes)
+ * govern which fulfillments orders are returned to clients.
+ * An API client will only receive a subset of the fulfillment orders which belong to an order
+ * if they don't have the necessary access scopes to view all of the fulfillment orders.
+ *
+ * Fulfillment service apps can retrieve the fulfillment orders which have been assigned to their locations with the
+ * [Shop.assignedFulfillmentOrders](https://shopify.dev/api/admin-graphql/latest/objects/Shop#connection-shop-assignedfulfillmentorders)
+ * connection.
+ * Use the `assignmentStatus` argument to control whether all assigned fulfillment orders
+ * should be returned or only those where a merchant has sent a
+ * [fulfillment request](https://shopify.dev/api/admin-graphql/latest/objects/FulfillmentOrderMerchantRequest)
+ * and it has yet to be responded to.
+ *
+ * The API client must be granted the `read_assigned_fulfillment_orders` access scope to access
+ * the assigned fulfillment orders.
+ *
+ * ## The lifecycle of a fulfillment order
+ *
+ * ### Fulfillment Order Creation
+ *
+ * After an order is created, a background worker performs the order routing process which determines
+ * which locations will be responsible for fulfilling the purchased items.
+ * Once the order routing process is complete, one or more fulfillment orders will be created
+ * and assigned to these locations. It is not possible to manually create fulfillment orders.
+ *
+ * Once a fulfillment order has been created, it will have one of two different lifecycles depending on
+ * the type of location which the fulfillment order is assigned to.
+ *
+ * ### The lifecycle of a fulfillment order at a merchant managed location
+ *
+ * Fulfillment orders are completed by creating
+ * [fulfillments](https://shopify.dev/api/admin-graphql/latest/objects/Fulfillment).
+ * Fulfillments represents the work done.
+ *
+ * For digital products a merchant or an order management app would create a fulfilment once the digital asset
+ * has been provisioned.
+ * For example, in the case of a digital gift card, a merchant would to do this once
+ * the gift card has been activated - before the email has been shipped.
+ *
+ * On the other hand, for a traditional shipped order,
+ * a merchant or an order management app would create a fulfillment after picking and packing the items relating
+ * to a fulfillment order, but before the courier has collected the goods.
+ *
+ * [Learn about managing fulfillment orders as an order management app](https://shopify.dev/apps/fulfillment/order-management-apps/manage-fulfillments).
+ *
+ * ### The lifecycle of a fulfillment order at a location which is managed by a fulfillment service
+ *
+ * For fulfillment orders which are assigned to a location that is managed by a fulfillment service,
+ * a merchant or an Order Management App can
+ * [send a fulfillment request](https://shopify.dev/api/admin-graphql/latest/mutations/fulfillmentOrderSubmitFulfillmentRequest)
+ * to the fulfillment service which operates the location to request that they fulfill the associated items.
+ * A fulfillment service has the option to
+ * [accept](https://shopify.dev/api/admin-graphql/latest/mutations/fulfillmentOrderAcceptFulfillmentRequest)
+ * or [reject](https://shopify.dev/api/admin-graphql/latest/mutations/fulfillmentOrderRejectFulfillmentRequest)
+ * this fulfillment request.
+ *
+ * Once the fulfillment service has accepted the request, the request can no longer be cancelled by the merchant
+ * or order management app and instead a
+ * [cancellation request must be submitted](https://shopify.dev/api/admin-graphql/latest/mutations/fulfillmentOrderSubmitCancellationRequest)
+ * to the fulfillment service.
+ *
+ * Once a fulfillment service accepts a fulfillment request,
+ * then after they are ready to pack items and send them for delivery, they create fulfillments with the
+ * [fulfillmentCreateV2](https://shopify.dev/api/admin-graphql/latest/mutations/fulfillmentCreateV2)
+ * mutation.
+ * They can provide tracking information right away or create fulfillments without it and then
+ * update the tracking information for fulfillments with the
+ * [fulfillmentTrackingInfoUpdateV2](https://shopify.dev/api/admin-graphql/latest/mutations/fulfillmentTrackingInfoUpdateV2)
+ * mutation.
+ *
+ * [Learn about managing fulfillment orders as a fulfillment service](https://shopify.dev/apps/fulfillment/fulfillment-service-apps/manage-fulfillments).
+ *
+ * ## API access scopes
+ *
+ * Fulfillment orders are governed by the following API access scopes:
+ *
+ * * The `read_merchant_managed_fulfillment_orders` and
+ *   `write_merchant_managed_fulfillment_orders` access scopes
+ *   grant access to fulfillment orders assigned to merchant-managed locations.
+ * * The `read_assigned_fulfillment_orders` and `write_assigned_fulfillment_orders`
+ *   access scopes are intended for fulfillment services.
+ *   These scopes grant access to fulfillment orders assigned to locations that are being managed
+ *   by fulfillment services.
+ * * The `read_third_party_fulfillment_orders` and `write_third_party_fulfillment_orders`
+ *   access scopes grant access to fulfillment orders
+ *   assigned to locations managed by other fulfillment services.
+ *
+ * ### Fulfillment service app access scopes
+ *
+ * Usually, **fulfillment services** have the `write_assigned_fulfillment_orders` access scope
+ * and don't have the `*_third_party_fulfillment_orders`
+ * or `*_merchant_managed_fulfillment_orders` access scopes.
+ * The app will only have access to the fulfillment orders assigned to their location
+ * (or multiple locations if the app registers multiple fulfillment services on the shop).
+ * The app will not have access to fulfillment orders assigned to merchant-managed locations
+ * or locations owned by other fulfillment service apps.
+ *
+ * ### Order management app access scopes
+ *
+ * **Order management apps** will usually request `write_merchant_managed_fulfillment_orders` and
+ * `write_third_party_fulfillment_orders` access scopes. This will allow them to manage all fulfillment orders
+ * on behalf of a merchant.
+ *
+ * If an app combines the functions of an order management app and a fulfillment service,
+ * then the app should request all
+ * access scopes to manage all assigned and all unassigned fulfillment orders.
+ *
+ * ## Notifications about fulfillment orders
+ *
+ * Fulfillment services are required to
+ * [register](https://shopify.dev/api/admin-graphql/latest/objects/FulfillmentService)
+ * a self-hosted callback URL which has a number of uses. One of these uses is that this callback URL will be notified
+ * whenever a merchant submits a fulfillment or cancellation request.
+ *
+ * Both merchants and apps can
+ * [subscribe](https://shopify.dev/apps/fulfillment/fulfillment-service-apps/manage-fulfillments#webhooks)
+ * to the
+ * [fulfillment order webhooks](https://shopify.dev/api/admin-graphql/latest/enums/WebhookSubscriptionTopic#value-fulfillmentorderscancellationrequestaccepted)
+ * to be notified whenever fulfillment order related domain events occur.
+ *
+ * [Learn about fulfillment workflows](https://shopify.dev/apps/fulfillment).
  *
  */
 export type FulfillmentOrderLineItemsArgs = {
@@ -13137,10 +13572,155 @@ export type FulfillmentOrderLineItemsArgs = {
 
 
 /**
- * Represents a fulfillment order. In Shopify, a fulfillment order represents a group of one or more items
- * in an order that are to be fulfilled from the same location. There can be more than one fulfillment order
- * for an order at a given location. Fulfillment orders are created automatically when an order is created.
- * To learn how to build a fulfillment app, refer to [Fulfillment apps](https://shopify.dev/apps/fulfillment).
+ * The FulfillmentOrder object represents either an item or a group of items in an
+ * [Order](https://shopify.dev/api/admin-graphql/latest/objects/Order)
+ * that are expected to be fulfilled from the same location.
+ * There can be more than one fulfillment order for an
+ * [order](https://shopify.dev/api/admin-graphql/latest/objects/Order)
+ * at a given location.
+ *
+ * {{ '/api/reference/fulfillment_order_relationships.png' | image }}
+ *
+ * Fulfillment orders represent the work which is intended to be done in relation to an order.
+ * When fulfillment has started for one or more line items, a
+ * [Fulfillment](https://shopify.dev/api/admin-graphql/latest/objects/Fulfillment)
+ * is created by a merchant or third party to represent the ongoing or completed work of fulfillment.
+ *
+ * [See below for more details on creating fulfillments](#the-lifecycle-of-a-fulfillment-order-at-a-location-which-is-managed-by-a-fulfillment-service).
+ *
+ * > Note:
+ * > Shopify creates fulfillment orders automatically when an order is created.
+ * > It is not possible to manually create fulfillment orders.
+ * >
+ * > [See below for more details on the lifecycle of a fulfillment order](#the-lifecycle-of-a-fulfillment-order).
+ *
+ * ## Retrieving fulfillment orders
+ *
+ * All fulfillment orders related to a given order can be retrieved with the
+ * [Order.fulfillmentOrders](https://shopify.dev/api/admin-graphql/latest/objects/Order#connection-order-fulfillmentorders)
+ * connection.
+ *
+ * [API access scopes](#api-access-scopes)
+ * govern which fulfillments orders are returned to clients.
+ * An API client will only receive a subset of the fulfillment orders which belong to an order
+ * if they don't have the necessary access scopes to view all of the fulfillment orders.
+ *
+ * Fulfillment service apps can retrieve the fulfillment orders which have been assigned to their locations with the
+ * [Shop.assignedFulfillmentOrders](https://shopify.dev/api/admin-graphql/latest/objects/Shop#connection-shop-assignedfulfillmentorders)
+ * connection.
+ * Use the `assignmentStatus` argument to control whether all assigned fulfillment orders
+ * should be returned or only those where a merchant has sent a
+ * [fulfillment request](https://shopify.dev/api/admin-graphql/latest/objects/FulfillmentOrderMerchantRequest)
+ * and it has yet to be responded to.
+ *
+ * The API client must be granted the `read_assigned_fulfillment_orders` access scope to access
+ * the assigned fulfillment orders.
+ *
+ * ## The lifecycle of a fulfillment order
+ *
+ * ### Fulfillment Order Creation
+ *
+ * After an order is created, a background worker performs the order routing process which determines
+ * which locations will be responsible for fulfilling the purchased items.
+ * Once the order routing process is complete, one or more fulfillment orders will be created
+ * and assigned to these locations. It is not possible to manually create fulfillment orders.
+ *
+ * Once a fulfillment order has been created, it will have one of two different lifecycles depending on
+ * the type of location which the fulfillment order is assigned to.
+ *
+ * ### The lifecycle of a fulfillment order at a merchant managed location
+ *
+ * Fulfillment orders are completed by creating
+ * [fulfillments](https://shopify.dev/api/admin-graphql/latest/objects/Fulfillment).
+ * Fulfillments represents the work done.
+ *
+ * For digital products a merchant or an order management app would create a fulfilment once the digital asset
+ * has been provisioned.
+ * For example, in the case of a digital gift card, a merchant would to do this once
+ * the gift card has been activated - before the email has been shipped.
+ *
+ * On the other hand, for a traditional shipped order,
+ * a merchant or an order management app would create a fulfillment after picking and packing the items relating
+ * to a fulfillment order, but before the courier has collected the goods.
+ *
+ * [Learn about managing fulfillment orders as an order management app](https://shopify.dev/apps/fulfillment/order-management-apps/manage-fulfillments).
+ *
+ * ### The lifecycle of a fulfillment order at a location which is managed by a fulfillment service
+ *
+ * For fulfillment orders which are assigned to a location that is managed by a fulfillment service,
+ * a merchant or an Order Management App can
+ * [send a fulfillment request](https://shopify.dev/api/admin-graphql/latest/mutations/fulfillmentOrderSubmitFulfillmentRequest)
+ * to the fulfillment service which operates the location to request that they fulfill the associated items.
+ * A fulfillment service has the option to
+ * [accept](https://shopify.dev/api/admin-graphql/latest/mutations/fulfillmentOrderAcceptFulfillmentRequest)
+ * or [reject](https://shopify.dev/api/admin-graphql/latest/mutations/fulfillmentOrderRejectFulfillmentRequest)
+ * this fulfillment request.
+ *
+ * Once the fulfillment service has accepted the request, the request can no longer be cancelled by the merchant
+ * or order management app and instead a
+ * [cancellation request must be submitted](https://shopify.dev/api/admin-graphql/latest/mutations/fulfillmentOrderSubmitCancellationRequest)
+ * to the fulfillment service.
+ *
+ * Once a fulfillment service accepts a fulfillment request,
+ * then after they are ready to pack items and send them for delivery, they create fulfillments with the
+ * [fulfillmentCreateV2](https://shopify.dev/api/admin-graphql/latest/mutations/fulfillmentCreateV2)
+ * mutation.
+ * They can provide tracking information right away or create fulfillments without it and then
+ * update the tracking information for fulfillments with the
+ * [fulfillmentTrackingInfoUpdateV2](https://shopify.dev/api/admin-graphql/latest/mutations/fulfillmentTrackingInfoUpdateV2)
+ * mutation.
+ *
+ * [Learn about managing fulfillment orders as a fulfillment service](https://shopify.dev/apps/fulfillment/fulfillment-service-apps/manage-fulfillments).
+ *
+ * ## API access scopes
+ *
+ * Fulfillment orders are governed by the following API access scopes:
+ *
+ * * The `read_merchant_managed_fulfillment_orders` and
+ *   `write_merchant_managed_fulfillment_orders` access scopes
+ *   grant access to fulfillment orders assigned to merchant-managed locations.
+ * * The `read_assigned_fulfillment_orders` and `write_assigned_fulfillment_orders`
+ *   access scopes are intended for fulfillment services.
+ *   These scopes grant access to fulfillment orders assigned to locations that are being managed
+ *   by fulfillment services.
+ * * The `read_third_party_fulfillment_orders` and `write_third_party_fulfillment_orders`
+ *   access scopes grant access to fulfillment orders
+ *   assigned to locations managed by other fulfillment services.
+ *
+ * ### Fulfillment service app access scopes
+ *
+ * Usually, **fulfillment services** have the `write_assigned_fulfillment_orders` access scope
+ * and don't have the `*_third_party_fulfillment_orders`
+ * or `*_merchant_managed_fulfillment_orders` access scopes.
+ * The app will only have access to the fulfillment orders assigned to their location
+ * (or multiple locations if the app registers multiple fulfillment services on the shop).
+ * The app will not have access to fulfillment orders assigned to merchant-managed locations
+ * or locations owned by other fulfillment service apps.
+ *
+ * ### Order management app access scopes
+ *
+ * **Order management apps** will usually request `write_merchant_managed_fulfillment_orders` and
+ * `write_third_party_fulfillment_orders` access scopes. This will allow them to manage all fulfillment orders
+ * on behalf of a merchant.
+ *
+ * If an app combines the functions of an order management app and a fulfillment service,
+ * then the app should request all
+ * access scopes to manage all assigned and all unassigned fulfillment orders.
+ *
+ * ## Notifications about fulfillment orders
+ *
+ * Fulfillment services are required to
+ * [register](https://shopify.dev/api/admin-graphql/latest/objects/FulfillmentService)
+ * a self-hosted callback URL which has a number of uses. One of these uses is that this callback URL will be notified
+ * whenever a merchant submits a fulfillment or cancellation request.
+ *
+ * Both merchants and apps can
+ * [subscribe](https://shopify.dev/apps/fulfillment/fulfillment-service-apps/manage-fulfillments#webhooks)
+ * to the
+ * [fulfillment order webhooks](https://shopify.dev/api/admin-graphql/latest/enums/WebhookSubscriptionTopic#value-fulfillmentorderscancellationrequestaccepted)
+ * to be notified whenever fulfillment order related domain events occur.
+ *
+ * [Learn about fulfillment workflows](https://shopify.dev/apps/fulfillment).
  *
  */
 export type FulfillmentOrderLocationsForMoveArgs = {
@@ -13153,10 +13733,155 @@ export type FulfillmentOrderLocationsForMoveArgs = {
 
 
 /**
- * Represents a fulfillment order. In Shopify, a fulfillment order represents a group of one or more items
- * in an order that are to be fulfilled from the same location. There can be more than one fulfillment order
- * for an order at a given location. Fulfillment orders are created automatically when an order is created.
- * To learn how to build a fulfillment app, refer to [Fulfillment apps](https://shopify.dev/apps/fulfillment).
+ * The FulfillmentOrder object represents either an item or a group of items in an
+ * [Order](https://shopify.dev/api/admin-graphql/latest/objects/Order)
+ * that are expected to be fulfilled from the same location.
+ * There can be more than one fulfillment order for an
+ * [order](https://shopify.dev/api/admin-graphql/latest/objects/Order)
+ * at a given location.
+ *
+ * {{ '/api/reference/fulfillment_order_relationships.png' | image }}
+ *
+ * Fulfillment orders represent the work which is intended to be done in relation to an order.
+ * When fulfillment has started for one or more line items, a
+ * [Fulfillment](https://shopify.dev/api/admin-graphql/latest/objects/Fulfillment)
+ * is created by a merchant or third party to represent the ongoing or completed work of fulfillment.
+ *
+ * [See below for more details on creating fulfillments](#the-lifecycle-of-a-fulfillment-order-at-a-location-which-is-managed-by-a-fulfillment-service).
+ *
+ * > Note:
+ * > Shopify creates fulfillment orders automatically when an order is created.
+ * > It is not possible to manually create fulfillment orders.
+ * >
+ * > [See below for more details on the lifecycle of a fulfillment order](#the-lifecycle-of-a-fulfillment-order).
+ *
+ * ## Retrieving fulfillment orders
+ *
+ * All fulfillment orders related to a given order can be retrieved with the
+ * [Order.fulfillmentOrders](https://shopify.dev/api/admin-graphql/latest/objects/Order#connection-order-fulfillmentorders)
+ * connection.
+ *
+ * [API access scopes](#api-access-scopes)
+ * govern which fulfillments orders are returned to clients.
+ * An API client will only receive a subset of the fulfillment orders which belong to an order
+ * if they don't have the necessary access scopes to view all of the fulfillment orders.
+ *
+ * Fulfillment service apps can retrieve the fulfillment orders which have been assigned to their locations with the
+ * [Shop.assignedFulfillmentOrders](https://shopify.dev/api/admin-graphql/latest/objects/Shop#connection-shop-assignedfulfillmentorders)
+ * connection.
+ * Use the `assignmentStatus` argument to control whether all assigned fulfillment orders
+ * should be returned or only those where a merchant has sent a
+ * [fulfillment request](https://shopify.dev/api/admin-graphql/latest/objects/FulfillmentOrderMerchantRequest)
+ * and it has yet to be responded to.
+ *
+ * The API client must be granted the `read_assigned_fulfillment_orders` access scope to access
+ * the assigned fulfillment orders.
+ *
+ * ## The lifecycle of a fulfillment order
+ *
+ * ### Fulfillment Order Creation
+ *
+ * After an order is created, a background worker performs the order routing process which determines
+ * which locations will be responsible for fulfilling the purchased items.
+ * Once the order routing process is complete, one or more fulfillment orders will be created
+ * and assigned to these locations. It is not possible to manually create fulfillment orders.
+ *
+ * Once a fulfillment order has been created, it will have one of two different lifecycles depending on
+ * the type of location which the fulfillment order is assigned to.
+ *
+ * ### The lifecycle of a fulfillment order at a merchant managed location
+ *
+ * Fulfillment orders are completed by creating
+ * [fulfillments](https://shopify.dev/api/admin-graphql/latest/objects/Fulfillment).
+ * Fulfillments represents the work done.
+ *
+ * For digital products a merchant or an order management app would create a fulfilment once the digital asset
+ * has been provisioned.
+ * For example, in the case of a digital gift card, a merchant would to do this once
+ * the gift card has been activated - before the email has been shipped.
+ *
+ * On the other hand, for a traditional shipped order,
+ * a merchant or an order management app would create a fulfillment after picking and packing the items relating
+ * to a fulfillment order, but before the courier has collected the goods.
+ *
+ * [Learn about managing fulfillment orders as an order management app](https://shopify.dev/apps/fulfillment/order-management-apps/manage-fulfillments).
+ *
+ * ### The lifecycle of a fulfillment order at a location which is managed by a fulfillment service
+ *
+ * For fulfillment orders which are assigned to a location that is managed by a fulfillment service,
+ * a merchant or an Order Management App can
+ * [send a fulfillment request](https://shopify.dev/api/admin-graphql/latest/mutations/fulfillmentOrderSubmitFulfillmentRequest)
+ * to the fulfillment service which operates the location to request that they fulfill the associated items.
+ * A fulfillment service has the option to
+ * [accept](https://shopify.dev/api/admin-graphql/latest/mutations/fulfillmentOrderAcceptFulfillmentRequest)
+ * or [reject](https://shopify.dev/api/admin-graphql/latest/mutations/fulfillmentOrderRejectFulfillmentRequest)
+ * this fulfillment request.
+ *
+ * Once the fulfillment service has accepted the request, the request can no longer be cancelled by the merchant
+ * or order management app and instead a
+ * [cancellation request must be submitted](https://shopify.dev/api/admin-graphql/latest/mutations/fulfillmentOrderSubmitCancellationRequest)
+ * to the fulfillment service.
+ *
+ * Once a fulfillment service accepts a fulfillment request,
+ * then after they are ready to pack items and send them for delivery, they create fulfillments with the
+ * [fulfillmentCreateV2](https://shopify.dev/api/admin-graphql/latest/mutations/fulfillmentCreateV2)
+ * mutation.
+ * They can provide tracking information right away or create fulfillments without it and then
+ * update the tracking information for fulfillments with the
+ * [fulfillmentTrackingInfoUpdateV2](https://shopify.dev/api/admin-graphql/latest/mutations/fulfillmentTrackingInfoUpdateV2)
+ * mutation.
+ *
+ * [Learn about managing fulfillment orders as a fulfillment service](https://shopify.dev/apps/fulfillment/fulfillment-service-apps/manage-fulfillments).
+ *
+ * ## API access scopes
+ *
+ * Fulfillment orders are governed by the following API access scopes:
+ *
+ * * The `read_merchant_managed_fulfillment_orders` and
+ *   `write_merchant_managed_fulfillment_orders` access scopes
+ *   grant access to fulfillment orders assigned to merchant-managed locations.
+ * * The `read_assigned_fulfillment_orders` and `write_assigned_fulfillment_orders`
+ *   access scopes are intended for fulfillment services.
+ *   These scopes grant access to fulfillment orders assigned to locations that are being managed
+ *   by fulfillment services.
+ * * The `read_third_party_fulfillment_orders` and `write_third_party_fulfillment_orders`
+ *   access scopes grant access to fulfillment orders
+ *   assigned to locations managed by other fulfillment services.
+ *
+ * ### Fulfillment service app access scopes
+ *
+ * Usually, **fulfillment services** have the `write_assigned_fulfillment_orders` access scope
+ * and don't have the `*_third_party_fulfillment_orders`
+ * or `*_merchant_managed_fulfillment_orders` access scopes.
+ * The app will only have access to the fulfillment orders assigned to their location
+ * (or multiple locations if the app registers multiple fulfillment services on the shop).
+ * The app will not have access to fulfillment orders assigned to merchant-managed locations
+ * or locations owned by other fulfillment service apps.
+ *
+ * ### Order management app access scopes
+ *
+ * **Order management apps** will usually request `write_merchant_managed_fulfillment_orders` and
+ * `write_third_party_fulfillment_orders` access scopes. This will allow them to manage all fulfillment orders
+ * on behalf of a merchant.
+ *
+ * If an app combines the functions of an order management app and a fulfillment service,
+ * then the app should request all
+ * access scopes to manage all assigned and all unassigned fulfillment orders.
+ *
+ * ## Notifications about fulfillment orders
+ *
+ * Fulfillment services are required to
+ * [register](https://shopify.dev/api/admin-graphql/latest/objects/FulfillmentService)
+ * a self-hosted callback URL which has a number of uses. One of these uses is that this callback URL will be notified
+ * whenever a merchant submits a fulfillment or cancellation request.
+ *
+ * Both merchants and apps can
+ * [subscribe](https://shopify.dev/apps/fulfillment/fulfillment-service-apps/manage-fulfillments#webhooks)
+ * to the
+ * [fulfillment order webhooks](https://shopify.dev/api/admin-graphql/latest/enums/WebhookSubscriptionTopic#value-fulfillmentorderscancellationrequestaccepted)
+ * to be notified whenever fulfillment order related domain events occur.
+ *
+ * [Learn about fulfillment workflows](https://shopify.dev/apps/fulfillment).
  *
  */
 export type FulfillmentOrderMerchantRequestsArgs = {
@@ -15698,7 +16423,7 @@ export type LineItem = Node & {
   sellingPlan?: Maybe<LineItemSellingPlan>;
   /** The variant SKU number. */
   sku?: Maybe<Scalars['String']>;
-  /** Staff attributed to the initial sale of the line item. */
+  /** Staff attributed to the line item. */
   staffMember?: Maybe<StaffMember>;
   /** The taxes charged for this line item. */
   taxLines: Array<TaxLine>;
@@ -15847,7 +16572,7 @@ export type LineItemMutable = Node & {
   restockable: Scalars['Boolean'];
   /** The variant SKU number. */
   sku?: Maybe<Scalars['String']>;
-  /** Staff attributed to the initial sale of the line item. */
+  /** Staff attributed to the line item. */
   staffMember?: Maybe<StaffMember>;
   /** The TaxLine object connected to this line item. */
   taxLines: Array<TaxLine>;
@@ -18925,7 +19650,11 @@ export type MetafieldDefinitionInput = {
   namespace: Scalars['String'];
   /** The resource type that the metafield definition is attached to. */
   ownerType: MetafieldOwnerType;
-  /** Whether to pin the metafield definition. */
+  /**
+   * Whether to [pin](https://help.shopify.com/manual/custom-data/metafields/pinning-metafield-definitions)
+   * the metafield definition.
+   *
+   */
   pin?: InputMaybe<Scalars['Boolean']>;
   /** The type of data that the metafield will store. */
   type: Scalars['String'];
@@ -24467,7 +25196,17 @@ export type Order = CommentEventSubject & HasEvents & HasLocalizationExtensions 
    *
    */
   fulfillable: Scalars['Boolean'];
-  /** A list of fulfillment orders for the order. */
+  /**
+   * A list of fulfillment orders for a specific order.
+   *
+   * [FulfillmentOrder API access scopes](https://shopify.dev/api/admin-graphql/latest/objects/FulfillmentOrder#api-access-scopes)
+   * govern which fulfillments orders are returned.
+   * An API client will only receive a subset of the fulfillment orders which belong to an order
+   * if they don't have the necessary access scopes to view all of the fulfillment orders.
+   * In the case that an API client does not have the access scopes necessary to view
+   * any of the fulfillment orders that belong to an order, an empty array will be returned.
+   *
+   */
   fulfillmentOrders: FulfillmentOrderConnection;
   /** List of shipments for the order. */
   fulfillments: Array<Fulfillment>;
@@ -42486,6 +43225,8 @@ export enum WebhookSubscriptionTopic {
   CustomersEnable = 'CUSTOMERS_ENABLE',
   /** The webhook topic for `customers_marketing_consent/update` events. Occurs whenever a customer's marketing consent is updated. Requires the `read_customers` scope. */
   CustomersMarketingConsentUpdate = 'CUSTOMERS_MARKETING_CONSENT_UPDATE',
+  /** The webhook topic for `customers/merge` events. Triggers when two customers are merged Requires the `read_customer_merge` scope. */
+  CustomersMerge = 'CUSTOMERS_MERGE',
   /** The webhook topic for `customers/update` events. Occurs whenever a customer is updated. Requires the `read_customers` scope. */
   CustomersUpdate = 'CUSTOMERS_UPDATE',
   /** The webhook topic for `customer_groups/create` events. Occurs whenever a customer saved search is created. Requires the `read_customers` scope. */
@@ -42618,7 +43359,7 @@ export enum WebhookSubscriptionTopic {
   OrdersPartiallyFulfilled = 'ORDERS_PARTIALLY_FULFILLED',
   /** The webhook topic for `orders/updated` events. Occurs whenever an order is updated. Requires at least one of the following scopes: read_orders, read_marketplace_orders, read_buyer_membership_orders. */
   OrdersUpdated = 'ORDERS_UPDATED',
-  /** The webhook topic for `order_transactions/create` events. Occurs when a order transaction is created or when it's status is updated. Only occurs for transactions with a status of success, failure or error. Requires at least one of the following scopes: read_orders, read_marketplace_orders. */
+  /** The webhook topic for `order_transactions/create` events. Occurs when a order transaction is created or when it's status is updated. Only occurs for transactions with a status of success, failure or error. Requires at least one of the following scopes: read_orders, read_marketplace_orders, read_buyer_membership_orders. */
   OrderTransactionsCreate = 'ORDER_TRANSACTIONS_CREATE',
   /** The webhook topic for `payment_schedules/due` events. Occurs whenever payment schedules are due. Requires the `read_payment_terms` scope. */
   PaymentSchedulesDue = 'PAYMENT_SCHEDULES_DUE',
@@ -42652,19 +43393,19 @@ export enum WebhookSubscriptionTopic {
   ProfilesDelete = 'PROFILES_DELETE',
   /** The webhook topic for `profiles/update` events. Occurs whenever a delivery profile is updated Requires the `read_shipping` scope. */
   ProfilesUpdate = 'PROFILES_UPDATE',
-  /** The webhook topic for `refunds/create` events. Occurs whenever a new refund is created without errors on an order, independent from the movement of money. Requires at least one of the following scopes: read_orders, read_marketplace_orders. */
+  /** The webhook topic for `refunds/create` events. Occurs whenever a new refund is created without errors on an order, independent from the movement of money. Requires at least one of the following scopes: read_orders, read_marketplace_orders, read_buyer_membership_orders. */
   RefundsCreate = 'REFUNDS_CREATE',
-  /** The webhook topic for `returns/approve` events. Occurs whenever a return is approved. This means `Return.status` is `OPEN`. Requires at least one of the following scopes: read_returns, read_marketplace_returns. */
+  /** The webhook topic for `returns/approve` events. Occurs whenever a return is approved. This means `Return.status` is `OPEN`. Requires at least one of the following scopes: read_returns, read_marketplace_returns, read_buyer_membership_orders. */
   ReturnsApprove = 'RETURNS_APPROVE',
-  /** The webhook topic for `returns/cancel` events. Occurs whenever a return is canceled. Requires at least one of the following scopes: read_orders, read_marketplace_orders, read_returns, read_marketplace_returns. */
+  /** The webhook topic for `returns/cancel` events. Occurs whenever a return is canceled. Requires at least one of the following scopes: read_orders, read_marketplace_orders, read_returns, read_marketplace_returns, read_buyer_membership_orders. */
   ReturnsCancel = 'RETURNS_CANCEL',
-  /** The webhook topic for `returns/close` events. Occurs whenever a return is closed. Requires at least one of the following scopes: read_orders, read_marketplace_orders, read_returns, read_marketplace_returns. */
+  /** The webhook topic for `returns/close` events. Occurs whenever a return is closed. Requires at least one of the following scopes: read_orders, read_marketplace_orders, read_returns, read_marketplace_returns, read_buyer_membership_orders. */
   ReturnsClose = 'RETURNS_CLOSE',
-  /** The webhook topic for `returns/decline` events. Occurs whenever a return is declined. This means `Return.status` is `DECLINED`. Requires at least one of the following scopes: read_returns, read_marketplace_returns. */
+  /** The webhook topic for `returns/decline` events. Occurs whenever a return is declined. This means `Return.status` is `DECLINED`. Requires at least one of the following scopes: read_returns, read_marketplace_returns, read_buyer_membership_orders. */
   ReturnsDecline = 'RETURNS_DECLINE',
-  /** The webhook topic for `returns/reopen` events. Occurs whenever a closed return is reopened. Requires at least one of the following scopes: read_orders, read_marketplace_orders, read_returns, read_marketplace_returns. */
+  /** The webhook topic for `returns/reopen` events. Occurs whenever a closed return is reopened. Requires at least one of the following scopes: read_orders, read_marketplace_orders, read_returns, read_marketplace_returns, read_buyer_membership_orders. */
   ReturnsReopen = 'RETURNS_REOPEN',
-  /** The webhook topic for `returns/request` events. Occurs whenever a return is requested. This means `Return.status` is `REQUESTED`. Requires at least one of the following scopes: read_returns, read_marketplace_returns. */
+  /** The webhook topic for `returns/request` events. Occurs whenever a return is requested. This means `Return.status` is `REQUESTED`. Requires at least one of the following scopes: read_returns, read_marketplace_returns, read_buyer_membership_orders. */
   ReturnsRequest = 'RETURNS_REQUEST',
   /**
    * The webhook topic for `reverse_deliveries/attach_deliverable` events. Occurs whenever a deliverable is attached to a reverse delivery.
@@ -42836,12 +43577,13 @@ export type AddProductsToCollectionMutationVariables = Exact<{
 
 export type AddProductsToCollectionMutation = { __typename?: 'Mutation', collectionAddProducts?: { __typename?: 'CollectionAddProductsPayload', collection?: { __typename?: 'Collection', id: string } | null, userErrors: Array<{ __typename?: 'UserError', field?: Array<string> | null, message: string }> } | null };
 
-export type GetOrderTagsQueryVariables = Exact<{
+export type AddTagsMutationVariables = Exact<{
   id: Scalars['ID'];
+  tags: Array<Scalars['String']> | Scalars['String'];
 }>;
 
 
-export type GetOrderTagsQuery = { __typename?: 'QueryRoot', order?: { __typename?: 'Order', tags: Array<string> } | null };
+export type AddTagsMutation = { __typename?: 'Mutation', tagsAdd?: { __typename?: 'TagsAddPayload', node?: { __typename?: 'AbandonedCheckout', id: string } | { __typename?: 'Abandonment', id: string } | { __typename?: 'AddAllProductsOperation', id: string } | { __typename?: 'AdditionalFee', id: string } | { __typename?: 'App', id: string } | { __typename?: 'AppCatalog', id: string } | { __typename?: 'AppCredit', id: string } | { __typename?: 'AppInstallation', id: string } | { __typename?: 'AppPurchaseOneTime', id: string } | { __typename?: 'AppRevenueAttributionRecord', id: string } | { __typename?: 'AppSubscription', id: string } | { __typename?: 'AppUsageRecord', id: string } | { __typename?: 'BasicEvent', id: string } | { __typename?: 'BulkOperation', id: string } | { __typename?: 'CalculatedOrder', id: string } | { __typename?: 'CatalogCsvOperation', id: string } | { __typename?: 'Channel', id: string } | { __typename?: 'ChannelDefinition', id: string } | { __typename?: 'ChannelInformation', id: string } | { __typename?: 'CheckoutProfile', id: string } | { __typename?: 'Collection', id: string } | { __typename?: 'CommentEvent', id: string } | { __typename?: 'Company', id: string } | { __typename?: 'CompanyAddress', id: string } | { __typename?: 'CompanyContact', id: string } | { __typename?: 'CompanyContactRole', id: string } | { __typename?: 'CompanyContactRoleAssignment', id: string } | { __typename?: 'CompanyLocation', id: string } | { __typename?: 'CompanyLocationCatalog', id: string } | { __typename?: 'Customer', id: string } | { __typename?: 'CustomerPaymentMethod', id: string } | { __typename?: 'CustomerSegmentMembersQuery', id: string } | { __typename?: 'CustomerVisit', id: string } | { __typename?: 'DeliveryCarrierService', id: string } | { __typename?: 'DeliveryCondition', id: string } | { __typename?: 'DeliveryCountry', id: string } | { __typename?: 'DeliveryCustomization', id: string } | { __typename?: 'DeliveryLocationGroup', id: string } | { __typename?: 'DeliveryMethod', id: string } | { __typename?: 'DeliveryMethodDefinition', id: string } | { __typename?: 'DeliveryParticipant', id: string } | { __typename?: 'DeliveryProfile', id: string } | { __typename?: 'DeliveryProfileItem', id: string } | { __typename?: 'DeliveryProvince', id: string } | { __typename?: 'DeliveryRateDefinition', id: string } | { __typename?: 'DeliveryZone', id: string } | { __typename?: 'DiscountAutomaticBxgy', id: string } | { __typename?: 'DiscountAutomaticNode', id: string } | { __typename?: 'DiscountCodeNode', id: string } | { __typename?: 'DiscountNode', id: string } | { __typename?: 'DiscountRedeemCodeBulkCreation', id: string } | { __typename?: 'Domain', id: string } | { __typename?: 'DraftOrder', id: string } | { __typename?: 'DraftOrderLineItem', id: string } | { __typename?: 'DraftOrderTag', id: string } | { __typename?: 'Duty', id: string } | { __typename?: 'ExternalVideo', id: string } | { __typename?: 'Fulfillment', id: string } | { __typename?: 'FulfillmentEvent', id: string } | { __typename?: 'FulfillmentLineItem', id: string } | { __typename?: 'FulfillmentOrder', id: string } | { __typename?: 'FulfillmentOrderDestination', id: string } | { __typename?: 'FulfillmentOrderLineItem', id: string } | { __typename?: 'FulfillmentOrderMerchantRequest', id: string } | { __typename?: 'GenericFile', id: string } | { __typename?: 'GiftCard', id: string } | { __typename?: 'InventoryAdjustmentGroup', id: string } | { __typename?: 'InventoryItem', id: string } | { __typename?: 'InventoryLevel', id: string } | { __typename?: 'LineItem', id: string } | { __typename?: 'LineItemMutable', id: string } | { __typename?: 'Location', id: string } | { __typename?: 'MailingAddress', id: string } | { __typename?: 'Market', id: string } | { __typename?: 'MarketCatalog', id: string } | { __typename?: 'MarketRegionCountry', id: string } | { __typename?: 'MarketWebPresence', id: string } | { __typename?: 'MarketingActivity', id: string } | { __typename?: 'MarketingEvent', id: string } | { __typename?: 'MediaImage', id: string } | { __typename?: 'Metafield', id: string } | { __typename?: 'MetafieldDefinition', id: string } | { __typename?: 'MetafieldStorefrontVisibility', id: string } | { __typename?: 'Metaobject', id: string } | { __typename?: 'MetaobjectDefinition', id: string } | { __typename?: 'Model3d', id: string } | { __typename?: 'OnlineStoreArticle', id: string } | { __typename?: 'OnlineStoreBlog', id: string } | { __typename?: 'OnlineStorePage', id: string } | { __typename?: 'Order', id: string } | { __typename?: 'OrderDisputeSummary', id: string } | { __typename?: 'OrderTransaction', id: string } | { __typename?: 'PaymentCustomization', id: string } | { __typename?: 'PaymentMandate', id: string } | { __typename?: 'PaymentSchedule', id: string } | { __typename?: 'PaymentTerms', id: string } | { __typename?: 'PaymentTermsTemplate', id: string } | { __typename?: 'PriceList', id: string } | { __typename?: 'PriceRule', id: string } | { __typename?: 'PriceRuleDiscountCode', id: string } | { __typename?: 'PrivateMetafield', id: string } | { __typename?: 'Product', id: string } | { __typename?: 'ProductOption', id: string } | { __typename?: 'ProductTaxonomyNode', id: string } | { __typename?: 'ProductVariant', id: string } | { __typename?: 'Publication', id: string } | { __typename?: 'PublicationResourceOperation', id: string } | { __typename?: 'Refund', id: string } | { __typename?: 'Return', id: string } | { __typename?: 'ReturnLineItem', id: string } | { __typename?: 'ReturnableFulfillment', id: string } | { __typename?: 'ReverseDelivery', id: string } | { __typename?: 'ReverseDeliveryLineItem', id: string } | { __typename?: 'ReverseFulfillmentOrder', id: string } | { __typename?: 'ReverseFulfillmentOrderDisposition', id: string } | { __typename?: 'ReverseFulfillmentOrderLineItem', id: string } | { __typename?: 'SavedSearch', id: string } | { __typename?: 'ScriptTag', id: string } | { __typename?: 'Segment', id: string } | { __typename?: 'SellingPlan', id: string } | { __typename?: 'SellingPlanGroup', id: string } | { __typename?: 'ServerPixel', id: string } | { __typename?: 'Shop', id: string } | { __typename?: 'ShopAddress', id: string } | { __typename?: 'ShopPolicy', id: string } | { __typename?: 'ShopifyPaymentsAccount', id: string } | { __typename?: 'ShopifyPaymentsBankAccount', id: string } | { __typename?: 'ShopifyPaymentsDispute', id: string } | { __typename?: 'ShopifyPaymentsDisputeEvidence', id: string } | { __typename?: 'ShopifyPaymentsDisputeFileUpload', id: string } | { __typename?: 'ShopifyPaymentsDisputeFulfillment', id: string } | { __typename?: 'ShopifyPaymentsPayout', id: string } | { __typename?: 'ShopifyPaymentsVerification', id: string } | { __typename?: 'StaffMember', id: string } | { __typename?: 'StandardMetafieldDefinitionTemplate', id: string } | { __typename?: 'StorefrontAccessToken', id: string } | { __typename?: 'SubscriptionBillingAttempt', id: string } | { __typename?: 'SubscriptionContract', id: string } | { __typename?: 'SubscriptionDraft', id: string } | { __typename?: 'TenderTransaction', id: string } | { __typename?: 'TransactionFee', id: string } | { __typename?: 'UrlRedirect', id: string } | { __typename?: 'UrlRedirectImport', id: string } | { __typename?: 'Video', id: string } | { __typename?: 'WebPixel', id: string } | { __typename?: 'WebhookSubscription', id: string } | null, userErrors: Array<{ __typename?: 'UserError', field?: Array<string> | null, message: string }> } | null };
 
 export type GetOrderCustomAttributesQueryVariables = Exact<{
   id: Scalars['ID'];
@@ -42876,7 +43618,7 @@ export const CreateProductDocument = {"kind":"Document","definitions":[{"kind":"
 export const PublishablePublishToCurrentChannelDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"publishablePublishToCurrentChannel"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"publishablePublishToCurrentChannel"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"publishable"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"publishedOnCurrentPublication"}}]}}]}}]}}]} as unknown as DocumentNode<PublishablePublishToCurrentChannelMutation, PublishablePublishToCurrentChannelMutationVariables>;
 export const CreateCollectionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"createCollection"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CollectionInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"collectionCreate"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"collection"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<CreateCollectionMutation, CreateCollectionMutationVariables>;
 export const AddProductsToCollectionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"addProductsToCollection"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"productIds"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"collectionAddProducts"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"Argument","name":{"kind":"Name","value":"productIds"},"value":{"kind":"Variable","name":{"kind":"Name","value":"productIds"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"collection"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"userErrors"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"field"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]}}]} as unknown as DocumentNode<AddProductsToCollectionMutation, AddProductsToCollectionMutationVariables>;
-export const GetOrderTagsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getOrderTags"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"order"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"tags"}}]}}]}}]} as unknown as DocumentNode<GetOrderTagsQuery, GetOrderTagsQueryVariables>;
+export const AddTagsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"addTags"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"tags"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"tagsAdd"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"Argument","name":{"kind":"Name","value":"tags"},"value":{"kind":"Variable","name":{"kind":"Name","value":"tags"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"userErrors"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"field"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]}}]} as unknown as DocumentNode<AddTagsMutation, AddTagsMutationVariables>;
 export const GetOrderCustomAttributesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getOrderCustomAttributes"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"order"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"customAttributes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"key"}},{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]}}]}}]} as unknown as DocumentNode<GetOrderCustomAttributesQuery, GetOrderCustomAttributesQueryVariables>;
 export const GetOrderDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getOrder"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"order"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"processedAt"}},{"kind":"Field","name":{"kind":"Name","value":"currencyCode"}},{"kind":"Field","name":{"kind":"Name","value":"customer"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"displayName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}},{"kind":"Field","name":{"kind":"Name","value":"billingAddress"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"address1"}},{"kind":"Field","name":{"kind":"Name","value":"address2"}},{"kind":"Field","name":{"kind":"Name","value":"city"}},{"kind":"Field","name":{"kind":"Name","value":"country"}},{"kind":"Field","name":{"kind":"Name","value":"zip"}},{"kind":"Field","name":{"kind":"Name","value":"phone"}}]}},{"kind":"Field","name":{"kind":"Name","value":"tags"}},{"kind":"Field","name":{"kind":"Name","value":"customAttributes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"key"}},{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"lineItems"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"IntValue","value":"20"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"quantity"}},{"kind":"Field","name":{"kind":"Name","value":"product"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"variants"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"IntValue","value":"1"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"price"}},{"kind":"Field","name":{"kind":"Name","value":"inventoryItem"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"unitCost"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}}]}}]}}]}}]}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalPriceSet"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"presentmentMoney"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"currencyCode"}}]}},{"kind":"Field","name":{"kind":"Name","value":"shopMoney"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"currencyCode"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"customAttributes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"key"}},{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]}}]}}]} as unknown as DocumentNode<GetOrderQuery, GetOrderQueryVariables>;
 export const GetProductsByTagDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getProductsByTag"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"query"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"products"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"IntValue","value":"10"}},{"kind":"Argument","name":{"kind":"Name","value":"query"},"value":{"kind":"Variable","name":{"kind":"Name","value":"query"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetProductsByTagQuery, GetProductsByTagQueryVariables>;

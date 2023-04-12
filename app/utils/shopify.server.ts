@@ -15,13 +15,13 @@ import logger from "~/helpers/logger.server"
 import Sentry from "~/services/sentry"
 import {
   getOrderCustomAttributesQuery,
-  getOrderTagsQuery,
   getProductsByTagQuery,
   createProductMutation,
   publishToCurrentChannelMutation,
   createCollectionMutation,
   addProductsToCollectionMutation,
   getProductQuery,
+  addTagsMutation,
 } from "~/services/shopify/admin"
 import { getOrderQuery } from "~/services/shopify/admin"
 import { createCheckoutMutation } from "~/services/shopify/storefront"
@@ -111,23 +111,6 @@ export async function getOrder(id: string) {
   }
 
   return order
-}
-
-export async function getOrderTags(id: string) {
-  const { order } = await request(
-    shopifyAdminAPIEndpoint,
-    getOrderTagsQuery,
-    {
-      id,
-    },
-    shopifyAdminAPIHeaders
-  )
-
-  if (!order) {
-    throw new ShopifyError("Unable to get order", "order_get_error")
-  }
-
-  return order.tags
 }
 
 export async function getOrderCustomAttributes(id: string) {
@@ -344,4 +327,28 @@ export async function addProductsToCollection(
   }
 
   return collectionAddProducts.collection
+}
+
+export async function addTags(id: string, tags: string[]) {
+  const { tagsAdd } = await request(
+    shopifyAdminAPIEndpoint,
+    addTagsMutation,
+    {
+      id,
+      tags,
+    },
+    shopifyAdminAPIHeaders
+  )
+
+  if (!tagsAdd?.node?.id) {
+    logger.error("Unable to create checkout", {
+      userErrors: tagsAdd?.userErrors,
+    })
+
+    Sentry.captureException(tagsAdd?.userErrors)
+
+    throw new ShopifyError("Unable to create tags", "checkout_create_error")
+  }
+
+  return true
 }

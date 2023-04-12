@@ -1,13 +1,5 @@
 import { graphql } from "~/services/shopify/admin/gql"
 
-export const getOrderTagsQuery = graphql(`
-  query getOrderTags($id: ID!) {
-    order(id: $id) {
-      tags
-    }
-  }
-`)
-
 export const getOrderCustomAttributesQuery = graphql(`
   query getOrderCustomAttributes($id: ID!) {
     order(id: $id) {

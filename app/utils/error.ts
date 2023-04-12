@@ -120,6 +120,7 @@ export type DraftOrderErrorCode = "draft_order_error"
 export type PurchaseErrorCode =
   | "no_purchase"
   | "listing_id_missing"
+  | "listing_sku_missing"
   | "session_carts_key_missing"
 
 export type GenericErrorCode = "unknown_error" | "no_code_provided"
@@ -132,6 +133,7 @@ export type ShopifyErrorCode =
   | "product_create_error"
   | "product_publish_error"
   | "add_products_to_collection_error"
+  | "tags_add_error"
 
 export type FileErrorCode =
   | "no_file_selected"

@@ -4,7 +4,11 @@ import { ReasonPhrases, StatusCodes } from "http-status-codes"
 import { badRequest, serverError, unauthorized } from "remix-utils"
 import { z } from "zod"
 
-import { clearCartQueue, createPurchaseQueue } from "~/helpers/queues"
+import {
+  addTagsToOrderQueue,
+  clearCartQueue,
+  createPurchaseQueue,
+} from "~/helpers/queues"
 import Sentry from "~/services/sentry"
 import {
   getShopifyWebhookHeaders,
@@ -64,6 +68,9 @@ export async function action({ request, context }: ActionArgs) {
     const order = parseOrderCreationWebhookPayload(jsonBody)
 
     await Promise.all([
+      addTagsToOrderQueue.add(`Order #${order.number}`, {
+        orderId: order.id,
+      }),
       createPurchaseQueue.add(`Order #${order.number}`, {
         orderId: order.id,
       }),
