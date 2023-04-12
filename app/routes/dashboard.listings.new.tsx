@@ -14,7 +14,7 @@ import { z } from "zod"
 
 import { FormDate, FormInput, FormSelect, FormSubmit } from "~/components/form"
 import auth from "~/helpers/auth.server"
-import { createListingCommerceEntityQueue } from "~/helpers/queues"
+import { CreateListingCommerceEntityQueue } from "~/helpers/queues"
 import { getFormData } from "~/utils/http.server"
 import {
   EventDateSchema,
@@ -96,7 +96,7 @@ export async function action({ request, context }: ActionArgs) {
     data: result.data,
   })
 
-  await createListingCommerceEntityQueue.add(`${listing.sku}`, {
+  await CreateListingCommerceEntityQueue.add(`${listing.sku}`, {
     listingId: listing.id,
   })
 

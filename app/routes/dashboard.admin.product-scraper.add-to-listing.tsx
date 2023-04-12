@@ -14,7 +14,7 @@ import { z } from "zod"
 import { Alert, Button } from "~/components/common"
 import { FormInput, FormSelect, FormSubmit } from "~/components/form"
 import { CURRENCIES, DEFAULT_MARGIN } from "~/config/consts"
-import { addItemToListingQueue } from "~/helpers/queues"
+import { AddItemToListingQueue } from "~/helpers/queues"
 import { useScrapedProducts } from "~/routes/dashboard.admin.product-scraper/route"
 import alegra from "~/services/alegra.server"
 import { useDialogPage } from "~/utils/hooks"
@@ -71,7 +71,7 @@ export async function action({ request, context }: ActionArgs) {
     where: { id: listingId },
   })
 
-  await addItemToListingQueue.addBulk(
+  await AddItemToListingQueue.addBulk(
     products.map(({ scrapedProductId, rowId, quantity }) => ({
       data: {
         exchangeRate,

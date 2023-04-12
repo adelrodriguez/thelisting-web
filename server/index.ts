@@ -21,7 +21,7 @@ import {
 import cache from "~/helpers/cache.server"
 import db from "~/helpers/db.server"
 import logger from "~/helpers/logger.server"
-import { automatedAbandonedCheckoutsNotification } from "~/helpers/queues"
+import { AutomatedAbandonedCheckoutsNotification } from "~/helpers/queues"
 
 const port = process.env.PORT || 3000
 
@@ -48,7 +48,6 @@ createBullBoard({
   queues: Object.values(QUEUE_NAMES)
     .map((queueName) => new Queue(queueName, { connection }))
     .map((queue) => new BullMQAdapter(queue)),
-  // queues: [clearCartQueue].map((queue) => new BullMQAdapter(queue)),
   serverAdapter: serverAdapter,
 })
 
@@ -118,7 +117,7 @@ app.listen(port, () => {
 async function cron() {
   logger.info("Starting cron jobs")
 
-  await automatedAbandonedCheckoutsNotification.add("abandoned", null, {
+  await AutomatedAbandonedCheckoutsNotification.add("abandoned", null, {
     removeOnComplete: {
       age: 1000 * 60 * 60 * 24 * 7, // 7 days
     },

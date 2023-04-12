@@ -2,17 +2,17 @@ import type { ActionArgs } from "@remix-run/node"
 import { Form } from "@remix-run/react"
 
 import { Input, SubmitButton } from "~/components/form"
-import { clearCartQueue, createPurchaseQueue } from "~/helpers/queues"
+import { ClearCartQueue, CreatePurchaseQueue } from "~/helpers/queues"
 
 export async function action({ request }: ActionArgs) {
   const formData = await request.formData()
   const orderCreatedId = formData.get("order-created") as string
 
   await Promise.all([
-    createPurchaseQueue.add(`Manual Job - ${Date.now()}`, {
+    CreatePurchaseQueue.add(`Manual Job - ${Date.now()}`, {
       orderId: orderCreatedId,
     }),
-    clearCartQueue.add(`Manual Job - ${Date.now()}`, {
+    ClearCartQueue.add(`Manual Job - ${Date.now()}`, {
       orderId: orderCreatedId,
     }),
   ])

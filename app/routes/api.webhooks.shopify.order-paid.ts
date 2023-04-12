@@ -7,8 +7,8 @@ import { z } from "zod"
 
 import { ONE_MINUTE } from "~/config/consts"
 import {
-  markPurchaseAsPaidQueue,
-  saveOrderCustomerQueue,
+  MarkPurchaseAsPaidQueue,
+  SaveOrderCustomerQueue,
 } from "~/helpers/queues"
 import {
   getShopifyWebhookHeaders,
@@ -68,10 +68,10 @@ export async function action({ request, context }: ActionArgs) {
     const order = parseOrderPaymentWebhookPayload(jsonBody)
 
     await Promise.all([
-      saveOrderCustomerQueue.add(`Order #${order.number}`, {
+      SaveOrderCustomerQueue.add(`Order #${order.number}`, {
         orderId: order.id,
       }),
-      markPurchaseAsPaidQueue.add(
+      MarkPurchaseAsPaidQueue.add(
         `Order #${order.number}`,
         {
           orderId: order.id,

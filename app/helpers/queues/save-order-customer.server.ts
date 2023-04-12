@@ -3,7 +3,7 @@ import type { Processor } from "bullmq"
 import { QUEUE_NAMES } from "~/config/consts"
 import db from "~/helpers/db.server"
 import { createQueue } from "~/helpers/queue.server"
-import { createInvoiceQueue } from "~/helpers/queues"
+import { CreateInvoiceQueue } from "~/helpers/queues"
 import alegra from "~/services/alegra.server"
 import Sentry from "~/services/sentry"
 import { parseCreateContactRequest } from "~/utils/alegra"
@@ -64,7 +64,7 @@ export const processor: Processor<QueueData> = async (job) => {
     }
 
     // Create the invoice for the customer
-    await createInvoiceQueue.add(`Order ${order.name}`, {
+    await CreateInvoiceQueue.add(`Order ${order.name}`, {
       contactId,
       orderId: job.data.orderId,
     })

@@ -5,9 +5,9 @@ import { badRequest, serverError, unauthorized } from "remix-utils"
 import { z } from "zod"
 
 import {
-  addTagsToOrderQueue,
-  clearCartQueue,
-  createPurchaseQueue,
+  AddTagsToOrderQueue,
+  ClearCartQueue,
+  CreatePurchaseQueue,
 } from "~/helpers/queues"
 import Sentry from "~/services/sentry"
 import {
@@ -68,13 +68,13 @@ export async function action({ request, context }: ActionArgs) {
     const order = parseOrderCreationWebhookPayload(jsonBody)
 
     await Promise.all([
-      addTagsToOrderQueue.add(`Order #${order.number}`, {
+      AddTagsToOrderQueue.add(`Order #${order.number}`, {
         orderId: order.id,
       }),
-      createPurchaseQueue.add(`Order #${order.number}`, {
+      CreatePurchaseQueue.add(`Order #${order.number}`, {
         orderId: order.id,
       }),
-      clearCartQueue.add(`Order #${order.number}`, {
+      ClearCartQueue.add(`Order #${order.number}`, {
         orderId: order.id,
       }),
     ])

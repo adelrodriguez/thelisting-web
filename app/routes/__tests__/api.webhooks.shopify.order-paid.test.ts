@@ -4,7 +4,7 @@ export {}
 // import { afterEach, expect, test, vi } from "vitest"
 
 // import { HOOKDECK_SIGNING_SECRET } from "~/config/env.server"
-// import { saveOrderCustomerQueue } from "~/helpers/queues"
+// import { SaveOrderCustomerQueue } from "~/helpers/queues"
 // import { StatusCodes } from "~/utils/http.server"
 // import { OrderPaymentWebhookPayloadSchema } from "~/utils/shopify"
 // import { encodeWebhookSignature } from "~/utils/webhook.server"
@@ -21,7 +21,7 @@ export {}
 //     checkIfWebhookIsRepeated: vi.fn().mockResolvedValue(false),
 //   }
 // })
-// saveOrderCustomerQueue.add = vi.fn()
+// SaveOrderCustomerQueue.add = vi.fn()
 
 // afterEach(() => {
 //   vi.resetAllMocks()
@@ -90,5 +90,5 @@ export {}
 //     request,
 //   })
 
-//   expect(saveOrderCustomerQueue.add).toHaveBeenCalled()
+//   expect(SaveOrderCustomerQueue.add).toHaveBeenCalled()
 // })

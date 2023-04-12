@@ -3,7 +3,7 @@ import type { Processor } from "bullmq"
 import { QUEUE_NAMES } from "~/config/consts"
 import db from "~/helpers/db.server"
 import { createQueue } from "~/helpers/queue.server"
-import { notifyPurchaseQueue } from "~/helpers/queues"
+import { NotifyPurchaseQueue } from "~/helpers/queues"
 import Sentry from "~/services/sentry"
 import { getShopifyId } from "~/utils/shopify"
 
@@ -33,7 +33,7 @@ export const processor: Processor<QueueData> = async (job) => {
 
     job.log(`Purchase ${purchase.id} marked as paid. Notifying user...`)
 
-    await notifyPurchaseQueue.add(`Purchase ID: ${purchase.id}`, {
+    await NotifyPurchaseQueue.add(`Purchase ID: ${purchase.id}`, {
       orderId,
     })
   } catch (error) {
