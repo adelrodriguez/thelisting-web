@@ -101,7 +101,7 @@ export default function ListingReviewPage() {
                   {listing.title}
                 </h1>
                 <p className="text-md mt-2 font-body text-gray-500">
-                  {t("listing:yourGiftsDescription")}
+                  {t("registry:yourGiftsDescription")}
                 </p>
               </div>
 
@@ -143,7 +143,7 @@ export default function ListingReviewPage() {
                 <div className="mx-auto max-w-2xl space-y-8 sm:px-4 lg:max-w-4xl lg:px-0">
                   {listing.purchases.length === 0 && (
                     <h2 className="px-4 py-5 text-center font-body text-lg font-medium text-gray-500 sm:px-6">
-                      {t("listing:yourGiftsEmpty")}
+                      {t("registry:yourGiftsEmpty")}
                     </h2>
                   )}
                   {listing.purchases.map((purchase, index) => (
@@ -154,7 +154,7 @@ export default function ListingReviewPage() {
                             <dl className="grid w-full grid-cols-3 gap-y-2 gap-x-6 text-sm sm:w-3/4">
                               <div>
                                 <dt className="font-medium text-gray-900">
-                                  {t("listing:giftedBy")}
+                                  {t("registry:giftedBy")}
                                 </dt>
                                 <dd className="mt-1 max-w-[200px] text-gray-500">
                                   {purchase.customer?.name}
@@ -162,7 +162,7 @@ export default function ListingReviewPage() {
                               </div>
                               <div>
                                 <dt className="font-medium text-gray-900">
-                                  {t("listing:giftedOn")}
+                                  {t("registry:giftedOn")}
                                 </dt>
                                 <dd className="mt-1 text-gray-500">
                                   <time
@@ -182,7 +182,7 @@ export default function ListingReviewPage() {
                               </div>
                               <div>
                                 <dt className="font-medium text-gray-900">
-                                  {t("listing:totalGifted")}
+                                  {t("registry:totalGifted")}
                                 </dt>
                                 <dd className="mt-1 text-gray-500">
                                   <FormattedNumber
@@ -232,7 +232,7 @@ export default function ListingReviewPage() {
                               <div className="p-4">
                                 <div className="text-sm font-medium text-gray-900">
                                   ✨{" "}
-                                  {t("listing:leftYouANote", {
+                                  {t("registry:leftYouANote", {
                                     name: purchase.customer?.name,
                                   })}
                                 </div>
