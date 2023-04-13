@@ -1,5 +1,7 @@
 import type { ActionArgs, LoaderArgs } from "@remix-run/node"
 import type { RouteMatch } from "@remix-run/react"
+import { Outlet } from "@remix-run/react"
+import { Link } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
 import { useSnackbar } from "notistack"
 import { notFound } from "remix-utils"
@@ -13,7 +15,7 @@ import { z } from "zod"
 import { ViewOnShopify } from "~/components/admin"
 import { FormattedNumber, Image } from "~/components/common"
 import type { NotFoundBoundaryData } from "~/components/error"
-import { FormInput, FormSubmit, FormTextArea } from "~/components/form"
+import { FormInput, FormTextArea, SubmitButton } from "~/components/form"
 import { useProduct } from "~/utils/hooks"
 import { getFormData } from "~/utils/http.server"
 import { getPriceSymbol } from "~/utils/money"
@@ -56,7 +58,20 @@ export async function loader({ params, context }: LoaderArgs) {
     where: { itemId: item.id },
   })
 
-  return json({ item, itemPurchases, ...setFormDefaults("editItem", item) })
+  const itemPurchaseCount = itemPurchases.length
+
+  return json({
+    item,
+    itemPurchaseCount,
+    stats: [
+      { name: "Total Times Ordered", stat: itemPurchaseCount },
+      {
+        name: "Total Purchased",
+        stat: itemPurchases.reduce((acc, cur) => acc + cur.quantity, 0),
+      },
+    ],
+    ...setFormDefaults("editItem", item),
+  })
 }
 
 export async function action({ request, params, context }: ActionArgs) {
@@ -76,17 +91,9 @@ export async function action({ request, params, context }: ActionArgs) {
 }
 
 export default function DashboardListingItemDetailPage() {
-  const { item, itemPurchases } = useLoaderData<typeof loader>()
+  const { item, stats, itemPurchaseCount } = useLoaderData<typeof loader>()
   const { data, isLoading, isError } = useProduct(item.commerceId!)
   const { enqueueSnackbar } = useSnackbar()
-
-  const stats = [
-    { name: "Total Times Ordered", stat: itemPurchases.length },
-    {
-      name: "Total Purchased",
-      stat: itemPurchases.reduce((acc, cur) => acc + cur.quantity, 0),
-    },
-  ]
 
   return (
     <div className="mt-4 grid gap-x-6 sm:grid-cols-2">
@@ -187,9 +194,25 @@ export default function DashboardListingItemDetailPage() {
             step="1"
             min={0}
           />
-          <FormSubmit text="Update" loadingText="Updating..." />
         </ValidatedForm>
+        <div className="mt-4 flex justify-end">
+          {itemPurchaseCount === 0 && (
+            <Link to="delete">
+              <button
+                type="button"
+                className="mr-4 rounded-md bg-red-50 px-3 py-2 text-sm font-semibold text-red-600 shadow-sm  ring-0 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                disabled={itemPurchaseCount > 0}
+              >
+                Delete
+              </button>
+            </Link>
+          )}
+          <SubmitButton loadingText="Updating..." form="editItem">
+            Update
+          </SubmitButton>
+        </div>
       </div>
+      <Outlet />
     </div>
   )
 }

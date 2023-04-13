@@ -48,6 +48,21 @@ export const addProductsToCollectionMutation = graphql(`
   }
 `)
 
+export const removeProductsFromCollectionMutation = graphql(`
+  mutation removeProductsFromCollection($id: ID!, $productIds: [ID!]!) {
+    collectionRemoveProducts(id: $id, productIds: $productIds) {
+      job {
+        id
+        done
+      }
+      userErrors {
+        field
+        message
+      }
+    }
+  }
+`)
+
 export const addTagsMutation = graphql(`
   mutation addTags($id: ID!, $tags: [String!]!) {
     tagsAdd(id: $id, tags: $tags) {

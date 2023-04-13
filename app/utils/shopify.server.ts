@@ -22,6 +22,7 @@ import {
   addProductsToCollectionMutation,
   getProductQuery,
   addTagsMutation,
+  removeProductsFromCollectionMutation,
 } from "~/services/shopify/admin"
 import { getOrderQuery } from "~/services/shopify/admin"
 import { createCheckoutMutation } from "~/services/shopify/storefront"
@@ -327,6 +328,34 @@ export async function addProductsToCollection(
   }
 
   return collectionAddProducts.collection
+}
+
+export async function removeProductsFromCollection(
+  collectionId: string,
+  productIds: string[]
+) {
+  const { collectionRemoveProducts } = await request(
+    shopifyAdminAPIEndpoint,
+    removeProductsFromCollectionMutation,
+    {
+      id: collectionId,
+      productIds,
+    },
+    shopifyAdminAPIHeaders
+  )
+
+  if (!collectionRemoveProducts?.job) {
+    logger.error("Unable to remove products from collection", {
+      userErrors: collectionRemoveProducts?.userErrors,
+    })
+    Sentry.captureException(collectionRemoveProducts?.userErrors)
+    throw new ShopifyError(
+      "Unable to remove products from collection",
+      "remove_products_from_collection_error"
+    )
+  }
+
+  return collectionRemoveProducts.job
 }
 
 export async function addTags(id: string, tags: string[]) {

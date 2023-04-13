@@ -133,6 +133,7 @@ export type ShopifyErrorCode =
   | "product_create_error"
   | "product_publish_error"
   | "add_products_to_collection_error"
+  | "remove_products_from_collection_error"
   | "tags_add_error"
 
 export type FileErrorCode =
