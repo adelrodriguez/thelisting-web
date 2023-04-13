@@ -1,41 +1,40 @@
 import { ListingStatus, ListingType, UserRole } from "@prisma/client"
 import type { ActionArgs, LoaderArgs } from "@remix-run/node"
 import type { RouteMatch } from "@remix-run/react"
-import { withZod } from "@remix-validated-form/with-zod"
-import { startOfTomorrow } from "date-fns"
+import { useSubmit } from "@remix-run/react"
+import { format, startOfTomorrow } from "date-fns"
+import { zonedTimeToUtc } from "date-fns-tz"
 import { useSnackbar } from "notistack"
-import { useState, useEffect } from "react"
+import type { FormEvent } from "react"
+import { useEffect } from "react"
 import { forbidden, notFound, unauthorized } from "remix-utils"
-import {
-  setFormDefaults,
-  ValidatedForm,
-  validationError,
-} from "remix-validated-form"
 import { z } from "zod"
+import { zx } from "zodix"
 
 import {
-  FormInput,
-  FormDate,
-  FormSubmit,
-  FormListRadioGroup,
-  FormSelect,
-  FormImageInput,
+  ImageInput,
+  Input,
+  InputWithAddOn,
+  ListRadioGroup,
+  Select,
+  SubmitButton,
+  ValidationErrors,
 } from "~/components/form"
 import auth from "~/helpers/auth.server"
-import { getFormData } from "~/utils/http.server"
+import { flattenErrors } from "~/utils/form"
 import {
-  CommerceIdSchema,
-  EventDateSchema,
-  ImageSchema,
-  PathSchema,
-  StatusSchema,
-  SubtitleSchema,
-  TitleSchema,
-  TypeSchema,
+  ListingCoverImageSchema,
+  ListingEventDateSchema,
+  ListingOwnerSchema,
+  ListingPathSchema,
+  ListingStatusSchema,
+  ListingSubtitleSchema,
+  ListingThankYouImageSchema,
+  ListingTitleSchema,
+  ListingTypeSchema,
 } from "~/utils/listing"
-import { getParam, json, useLoaderData } from "~/utils/remix"
+import { json, useActionData, useLoaderData } from "~/utils/remix"
 import { getUserFullName } from "~/utils/user"
-import { isWindowDefined } from "~/utils/window"
 
 export const handle = {
   crumb: ({ params }: RouteMatch) => ({
@@ -45,35 +44,14 @@ export const handle = {
   id: "dashboard-listings-details",
 }
 
-const EditListingSchema = z.object({
-  commerceId: CommerceIdSchema,
-  coverImage: ImageSchema,
-  eventDate: EventDateSchema,
-  ownerId: z.string().uuid(),
-  path: PathSchema,
-  status: StatusSchema,
-  subtitle: SubtitleSchema,
-  thankYouImage: ImageSchema,
-  title: TitleSchema,
-  type: TypeSchema,
-})
-
-const validator = withZod(EditListingSchema)
-
 export async function loader({ params, context }: LoaderArgs) {
   const db = context.db
-  const sku = getParam(params, "listing")
-
-  if (isNaN(Number(sku)))
-    throw notFound({
-      message: "Listing not found",
-      title: "Listing not found",
-    })
+  const { listing: sku } = zx.parseParams(params, {
+    listing: z.coerce.number(),
+  })
 
   const [listing, users] = await Promise.all([
-    db.listing.findUnique({
-      where: { sku: Number(sku) },
-    }),
+    db.listing.findUnique({ where: { sku } }),
     db.user.findMany({
       orderBy: { firstName: "asc" },
       select: { firstName: true, id: true, lastName: true },
@@ -86,7 +64,7 @@ export async function loader({ params, context }: LoaderArgs) {
       title: "Listing not found",
     })
 
-  return json({ listing, users, ...setFormDefaults("editListing", listing) })
+  return json({ listing, users })
 }
 
 export async function action({ request, params, context }: ActionArgs) {
@@ -95,28 +73,14 @@ export async function action({ request, params, context }: ActionArgs) {
 
   if (!user) throw unauthorized("You must be logged in to update a listing.")
 
-  const sku = getParam(params, "listing")
+  const { listing: sku } = zx.parseParams(
+    params,
+    z.object({ listing: z.coerce.number() })
+  )
 
-  if (isNaN(Number(sku)))
-    throw notFound({
-      message: "Listing not found",
-      title: "Listing not found",
-    })
-
-  const listing = await db.listing.findUnique({
+  const listing = await db.listing.findUniqueOrThrow({
     where: { sku: Number(sku) },
   })
-
-  if (!listing)
-    throw notFound({
-      message: "Listing not found",
-      title: "Listing not found",
-    })
-
-  const formData = await getFormData(request)
-  const result = await validator.validate(formData)
-
-  if (result.error) return validationError(result.error)
 
   if (listing.ownerId !== user.id && user.role !== UserRole.Admin) {
     throw forbidden({
@@ -124,74 +88,139 @@ export async function action({ request, params, context }: ActionArgs) {
     })
   }
 
+  const formData = await zx.parseFormSafe(
+    request,
+    z.object({
+      eventDate: ListingEventDateSchema,
+      ownerId: ListingOwnerSchema,
+      path: ListingPathSchema.trim()
+        .transform((value) => value.toLowerCase())
+        .refine(
+          async (path) => {
+            const existingListing = await db.listing.findFirst({
+              select: { id: true },
+              where: { path },
+            })
+
+            if (!existingListing) return true
+
+            return existingListing.id === listing.id
+          },
+          { message: "The path you have entered is already in use." }
+        ),
+      status: ListingStatusSchema,
+      subtitle: ListingSubtitleSchema,
+      title: ListingTitleSchema,
+      type: ListingTypeSchema,
+    })
+  )
+
+  if (!formData.success) {
+    return json({ errors: flattenErrors(formData.error), listing: null })
+  }
+
   const updatedListing = await db.listing.update({
-    data: result.data,
+    data: formData.data,
     where: { id: listing.id },
   })
 
-  return json({ listing: updatedListing })
+  return json({ errors: null, listing: updatedListing })
 }
 
 export default function DashboardListingPage() {
   const { enqueueSnackbar } = useSnackbar()
-  const { users } = useLoaderData<typeof loader>()
-  const [origin, setOrigin] = useState("")
+  const submit = useSubmit()
+  const { listing, users } = useLoaderData<typeof loader>()
+  const data = useActionData<typeof action>()
 
   useEffect(() => {
-    if (isWindowDefined()) {
-      setOrigin(window.location.origin)
+    if (!data) return
+
+    if (!data.errors) {
+      enqueueSnackbar("Listing updated 🎉", {
+        description: "The listing was successfully updated",
+        variant: "success",
+      })
+    } else {
+      enqueueSnackbar("Error updating listing", {
+        description: "There was an error updating the listing",
+        variant: "error",
+      })
     }
-  }, [])
+  }, [data, enqueueSnackbar])
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    const $form = event.currentTarget
+    const formData = new FormData($form)
+
+    const eventDate = formData.get("eventDate") as string
+
+    // Convert the event date to UTC
+    formData.set(
+      "eventDate",
+      zonedTimeToUtc(
+        eventDate,
+        Intl.DateTimeFormat().resolvedOptions().timeZone
+      ).toISOString()
+    )
+
+    submit(formData, { method: "POST" })
+  }
 
   return (
-    <ValidatedForm
-      validator={validator}
-      method="post"
+    <form
       className="m-auto mt-8 flex w-full max-w-xl flex-col gap-y-6"
-      id="editListing"
-      onSubmit={() => {
-        enqueueSnackbar("Listing updated 🎉", {
-          description: "The listing was successfully updated",
-          variant: "success",
-        })
-      }}
+      onSubmit={handleSubmit}
     >
-      <FormInput
+      <ValidationErrors errors={data?.errors} />
+      <Input
         label="Title"
         name="title"
         description="This is what we'll call your listing and show to others"
         required
+        schema={ListingTitleSchema}
+        defaultValue={listing.title}
       />
-      <FormInput
+      <Input
         label="Subtitle"
         name="subtitle"
         description="This will appear under the title and in the description when sharing your listing"
+        schema={ListingSubtitleSchema}
+        defaultValue={listing.subtitle ?? ""}
       />
-      <FormInput
+      <Input
         label="SKU"
         name="sku"
         disabled
         description="This is the unique identifier for your listing"
+        defaultValue={listing.sku}
       />
-      <FormInput
-        name="path"
+      <InputWithAddOn
         label="Path"
-        addOn={origin}
-        description="The unique path for your listing"
+        name="path"
+        description="This is the URL for your listing"
+        defaultValue={listing.path}
+        addOn={"https://giftthelisting.com/"}
+        schema={ListingPathSchema}
         required
       />
-      <FormDate
-        label="Event Date"
-        name="eventDate"
-        min={startOfTomorrow()}
+      <Input
+        defaultValue={format(listing.eventDate, "yyyy-MM-dd")}
         description="The date of your event"
+        label="Event Date"
+        min={format(startOfTomorrow(), "yyyy-MM-dd")}
+        name="eventDate"
         required
+        schema={z.string()}
+        type="date"
       />
-      <FormSelect
+      <Select
+        defaultValue={listing.type}
         options={[
           {
             label: "Select an option",
-            value: undefined,
+            value: "",
           },
           {
             label: "💍 Wedding",
@@ -214,17 +243,25 @@ export default function DashboardListingPage() {
         name="type"
         description="The type of event you're hosting"
         required
+        schema={ListingTypeSchema}
       />
-      <FormSelect
-        options={users.map((user) => ({
-          label: getUserFullName(user),
-          value: user.id,
-        }))}
+      <Select
+        defaultValue={listing.ownerId}
+        options={[
+          { label: "Select an option", value: "" },
+          ...users.map((user) => ({
+            label: getUserFullName(user),
+            value: user.id,
+          })),
+        ]}
         label="Owner"
         name="ownerId"
+        description="The user owner of this listing"
         required
+        schema={ListingOwnerSchema}
       />
-      <FormListRadioGroup
+      <ListRadioGroup
+        defaultValue={listing.status}
         name="status"
         label="Status"
         options={[
@@ -248,23 +285,31 @@ export default function DashboardListingPage() {
         ]}
         required
       />
-      <FormImageInput
+      <ImageInput
+        defaultValue={listing.coverImage || ""}
         label="Cover Image"
         name="coverImage"
         description="The image that will be shown on the listing page"
+        placeholder="cover.png"
+        required
+        schema={ListingCoverImageSchema}
       />
-      <FormImageInput
+      <ImageInput
+        defaultValue={listing.thankYouImage || ""}
         label={'"Thank You" Image'}
         name="thankYouImage"
         description="The image that will be shown after someone purchases an item from your listing"
+        placeholder="thank-you.png"
+        schema={ListingThankYouImageSchema}
       />
-      <FormInput
+      <Input
+        defaultValue={listing.commerceId || ""}
         description="The Shopify collection ID. You need to have this in order to be able to add items to your listing. If this is empty and you recently created the listing, please wait a few seconds."
         label="Commerce ID"
         name="commerceId"
         disabled
       />
-      <FormSubmit text="Update" loadingText="Updating..." />
-    </ValidatedForm>
+      <SubmitButton loadingText="Updating...">Update</SubmitButton>
+    </form>
   )
 }
