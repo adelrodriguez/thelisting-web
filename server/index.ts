@@ -17,6 +17,7 @@ import {
   RAILWAY_STATIC_URL,
   REDIS_JOBS_URL,
 } from "~/config/env.server"
+import { isDevelopment } from "~/config/vars"
 import cache from "~/helpers/cache.server"
 import db from "~/helpers/db.server"
 import logger from "~/helpers/logger.server"
@@ -106,10 +107,9 @@ app.all(
 )
 
 app.listen(port, () => {
-  logger.info(
-    `Express server listening on port ${port} (remote: http://${getLocalNetworkIP()}:${port}/)`
-  )
-  logger.info(`Bull Board is listening on port ${port}`)
+  logger.info(`Express server listening on port ${port}`)
+  isDevelopment &&
+    logger.info(`Local network IP: http://${getLocalNetworkIP()}:${port}}`)
 
   // Start cron jobs
   cron()
