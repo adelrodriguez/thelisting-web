@@ -1,8 +1,6 @@
-import {
-  ExpressAdapter,
-  createBullBoard,
-  BullMQAdapter,
-} from "@bull-board/express"
+import { createBullBoard } from "@bull-board/api"
+import { BullMQAdapter } from "@bull-board/api/bullMQAdapter"
+import { ExpressAdapter } from "@bull-board/express"
 import { createRequestHandler } from "@remix-run/express"
 import { Queue } from "bullmq"
 import compression from "compression"
@@ -10,7 +8,8 @@ import express from "express"
 import basicAuth from "express-basic-auth"
 import Redis from "ioredis"
 import morgan from "morgan"
-import path from "path"
+import { networkInterfaces } from "node:os"
+import path from "node:path"
 
 import { QUEUE_NAMES } from "~/config/consts"
 import {
@@ -107,7 +106,9 @@ app.all(
 )
 
 app.listen(port, () => {
-  logger.info(`Express server listening on port ${port}`)
+  logger.info(
+    `Express server listening on port ${port} (remote: http://${getLocalNetworkIP()}:${port}/)`
+  )
   logger.info(`Bull Board is listening on port ${port}`)
 
   // Start cron jobs
@@ -139,4 +140,25 @@ function purgeRequireCache() {
       delete require.cache[key]
     }
   }
+}
+
+function getLocalNetworkIP(): string {
+  const nets = networkInterfaces()
+  const results = Object.create(null) // Or just '{}', an empty object
+
+  for (const name of Object.keys(nets)) {
+    for (const net of nets[name]!) {
+      // Skip over non-IPv4 and internal (i.e. 127.0.0.1) addresses
+      // 'IPv4' is in Node <= 17, from 18 it's a number 4 or 6
+      const familyV4Value = typeof net.family === "string" ? "IPv4" : 4
+      if (net.family === familyV4Value && !net.internal) {
+        if (!results[name]) {
+          results[name] = []
+        }
+        results[name].push(net.address)
+      }
+    }
+  }
+
+  return results["en0"][0]
 }
