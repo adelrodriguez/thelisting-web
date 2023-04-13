@@ -80,5 +80,3 @@ export const QUEUE_NAMES = {
   NotifyPurchase: "NOTIFY_PURCHASE",
   SaveOrderCustomer: "SAVE_ORDER_CUSTOMER",
 }
-
-export const THE_LISTING_TIMEZONE = "America/Santo_Domingo"

@@ -1,7 +1,8 @@
 import { PhotoIcon, FolderOpenIcon } from "@heroicons/react/20/solid"
 import type { Image } from "@prisma/client"
 import { useQuery } from "@tanstack/react-query"
-import type { InputHTMLAttributes } from "react"
+import clsx from "clsx"
+import type { FocusEvent, InputHTMLAttributes } from "react"
 import { useState } from "react"
 import type { z } from "zod"
 
@@ -24,6 +25,8 @@ export default function ImageInput({
   schema?: z.ZodSchema
 } & InputHTMLAttributes<HTMLInputElement>) {
   const { name, placeholder } = props
+  const [validationError, setValidationError] = useState("")
+
   const [value, setValue] = useState(defaultValue || "")
   const [open, setOpen] = useState(false)
   const { data } = useQuery(
@@ -38,6 +41,18 @@ export default function ImageInput({
       enabled: !!value,
     }
   )
+
+  function validate(event: FocusEvent<HTMLInputElement>) {
+    const $input = event.currentTarget
+
+    if (!schema) return
+
+    const result = schema.safeParse($input.value)
+
+    setValidationError(
+      result.success ? "" : result.error.flatten().formErrors[0]!
+    )
+  }
 
   return (
     <>
@@ -61,33 +76,67 @@ export default function ImageInput({
             <span className="text-sm leading-6 text-gray-500">Required</span>
           )}
         </div>
-        <div className="mt-1 flex rounded-md shadow-sm">
+        <div className="group my-1 flex rounded-md shadow-sm">
           <div className="relative flex flex-grow items-stretch focus-within:z-10">
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-              <PhotoIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+              <PhotoIcon
+                className={clsx(
+                  "h-5 w-5",
+                  validationError ? "text-red-400" : "text-gray-400"
+                )}
+                aria-hidden="true"
+              />
             </div>
             <input
-              value={data?.filename}
-              type="text"
-              className="block w-full rounded-none rounded-l-md border-gray-300 pl-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              value={data?.filename || ""}
+              type={props.type || "text"}
+              className={clsx(
+                "block w-full select-none rounded-none rounded-l-md border-0 py-1.5 pl-10 text-gray-900 ring-1 ring-inset ",
+                "focus:ring-2 focus:ring-inset",
+                "sm:text-sm sm:leading-6",
+                {
+                  "placeholder-gray-400 ring-gray-300 focus:ring-slate-600":
+                    !validationError,
+                  "pr-10 text-red-900 placeholder-red-300 ring-red-300 focus:outline-none focus:ring-red-500":
+                    validationError,
+                }
+              )}
+              readOnly
               placeholder={placeholder}
-              disabled
+              onBlur={validate}
             />
             <input {...props} type="hidden" value={value} name={name} />
           </div>
           <button
             type="button"
-            className="relative -ml-px inline-flex items-center space-x-2 rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            className="relative -ml-px inline-flex items-center gap-x-1.5 rounded-r-md px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
             onClick={() => setOpen(true)}
           >
             <FolderOpenIcon
               className="h-5 w-5 text-gray-400"
               aria-hidden="true"
             />
-            <span>Select</span>
+            Select
           </button>
         </div>
-        {description && <p className="text-sm text-gray-500">{description}</p>}
+        {description && (
+          <p
+            className={clsx("text-sm text-gray-500", {
+              block: !validationError,
+              hidden: validationError,
+            })}
+          >
+            {description}
+          </p>
+        )}
+        <p
+          className={clsx("text-sm text-red-600", {
+            block: validationError,
+            hidden: !validationError,
+          })}
+        >
+          {validationError}
+        </p>
       </div>
     </>
   )
