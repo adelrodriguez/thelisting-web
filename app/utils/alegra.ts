@@ -26,7 +26,7 @@ export const CreateContactRequestSchema = z.object({
   }),
   email: z.string().email(),
   name: z.string().max(90),
-  phonePrimary: z.string(),
+  phonePrimary: z.string().nullable(),
   type: z.enum(["client", "provider"]),
 })
 export type CreateContactRequest = z.infer<typeof CreateContactRequestSchema>
