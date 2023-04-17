@@ -1,24 +1,23 @@
 import { Transition } from "@headlessui/react"
 import type { ActionArgs, LoaderArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
-import { useLoaderData, useNavigate } from "@remix-run/react"
-import { withZod } from "@remix-validated-form/with-zod"
+import {
+  Form,
+  useLoaderData,
+  useNavigate,
+  useNavigation,
+} from "@remix-run/react"
+import { StatusCodes } from "http-status-codes"
 import { useTranslation } from "react-i18next"
-import { ValidatedForm, validationError } from "remix-validated-form"
 import { z } from "zod"
+import { parseFormSafe } from "zodix"
 
 import { Logo } from "~/components/branding"
-import { Alert, Image } from "~/components/common"
-import { FormInput, FormSubmit } from "~/components/form"
+import { Alert, Button, Image } from "~/components/common"
+import { Spinner } from "~/components/loading"
 import auth from "~/helpers/auth.server"
 import sessionStorage from "~/helpers/session.server"
-import { getFormData } from "~/utils/http.server"
-
-const validator = withZod(
-  z.object({
-    email: z.string().email("Please enter a valid email address"),
-  })
-)
+import { redirect } from "~/utils/remix"
 
 export const handle = {
   i18n: ["login", "common"],
@@ -41,15 +40,19 @@ export async function loader({ request }: LoaderArgs) {
 }
 
 export async function action({ request }: ActionArgs) {
-  const formData = await getFormData(request)
-  const result = await validator.validate(formData)
+  const result = await parseFormSafe(
+    request,
+    z.object({ email: z.string().email() })
+  )
 
-  if (result.error) return validationError(result.error)
+  if (!result.success) {
+    return redirect("/login?error", { status: StatusCodes.SEE_OTHER })
+  }
 
   // The success redirect is required in this action, this is where the user is
   // going to be redirected after the magic link is sent, note that here the
   // user is not yet authenticated, so you can't send it to a private page.
-  await auth.authenticate("email-link", request, {
+  return auth.authenticate("email-link", request, {
     // If this is not set, any error will be throw and the ErrorBoundary will be
     // rendered.
     failureRedirect: "/login?error",
@@ -60,7 +63,9 @@ export async function action({ request }: ActionArgs) {
 export default function LoginPage() {
   const { success, error } = useLoaderData<typeof loader>()
   const navigate = useNavigate()
+  const navigation = useNavigation()
   const { t } = useTranslation(handle.i18n)
+  const isSubmitting = navigation.state === "submitting"
 
   const isSuccess = typeof success === "string"
   const isError = typeof error === "string"
@@ -108,27 +113,31 @@ export default function LoginPage() {
             </Alert>
           </Transition>
 
-          <div className="mt-8">
-            <ValidatedForm
-              validator={validator}
-              method="post"
-              resetAfterSubmit
-              className="space-y-6"
-              defaultValues={{ email: "" }}
-            >
-              <FormInput
-                name="email"
-                required
-                type="email"
-                autoComplete="email"
-                placeholder={t("enterYourEmail") ?? ""}
-              />
-              <FormSubmit
-                className="w-full justify-center"
-                text={t("common:login") ?? ""}
-                loadingText={t("common:loggingIn") ?? ""}
-              />
-            </ValidatedForm>
+          <div className="mt-4">
+            <Form method="POST" className="space-y-3">
+              <div>
+                <label htmlFor="email" className="sr-only">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  id="email"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  placeholder={t("enterYourEmail") ?? ""}
+                />
+              </div>
+              <Button type="submit" disabled={isSubmitting} className="w-full">
+                {isSubmitting ? (
+                  <>
+                    <Spinner />
+                    {t("common:loggingIn") ?? ""}
+                  </>
+                ) : (
+                  t("common:login") ?? ""
+                )}
+              </Button>
+            </Form>
           </div>
         </main>
       </div>

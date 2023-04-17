@@ -9,12 +9,14 @@ export default function SubmitButton({
   children = `${i18next.t("common:submit")}`,
   loadingText = `${i18next.t("common:submitting")}...`,
   disabled,
+  formId,
   ...props
 }: {
   children?: React.ReactNode
   loadingText?: string
+  formId?: string
 } & Exclude<ComponentProps<typeof Button>, "type" | "children">) {
-  const isSubmitting = useIsSubmitting()
+  const isSubmitting = useIsSubmitting(formId)
 
   return (
     <Button {...props} type="submit" disabled={isSubmitting || disabled}>
