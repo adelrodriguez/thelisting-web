@@ -53,7 +53,7 @@ export async function action({ request, params, context }: ActionArgs) {
 
   const serverValidator = withZod(
     zfd.formData({
-      text: zfd.text(z.string().max(500, "The note is too long")),
+      text: zfd.text(z.string().max(500, "The note is too long").optional()),
     })
   )
 
@@ -71,7 +71,7 @@ export async function action({ request, params, context }: ActionArgs) {
     )
   }
 
-  if (result.data.text.length === 0) {
+  if (!result.data.text) {
     return json({ data: null, success: true })
   }
 
@@ -109,7 +109,7 @@ export default function ListingCartNotePage() {
   const lengthError = t("registry:note.lengthError")
   const clientValidator = withZod(
     zfd.formData({
-      text: zfd.text(z.string().max(500, lengthError)),
+      text: zfd.text(z.string().max(500, lengthError).optional()),
     })
   )
 
