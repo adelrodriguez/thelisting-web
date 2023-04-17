@@ -1,12 +1,13 @@
 import { RibbonType } from "@prisma/client"
 import { UserRole } from "@prisma/client"
 import type { ActionArgs } from "@remix-run/node"
+import { withZod } from "@remix-validated-form/with-zod"
 import { notFound, unauthorized } from "remix-utils"
+import { validationError } from "remix-validated-form"
 import { z } from "zod"
 import { zx } from "zodix"
 
 import auth from "~/helpers/auth.server"
-import { flattenErrors } from "~/utils/form"
 import { json } from "~/utils/remix"
 import {
   BannerPropertiesSchema,
@@ -49,10 +50,12 @@ export async function action({ params, request, context }: ActionArgs) {
     }
   }
 
-  const result = await zx.parseFormSafe(request, schema)
+  const validator = withZod(schema)
+  const formData = await request.formData()
+  const result = await validator.validate(formData)
 
-  if (!result.success) {
-    return json({ error: flattenErrors(result.error) }, { status: 400 })
+  if (result.error) {
+    return validationError(result.error)
   }
 
   const updatedRibbon = await db.ribbon.update({

@@ -22,7 +22,7 @@ export const PathSchema = ListingPathSchema // TODO(adelrodriguez): REMOVE THIS
 export const ListingTitleSchema = z.string().min(3, "Please enter a title")
 export const TitleSchema = ListingTitleSchema // TODO(adelrodriguez): REMOVE THIS
 
-export const ListingSubtitleSchema = z.string().nullish()
+export const ListingSubtitleSchema = z.string().optional()
 export const SubtitleSchema = z.string().nullish()
 
 export const CommerceIdSchema = z.string().nullish()

@@ -1,39 +1,29 @@
 import { ExclamationCircleIcon } from "@heroicons/react/20/solid"
 import clsx from "clsx"
-import type { FocusEvent, InputHTMLAttributes } from "react"
-import { useState } from "react"
-import type { z } from "zod"
+import type { ComponentProps } from "react"
+import { useEffect, useRef } from "react"
+import { useField } from "remix-validated-form"
+
+import type { Input } from "~/components/form"
 
 export default function InputWithAddOn({
-  schema,
+  name,
   label,
   className,
   description,
   required,
   addOn,
+  type = "text",
   ...props
 }: {
-  label: string
   addOn: string
-  description?: string
-  schema?: z.ZodSchema
-} & InputHTMLAttributes<HTMLInputElement>) {
-  const [validationError, setValidationError] = useState("")
-  const { name } = props
+} & ComponentProps<typeof Input>) {
+  const { getInputProps, error } = useField(name)
+  const $input = useRef<HTMLInputElement>(null)
 
-  function validate(event: FocusEvent<HTMLInputElement>) {
-    const $input = event.currentTarget
-
-    if (!schema) return
-
-    const result = schema.safeParse($input.value)
-
-    $input.setCustomValidity(
-      result.success ? "" : result.error.flatten().formErrors[0]!
-    )
-
-    setValidationError($input.validationMessage)
-  }
+  useEffect(() => {
+    $input.current?.setCustomValidity(error || "")
+  }, [error])
 
   return (
     <div className={className}>
@@ -55,8 +45,8 @@ export default function InputWithAddOn({
             "focus-within:ring-2 focus-within:ring-inset",
             {
               "ring-red-300 focus-within:ring-red-500 focus:outline-none":
-                validationError,
-              "ring-slate-300 focus-within:ring-slate-500": !validationError,
+                error,
+              "ring-slate-300 focus-within:ring-slate-500": !error,
             }
           )}
         >
@@ -64,9 +54,7 @@ export default function InputWithAddOn({
             {addOn}
           </span>
           <input
-            {...props}
-            onBlur={validate}
-            type={props.type ?? "text"}
+            {...getInputProps({ ...props, id: name, ref: $input, type })}
             className={clsx(
               "peer block w-full flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 shadow-sm",
               "placeholder:text-gray-400",
@@ -86,8 +74,8 @@ export default function InputWithAddOn({
         {description && (
           <p
             className={clsx("text-sm text-gray-500", {
-              block: !validationError,
-              hidden: validationError,
+              block: !error,
+              hidden: error,
             })}
           >
             {description}
@@ -95,11 +83,11 @@ export default function InputWithAddOn({
         )}
         <p
           className={clsx(" text-sm text-red-600", {
-            block: validationError,
-            hidden: !validationError,
+            block: error,
+            hidden: !error,
           })}
         >
-          {validationError}
+          {error}
         </p>
       </div>
     </div>

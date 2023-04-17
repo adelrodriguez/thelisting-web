@@ -11,7 +11,7 @@ export const RibbonTypeSchema = z.enum([
 // === Banner ===
 export const BannerTitleSchema = z
   .string()
-  .min(3, "Title must be at least 3 characters")
+  .min(1, "You must provide a title for the banner")
 export const BannerSubtitleSchema = z.string().optional()
 
 export const BannerPropertiesSchema = z.object({

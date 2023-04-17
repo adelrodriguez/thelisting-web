@@ -1,12 +1,8 @@
 import { ExclamationCircleIcon } from "@heroicons/react/20/solid"
 import clsx from "clsx"
-import type {
-  OptionHTMLAttributes,
-  SelectHTMLAttributes,
-  FocusEvent,
-} from "react"
-import { useState } from "react"
-import type { z } from "zod"
+import type { OptionHTMLAttributes, SelectHTMLAttributes } from "react"
+import { useRef, useEffect } from "react"
+import { useField } from "remix-validated-form"
 
 type SelectOption = {
   label: string
@@ -15,42 +11,28 @@ type SelectOption = {
 }
 
 export default function Select<T extends SelectOption>({
+  name,
   className,
-  schema,
   description,
-  error,
   label,
   options,
   placeholder,
   required,
   ...props
 }: {
+  name: string
   label: string
   description?: string
   error?: boolean
   options: T[]
   placeholder?: string
-  /**
-   * The Zod schema used to validate the input client-side
-   */
-  schema?: z.ZodSchema
-} & SelectHTMLAttributes<HTMLSelectElement>) {
-  const { name } = props
-  const [validationError, setValidationError] = useState("")
+} & Omit<SelectHTMLAttributes<HTMLSelectElement>, "name" | "defaultValue">) {
+  const { error, getInputProps } = useField(name)
+  const $select = useRef<HTMLSelectElement>(null)
 
-  function validate(event: FocusEvent<HTMLSelectElement>) {
-    const $select = event.currentTarget
-
-    if (!schema) return
-
-    const result = schema.safeParse($select.value)
-
-    $select.setCustomValidity(
-      result.success ? "" : result.error.flatten().formErrors[0]!
-    )
-
-    setValidationError($select.validationMessage)
-  }
+  useEffect(() => {
+    $select.current?.setCustomValidity(error || "")
+  }, [error])
 
   return (
     <div className={className}>
@@ -67,7 +49,7 @@ export default function Select<T extends SelectOption>({
       </div>
       <div className="relative">
         <select
-          {...props}
+          {...getInputProps({ ...props, id: name, ref: $select })}
           className={clsx(
             "peer my-1 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-slate-300",
             "placeholder:text-gray-400",
@@ -76,8 +58,6 @@ export default function Select<T extends SelectOption>({
             "disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500",
             "invalid:pr-10 invalid:text-red-900 invalid:placeholder-red-300 invalid:ring-red-300 invalid:focus:outline-none invalid:focus:ring-red-500"
           )}
-          onSelect={validate}
-          onChange={validate}
         >
           {options.map((option) => (
             <option
@@ -101,7 +81,7 @@ export default function Select<T extends SelectOption>({
           </p>
         )}
         <p className="hidden text-sm text-red-600 peer-invalid:block">
-          {validationError}
+          {error}
         </p>
       </div>
     </div>

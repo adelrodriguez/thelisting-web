@@ -73,8 +73,8 @@ export default function DashboardListingRibbonsPage() {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <div className="mt-4 grid grid-cols-1 items-start gap-4 md:grid-cols-3 md:gap-8">
-        <div className="grid grid-cols-1 gap-4 md:col-span-2">
+      <div className="mt-4 grid grid-cols-1 items-start gap-4 md:grid-cols-5 md:gap-8">
+        <div className="gap-4 md:col-span-2">
           <section aria-labelledby="section-1-title">
             <div className="rounded-lg bg-white shadow">
               <div className="border-b border-gray-200 bg-white px-4 py-5 sm:px-6">
@@ -100,7 +100,7 @@ export default function DashboardListingRibbonsPage() {
           </section>
         </div>
 
-        <div className="grid grid-cols-1 gap-4">
+        <div className="gap-4 md:col-span-3">
           <section>
             <div className="rounded-lg bg-white shadow">
               <div className="border-b border-gray-200 bg-white px-4 py-5 sm:px-6">

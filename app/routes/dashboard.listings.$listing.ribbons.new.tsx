@@ -1,37 +1,35 @@
 import { Dialog, Transition } from "@headlessui/react"
 import { RibbonType } from "@prisma/client"
 import type { ActionArgs, LoaderArgs } from "@remix-run/node"
-import { Form } from "@remix-run/react"
+import { withZod } from "@remix-validated-form/with-zod"
 import { Fragment } from "react"
+import { ValidatedForm as Form, validationError } from "remix-validated-form"
 import { z } from "zod"
 import { zx } from "zodix"
 
-import {
-  Input,
-  SubmitButton,
-  ValidationErrors,
-  ListRadioGroup,
-} from "~/components/form"
-import { flattenErrors } from "~/utils/form"
+import { Input, SubmitButton, ListRadioGroup } from "~/components/form"
 import { useDialogPage } from "~/utils/hooks"
-import {
-  getParam,
-  json,
-  redirect,
-  useActionData,
-  useLoaderData,
-} from "~/utils/remix"
+import { redirect, useLoaderData } from "~/utils/remix"
 import {
   RibbonTypeSchema,
   RibbonNameSchema,
   RibbonPositionSchema,
 } from "~/utils/ribbon"
 
-const AddRibbonSchema = z.object({
-  name: RibbonNameSchema,
-  position: RibbonPositionSchema,
-  type: RibbonTypeSchema,
-})
+const clientValidator = withZod(
+  z.object({
+    name: RibbonNameSchema,
+    type: RibbonTypeSchema,
+  })
+)
+
+const serverValidator = withZod(
+  z.object({
+    name: RibbonNameSchema,
+    position: RibbonPositionSchema,
+    type: RibbonTypeSchema,
+  })
+)
 
 export async function loader({ request }: LoaderArgs) {
   const requestUrl = new URL(request.url)
@@ -42,12 +40,14 @@ export async function loader({ request }: LoaderArgs) {
 
 export async function action({ params, context, request }: ActionArgs) {
   const { db, logger } = context
-  const sku = getParam(params, "listing")
+  const { listing: sku } = zx.parseParams(params, {
+    listing: z.coerce.number(),
+  })
+  const formData = await request.formData()
+  const result = await serverValidator.validate(formData)
 
-  const result = await zx.parseFormSafe(request, AddRibbonSchema)
-
-  if (!result.success) {
-    return json({ errors: flattenErrors(result.error) })
+  if (result.error) {
+    return validationError(result.error)
   }
 
   const ribbons = await db.ribbon.findMany({
@@ -91,7 +91,6 @@ export async function action({ params, context, request }: ActionArgs) {
 export default function DashboardListingRibbonsEditPage() {
   const { position } = useLoaderData<typeof loader>()
   const { close, leave, open } = useDialogPage()
-  const actionData = useActionData<typeof action>()
 
   return (
     <Transition.Root appear show={open} as={Fragment}>
@@ -131,8 +130,9 @@ export default function DashboardListingRibbonsEditPage() {
                 <Form
                   className="mx-auto mt-4 flex flex-col gap-y-3"
                   method="POST"
+                  validator={clientValidator}
+                  defaultValues={{ type: RibbonType.Banner }}
                 >
-                  <ValidationErrors errors={actionData?.errors} />
                   <input
                     type="hidden"
                     name="position"
@@ -144,7 +144,6 @@ export default function DashboardListingRibbonsEditPage() {
                     description="The name of the ribbon"
                     label="Name"
                     name="name"
-                    schema={RibbonNameSchema}
                     required
                   />
                   <ListRadioGroup
@@ -156,9 +155,8 @@ export default function DashboardListingRibbonsEditPage() {
                       value: type,
                     }))}
                     required
-                    defaultValue={RibbonType.Banner}
                   />
-                  <SubmitButton />
+                  <SubmitButton>Create</SubmitButton>
                 </Form>
               </Dialog.Panel>
             </Transition.Child>

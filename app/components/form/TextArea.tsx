@@ -1,40 +1,27 @@
 import { ExclamationCircleIcon } from "@heroicons/react/20/solid"
 import clsx from "clsx"
-import { useState } from "react"
-import type { FocusEvent, TextareaHTMLAttributes } from "react"
-import type { z } from "zod"
+import { useEffect, useRef } from "react"
+import type { TextareaHTMLAttributes } from "react"
+import { useField } from "remix-validated-form"
 
-export default function Input({
-  schema,
+export default function TextArea({
+  name,
   label,
   className,
   description,
   required,
   ...props
 }: {
+  name: string
   label: string
   description?: string
-  /**
-   * The Zod schema used to validate the input client-side
-   */
-  schema?: z.ZodSchema
 } & TextareaHTMLAttributes<HTMLTextAreaElement>) {
-  const [validationError, setValidationError] = useState("")
-  const { name } = props
+  const { getInputProps, error } = useField(name)
+  const $input = useRef<HTMLTextAreaElement>(null)
 
-  function validate(event: FocusEvent<HTMLTextAreaElement>) {
-    const $input = event.currentTarget
-
-    if (!schema) return
-
-    const result = schema.safeParse($input.value)
-
-    $input.setCustomValidity(
-      result.success ? "" : result.error.flatten().formErrors[0]!
-    )
-
-    setValidationError($input.validationMessage)
-  }
+  useEffect(() => {
+    $input.current?.setCustomValidity(error || "")
+  }, [error])
 
   return (
     <div className={className}>
@@ -51,9 +38,7 @@ export default function Input({
       </div>
       <div className="relative">
         <textarea
-          {...props}
-          id={name}
-          onBlur={validate}
+          {...getInputProps({ ...props, id: name, ref: $input })}
           className={clsx(
             "peer my-1 block w-full rounded-md border-gray-300 py-1.5 shadow-sm sm:text-sm sm:leading-6",
             "focus:border-gray-500 focus:ring-gray-500",
@@ -73,7 +58,7 @@ export default function Input({
           </p>
         )}
         <p className="hidden text-sm text-red-600 peer-invalid:block">
-          {validationError}
+          {error}
         </p>
       </div>
     </div>

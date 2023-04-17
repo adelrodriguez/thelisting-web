@@ -2,33 +2,27 @@ import { PhotoIcon, FolderOpenIcon } from "@heroicons/react/20/solid"
 import type { Image } from "@prisma/client"
 import { useQuery } from "@tanstack/react-query"
 import clsx from "clsx"
-import type { FocusEvent, InputHTMLAttributes } from "react"
+import type { ComponentProps } from "react"
+import { useEffect, useRef } from "react"
 import { useState } from "react"
-import type { z } from "zod"
+import { useControlField, useField } from "remix-validated-form"
 
 import { ImagePicker } from "~/components/common"
+import type { Input } from "~/components/form"
 
 export default function ImageInput({
   className,
+  name,
   description,
   label,
   required,
-  schema,
-  defaultValue,
   ...props
-}: {
-  label: string
-  description?: string
-  /**
-   * The Zod schema used to validate the input client-side
-   */
-  schema?: z.ZodSchema
-} & InputHTMLAttributes<HTMLInputElement>) {
-  const { name, placeholder } = props
-  const [validationError, setValidationError] = useState("")
-
-  const [value, setValue] = useState(defaultValue || "")
+}: ComponentProps<typeof Input>) {
+  const { error, getInputProps } = useField(name)
+  const [value, setValue] = useControlField<string | null>(name)
+  const $input = useRef<HTMLInputElement>(null)
   const [open, setOpen] = useState(false)
+
   const { data } = useQuery(
     ["images", value],
     async () => {
@@ -42,17 +36,13 @@ export default function ImageInput({
     }
   )
 
-  function validate(event: FocusEvent<HTMLInputElement>) {
-    const $input = event.currentTarget
+  const { placeholder } = props
 
-    if (!schema) return
-
-    const result = schema.safeParse($input.value)
-
-    setValidationError(
-      result.success ? "" : result.error.flatten().formErrors[0]!
-    )
-  }
+  useEffect(() => {
+    if (error) {
+      $input.current?.setCustomValidity(error)
+    }
+  }, [error])
 
   return (
     <>
@@ -82,7 +72,7 @@ export default function ImageInput({
               <PhotoIcon
                 className={clsx(
                   "h-5 w-5",
-                  validationError ? "text-red-400" : "text-gray-400"
+                  error ? "text-red-400" : "text-gray-400"
                 )}
                 aria-hidden="true"
               />
@@ -96,16 +86,21 @@ export default function ImageInput({
                 "sm:text-sm sm:leading-6",
                 {
                   "placeholder-gray-400 ring-gray-300 focus:ring-slate-600":
-                    !validationError,
+                    !error,
                   "pr-10 text-red-900 placeholder-red-300 ring-red-300 focus:outline-none focus:ring-red-500":
-                    validationError,
+                    error,
                 }
               )}
               readOnly
               placeholder={placeholder}
-              onBlur={validate}
             />
-            <input {...props} type="hidden" value={value} name={name} />
+            <input
+              {...getInputProps({
+                ...props,
+                type: "hidden",
+                value: value || "",
+              })}
+            />
           </div>
           <button
             type="button"
@@ -122,8 +117,8 @@ export default function ImageInput({
         {description && (
           <p
             className={clsx("text-sm text-gray-500", {
-              block: !validationError,
-              hidden: validationError,
+              block: !error,
+              hidden: error,
             })}
           >
             {description}
@@ -131,11 +126,11 @@ export default function ImageInput({
         )}
         <p
           className={clsx("text-sm text-red-600", {
-            block: validationError,
-            hidden: !validationError,
+            block: error,
+            hidden: !error,
           })}
         >
-          {validationError}
+          {error}
         </p>
       </div>
     </>

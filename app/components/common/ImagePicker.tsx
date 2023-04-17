@@ -150,7 +150,7 @@ function ImageGallery({
               >
                 <div className="flex flex-col space-y-1 text-sm text-gray-600">
                   <PhotoIcon className="mx-auto h-12 w-12 text-gray-400" />
-                  <div className="mx-auto flex flex-col lg:flex-row">
+                  <div className="mx-auto flex flex-col">
                     <label
                       htmlFor="file-upload"
                       className="relative cursor-pointer rounded-md  font-medium text-gray-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-gray-500 focus-within:ring-offset-2 hover:text-gray-500"

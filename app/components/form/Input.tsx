@@ -1,40 +1,31 @@
 import { ExclamationCircleIcon } from "@heroicons/react/20/solid"
 import clsx from "clsx"
-import { useState } from "react"
-import type { FocusEvent, InputHTMLAttributes } from "react"
-import type { z } from "zod"
+import { useEffect, useRef } from "react"
+import type { InputHTMLAttributes } from "react"
+import { useField } from "remix-validated-form"
 
 export default function Input({
-  schema,
+  name,
   label,
   className,
   description,
   required,
+  type = "text",
   ...props
 }: {
+  name: string
   label: string
   description?: string
-  /**
-   * The Zod schema used to validate the input client-side
-   */
-  schema?: z.ZodSchema
-} & InputHTMLAttributes<HTMLInputElement>) {
-  const [validationError, setValidationError] = useState("")
-  const { name } = props
+} & Omit<
+  InputHTMLAttributes<HTMLInputElement>,
+  "name" | "defaultValue" | "defaultChecked"
+>) {
+  const { getInputProps, error } = useField(name)
+  const $input = useRef<HTMLInputElement>(null)
 
-  function validate(event: FocusEvent<HTMLInputElement>) {
-    const $input = event.currentTarget
-
-    if (!schema) return
-
-    const result = schema.safeParse($input.value)
-
-    $input.setCustomValidity(
-      result.success ? "" : result.error.flatten().formErrors[0]!
-    )
-
-    setValidationError($input.validationMessage)
-  }
+  useEffect(() => {
+    $input.current?.setCustomValidity(error || "")
+  }, [error])
 
   return (
     <div className={className}>
@@ -51,9 +42,7 @@ export default function Input({
       </div>
       <div className="relative">
         <input
-          {...props}
-          id={name}
-          onBlur={validate}
+          {...getInputProps({ ...props, id: name, ref: $input, type })}
           className={clsx(
             "peer my-1 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-slate-300",
             "placeholder:text-gray-400",
@@ -62,7 +51,6 @@ export default function Input({
             "disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500",
             "invalid:pr-10 invalid:text-red-900 invalid:placeholder-red-300 invalid:ring-red-300 invalid:focus:outline-none invalid:focus:ring-red-500"
           )}
-          type={props.type ?? "text"}
         />
         <div className="pointer-events-none invisible absolute right-0 top-0 flex h-9 items-center pr-3 peer-invalid:visible">
           <ExclamationCircleIcon
@@ -76,7 +64,7 @@ export default function Input({
           </p>
         )}
         <p className="hidden text-sm text-red-600 peer-invalid:block">
-          {validationError}
+          {error}
         </p>
       </div>
     </div>

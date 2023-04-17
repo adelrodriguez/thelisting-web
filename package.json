@@ -121,6 +121,7 @@
     "winston": "^3.8.2",
     "xstate": "4.37.0",
     "zod": "3.20.6",
+    "zod-form-data": "^2.0.1",
     "zodix": "0.4.0"
   },
   "devDependencies": {

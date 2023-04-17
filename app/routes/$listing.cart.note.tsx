@@ -2,15 +2,18 @@ import { Dialog, Transition } from "@headlessui/react"
 import { XMarkIcon } from "@heroicons/react/24/outline"
 import { NoteType } from "@prisma/client"
 import type { ActionArgs } from "@remix-run/node"
-import { Form, useNavigate } from "@remix-run/react"
+import { useNavigate } from "@remix-run/react"
+import { withZod } from "@remix-validated-form/with-zod"
+import { StatusCodes } from "http-status-codes"
 import { Fragment, useEffect } from "react"
 import { useTranslation } from "react-i18next"
+import { setFormDefaults } from "remix-validated-form"
 import { z } from "zod"
+import { zfd } from "zod-form-data"
 import { zx } from "zodix"
 
 import { Alert, Button } from "~/components/common"
-import { SubmitButton, TextArea, ValidationErrors } from "~/components/form"
-import { flattenErrors } from "~/utils/form"
+import { Form, SubmitButton, TextArea } from "~/components/form"
 import { useCart, useDialogPage, useTrackPageview } from "~/utils/hooks"
 import { json, useActionData, useLoaderData } from "~/utils/remix"
 
@@ -29,7 +32,12 @@ export async function loader({ request, context }: ActionArgs) {
     where: { id: query.data.note_id },
   })
 
-  return json({ note })
+  return json({
+    note,
+    ...setFormDefaults("add-note", {
+      text: note?.text ?? "",
+    }),
+  })
 }
 
 export async function action({ request, params, context }: ActionArgs) {
@@ -42,20 +50,29 @@ export async function action({ request, params, context }: ActionArgs) {
     params,
     z.object({ listing: z.string() })
   )
-  const parsedFormData = await zx.parseFormSafe(
-    request,
-    z.object({ text: z.string().max(500) })
+
+  const serverValidator = withZod(
+    zfd.formData({
+      text: zfd.text(z.string().max(500, "The note is too long")),
+    })
   )
 
-  if (!parsedFormData.success) {
-    return json({
-      errors: flattenErrors(parsedFormData.error),
-      note: null,
-    })
+  const formData = await request.formData()
+  const result = await serverValidator.validate(formData)
+
+  if (result.error) {
+    return json(
+      {
+        data: null,
+        success: false,
+        ...result.error,
+      },
+      { status: StatusCodes.UNPROCESSABLE_ENTITY }
+    )
   }
 
-  if (parsedFormData.data.text.length === 0) {
-    return json({ errors: null, note: null })
+  if (result.data.text.length === 0) {
+    return json({ data: null, success: true })
   }
 
   if (!parsedQuery.success) {
@@ -67,42 +84,45 @@ export async function action({ request, params, context }: ActionArgs) {
     const note = await db.note.create({
       data: {
         listingId: listing.id,
-        text: parsedFormData.data.text,
+        text: result.data.text,
         type: NoteType.Text,
       },
     })
 
-    return json({ errors: null, note })
+    return json({ data: note, success: true })
   }
 
   const note = await db.note.update({
-    data: { text: parsedFormData.data.text, type: NoteType.Text },
+    data: { text: result.data.text, type: NoteType.Text },
     where: { id: parsedQuery.data.note_id },
   })
 
-  return json({ errors: null, note })
+  return json({ data: note, success: true })
 }
 
 export default function ListingCartNotePage() {
-  const { t } = useTranslation(handle.i18n)
   const { note } = useLoaderData<typeof loader>()
-  const data = useActionData<typeof action>()
   const { open, close, leave } = useDialogPage()
+  const { t } = useTranslation(handle.i18n)
   const cart = useCart()
+  const actionData = useActionData<typeof action>()
+  const lengthError = t("registry:note.lengthError")
+  const clientValidator = withZod(
+    zfd.formData({
+      text: zfd.text(z.string().max(500, lengthError)),
+    })
+  )
 
   useEffect(() => {
-    if (!data) return
+    if (!actionData) return
 
-    if (data.errors !== null) return
+    if (!actionData.success) return
 
-    cart.attachNoteId(data.note === null ? null : data.note.id)
+    cart.attachNoteId(actionData.data === null ? null : actionData.data.id)
 
     close()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, close])
-
-  // Translations
-  const lengthError = t("registry:note.lengthError")
+  }, [actionData, close])
 
   useTrackPageview()
 
@@ -124,8 +144,10 @@ export default function ListingCartNotePage() {
               >
                 <Dialog.Panel className="pointer-events-auto w-screen max-w-md">
                   <Form
+                    id="add-note"
                     className="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl"
                     method="POST"
+                    validator={clientValidator}
                   >
                     <div className="h-0 flex-1 overflow-y-auto">
                       <div className="bg-gray-700 py-6 px-4 sm:px-6">
@@ -156,14 +178,12 @@ export default function ListingCartNotePage() {
                       <div className="flex flex-1 flex-col justify-between">
                         <div className="divide-y divide-gray-200 px-4 sm:px-6">
                           <div className="space-y-6 pt-6 pb-5">
-                            <ValidationErrors errors={data?.errors} />
                             <TextArea
                               label="Nota"
                               name="text"
                               rows={20}
                               placeholder={`${t("note.placeholder")}`}
                               defaultValue={note?.text || ""}
-                              schema={z.string().max(500, lengthError)}
                             />
                           </div>
                         </div>

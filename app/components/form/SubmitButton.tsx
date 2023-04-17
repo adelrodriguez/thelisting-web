@@ -1,6 +1,6 @@
-import { useNavigation } from "@remix-run/react"
 import i18next from "i18next"
 import type { ComponentProps } from "react"
+import { useIsSubmitting } from "remix-validated-form"
 
 import { Button } from "~/components/common"
 import { Spinner } from "~/components/loading"
@@ -14,8 +14,7 @@ export default function SubmitButton({
   children?: React.ReactNode
   loadingText?: string
 } & Exclude<ComponentProps<typeof Button>, "type" | "children">) {
-  const navigation = useNavigation()
-  const isSubmitting = navigation.state === "submitting"
+  const isSubmitting = useIsSubmitting()
 
   return (
     <Button {...props} type="submit" disabled={isSubmitting || disabled}>

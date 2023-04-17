@@ -1,5 +1,6 @@
 import { RadioGroup } from "@headlessui/react"
 import clsx from "clsx"
+import { useField } from "remix-validated-form"
 
 type ListRadioOption = {
   label?: string
@@ -13,17 +14,17 @@ export default function ListRadioGroup<T extends ListRadioOption>({
   required,
   description,
   name,
-  defaultValue,
 }: {
   options: T[]
   label: string
   required?: boolean
   description?: string
   name: string
-  defaultValue: T["value"]
 }) {
+  const { getInputProps } = useField(name)
+
   return (
-    <RadioGroup name={name} defaultValue={defaultValue}>
+    <RadioGroup {...getInputProps()}>
       <RadioGroup.Label className="flex justify-between">
         <label
           className="block text-sm font-medium leading-6 text-gray-900"
