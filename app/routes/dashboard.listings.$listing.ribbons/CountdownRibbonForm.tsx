@@ -10,7 +10,7 @@ import { Input, SubmitButton } from "~/components/form"
 import { CountdownPropertiesSchema } from "~/utils/ribbon"
 
 const validator = withZod(
-  zfd.formData({
+  z.object({
     eventDatetime: z.string(),
   })
 )

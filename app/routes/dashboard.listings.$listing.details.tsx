@@ -3,15 +3,14 @@ import type { ActionArgs, LoaderArgs } from "@remix-run/node"
 import type { RouteMatch } from "@remix-run/react"
 import { useSubmit } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
-import { format, startOfTomorrow } from "date-fns"
-import { zonedTimeToUtc } from "date-fns-tz"
+import { format, startOfTomorrow, subMilliseconds } from "date-fns"
+import { getTimezoneOffset } from "date-fns-tz"
 import { StatusCodes } from "http-status-codes"
 import { useSnackbar } from "notistack"
 import { useEffect } from "react"
 import { forbidden, notFound, unauthorized } from "remix-utils"
 import { setFormDefaults } from "remix-validated-form"
 import { z } from "zod"
-import { zfd } from "zod-form-data"
 import { zx } from "zodix"
 
 import {
@@ -47,13 +46,13 @@ export const handle = {
 }
 
 const clientValidator = withZod(
-  zfd.formData({
+  z.object({
     coverImage: ListingCoverImageSchema,
     eventDate: ListingEventDateSchema,
     ownerId: ListingOwnerSchema,
     path: ListingPathSchema,
     status: ListingStatusSchema,
-    subtitle: zfd.text(z.string().optional()),
+    subtitle: z.string().optional(),
     thankYouImage: ListingThankYouImageSchema,
     title: ListingTitleSchema,
     type: ListingTypeSchema,
@@ -112,7 +111,7 @@ export async function action({ request, params, context }: ActionArgs) {
   }
 
   const serverValidator = withZod(
-    zfd.formData({
+    z.object({
       coverImage: ListingCoverImageSchema,
       eventDate: ListingEventDateSchema,
       ownerId: ListingOwnerSchema,
@@ -186,13 +185,20 @@ export default function DashboardListingPage() {
       onSubmit={(data, event) => {
         event.preventDefault()
 
+        const timezoneOffsetInMilliseconds = getTimezoneOffset(
+          Intl.DateTimeFormat().resolvedOptions().timeZone,
+          data.eventDate
+        )
+
+        const eventDate = subMilliseconds(
+          data.eventDate,
+          timezoneOffsetInMilliseconds
+        ).toISOString()
+
         submit(
           {
             ...data,
-            eventDate: zonedTimeToUtc(
-              data.eventDate,
-              Intl.DateTimeFormat().resolvedOptions().timeZone
-            ).toISOString(),
+            eventDate,
           },
           { method: "POST" }
         )

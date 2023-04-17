@@ -9,7 +9,7 @@ import { ImageInput, Input, SubmitButton } from "~/components/form"
 import { BannerPropertiesSchema } from "~/utils/ribbon"
 
 const validator = withZod(
-  zfd.formData({
+  z.object({
     backgroundImage: zfd.text(z.string().optional()),
     subtitle: zfd.text(z.string().optional()),
     title: z
