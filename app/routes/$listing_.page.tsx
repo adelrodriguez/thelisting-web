@@ -1,16 +1,20 @@
+import type { Listing, Ribbon } from "@prisma/client"
+import { RibbonType } from "@prisma/client"
 import type { LoaderArgs } from "@remix-run/node"
 import { redirect } from "@remix-run/node"
 import { notFound } from "remix-utils"
 
 import type { NotFoundBoundaryData } from "~/components/error"
-import { Ribbons } from "~/components/ribbons"
+import { Banner, Countdown } from "~/components/ribbons"
 import { isProduction } from "~/config/vars"
-import {
-  CLOUDFLARE_IMAGE_VARIANTS,
-  generateCloudflareImageUrl,
-} from "~/utils/cloudflare"
+import { generateCloudflareImageUrl } from "~/utils/cloudflare"
 import type { MetaFunction } from "~/utils/remix"
 import { getParam, json, useLoaderData } from "~/utils/remix"
+import {
+  parseBannerProperties,
+  parseCountdownProperties,
+  parseCoverImageProperties,
+} from "~/utils/ribbons"
 
 export async function loader({ params, context }: LoaderArgs) {
   const db = context.db
@@ -52,7 +56,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
         ? {
             "og:image": generateCloudflareImageUrl(
               data.listing.coverImage,
-              CLOUDFLARE_IMAGE_VARIANTS.Thumbnail
+              "thumbnail"
             ),
           }
         : {}),
@@ -64,6 +68,26 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
   }
 }
 
+function getCoverImage(listing: Listing & { ribbons: Ribbon[] }) {
+  const coverImageRibbon = listing.ribbons.find(
+    (ribbon) => ribbon.type === RibbonType.CoverImage
+  )
+
+  if (coverImageRibbon) {
+    const properties = parseCoverImageProperties(coverImageRibbon.properties)
+
+    if (!properties.success) return null
+
+    return generateCloudflareImageUrl(properties.data.image, "display")
+  }
+
+  if (!coverImageRibbon && listing.coverImage) {
+    return generateCloudflareImageUrl(listing.coverImage, "display")
+  }
+
+  return null
+}
+
 export default function ListingPage() {
   const { listing } = useLoaderData<typeof loader>()
 
@@ -73,9 +97,9 @@ export default function ListingPage() {
         <img
           className="sticky inset-0 h-screen w-full object-cover object-center"
           src={
-            listing.coverImage
-              ? generateCloudflareImageUrl(listing.coverImage, "display")
-              : "https://images.unsplash.com/photo-1496917756835-20cb06e75b4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1908&q=80"
+            getCoverImage(listing) ??
+            // TODO(adelrodriguez): Add actual default image
+            "https://images.unsplash.com/photo-1496917756835-20cb06e75b4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1908&q=80"
           }
           alt=""
         />
@@ -87,7 +111,26 @@ export default function ListingPage() {
         </div>
       </div>
       <div className="flex flex-1 flex-col justify-center shadow-xl lg:w-1/3 lg:flex-none">
-        <Ribbons ribbons={listing.ribbons} />
+        {listing.ribbons.map((ribbon) => {
+          switch (ribbon.type) {
+            case RibbonType.Banner: {
+              const result = parseBannerProperties(ribbon.properties)
+
+              if (!result.success) return null
+
+              return <Banner {...result.data} key={ribbon.id} />
+            }
+            case RibbonType.Countdown: {
+              const result = parseCountdownProperties(ribbon.properties)
+
+              if (!result.success) return null
+
+              return <Countdown {...result.data} key={ribbon.id} />
+            }
+            default:
+              return null
+          }
+        })}
       </div>
     </main>
   )

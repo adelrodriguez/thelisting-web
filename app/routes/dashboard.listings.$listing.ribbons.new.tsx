@@ -14,7 +14,7 @@ import {
   RibbonTypeSchema,
   RibbonNameSchema,
   RibbonPositionSchema,
-} from "~/utils/ribbon"
+} from "~/utils/ribbons"
 
 const clientValidator = withZod(
   z.object({

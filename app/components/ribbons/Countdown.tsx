@@ -4,7 +4,7 @@ import { ClientOnly } from "remix-utils"
 
 import { Spinner } from "~/components/loading"
 import { useInterval } from "~/utils/hooks"
-import type { CountdownProperties } from "~/utils/ribbon"
+import type { CountdownProperties } from "~/utils/ribbons"
 import { capitalize } from "~/utils/string"
 
 function getRemainingTime(eventDatetime: Date) {

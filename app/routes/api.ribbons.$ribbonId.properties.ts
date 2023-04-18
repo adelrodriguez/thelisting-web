@@ -12,7 +12,8 @@ import { json } from "~/utils/remix"
 import {
   BannerPropertiesSchema,
   CountdownPropertiesSchema,
-} from "~/utils/ribbon"
+  CoverImagePropertiesSchema,
+} from "~/utils/ribbons"
 
 export async function action({ params, request, context }: ActionArgs) {
   const { db } = context
@@ -43,6 +44,10 @@ export async function action({ params, request, context }: ActionArgs) {
     }
     case RibbonType.Countdown: {
       schema = CountdownPropertiesSchema
+      break
+    }
+    case RibbonType.CoverImage: {
+      schema = CoverImagePropertiesSchema
       break
     }
     default: {

@@ -3,25 +3,19 @@ import { useFetcher } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
 import { ValidatedForm as Form } from "remix-validated-form"
 import { z } from "zod"
-import { zfd } from "zod-form-data"
 
-import { ImageInput, Input, SubmitButton } from "~/components/form"
-import { BannerPropertiesSchema } from "~/utils/ribbons"
+import { ImageInput, SubmitButton } from "~/components/form"
+import { CoverImagePropertiesSchema } from "~/utils/ribbons"
 
 const validator = withZod(
   z.object({
-    backgroundImage: zfd.text(z.string().optional()),
-    subtitle: zfd.text(z.string().optional()),
-    title: z
-      .string()
-      .min(1, "You must provide a title for the banner")
-      .max(255),
+    image: z.string().uuid("You must provide an image"),
   })
 )
 
-export default function BannerRibbonForm({ ribbon }: { ribbon: Ribbon }) {
+export default function CoverImageRibbonForm({ ribbon }: { ribbon: Ribbon }) {
   const fetcher = useFetcher()
-  const result = BannerPropertiesSchema.safeParse(ribbon.properties)
+  const result = CoverImagePropertiesSchema.safeParse(ribbon.properties)
   let defaultValues
 
   if (result.success) {
@@ -38,9 +32,7 @@ export default function BannerRibbonForm({ ribbon }: { ribbon: Ribbon }) {
       fetcher={fetcher}
       resetAfterSubmit
     >
-      <Input label="Title" type="text" name="title" required />
-      <Input label="Subtitle" type="text" name="subtitle" />
-      <ImageInput name="backgroundImage" label="Background Image" />
+      <ImageInput name="image" label="Cover Image" />
       <SubmitButton loadingText="Updating...">Update</SubmitButton>
     </Form>
   )

@@ -6,10 +6,7 @@ import { notFound } from "remix-utils"
 import { Image } from "~/components/common"
 import type { NotFoundBoundaryData } from "~/components/error"
 import { THE_LISTING_LOGO_BLACK } from "~/config/consts"
-import {
-  CLOUDFLARE_IMAGE_VARIANTS,
-  generateCloudflareImageUrl,
-} from "~/utils/cloudflare"
+import { generateCloudflareImageUrl } from "~/utils/cloudflare"
 import { CartProvider } from "~/utils/hooks"
 import type { MetaFunction } from "~/utils/remix"
 import { getParam } from "~/utils/remix"
@@ -49,7 +46,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
         ? {
             "og:image": generateCloudflareImageUrl(
               data.listing.coverImage,
-              CLOUDFLARE_IMAGE_VARIANTS.Thumbnail
+              "thumbnail"
             ),
           }
         : {}),
@@ -82,7 +79,7 @@ export default function ListingPage() {
                   className="h-full w-full object-cover object-center"
                   src={generateCloudflareImageUrl(
                     listing.coverImage,
-                    CLOUDFLARE_IMAGE_VARIANTS.Display
+                    "display"
                   )}
                   alt=""
                 />

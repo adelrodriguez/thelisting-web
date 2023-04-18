@@ -1,18 +1,38 @@
 import { Disclosure } from "@headlessui/react"
-import { EllipsisVerticalIcon, PlusIcon } from "@heroicons/react/20/solid"
+import {
+  ClockIcon,
+  ComputerDesktopIcon,
+  EllipsisVerticalIcon,
+  PhotoIcon,
+  PlusIcon,
+} from "@heroicons/react/20/solid"
 import type { Ribbon } from "@prisma/client"
 import { RibbonType } from "@prisma/client"
 import { Link } from "@remix-run/react"
 import clsx from "clsx"
 import { useDrag, useDrop } from "react-dnd"
 
-import { RIBBON_CARD } from "~/utils/ribbon"
-
 import BannerRibbonForm from "./BannerRibbonForm"
 import CountdownRibbonForm from "./CountdownRibbonForm"
+import CoverImageRibbonForm from "./CoverImageRibbonForm"
 
 export const ItemTypes = {
   RIBBON: "ribbon",
+}
+
+const RIBBON_CARD = {
+  [RibbonType.Banner]: {
+    bgColor: "bg-amber-500",
+    icon: <ComputerDesktopIcon className="h-6 w-6" aria-hidden="true" />,
+  },
+  [RibbonType.Countdown]: {
+    bgColor: "bg-sky-500",
+    icon: <ClockIcon className="h-6 w-6" aria-hidden="true" />,
+  },
+  [RibbonType.CoverImage]: {
+    bgColor: "bg-purple-500",
+    icon: <PhotoIcon className="h-6 w-6" aria-hidden="true" />,
+  },
 }
 
 export default function RibbonCard({
@@ -110,6 +130,9 @@ export default function RibbonCard({
               )}
               {ribbon.type === RibbonType.Countdown && (
                 <CountdownRibbonForm ribbon={ribbon} />
+              )}
+              {ribbon.type === RibbonType.CoverImage && (
+                <CoverImageRibbonForm ribbon={ribbon} />
               )}
             </>
           )}

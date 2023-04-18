@@ -4,10 +4,9 @@ import { withZod } from "@remix-validated-form/with-zod"
 import { format, startOfToday } from "date-fns"
 import { ValidatedForm as Form } from "remix-validated-form"
 import { z } from "zod"
-import { zfd } from "zod-form-data"
 
 import { Input, SubmitButton } from "~/components/form"
-import { CountdownPropertiesSchema } from "~/utils/ribbon"
+import { CountdownPropertiesSchema } from "~/utils/ribbons"
 
 const validator = withZod(
   z.object({
@@ -34,6 +33,7 @@ export default function BannerRibbonForm({ ribbon }: { ribbon: Ribbon }) {
       fetcher={fetcher}
       validator={validator}
       defaultValues={defaultValues}
+      resetAfterSubmit
     >
       <Input
         label="Event Date & Time"

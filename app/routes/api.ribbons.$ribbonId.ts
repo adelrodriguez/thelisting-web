@@ -7,7 +7,7 @@ import { z } from "zod"
 import { zx } from "zodix"
 
 import auth from "~/helpers/auth.server"
-import { BannerPropertiesSchema } from "~/utils/ribbon"
+import { BannerPropertiesSchema } from "~/utils/ribbons"
 
 export async function action({ params, request, context }: ActionArgs) {
   const { db } = context
