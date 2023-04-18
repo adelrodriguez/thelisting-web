@@ -1,31 +1,33 @@
 import { ListingType } from "@prisma/client"
 import type { ActionArgs, LoaderArgs } from "@remix-run/node"
+import { useSubmit } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
-import { startOfTomorrow } from "date-fns"
+import { format, startOfTomorrow, subMilliseconds } from "date-fns"
+import { getTimezoneOffset } from "date-fns-tz"
+import { StatusCodes } from "http-status-codes"
 import { useSnackbar } from "notistack"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { unauthorized } from "remix-utils"
-import {
-  setFormDefaults,
-  ValidatedForm,
-  validationError,
-} from "remix-validated-form"
 import { z } from "zod"
 
-import { FormDate, FormInput, FormSelect, FormSubmit } from "~/components/form"
+import {
+  Form,
+  Input,
+  InputWithAddOn,
+  Select,
+  SubmitButton,
+} from "~/components/form"
 import auth from "~/helpers/auth.server"
 import { CreateListingCommerceEntityQueue } from "~/helpers/queues"
-import { getFormData } from "~/utils/http.server"
 import {
-  EventDateSchema,
-  PathSchema,
-  TitleSchema,
-  TypeSchema,
-  verifyPathIsUnique,
+  ListingEventDateSchema,
+  ListingOwnerSchema,
+  ListingPathSchema,
+  ListingTitleSchema,
+  ListingTypeSchema,
 } from "~/utils/listing"
-import { json, redirect, useLoaderData } from "~/utils/remix"
+import { json, redirect, useActionData, useLoaderData } from "~/utils/remix"
 import { getUserFullName } from "~/utils/user"
-import { isWindowDefined } from "~/utils/window"
 
 export const handle = {
   crumb: () => ({
@@ -34,15 +36,15 @@ export const handle = {
   }),
 }
 
-const CreateListingSchema = z.object({
-  eventDate: EventDateSchema,
-  ownerId: z.string().uuid(),
-  path: PathSchema,
-  title: TitleSchema,
-  type: TypeSchema,
-})
-
-const validator = withZod(CreateListingSchema)
+const clientValidator = withZod(
+  z.object({
+    eventDate: ListingEventDateSchema,
+    ownerId: ListingOwnerSchema,
+    path: ListingPathSchema,
+    title: ListingTitleSchema,
+    type: ListingTypeSchema,
+  })
+)
 
 export async function loader({ request, context }: LoaderArgs) {
   const { db } = context
@@ -55,42 +57,46 @@ export async function loader({ request, context }: LoaderArgs) {
     select: { firstName: true, id: true, lastName: true },
   })
 
-  return json({
-    users,
-    ...setFormDefaults("createListing", {
-      eventDate: startOfTomorrow(),
-      ownerId: user.id,
-      path: "",
-      title: "",
-      type: undefined,
-    }),
-  })
+  return json({ users })
 }
 
 export async function action({ request, context }: ActionArgs) {
   const { db } = context
   const user = await auth.isAuthenticated(request)
 
-  if (!user) throw unauthorized("You must be logged in to create a listing")
+  if (!user) {
+    throw unauthorized("You must be logged in to create a listing")
+  }
 
   const serverValidator = withZod(
-    CreateListingSchema.refine(
-      async (data) => {
-        const result = await verifyPathIsUnique(data.path)
-        return result
-      },
-      {
-        message: "This path is already taken",
-        path: ["path"],
-      }
-    )
+    z.object({
+      eventDate: ListingEventDateSchema,
+      ownerId: ListingOwnerSchema,
+      path: ListingPathSchema.trim()
+        .transform((value) => value.toLowerCase())
+        .refine(
+          async (path) => {
+            const listings = await db.listing.count({
+              where: { path },
+            })
+
+            return listings === 0
+          },
+          { message: "The path you have entered is already in use." }
+        ),
+      title: ListingTitleSchema,
+      type: ListingTypeSchema,
+    })
   )
 
-  const formData = await getFormData(request)
-
+  const formData = await request.formData()
   const result = await serverValidator.validate(formData)
 
-  if (result.error) return validationError(result.error)
+  if (result.error)
+    return json(
+      { ...result.error, listing: null, success: false },
+      { status: StatusCodes.UNPROCESSABLE_ENTITY }
+    )
 
   const listing = await db.listing.create({
     data: result.data,
@@ -106,13 +112,25 @@ export async function action({ request, context }: ActionArgs) {
 export default function CreateListingsPage() {
   const { enqueueSnackbar } = useSnackbar()
   const { users } = useLoaderData<typeof loader>()
-  const [origin, setOrigin] = useState("")
+  const actionData = useActionData<typeof action>()
+  const submit = useSubmit()
 
   useEffect(() => {
-    if (isWindowDefined()) {
-      setOrigin(window.location.origin)
+    if (!actionData) return
+
+    if (actionData.success) {
+      enqueueSnackbar("Listing created 🎉", {
+        description:
+          "The listing was successfully created. The Shopify collection will be created shortly.",
+        variant: "success",
+      })
+    } else {
+      enqueueSnackbar("Error creating listing", {
+        description: "There was an error creating the listing",
+        variant: "error",
+      })
     }
-  }, [])
+  }, [actionData, enqueueSnackbar])
 
   return (
     <div className="mx-auto max-w-7xl py-12 px-4 sm:px-6 lg:px-8">
@@ -127,41 +145,55 @@ export default function CreateListingsPage() {
           Create a new listing for your event
         </p>
       </div>
-      <ValidatedForm
-        id="createListing"
-        validator={validator}
-        method="post"
+      <Form
+        id="create-listing"
+        validator={clientValidator}
+        method="POST"
         className="m-auto mt-8 flex flex-col gap-y-6 sm:w-[500px]"
-        resetAfterSubmit
-        onSubmit={() => {
-          enqueueSnackbar("Listing created 🎉", {
-            description:
-              "The listing was successfully created. The Shopify collection will be created shortly.",
-            variant: "success",
-          })
+        onSubmit={(data, event) => {
+          event.preventDefault()
+
+          const timezoneOffsetInMilliseconds = getTimezoneOffset(
+            Intl.DateTimeFormat().resolvedOptions().timeZone,
+            data.eventDate
+          )
+
+          const eventDate = subMilliseconds(
+            data.eventDate,
+            timezoneOffsetInMilliseconds
+          ).toISOString()
+
+          submit(
+            {
+              ...data,
+              eventDate,
+            },
+            { method: "POST" }
+          )
         }}
       >
-        <FormInput
+        <Input
           label="Title"
           name="title"
           description="This is what we'll call your listing and show to others"
           required
         />
-        <FormInput
+        <InputWithAddOn
           name="path"
           label="Path"
-          addOn={origin}
+          addOn={"https://www.giftthelisting.com/"}
           description="The unique path for your listing"
           required
         />
-        <FormDate
+        <Input
+          type="date"
           label="Event Date"
           name="eventDate"
-          min={startOfTomorrow()}
+          min={format(startOfTomorrow(), "yyyy-MM-dd")}
           description="The date of your event"
           required
         />
-        <FormSelect
+        <Select
           options={[
             {
               label: "Select an option",
@@ -187,19 +219,23 @@ export default function CreateListingsPage() {
           label="Event Type"
           name="type"
           description="The type of event you're hosting"
+          required
         />
-        <FormSelect
-          options={users.map((user) => ({
-            label: getUserFullName(user),
-            value: user.id,
-          }))}
+        <Select
+          options={[
+            { label: "Select an option", value: "" },
+            ...users.map((user) => ({
+              label: getUserFullName(user),
+              value: user.id,
+            })),
+          ]}
           label="Owner"
           name="ownerId"
           description="The owner of this listing"
+          required
         />
-
-        <FormSubmit text="Create" loadingText="Creating..." />
-      </ValidatedForm>
+        <SubmitButton loadingText="Creating...">Create</SubmitButton>
+      </Form>
     </div>
   )
 }
