@@ -83,10 +83,12 @@ export default async function handleRequest(
   })
 }
 
-Sentry.init({
-  dsn: isProduction ? SENTRY_DSN : undefined,
-  environment: process.env.NODE_ENV,
-  integrations: [new Sentry.Integrations.Prisma({ client: db })],
-  release: RAILWAY_GIT_COMMIT_SHA,
-  tracesSampleRate: 1,
-})
+if (isProduction) {
+  Sentry.init({
+    dsn: SENTRY_DSN,
+    environment: process.env.NODE_ENV,
+    integrations: [new Sentry.Integrations.Prisma({ client: db })],
+    release: RAILWAY_GIT_COMMIT_SHA,
+    tracesSampleRate: 1,
+  })
+}
