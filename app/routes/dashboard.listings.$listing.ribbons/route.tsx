@@ -1,3 +1,4 @@
+import { ArrowTopRightOnSquareIcon } from "@heroicons/react/20/solid"
 import type { ActionArgs, LoaderArgs } from "@remix-run/node"
 import { Link, Outlet } from "@remix-run/react"
 import { DndProvider } from "react-dnd"
@@ -103,10 +104,13 @@ export default function DashboardListingRibbonsPage() {
         <div className="gap-4 md:col-span-2">
           <section>
             <div className="rounded-lg bg-white shadow">
-              <div className="border-b border-gray-200 bg-white px-4 py-5 sm:px-6">
+              <div className="flex justify-between border-b border-gray-200 bg-white px-4 py-5 sm:px-6">
                 <h2 className="text-base font-semibold leading-6 text-gray-700">
                   Preview
                 </h2>
+                <Link to={`/${listing.path}/page`} target="_blank">
+                  <ArrowTopRightOnSquareIcon className="inline-block h-4 w-4" />
+                </Link>
               </div>
               <RibbonsPreview ribbons={ribbons} path={listing.path} />
             </div>
