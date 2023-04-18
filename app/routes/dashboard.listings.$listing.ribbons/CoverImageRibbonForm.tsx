@@ -4,11 +4,16 @@ import { withZod } from "@remix-validated-form/with-zod"
 import { ValidatedForm as Form } from "remix-validated-form"
 import { z } from "zod"
 
-import { ImageInput, SubmitButton } from "~/components/form"
+import { ImageInput, Input, SubmitButton } from "~/components/form"
 import { CoverImagePropertiesSchema } from "~/utils/ribbons"
 
 const validator = withZod(
   z.object({
+    height: z.coerce
+      .number()
+      .min(0, "Height must be greater than 0")
+      .int("Height must be an integer")
+      .optional(),
     image: z.string().uuid("You must provide an image"),
   })
 )
@@ -30,9 +35,16 @@ export default function CoverImageRibbonForm({ ribbon }: { ribbon: Ribbon }) {
       validator={validator}
       defaultValues={defaultValues}
       fetcher={fetcher}
-      resetAfterSubmit
     >
       <ImageInput name="image" label="Cover Image" />
+      <Input
+        name="height"
+        label="Height"
+        type="number"
+        min="0"
+        step="1"
+        description="The height of the cover image (in mobile view). Provide 0 to cover the whole screen"
+      />
       <SubmitButton loadingText="Updating...">Update</SubmitButton>
     </Form>
   )

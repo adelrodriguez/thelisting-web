@@ -36,7 +36,6 @@ export default function BannerRibbonForm({ ribbon }: { ribbon: Ribbon }) {
       validator={validator}
       defaultValues={defaultValues}
       fetcher={fetcher}
-      resetAfterSubmit
     >
       <Input label="Title" type="text" name="title" required />
       <Input label="Subtitle" type="text" name="subtitle" />

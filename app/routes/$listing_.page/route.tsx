@@ -1,7 +1,8 @@
-import type { Listing, Ribbon } from "@prisma/client"
 import { RibbonType } from "@prisma/client"
 import type { LoaderArgs } from "@remix-run/node"
 import { redirect } from "@remix-run/node"
+import { AnimatePresence, motion } from "framer-motion"
+import { useCallback, useState } from "react"
 import { notFound } from "remix-utils"
 
 import type { NotFoundBoundaryData } from "~/components/error"
@@ -17,6 +18,7 @@ import {
 
 import Banner from "./Banner"
 import Countdown from "./Countdown"
+import CoverImage from "./CoverImage"
 
 export async function loader({ params, context }: LoaderArgs) {
   const db = context.db
@@ -46,7 +48,16 @@ export async function loader({ params, context }: LoaderArgs) {
     })
   }
 
-  return json({ listing })
+  const coverImages = listing.ribbons.reduce((acc: string[], ribbon) => {
+    if (ribbon.type === RibbonType.CoverImage) {
+      const result = parseCoverImageProperties(ribbon.properties)
+
+      if (result.success) acc.push(result.data.image)
+    }
+    return acc
+  }, [])
+
+  return json({ coverImages, listing })
 }
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
@@ -70,41 +81,29 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
   }
 }
 
-function getCoverImage(listing: Listing & { ribbons: Ribbon[] }) {
-  const coverImageRibbon = listing.ribbons.find(
-    (ribbon) => ribbon.type === RibbonType.CoverImage
-  )
-
-  if (coverImageRibbon) {
-    const properties = parseCoverImageProperties(coverImageRibbon.properties)
-
-    if (!properties.success) return null
-
-    return generateCloudflareImageUrl(properties.data.image, "display")
-  }
-
-  if (!coverImageRibbon && listing.coverImage) {
-    return generateCloudflareImageUrl(listing.coverImage, "display")
-  }
-
-  return null
-}
-
 export default function ListingPage() {
-  const { listing } = useLoaderData<typeof loader>()
+  const { listing, coverImages } = useLoaderData<typeof loader>()
+  const [currentImage, setCurrentImage] = useState(coverImages[0])
+  const handleImageChange = useCallback((image: string) => {
+    setCurrentImage(image)
+  }, [])
 
   return (
     <main className="flex flex-1">
       <div className="relative hidden w-0 flex-1 lg:block">
-        <img
-          className="sticky inset-0 h-screen w-full object-cover object-center"
-          src={
-            getCoverImage(listing) ??
-            // TODO(adelrodriguez): Add actual default image
-            "https://images.unsplash.com/photo-1496917756835-20cb06e75b4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1908&q=80"
-          }
-          alt=""
-        />
+        <AnimatePresence>
+          <motion.img
+            key={currentImage!}
+            src={generateCloudflareImageUrl(currentImage!, "display")}
+            alt={`Image ${currentImage}`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            className="sticky inset-0 h-screen w-full object-cover object-center"
+          />
+        </AnimatePresence>
+
         <div className="fixed left-10 bottom-[10%] text-white">
           <h1 className="mb-4 font-header text-5xl font-bold">
             {listing.title}
@@ -128,6 +127,19 @@ export default function ListingPage() {
               if (!result.success) return null
 
               return <Countdown {...result.data} key={ribbon.id} />
+            }
+            case RibbonType.CoverImage: {
+              const result = parseCoverImageProperties(ribbon.properties)
+
+              if (!result.success) return null
+
+              return (
+                <CoverImage
+                  {...result.data}
+                  key={ribbon.id}
+                  onView={handleImageChange}
+                />
+              )
             }
             default:
               return null
