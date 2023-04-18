@@ -32,29 +32,33 @@ export default function Countdown({ eventDatetime }: CountdownProperties) {
 
   return (
     <section>
-      {/* // TODO(adelrodriguez): Set a loading component */}
-      <ClientOnly
-        fallback={
-          <div className="flex w-full justify-center">
-            <Spinner className="h-5 w-5" />
-          </div>
-        }
-      >
-        {() => (
-          <div className="flex w-full justify-around">
-            {Object.keys(remaining)
-              .filter((key) => key !== "years")
-              .map((key) => (
-                <div className="flex w-24 flex-col items-center" key={key}>
-                  <div className="text-3xl font-bold md:text-6xl">
-                    {remaining[key as keyof typeof remaining]}
+      <div className="flex h-20 items-center md:px-4">
+        <ClientOnly
+          fallback={
+            <div className="flex w-full justify-center">
+              <Spinner className="h-10 w-10" />
+            </div>
+          }
+        >
+          {() => (
+            <div className="flex w-full justify-around">
+              {Object.keys(remaining)
+                .filter((key) => key !== "years")
+                .map((key) => (
+                  <div className="flex flex-col items-center" key={key}>
+                    <div className="font-header text-2xl font-bold lg:text-3xl xl:text-5xl">
+                      {remaining[key as keyof typeof remaining]}
+                    </div>
+                    <div className="font-body text-sm font-bold">
+                      {capitalize(key)}
+                    </div>
                   </div>
-                  <div className="text-sm font-bold">{capitalize(key)}</div>
-                </div>
-              ))}
-          </div>
-        )}
-      </ClientOnly>
+                ))}
+            </div>
+          )}
+        </ClientOnly>
+      </div>
+      {/* // TODO(adelrodriguez): Set a loading component */}
     </section>
   )
 }
