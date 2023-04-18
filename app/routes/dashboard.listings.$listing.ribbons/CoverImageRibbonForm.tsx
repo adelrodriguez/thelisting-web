@@ -4,7 +4,7 @@ import { withZod } from "@remix-validated-form/with-zod"
 import { ValidatedForm as Form } from "remix-validated-form"
 import { z } from "zod"
 
-import { ImageInput, Input, SubmitButton } from "~/components/form"
+import { ImageInput, Input } from "~/components/form"
 import { CoverImagePropertiesSchema } from "~/utils/ribbons"
 
 const validator = withZod(

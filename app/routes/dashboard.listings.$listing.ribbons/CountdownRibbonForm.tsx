@@ -40,7 +40,6 @@ export default function BannerRibbonForm({
       fetcher={fetcher}
       validator={validator}
       defaultValues={defaultValues}
-      resetAfterSubmit
     >
       <Input
         label="Event Date & Time"

@@ -19,7 +19,12 @@ export default function SubmitButton({
   const isSubmitting = useIsSubmitting(formId)
 
   return (
-    <Button {...props} type="submit" disabled={isSubmitting || disabled}>
+    <Button
+      {...props}
+      type="submit"
+      disabled={isSubmitting || disabled}
+      form={formId}
+    >
       {isSubmitting ? (
         <>
           <Spinner />
