@@ -18,7 +18,13 @@ const validator = withZod(
   })
 )
 
-export default function CoverImageRibbonForm({ ribbon }: { ribbon: Ribbon }) {
+export default function CoverImageRibbonForm({
+  ribbon,
+  id,
+}: {
+  ribbon: Ribbon
+  id: string
+}) {
   const fetcher = useFetcher()
   const result = CoverImagePropertiesSchema.safeParse(ribbon.properties)
   let defaultValues
@@ -29,6 +35,7 @@ export default function CoverImageRibbonForm({ ribbon }: { ribbon: Ribbon }) {
 
   return (
     <Form
+      id={id}
       className="flex flex-col gap-2"
       action={`/api/ribbons/${ribbon.id}/properties`}
       method="post"
@@ -45,7 +52,6 @@ export default function CoverImageRibbonForm({ ribbon }: { ribbon: Ribbon }) {
         step="1"
         description="The height of the cover image (in mobile view). Provide 0 to cover the whole screen"
       />
-      <SubmitButton loadingText="Updating...">Update</SubmitButton>
     </Form>
   )
 }

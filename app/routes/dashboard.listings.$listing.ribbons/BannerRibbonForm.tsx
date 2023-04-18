@@ -19,7 +19,13 @@ const validator = withZod(
   })
 )
 
-export default function BannerRibbonForm({ ribbon }: { ribbon: Ribbon }) {
+export default function BannerRibbonForm({
+  ribbon,
+  id,
+}: {
+  ribbon: Ribbon
+  id: string
+}) {
   const fetcher = useFetcher()
   const result = BannerPropertiesSchema.safeParse(ribbon.properties)
   let defaultValues
@@ -30,6 +36,7 @@ export default function BannerRibbonForm({ ribbon }: { ribbon: Ribbon }) {
 
   return (
     <Form
+      id={id}
       className="flex flex-col gap-2"
       action={`/api/ribbons/${ribbon.id}/properties`}
       method="post"
@@ -40,7 +47,6 @@ export default function BannerRibbonForm({ ribbon }: { ribbon: Ribbon }) {
       <Input label="Title" type="text" name="title" required />
       <Input label="Subtitle" type="text" name="subtitle" />
       <ImageInput name="backgroundImage" label="Background Image" />
-      <SubmitButton loadingText="Updating...">Update</SubmitButton>
     </Form>
   )
 }

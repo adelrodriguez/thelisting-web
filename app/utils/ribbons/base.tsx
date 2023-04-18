@@ -6,7 +6,7 @@ export const RibbonNameSchema = z
   .min(3, "You must provide a name for the ribbon")
   .max(50, "Ribbon name must be less than 50 characters")
 
-export const RibbonPositionSchema = z.coerce.number().int().positive()
+export const RibbonPositionSchema = z.coerce.number().int()
 
 export const RibbonTypeSchema = z.enum([
   RibbonType.Banner,

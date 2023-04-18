@@ -14,7 +14,13 @@ const validator = withZod(
   })
 )
 
-export default function BannerRibbonForm({ ribbon }: { ribbon: Ribbon }) {
+export default function BannerRibbonForm({
+  ribbon,
+  id,
+}: {
+  ribbon: Ribbon
+  id: string
+}) {
   const fetcher = useFetcher()
   const result = CountdownPropertiesSchema.safeParse(ribbon.properties)
   let defaultValues
@@ -27,6 +33,7 @@ export default function BannerRibbonForm({ ribbon }: { ribbon: Ribbon }) {
 
   return (
     <Form
+      id={id}
       className="flex flex-col gap-2"
       action={`/api/ribbons/${ribbon.id}/properties`}
       method="POST"
@@ -42,7 +49,6 @@ export default function BannerRibbonForm({ ribbon }: { ribbon: Ribbon }) {
         required
         min={format(startOfToday(), "yyyy-MM-dd HH:mm")}
       />
-      <SubmitButton>Save</SubmitButton>
     </Form>
   )
 }

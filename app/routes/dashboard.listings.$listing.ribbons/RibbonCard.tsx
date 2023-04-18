@@ -8,9 +8,12 @@ import {
 } from "@heroicons/react/20/solid"
 import type { Ribbon } from "@prisma/client"
 import { RibbonType } from "@prisma/client"
-import { Link } from "@remix-run/react"
+import { Link, useFetcher } from "@remix-run/react"
 import clsx from "clsx"
 import { useDrag, useDrop } from "react-dnd"
+
+import { Button } from "~/components/common"
+import { SubmitButton } from "~/components/form"
 
 import BannerRibbonForm from "./BannerRibbonForm"
 import CountdownRibbonForm from "./CountdownRibbonForm"
@@ -46,6 +49,7 @@ export default function RibbonCard({
   find: (id: string) => readonly [number, Ribbon]
   onFinish: () => void
 }) {
+  const fetcher = useFetcher()
   const originalIndex = find(ribbon.id)[0]
 
   const [{ isDragging }, drag, preview] = useDrag(() => ({
@@ -126,14 +130,33 @@ export default function RibbonCard({
           {!isDragging && (
             <>
               {ribbon.type === RibbonType.Banner && (
-                <BannerRibbonForm ribbon={ribbon} />
+                <BannerRibbonForm ribbon={ribbon} id={`form-${ribbon.id}`} />
               )}
               {ribbon.type === RibbonType.Countdown && (
-                <CountdownRibbonForm ribbon={ribbon} />
+                <CountdownRibbonForm ribbon={ribbon} id={`form-${ribbon.id}`} />
               )}
               {ribbon.type === RibbonType.CoverImage && (
-                <CoverImageRibbonForm ribbon={ribbon} />
+                <CoverImageRibbonForm
+                  ribbon={ribbon}
+                  id={`form-${ribbon.id}`}
+                />
               )}
+              <div className="mt-2 flex justify-end gap-2">
+                <fetcher.Form
+                  method="post"
+                  action={`/api/ribbons/${ribbon.id}?/delete`}
+                >
+                  <Button className="w-full" variant="danger">
+                    Delete
+                  </Button>
+                </fetcher.Form>
+                <SubmitButton
+                  formId={`form-${ribbon.id}`}
+                  loadingText="Updating..."
+                >
+                  Update
+                </SubmitButton>
+              </div>
             </>
           )}
         </Disclosure.Panel>
