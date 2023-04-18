@@ -67,5 +67,28 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 export default function ListingPage() {
   const { listing } = useLoaderData<typeof loader>()
 
-  return <Ribbons ribbons={listing.ribbons} />
+  return (
+    <main className="flex flex-1">
+      <div className="relative hidden w-0 flex-1 lg:block">
+        <img
+          className="sticky inset-0 h-screen w-full object-cover object-center"
+          src={
+            listing.coverImage
+              ? generateCloudflareImageUrl(listing.coverImage, "display")
+              : "https://images.unsplash.com/photo-1496917756835-20cb06e75b4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1908&q=80"
+          }
+          alt=""
+        />
+        <div className="fixed left-10 bottom-[10%] text-white">
+          <h1 className="mb-4 font-header text-5xl font-bold">
+            {listing.title}
+          </h1>
+          <h3 className="font-body text-2xl">{listing.subtitle}</h3>
+        </div>
+      </div>
+      <div className="flex flex-1 flex-col justify-center shadow-xl lg:w-1/3 lg:flex-none">
+        <Ribbons ribbons={listing.ribbons} />
+      </div>
+    </main>
+  )
 }

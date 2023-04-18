@@ -20,7 +20,7 @@ export default function RibbonsPreview({
   const containerRef = useRef<HTMLDivElement>(null)
   const ref = useRef<HTMLIFrameElement>(null)
   const SCALE = 4
-  const PREVIEW_HEIGHT = 600
+  const PREVIEW_HEIGHT = 500
 
   useEffect(() => {
     function handleResize() {
@@ -47,7 +47,7 @@ export default function RibbonsPreview({
 
   return (
     <>
-      <div className="border border-gray-300" ref={containerRef}>
+      <div className="mx-auto border border-gray-300" ref={containerRef}>
         <div
           className="overflow-hidden"
           style={{ height: PREVIEW_HEIGHT, width: containerWidth }}

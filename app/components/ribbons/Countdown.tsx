@@ -2,6 +2,7 @@ import { intervalToDuration, isPast } from "date-fns"
 import { useEffect, useState } from "react"
 import { ClientOnly } from "remix-utils"
 
+import { Spinner } from "~/components/loading"
 import { useInterval } from "~/utils/hooks"
 import type { CountdownProperties } from "~/utils/ribbon"
 import { capitalize } from "~/utils/string"
@@ -32,7 +33,13 @@ export default function Countdown({ eventDatetime }: CountdownProperties) {
   return (
     <section>
       {/* // TODO(adelrodriguez): Set a loading component */}
-      <ClientOnly fallback={<div>Loading...</div>}>
+      <ClientOnly
+        fallback={
+          <div className="flex w-full justify-center">
+            <Spinner className="h-5 w-5" />
+          </div>
+        }
+      >
         {() => (
           <div className="flex w-full justify-around">
             {Object.keys(remaining)

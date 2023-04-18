@@ -26,13 +26,13 @@ export default function Banner({
             />
           )}
           <div
-            className={clsx("absolute inset-0 bg-gray-500", {
+            className={clsx("absolute inset-0 bg-gray-400", {
               "mix-blend-multiply": !!backgroundImage,
             })}
             aria-hidden="true"
           />
         </div>
-        <div className="relative mx-auto max-w-7xl py-16 px-6 md:py-24 lg:py-32 lg:px-8">
+        <div className="relative mx-auto max-w-7xl py-24 px-6 md:py-32 lg:py-64 lg:px-8">
           <h1 className="font-headline text-4xl font-bold text-white sm:text-5xl md:text-center lg:text-6xl">
             {title}
           </h1>
