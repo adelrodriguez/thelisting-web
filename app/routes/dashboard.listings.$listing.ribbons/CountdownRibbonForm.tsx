@@ -5,7 +5,7 @@ import { format, startOfToday } from "date-fns"
 import { ValidatedForm as Form } from "remix-validated-form"
 import { z } from "zod"
 
-import { Input, SubmitButton } from "~/components/form"
+import { Input } from "~/components/form"
 import { CountdownPropertiesSchema } from "~/utils/ribbons"
 
 const validator = withZod(
