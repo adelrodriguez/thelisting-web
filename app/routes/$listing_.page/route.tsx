@@ -5,7 +5,6 @@ import { redirect } from "@remix-run/node"
 import { notFound } from "remix-utils"
 
 import type { NotFoundBoundaryData } from "~/components/error"
-import { Banner, Countdown } from "~/components/ribbons"
 import { isProduction } from "~/config/vars"
 import { generateCloudflareImageUrl } from "~/utils/cloudflare"
 import type { MetaFunction } from "~/utils/remix"
@@ -15,6 +14,9 @@ import {
   parseCountdownProperties,
   parseCoverImageProperties,
 } from "~/utils/ribbons"
+
+import Banner from "./Banner"
+import Countdown from "./Countdown"
 
 export async function loader({ params, context }: LoaderArgs) {
   const db = context.db
