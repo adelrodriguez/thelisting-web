@@ -1,4 +1,4 @@
-import { flattenConnection } from "@shopify/storefront-kit-react"
+import { flattenConnection } from "@shopify/hydrogen-react"
 import type { Processor } from "bullmq"
 import currency from "currency.js"
 import invariant from "tiny-invariant"

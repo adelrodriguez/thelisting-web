@@ -1,5 +1,5 @@
 import type { LoaderArgs } from "@remix-run/node"
-import { flattenConnection } from "@shopify/storefront-kit-react"
+import { flattenConnection } from "@shopify/hydrogen-react"
 import Papa from "papaparse"
 
 import { PRODUCT_METAFIELDS } from "~/config/consts"

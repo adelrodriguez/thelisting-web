@@ -1,4 +1,4 @@
-import { flattenConnection } from "@shopify/storefront-kit-react"
+import { flattenConnection } from "@shopify/hydrogen-react"
 import { useQuery } from "@tanstack/react-query"
 import request from "graphql-request"
 
