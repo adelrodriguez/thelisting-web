@@ -303,9 +303,9 @@ export default function DashboardListingPage() {
         required
       />
       <ImageInput
-        label="Cover Image"
+        label="Registry Cover Image"
         name="coverImage"
-        description="The image that will be shown on the listing page"
+        description="The image that will be shown on the registry page"
         placeholder="cover.png"
         required
       />
