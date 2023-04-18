@@ -153,6 +153,37 @@ export async function action({ request, params, context }: ActionArgs) {
     where: { id: listing.id },
   })
 
+  if (updatedListing.status !== listing.status) {
+    switch (updatedListing.status) {
+      case ListingStatus.Published:
+        await db.listing.update({
+          data: {
+            closedAt: null,
+            publishedAt: new Date(),
+          },
+          where: { id: updatedListing.id },
+        })
+        break
+      case ListingStatus.Closed:
+        await db.listing.update({
+          data: {
+            closedAt: new Date(),
+          },
+          where: { id: updatedListing.id },
+        })
+        break
+      default:
+        await db.listing.update({
+          data: {
+            closedAt: null,
+            publishedAt: null,
+          },
+          where: { id: updatedListing.id },
+        })
+        break
+    }
+  }
+
   return json({ data: updatedListing, success: true })
 }
 
