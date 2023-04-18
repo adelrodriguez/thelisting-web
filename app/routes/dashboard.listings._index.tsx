@@ -144,6 +144,26 @@ const columns = [
     },
     header: "Owner",
   }),
+  columnHelper.accessor("publishedAt", {
+    cell: (props) => {
+      const date = props.getValue()
+
+      if (!date) return null
+
+      return format(date, "MMM d, yyyy")
+    },
+    header: "Published At",
+  }),
+  columnHelper.accessor("closedAt", {
+    cell: (props) => {
+      const date = props.getValue()
+
+      if (!date) return null
+
+      return format(date, "MMM d, yyyy")
+    },
+    header: "Closed At",
+  }),
   columnHelper.display({
     cell: (props) => {
       const item = props.row.original
