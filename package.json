@@ -31,7 +31,7 @@
     "lint": "eslint .",
     "logs": "railway logs",
     "prebuild": "run-s clean generate:shopify",
-    "postbuild": "./scripts/build.sh",
+    "postbuild": "scripts/postbuild.sh",
     "serve": "cross-env NODE_ENV=production node ./build/server.js",
     "start": "run-s database:deploy database:generate serve",
     "test:coverage": "vitest run --coverage",

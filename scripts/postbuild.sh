@@ -18,3 +18,9 @@ echo "Uploading client sourcemaps"
 sentry-cli releases files "$VERSION" upload-sourcemaps ./public --url-prefix "~/" --dist "client"
 
 sentry-cli releases finalize "$VERSION"
+
+# Delete sourcemaps
+echo "Deleting sourcemaps"
+
+find ./public/build -type f -name '*.map' -delete
+find ./build -type f -name '*.map' -delete
