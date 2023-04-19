@@ -1,10 +1,7 @@
 import { ListingStatus, ListingType } from "@prisma/client"
-import { startOfToday } from "date-fns"
 import { z } from "zod"
 
-export const ListingEventDateSchema = z.coerce
-  .date()
-  .min(startOfToday(), { message: "Event date must be in the future" })
+export const ListingEventDateSchema = z.coerce.date()
 
 export const ListingPathSchema = z
   .string()
@@ -40,7 +37,5 @@ export const ListingStatusSchema = z.enum(
   }
 )
 
-export const ListingCoverImageSchema = z
-  .string()
-  .min(1, "Please provide an image")
+export const ListingCoverImageSchema = z.string().optional()
 export const ListingThankYouImageSchema = z.string().optional()

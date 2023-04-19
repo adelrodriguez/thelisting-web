@@ -38,7 +38,10 @@ export const handle = {
 
 const clientValidator = withZod(
   z.object({
-    eventDate: ListingEventDateSchema,
+    eventDate: ListingEventDateSchema.min(
+      startOfTomorrow(),
+      "Event date must be in the future"
+    ),
     ownerId: ListingOwnerSchema,
     path: ListingPathSchema,
     title: ListingTitleSchema,

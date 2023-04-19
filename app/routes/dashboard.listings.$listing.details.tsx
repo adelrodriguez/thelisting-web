@@ -263,7 +263,6 @@ export default function DashboardListingPage() {
       <Input
         description="The date of your event"
         label="Event Date"
-        min={format(startOfTomorrow(), "yyyy-MM-dd")}
         name="eventDate"
         required
         type="date"
@@ -338,7 +337,6 @@ export default function DashboardListingPage() {
         name="coverImage"
         description="The image that will be shown on the registry page"
         placeholder="cover.png"
-        required
       />
       <ImageInput
         label={'"Thank You" Image'}
