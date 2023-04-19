@@ -24,11 +24,6 @@ export async function loader({ params, context }: LoaderArgs) {
   const db = context.db
   const path = getParam(params, "listing")
 
-  // TODO(adelrodriguez): Remove this when ribbons are ready
-  if (isProduction) {
-    throw redirect(`/${path}`, { status: 302 })
-  }
-
   const listing = await db.listing.findFirst({
     include: {
       items: {
@@ -46,6 +41,12 @@ export async function loader({ params, context }: LoaderArgs) {
       message: "Sorry, we couldn’t find the page you’re looking for.",
       title: "Not Found",
     })
+  }
+
+  // TODO(adelrodriguez): Remove this when ribbons are ready
+  // Only see pages for internal pages in production
+  if (isProduction && !listing.isInternal) {
+    throw redirect(`/${path}`, { status: 302 })
   }
 
   const coverImages = listing.ribbons.reduce((acc: string[], ribbon) => {
