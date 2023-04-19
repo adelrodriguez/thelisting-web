@@ -1,7 +1,7 @@
 import { ExclamationCircleIcon } from "@heroicons/react/20/solid"
 import clsx from "clsx"
 import { useEffect, useRef } from "react"
-import type { InputHTMLAttributes } from "react"
+import type { ComponentPropsWithoutRef } from "react"
 import { useField } from "remix-validated-form"
 
 export default function Input({
@@ -17,7 +17,7 @@ export default function Input({
   label: string
   description?: string
 } & Omit<
-  InputHTMLAttributes<HTMLInputElement>,
+  ComponentPropsWithoutRef<"input">,
   "name" | "defaultValue" | "defaultChecked"
 >) {
   const { getInputProps, error } = useField(name)
@@ -42,7 +42,15 @@ export default function Input({
       </div>
       <div className="relative">
         <input
-          {...getInputProps({ ...props, id: name, ref: $input, type })}
+          {...getInputProps({
+            ...props,
+            id: name,
+            ref: $input,
+            type,
+            ...(description
+              ? { "aria-describedby": `${name}-description` }
+              : {}),
+          })}
           className={clsx(
             "peer my-1 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-slate-300",
             "placeholder:text-gray-400",
@@ -59,7 +67,10 @@ export default function Input({
           />
         </div>
         {description && (
-          <p className="text-sm text-gray-500 peer-invalid:hidden">
+          <p
+            className="text-sm text-gray-500 peer-invalid:hidden"
+            id={`${name}-description`}
+          >
             {description}
           </p>
         )}

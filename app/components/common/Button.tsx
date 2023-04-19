@@ -1,6 +1,6 @@
 import clsx from "clsx"
 import { forwardRef } from "react"
-import type { ReactNode, ButtonHTMLAttributes, Ref } from "react"
+import type { ReactNode, Ref, ComponentPropsWithRef } from "react"
 
 function Button(
   {
@@ -16,7 +16,7 @@ function Button(
     className?: string
     size?: "xs" | "sm" | "md" | "lg" | "xl"
     variant?: "primary" | "secondary" | "danger"
-  } & ButtonHTMLAttributes<HTMLButtonElement>,
+  } & ComponentPropsWithRef<"button">,
   ref: Ref<HTMLButtonElement>
 ) {
   return (

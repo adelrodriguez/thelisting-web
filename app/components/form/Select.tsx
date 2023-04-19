@@ -1,12 +1,12 @@
 import { ExclamationCircleIcon } from "@heroicons/react/20/solid"
 import clsx from "clsx"
-import type { OptionHTMLAttributes, SelectHTMLAttributes } from "react"
+import type { ComponentPropsWithoutRef } from "react"
 import { useRef, useEffect } from "react"
 import { useField } from "remix-validated-form"
 
 type SelectOption = {
   label: string
-  value: OptionHTMLAttributes<HTMLOptionElement>["value"]
+  value: ComponentPropsWithoutRef<"option">["value"]
   disabled?: boolean
 }
 
@@ -26,7 +26,7 @@ export default function Select<T extends SelectOption>({
   error?: boolean
   options: T[]
   placeholder?: string
-} & Omit<SelectHTMLAttributes<HTMLSelectElement>, "name" | "defaultValue">) {
+} & Omit<ComponentPropsWithoutRef<"select">, "name" | "defaultValue">) {
   const { error, getInputProps } = useField(name)
   const $select = useRef<HTMLSelectElement>(null)
 

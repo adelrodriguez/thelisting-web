@@ -1,7 +1,7 @@
 import { ExclamationCircleIcon } from "@heroicons/react/20/solid"
 import clsx from "clsx"
 import { useEffect, useRef } from "react"
-import type { TextareaHTMLAttributes } from "react"
+import type { ComponentPropsWithoutRef } from "react"
 import { useField } from "remix-validated-form"
 
 export default function TextArea({
@@ -15,7 +15,7 @@ export default function TextArea({
   name: string
   label: string
   description?: string
-} & TextareaHTMLAttributes<HTMLTextAreaElement>) {
+} & ComponentPropsWithoutRef<"textarea">) {
   const { getInputProps, error } = useField(name)
   const $input = useRef<HTMLTextAreaElement>(null)
 

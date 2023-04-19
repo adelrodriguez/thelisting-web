@@ -54,7 +54,15 @@ export default function InputWithAddOn({
             {addOn}
           </span>
           <input
-            {...getInputProps({ ...props, id: name, ref: $input, type })}
+            {...getInputProps({
+              ...props,
+              id: name,
+              ref: $input,
+              type,
+              ...(description
+                ? { "aria-describedby": `${name}-description` }
+                : {}),
+            })}
             className={clsx(
               "peer block w-full flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 shadow-sm",
               "placeholder:text-gray-400",
@@ -73,6 +81,7 @@ export default function InputWithAddOn({
         </div>
         {description && (
           <p
+            id={`${name}-description`}
             className={clsx("text-sm text-gray-500", {
               block: !error,
               hidden: error,
