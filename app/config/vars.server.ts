@@ -5,8 +5,6 @@ import {
   SHOPIFY_STORE_DOMAIN,
 } from "./env.server"
 
-export const xStateVisualizer = process.env.XSTATE_VISUALIZER === "true"
-
 export const shopifyStorefrontAPIEndpoint = `https://${SHOPIFY_STORE_DOMAIN}/api/${SHOPIFY_API_VERSION}/graphql.json`
 export const shopifyStorefrontAPIHeaders = {
   "X-Shopify-Storefront-Access-Token": SHOPIFY_STOREFRONT_ACCESS_TOKEN,

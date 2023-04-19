@@ -26,10 +26,7 @@ import {
   SHOPIFY_STORE,
   SHOPIFY_STOREFRONT_ACCESS_TOKEN,
 } from "~/config/env.server"
-import {
-  shopifyStorefrontAPIEndpoint,
-  xStateVisualizer,
-} from "~/config/vars.server"
+import { shopifyStorefrontAPIEndpoint } from "~/config/vars.server"
 import i18next from "~/helpers/i18next.server"
 import stylesheet from "~/styles/app.css"
 import { useChangeLanguage } from "~/utils/hooks"
@@ -73,7 +70,6 @@ export async function loader({ request }: LoaderArgs) {
     shopifyStore: SHOPIFY_STORE,
     shopifyStorefrontAPIEndpoint,
     shopifyStorefrontAccessToken: SHOPIFY_STOREFRONT_ACCESS_TOKEN,
-    xStateVisualizer,
   }
 
   return json(
