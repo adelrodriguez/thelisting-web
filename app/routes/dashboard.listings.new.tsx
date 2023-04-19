@@ -1,6 +1,5 @@
 import { ListingType } from "@prisma/client"
 import type { ActionArgs, LoaderArgs } from "@remix-run/node"
-import { useSubmit } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
 import { format, startOfTomorrow, subMilliseconds } from "date-fns"
 import { getTimezoneOffset } from "date-fns-tz"
@@ -71,9 +70,16 @@ export async function action({ request, context }: ActionArgs) {
     throw unauthorized("You must be logged in to create a listing")
   }
 
+  const formData = await request.formData()
+  const timezone = formData.get("timezone") as string
+
   const serverValidator = withZod(
     z.object({
-      eventDate: ListingEventDateSchema,
+      eventDate: ListingEventDateSchema.transform((value) => {
+        const timezoneOffsetInMilliseconds = getTimezoneOffset(timezone, value)
+
+        return subMilliseconds(value, timezoneOffsetInMilliseconds)
+      }),
       ownerId: ListingOwnerSchema,
       path: ListingPathSchema.trim()
         .transform((value) => value.toLowerCase())
@@ -92,7 +98,6 @@ export async function action({ request, context }: ActionArgs) {
     })
   )
 
-  const formData = await request.formData()
   const result = await serverValidator.validate(formData)
 
   if (result.error)
@@ -116,7 +121,6 @@ export default function CreateListingsPage() {
   const { enqueueSnackbar } = useSnackbar()
   const { users } = useLoaderData<typeof loader>()
   const actionData = useActionData<typeof action>()
-  const submit = useSubmit()
 
   useEffect(() => {
     if (!actionData) return
@@ -153,27 +157,6 @@ export default function CreateListingsPage() {
         validator={clientValidator}
         method="POST"
         className="m-auto mt-8 flex flex-col gap-y-6 sm:w-[500px]"
-        onSubmit={(data, event) => {
-          event.preventDefault()
-
-          const timezoneOffsetInMilliseconds = getTimezoneOffset(
-            Intl.DateTimeFormat().resolvedOptions().timeZone,
-            data.eventDate
-          )
-
-          const eventDate = subMilliseconds(
-            data.eventDate,
-            timezoneOffsetInMilliseconds
-          ).toISOString()
-
-          submit(
-            {
-              ...data,
-              eventDate,
-            },
-            { method: "POST" }
-          )
-        }}
       >
         <Input
           label="Title"
@@ -195,6 +178,11 @@ export default function CreateListingsPage() {
           min={format(startOfTomorrow(), "yyyy-MM-dd")}
           description="The date of your event"
           required
+        />
+        <input
+          type="hidden"
+          name="timezone"
+          value={Intl.DateTimeFormat().resolvedOptions().timeZone}
         />
         <Select
           options={[

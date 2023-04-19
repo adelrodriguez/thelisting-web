@@ -1,9 +1,8 @@
 import { ListingStatus, ListingType, UserRole } from "@prisma/client"
 import type { ActionArgs, LoaderArgs } from "@remix-run/node"
 import type { RouteMatch } from "@remix-run/react"
-import { useSubmit } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
-import { format, startOfTomorrow, subMilliseconds } from "date-fns"
+import { format, subMilliseconds } from "date-fns"
 import { getTimezoneOffset } from "date-fns-tz"
 import { StatusCodes } from "http-status-codes"
 import { useSnackbar } from "notistack"
@@ -11,9 +10,11 @@ import { useEffect } from "react"
 import { forbidden, notFound, unauthorized } from "remix-utils"
 import { setFormDefaults } from "remix-validated-form"
 import { z } from "zod"
+import { zfd } from "zod-form-data"
 import { zx } from "zodix"
 
 import {
+  Checkbox,
   Form,
   ImageInput,
   Input,
@@ -49,11 +50,13 @@ const clientValidator = withZod(
   z.object({
     coverImage: ListingCoverImageSchema,
     eventDate: ListingEventDateSchema,
+    isInternal: zfd.checkbox({ trueValue: "internal" }),
     ownerId: ListingOwnerSchema,
     path: ListingPathSchema,
     status: ListingStatusSchema,
     subtitle: z.string().optional(),
     thankYouImage: ListingThankYouImageSchema,
+    timezone: z.string().optional(),
     title: ListingTitleSchema,
     type: ListingTypeSchema,
   })
@@ -110,10 +113,18 @@ export async function action({ request, params, context }: ActionArgs) {
     })
   }
 
+  const formData = await request.formData()
+  const timezone = formData.get("timezone") as string
+
   const serverValidator = withZod(
     z.object({
       coverImage: ListingCoverImageSchema,
-      eventDate: ListingEventDateSchema,
+      eventDate: ListingEventDateSchema.transform((value) => {
+        const timezoneOffsetInMilliseconds = getTimezoneOffset(timezone, value)
+
+        return subMilliseconds(value, timezoneOffsetInMilliseconds)
+      }),
+      isInternal: zfd.checkbox({ trueValue: "internal" }),
       ownerId: ListingOwnerSchema,
       path: ListingPathSchema.trim()
         .transform((value) => value.toLowerCase())
@@ -138,7 +149,6 @@ export async function action({ request, params, context }: ActionArgs) {
     })
   )
 
-  const formData = await request.formData()
   const result = await serverValidator.validate(formData)
 
   if (result.error) {
@@ -189,7 +199,6 @@ export async function action({ request, params, context }: ActionArgs) {
 
 export default function DashboardListingPage() {
   const { enqueueSnackbar } = useSnackbar()
-  const submit = useSubmit()
   const { users } = useLoaderData<typeof loader>()
   const actionData = useActionData<typeof action>()
 
@@ -213,27 +222,7 @@ export default function DashboardListingPage() {
     <Form
       id="edit-listing"
       className="m-auto mt-8 flex w-full max-w-xl flex-col gap-y-6"
-      onSubmit={(data, event) => {
-        event.preventDefault()
-
-        const timezoneOffsetInMilliseconds = getTimezoneOffset(
-          Intl.DateTimeFormat().resolvedOptions().timeZone,
-          data.eventDate
-        )
-
-        const eventDate = subMilliseconds(
-          data.eventDate,
-          timezoneOffsetInMilliseconds
-        ).toISOString()
-
-        submit(
-          {
-            ...data,
-            eventDate,
-          },
-          { method: "POST" }
-        )
-      }}
+      method="POST"
       validator={clientValidator}
     >
       <Input
@@ -266,6 +255,11 @@ export default function DashboardListingPage() {
         name="eventDate"
         required
         type="date"
+      />
+      <input
+        type="hidden"
+        name="timezone"
+        value={Intl.DateTimeFormat().resolvedOptions().timeZone}
       />
       <Select
         options={[
@@ -349,6 +343,12 @@ export default function DashboardListingPage() {
         label="Commerce ID"
         name="commerceId"
         disabled
+      />
+      <Checkbox
+        label="Internal"
+        name="isInternal"
+        description="Internal listings are used for showcase purposes. Purchases are disabled."
+        value="internal"
       />
       <SubmitButton loadingText="Updating...">Update</SubmitButton>
     </Form>

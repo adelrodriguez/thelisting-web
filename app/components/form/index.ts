@@ -6,6 +6,7 @@ export { default as FormSelect } from "./FormSelect"
 export { default as FormSubmit } from "./FormSubmit"
 export { default as FormTextArea } from "./FormTextArea"
 
+export { default as Checkbox } from "./Checkbox"
 export { default as ImageInput } from "./ImageInput"
 export { default as Input } from "./Input"
 export { default as InputWithAddOn } from "./InputWithAddOn"

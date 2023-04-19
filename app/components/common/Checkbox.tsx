@@ -1,10 +1,10 @@
-import type { HTMLProps } from "react"
+import type { ComponentPropsWithoutRef } from "react"
 import { useRef, useEffect } from "react"
 
 export default function Checkbox({
   indeterminate,
   ...props
-}: { indeterminate?: boolean } & HTMLProps<HTMLInputElement>) {
+}: { indeterminate?: boolean } & ComponentPropsWithoutRef<"input">) {
   const ref = useRef<HTMLInputElement>(null!)
 
   useEffect(() => {
@@ -17,7 +17,7 @@ export default function Checkbox({
     <input
       type="checkbox"
       ref={ref}
-      className="h-4 w-4 rounded border-gray-300 text-gray-600 focus:ring-gray-500 cursor-pointer"
+      className="h-4 w-4 cursor-pointer rounded border-slate-300 text-gray-600 focus:ring-slate-600"
       {...props}
     />
   )
