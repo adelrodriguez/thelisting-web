@@ -20,7 +20,7 @@ export default function RibbonsPreview({
   const containerRef = useRef<HTMLDivElement>(null)
   const ref = useRef<HTMLIFrameElement>(null)
   const SCALE = 4
-  const PREVIEW_HEIGHT = 500
+  const PREVIEW_HEIGHT = previewSize === "mobile" ? 600 : 300
 
   useEffect(() => {
     function handleResize() {
