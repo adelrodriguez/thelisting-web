@@ -7622,7 +7622,7 @@ export type CustomerSegmentMembersQueryCreatePayload = {
 
 /** Provides the fields and values to use when creating a customer segment members query. */
 export type CustomerSegmentMembersQueryInput = {
-  /** The query to use to filter the members. */
+  /** The query that's used to filter the members. The query is composed of a combination of conditions on facts about customers such as `email_subscription_status = 'SUBSCRIBED'` with [this syntax](https://shopify.dev/api/shopifyql/segment-query-language-reference). */
   query?: InputMaybe<Scalars['String']>;
   /** Reverse the order of the list. The sorting behaviour defaults to ascending order. */
   reverse?: InputMaybe<Scalars['Boolean']>;
@@ -30702,7 +30702,11 @@ export enum ProductVariantSortKeys {
   FullTitle = 'FULL_TITLE',
   /** Sort by the `id` value. */
   Id = 'ID',
-  /** Sort by the `inventory_levels.available` value. */
+  /**
+   * Sort by available inventory quantity in the location specified by the `query:"location_id:"` argument.
+   * Don't use this sort key when no `location_id` in query is specified.
+   *
+   */
   InventoryLevelsAvailable = 'INVENTORY_LEVELS_AVAILABLE',
   /** Sort by the `inventory_management` value. */
   InventoryManagement = 'INVENTORY_MANAGEMENT',
@@ -35398,52 +35402,6 @@ export type SegmentAssociationFilter = SegmentFilter & {
   multiValue: Scalars['Boolean'];
   /** The query name of the filter. */
   queryName: Scalars['String'];
-  /** A list of values for an association segment filter. */
-  values: SegmentAssociationFilterValueConnection;
-};
-
-
-/** A filter that takes a value that's associated with an object. For example, the `tags` field is associated with the [`Customer`](/api/admin-graphql/latest/objects/Customer) object. */
-export type SegmentAssociationFilterValuesArgs = {
-  after?: InputMaybe<Scalars['String']>;
-  before?: InputMaybe<Scalars['String']>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-};
-
-/** The values for an association segment filter. */
-export type SegmentAssociationFilterValue = {
-  __typename?: 'SegmentAssociationFilterValue';
-  /** The localized name of the value. */
-  localizedName: Scalars['String'];
-  /** The query name of the value. */
-  queryName: Scalars['String'];
-};
-
-/**
- * An auto-generated type for paginating through multiple SegmentAssociationFilterValues.
- *
- */
-export type SegmentAssociationFilterValueConnection = {
-  __typename?: 'SegmentAssociationFilterValueConnection';
-  /** A list of edges. */
-  edges: Array<SegmentAssociationFilterValueEdge>;
-  /** A list of the nodes contained in SegmentAssociationFilterValueEdge. */
-  nodes: Array<SegmentAssociationFilterValue>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-};
-
-/**
- * An auto-generated type which holds one SegmentAssociationFilterValue and a cursor during pagination.
- *
- */
-export type SegmentAssociationFilterValueEdge = {
-  __typename?: 'SegmentAssociationFilterValueEdge';
-  /** A cursor for use in pagination. */
-  cursor: Scalars['String'];
-  /** The item at the end of SegmentAssociationFilterValueEdge. */
-  node: SegmentAssociationFilterValue;
 };
 
 /** The statistics of a given attribute. */
@@ -35530,52 +35488,6 @@ export type SegmentEnumFilter = SegmentFilter & {
   multiValue: Scalars['Boolean'];
   /** The query name of the filter. */
   queryName: Scalars['String'];
-  /** A list of values for an enum segment filter. */
-  values: SegmentEnumFilterValueConnection;
-};
-
-
-/** A filter with a set of possible values that's been added to a segment query. */
-export type SegmentEnumFilterValuesArgs = {
-  after?: InputMaybe<Scalars['String']>;
-  before?: InputMaybe<Scalars['String']>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-};
-
-/** The values for an enum segment filter. */
-export type SegmentEnumFilterValue = {
-  __typename?: 'SegmentEnumFilterValue';
-  /** The localized name of the value. */
-  localizedName: Scalars['String'];
-  /** The query name of the value. */
-  queryName: Scalars['String'];
-};
-
-/**
- * An auto-generated type for paginating through multiple SegmentEnumFilterValues.
- *
- */
-export type SegmentEnumFilterValueConnection = {
-  __typename?: 'SegmentEnumFilterValueConnection';
-  /** A list of edges. */
-  edges: Array<SegmentEnumFilterValueEdge>;
-  /** A list of the nodes contained in SegmentEnumFilterValueEdge. */
-  nodes: Array<SegmentEnumFilterValue>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-};
-
-/**
- * An auto-generated type which holds one SegmentEnumFilterValue and a cursor during pagination.
- *
- */
-export type SegmentEnumFilterValueEdge = {
-  __typename?: 'SegmentEnumFilterValueEdge';
-  /** A cursor for use in pagination. */
-  cursor: Scalars['String'];
-  /** The item at the end of SegmentEnumFilterValueEdge. */
-  node: SegmentEnumFilterValue;
 };
 
 /** A filter that's used to segment customers based on the date that an event occured. For example, the `product_bought` event filter allows you to segment customers based on what products they've bought. */
@@ -35591,17 +35503,6 @@ export type SegmentEventFilter = SegmentFilter & {
   queryName: Scalars['String'];
   /** The return value type for an event segment filter. */
   returnValueType: Scalars['String'];
-  /** A list of values for an event segment filter. */
-  values: SegmentEventFilterValueConnection;
-};
-
-
-/** A filter that's used to segment customers based on the date that an event occured. For example, the `product_bought` event filter allows you to segment customers based on what products they've bought. */
-export type SegmentEventFilterValuesArgs = {
-  after?: InputMaybe<Scalars['String']>;
-  before?: InputMaybe<Scalars['String']>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
 };
 
 /** The parameters for an event segment filter. */
@@ -35617,41 +35518,6 @@ export type SegmentEventFilterParameter = {
   parameterType: Scalars['String'];
   /** The query name of the parameter. */
   queryName: Scalars['String'];
-};
-
-/** The values for an event segment filter. */
-export type SegmentEventFilterValue = {
-  __typename?: 'SegmentEventFilterValue';
-  /** The localized name of the value. */
-  localizedName: Scalars['String'];
-  /** The query name of the value. */
-  queryName: Scalars['String'];
-};
-
-/**
- * An auto-generated type for paginating through multiple SegmentEventFilterValues.
- *
- */
-export type SegmentEventFilterValueConnection = {
-  __typename?: 'SegmentEventFilterValueConnection';
-  /** A list of edges. */
-  edges: Array<SegmentEventFilterValueEdge>;
-  /** A list of the nodes contained in SegmentEventFilterValueEdge. */
-  nodes: Array<SegmentEventFilterValue>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-};
-
-/**
- * An auto-generated type which holds one SegmentEventFilterValue and a cursor during pagination.
- *
- */
-export type SegmentEventFilterValueEdge = {
-  __typename?: 'SegmentEventFilterValueEdge';
-  /** A cursor for use in pagination. */
-  cursor: Scalars['String'];
-  /** The item at the end of SegmentEventFilterValueEdge. */
-  node: SegmentEventFilterValue;
 };
 
 /** The filters used in segment queries associated with a shop. */
@@ -35815,52 +35681,6 @@ export type SegmentStringFilter = SegmentFilter & {
   multiValue: Scalars['Boolean'];
   /** The query name of the filter. */
   queryName: Scalars['String'];
-  /** A list of values for a string segment filter. */
-  values: SegmentStringFilterValueConnection;
-};
-
-
-/** A filter with a string that's been added to a segment query. */
-export type SegmentStringFilterValuesArgs = {
-  after?: InputMaybe<Scalars['String']>;
-  before?: InputMaybe<Scalars['String']>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-};
-
-/** The values for a string segment filter. */
-export type SegmentStringFilterValue = {
-  __typename?: 'SegmentStringFilterValue';
-  /** The localized name of the value. */
-  localizedName: Scalars['String'];
-  /** The query name of the value. */
-  queryName: Scalars['String'];
-};
-
-/**
- * An auto-generated type for paginating through multiple SegmentStringFilterValues.
- *
- */
-export type SegmentStringFilterValueConnection = {
-  __typename?: 'SegmentStringFilterValueConnection';
-  /** A list of edges. */
-  edges: Array<SegmentStringFilterValueEdge>;
-  /** A list of the nodes contained in SegmentStringFilterValueEdge. */
-  nodes: Array<SegmentStringFilterValue>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-};
-
-/**
- * An auto-generated type which holds one SegmentStringFilterValue and a cursor during pagination.
- *
- */
-export type SegmentStringFilterValueEdge = {
-  __typename?: 'SegmentStringFilterValueEdge';
-  /** A cursor for use in pagination. */
-  cursor: Scalars['String'];
-  /** The item at the end of SegmentStringFilterValueEdge. */
-  node: SegmentStringFilterValue;
 };
 
 /** Return type for `segmentUpdate` mutation. */
@@ -43223,7 +43043,7 @@ export enum WebhookSubscriptionTopic {
   CustomersDisable = 'CUSTOMERS_DISABLE',
   /** The webhook topic for `customers/enable` events. Occurs whenever a customer account is enabled. Requires the `read_customers` scope. */
   CustomersEnable = 'CUSTOMERS_ENABLE',
-  /** The webhook topic for `customers_marketing_consent/update` events. Occurs whenever a customer's marketing consent is updated. Requires the `read_customers` scope. */
+  /** The webhook topic for `customers_marketing_consent/update` events. Occurs whenever a customer's SMS marketing consent is updated. Requires the `read_customers` scope. */
   CustomersMarketingConsentUpdate = 'CUSTOMERS_MARKETING_CONSENT_UPDATE',
   /** The webhook topic for `customers/merge` events. Triggers when two customers are merged Requires the `read_customer_merge` scope. */
   CustomersMerge = 'CUSTOMERS_MERGE',

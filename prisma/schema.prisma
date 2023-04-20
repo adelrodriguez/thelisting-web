@@ -74,6 +74,8 @@ enum RibbonType {
   Banner
   Countdown
   CoverImage
+  ImageCarousel
+  ImageGallery
 }
 
 model Item {

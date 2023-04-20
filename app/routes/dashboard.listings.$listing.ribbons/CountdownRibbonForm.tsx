@@ -3,16 +3,11 @@ import { useFetcher } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
 import { format, startOfToday } from "date-fns"
 import { ValidatedForm as Form } from "remix-validated-form"
-import { z } from "zod"
 
 import { Input } from "~/components/form"
 import { CountdownPropertiesSchema } from "~/utils/ribbons"
 
-const validator = withZod(
-  z.object({
-    eventDatetime: z.string(),
-  })
-)
+const validator = withZod(CountdownPropertiesSchema)
 
 export default function BannerRibbonForm({
   ribbon,
@@ -39,6 +34,10 @@ export default function BannerRibbonForm({
       method="POST"
       fetcher={fetcher}
       validator={validator}
+      // TODO(adelrodriguez): Fix this type error. The issue here is that an
+      // input only takes strings, but our schema describes a Date object. Maybe
+      // creating a custom component that can accept Date objects?
+      // @ts-expect-error
       defaultValues={defaultValues}
     >
       <Input

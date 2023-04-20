@@ -13,6 +13,8 @@ import {
   BannerPropertiesSchema,
   CountdownPropertiesSchema,
   CoverImagePropertiesSchema,
+  ImageCarouselPropertiesSchema,
+  ImageGalleryPropertiesSchema,
 } from "~/utils/ribbons"
 
 export async function action({ params, request, context }: ActionArgs) {
@@ -48,6 +50,14 @@ export async function action({ params, request, context }: ActionArgs) {
     }
     case RibbonType.CoverImage: {
       schema = CoverImagePropertiesSchema
+      break
+    }
+    case RibbonType.ImageCarousel: {
+      schema = ImageCarouselPropertiesSchema
+      break
+    }
+    case RibbonType.ImageGallery: {
+      schema = ImageGalleryPropertiesSchema
       break
     }
     default: {

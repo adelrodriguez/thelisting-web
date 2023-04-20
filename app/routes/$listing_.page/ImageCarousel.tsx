@@ -1,0 +1,97 @@
+import { Transition } from "@headlessui/react"
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid"
+import clsx from "clsx"
+import { useEffect, useRef, useState } from "react"
+
+import { generateCloudflareImageUrl } from "~/utils/cloudflare"
+import type { ImageCarouselProperties } from "~/utils/ribbons"
+
+export default function ImageCarousel({
+  images,
+  duration,
+  height,
+}: ImageCarouselProperties) {
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const carouselInterval = useRef<NodeJS.Timer>()
+
+  useEffect(() => {
+    carouselInterval.current = setInterval(() => {
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length)
+    }, duration * 1000)
+
+    return () => {
+      clearInterval(carouselInterval.current)
+    }
+  }, [images, duration])
+
+  function navigate(direction: "prev" | "next") {
+    setCurrentIndex((prevIndex) => {
+      if (direction === "prev") {
+        return prevIndex === 0 ? images.length - 1 : prevIndex - 1
+      }
+
+      if (direction === "next") {
+        return (prevIndex + 1) % images.length
+      }
+
+      return 0
+    })
+    clearInterval(carouselInterval.current)
+  }
+
+  return (
+    <section>
+      <div className="p-4">
+        <div
+          className={clsx("relative w-full overflow-hidden", {
+            "h-64": !height,
+          })}
+          style={{ height: height || undefined }}
+        >
+          {images.map((image, index) => (
+            <Transition
+              key={index}
+              show={currentIndex === index}
+              enter="transition-opacity duration-1000"
+              enterFrom="opacity-0"
+              enterTo="opacity-100"
+              leave="transition-opacity duration-1000"
+              leaveFrom="opacity-100"
+              leaveTo="opacity-0"
+            >
+              <img
+                src={generateCloudflareImageUrl(image, "public")}
+                alt=""
+                className="absolute h-full w-full object-cover"
+              />
+            </Transition>
+          ))}
+          <button
+            className="absolute left-0 bottom-1/2 z-10 rounded-r-lg bg-slate-700 bg-opacity-50 p-2 text-white focus:outline-none"
+            onClick={() => navigate("prev")}
+          >
+            <ChevronLeftIcon className="h-6 w-6" />
+          </button>
+          <button
+            className="absolute right-0 bottom-1/2 z-10 rounded-l-lg bg-slate-700 bg-opacity-50 p-2 text-white focus:outline-none"
+            onClick={() => navigate("next")}
+          >
+            <ChevronRightIcon className="h-6 w-6" />
+          </button>
+          <div className="absolute bottom-0 flex w-full justify-center space-x-2 p-2">
+            {images.map((_, index) => (
+              <span
+                key={index}
+                className={clsx(
+                  "inline-block h-2 w-2 cursor-pointer rounded-full",
+                  currentIndex === index ? "bg-white" : "bg-slate-300"
+                )}
+                onClick={() => setCurrentIndex(index)}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}

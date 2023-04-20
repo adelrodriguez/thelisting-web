@@ -10,12 +10,6 @@ export const BannerPropertiesSchema = z.object({
 })
 export type BannerProperties = z.infer<typeof BannerPropertiesSchema>
 
-export function parseBannerProperties(
-  data: unknown
-): z.SafeParseReturnType<unknown, BannerProperties> {
-  return BannerPropertiesSchema.safeParse(data)
-}
-
 export const BannerRibbonSchema = RibbonBaseSchema.extend({
   properties: BannerPropertiesSchema,
   type: z.literal(RibbonType.Banner),

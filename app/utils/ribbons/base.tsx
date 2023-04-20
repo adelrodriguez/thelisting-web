@@ -12,6 +12,8 @@ export const RibbonTypeSchema = z.enum([
   RibbonType.Banner,
   RibbonType.Countdown,
   RibbonType.CoverImage,
+  RibbonType.ImageCarousel,
+  RibbonType.ImageGallery,
 ])
 
 export const RibbonBaseSchema = z.object({

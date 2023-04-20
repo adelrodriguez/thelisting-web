@@ -5,6 +5,8 @@ import {
   EllipsisVerticalIcon,
   PhotoIcon,
   PlusIcon,
+  RectangleGroupIcon,
+  RectangleStackIcon,
 } from "@heroicons/react/20/solid"
 import type { Ribbon } from "@prisma/client"
 import { RibbonType } from "@prisma/client"
@@ -18,6 +20,8 @@ import { SubmitButton } from "~/components/form"
 import BannerRibbonForm from "./BannerRibbonForm"
 import CountdownRibbonForm from "./CountdownRibbonForm"
 import CoverImageRibbonForm from "./CoverImageRibbonForm"
+import ImageGalleryRibbonForm from "./ImagaGalleryRibbonForm"
+import ImageCarouselRibbonForm from "./ImageCarouselRibbonForm"
 
 export const ItemTypes = {
   RIBBON: "ribbon",
@@ -35,6 +39,14 @@ const RIBBON_CARD = {
   [RibbonType.CoverImage]: {
     bgColor: "bg-purple-500",
     icon: <PhotoIcon className="h-6 w-6" aria-hidden="true" />,
+  },
+  [RibbonType.ImageCarousel]: {
+    bgColor: "bg-green-500",
+    icon: <RectangleStackIcon className="h-6 w-6" aria-hidden="true" />,
+  },
+  [RibbonType.ImageGallery]: {
+    bgColor: "bg-blue-500",
+    icon: <RectangleGroupIcon className="h-6 w-6" aria-hidden="true" />,
   },
 }
 
@@ -137,6 +149,18 @@ export default function RibbonCard({
               )}
               {ribbon.type === RibbonType.CoverImage && (
                 <CoverImageRibbonForm
+                  ribbon={ribbon}
+                  id={`form-${ribbon.id}`}
+                />
+              )}
+              {ribbon.type === RibbonType.ImageCarousel && (
+                <ImageCarouselRibbonForm
+                  ribbon={ribbon}
+                  id={`form-${ribbon.id}`}
+                />
+              )}
+              {ribbon.type === RibbonType.ImageGallery && (
+                <ImageGalleryRibbonForm
                   ribbon={ribbon}
                   id={`form-${ribbon.id}`}
                 />

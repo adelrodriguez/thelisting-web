@@ -10,11 +10,6 @@ export const CountdownPropertiesSchema = z.object({
 })
 
 export type CountdownProperties = z.infer<typeof CountdownPropertiesSchema>
-export function parseCountdownProperties(
-  data: unknown
-): z.SafeParseReturnType<unknown, CountdownProperties> {
-  return CountdownPropertiesSchema.safeParse(data)
-}
 
 export const CountdownRibbonSchema = RibbonBaseSchema.extend({
   properties: CountdownPropertiesSchema,

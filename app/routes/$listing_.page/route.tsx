@@ -10,15 +10,13 @@ import { isProduction } from "~/config/vars"
 import { generateCloudflareImageUrl } from "~/utils/cloudflare"
 import type { MetaFunction } from "~/utils/remix"
 import { getParam, json, useLoaderData } from "~/utils/remix"
-import {
-  parseBannerProperties,
-  parseCountdownProperties,
-  parseCoverImageProperties,
-} from "~/utils/ribbons"
+import { CoverImageRibbonSchema, RibbonSchema } from "~/utils/ribbons"
 
 import Banner from "./Banner"
 import Countdown from "./Countdown"
 import CoverImage from "./CoverImage"
+import ImageCarousel from "./ImageCarousel"
+import ImageGallery from "./ImageGallery"
 
 export async function loader({ params, context }: LoaderArgs) {
   const db = context.db
@@ -51,10 +49,13 @@ export async function loader({ params, context }: LoaderArgs) {
 
   const coverImages = listing.ribbons.reduce((acc: string[], ribbon) => {
     if (ribbon.type === RibbonType.CoverImage) {
-      const result = parseCoverImageProperties(ribbon.properties)
+      const result = CoverImageRibbonSchema.safeParse(ribbon.properties)
 
-      if (result.success) acc.push(result.data.image)
+      if (!result.success) return acc
+
+      acc.push(result.data.properties.image)
     }
+
     return acc
   }, [])
 
@@ -112,34 +113,36 @@ export default function ListingPage() {
           <h3 className="font-body text-2xl">{listing.subtitle}</h3>
         </div>
       </div>
-      <div className="flex flex-1 flex-col justify-center shadow-xl lg:w-1/3 lg:flex-none">
+      <div className="z-10 flex flex-1 flex-col justify-center shadow-2xl shadow-gray-700 lg:w-1/3 lg:flex-none">
         {listing.ribbons.map((ribbon) => {
-          switch (ribbon.type) {
+          const result = RibbonSchema.safeParse(ribbon)
+
+          if (!result.success) return null
+
+          switch (result.data.type) {
             case RibbonType.Banner: {
-              const result = parseBannerProperties(ribbon.properties)
-
-              if (!result.success) return null
-
-              return <Banner {...result.data} key={ribbon.id} />
+              return <Banner {...result.data.properties} key={ribbon.id} />
             }
             case RibbonType.Countdown: {
-              const result = parseCountdownProperties(ribbon.properties)
-
-              if (!result.success) return null
-
-              return <Countdown {...result.data} key={ribbon.id} />
+              return <Countdown {...result.data.properties} key={ribbon.id} />
             }
             case RibbonType.CoverImage: {
-              const result = parseCoverImageProperties(ribbon.properties)
-
-              if (!result.success) return null
-
               return (
                 <CoverImage
-                  {...result.data}
+                  {...result.data.properties}
                   key={ribbon.id}
                   onView={handleImageChange}
                 />
+              )
+            }
+            case RibbonType.ImageCarousel: {
+              return (
+                <ImageCarousel {...result.data.properties} key={ribbon.id} />
+              )
+            }
+            case RibbonType.ImageGallery: {
+              return (
+                <ImageGallery {...result.data.properties} key={ribbon.id} />
               )
             }
             default:

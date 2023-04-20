@@ -2,21 +2,11 @@ import type { Ribbon } from "@prisma/client"
 import { useFetcher } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
 import { ValidatedForm as Form } from "remix-validated-form"
-import { z } from "zod"
 
 import { ImageInput, Input } from "~/components/form"
 import { CoverImagePropertiesSchema } from "~/utils/ribbons"
 
-const validator = withZod(
-  z.object({
-    height: z.coerce
-      .number()
-      .min(0, "Height must be greater than 0")
-      .int("Height must be an integer")
-      .optional(),
-    image: z.string().uuid("You must provide an image"),
-  })
-)
+const validator = withZod(CoverImagePropertiesSchema)
 
 export default function CoverImageRibbonForm({
   ribbon,
@@ -48,8 +38,8 @@ export default function CoverImageRibbonForm({
         name="height"
         label="Height"
         type="number"
-        min="0"
-        step="1"
+        min={0}
+        step={1}
         description="The height of the cover image (in mobile view). Provide 0 to cover the whole screen"
       />
     </Form>

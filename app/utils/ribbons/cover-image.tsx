@@ -9,15 +9,10 @@ export const CoverImagePropertiesSchema = z.object({
     .min(0, "Height must be greater than 0")
     .int("Height must be an integer")
     .optional(),
-  image: z.string().uuid("You must provide an image for the cover image"),
+  image: z.string().uuid("You must provide an image for the cover"),
 })
 
 export type CoverImageProperties = z.infer<typeof CoverImagePropertiesSchema>
-export function parseCoverImageProperties(
-  data: unknown
-): z.SafeParseReturnType<unknown, CoverImageProperties> {
-  return CoverImagePropertiesSchema.safeParse(data)
-}
 
 export const CoverImageRibbonSchema = RibbonBaseSchema.extend({
   properties: CoverImagePropertiesSchema,
