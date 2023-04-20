@@ -39,3 +39,20 @@ export const ListingStatusSchema = z.enum(
 
 export const ListingCoverImageSchema = z.string().optional()
 export const ListingThankYouImageSchema = z.string().optional()
+
+export const ListingThemeSchema = z.object({
+  colors: z
+    .object({
+      background: z.string().optional(),
+      primary: z.string().optional(),
+      secondary: z.string().optional(),
+      text: z.string().optional(),
+    })
+    .optional(),
+  fonts: z
+    .object({
+      body: z.string().optional(),
+      heading: z.string().optional(),
+    })
+    .optional(),
+})
