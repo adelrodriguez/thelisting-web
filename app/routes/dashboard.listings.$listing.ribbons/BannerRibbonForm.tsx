@@ -3,7 +3,7 @@ import { useFetcher } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
 import { ValidatedForm as Form } from "remix-validated-form"
 
-import { ImageInput, Input } from "~/components/form"
+import { ImageInput, Input, Select } from "~/components/form"
 import { BannerPropertiesSchema } from "~/utils/ribbons"
 
 const validator = withZod(BannerPropertiesSchema)
@@ -33,9 +33,38 @@ export default function BannerRibbonForm({
       defaultValues={defaultValues}
       fetcher={fetcher}
     >
+      <ImageInput name="decorationImage" label="Decoration Image" />
       <Input label="Title" type="text" name="title" required />
       <Input label="Subtitle" type="text" name="subtitle" />
       <ImageInput name="backgroundImage" label="Background Image" />
+      <Select
+        name="imageFit"
+        label="Image Fit"
+        options={[
+          { label: "Select an option", value: "" },
+          { label: "Contain", value: "object-contain" },
+          { label: "Cover", value: "object-cover" },
+          { label: "Fill", value: "object-fill" },
+          { label: "None", value: "object-none" },
+          { label: "Scale Down", value: "object-scale-down" },
+        ]}
+      />
+      <Select
+        name="imagePosition"
+        label="Image Position"
+        options={[
+          { label: "Select an option", value: "" },
+          { label: "Bottom", value: "object-bottom" },
+          { label: "Center", value: "object-center" },
+          { label: "Left", value: "object-left" },
+          { label: "Left Bottom", value: "object-left-bottom" },
+          { label: "Left Top", value: "object-left-top" },
+          { label: "Right", value: "object-right" },
+          { label: "Right Bottom", value: "object-right-bottom" },
+          { label: "Right Top", value: "object-right-top" },
+          { label: "Top", value: "object-top" },
+        ]}
+      />
     </Form>
   )
 }

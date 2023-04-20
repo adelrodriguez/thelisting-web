@@ -7,6 +7,8 @@ import { useInterval } from "~/utils/hooks"
 import type { CountdownProperties } from "~/utils/ribbons"
 import { capitalize } from "~/utils/string"
 
+import useTheme from "./ThemeProvider"
+
 function getRemainingTime(eventDatetime: Date) {
   // If the event has already passed, return a duration of 0.
   if (isPast(eventDatetime)) {
@@ -18,6 +20,7 @@ function getRemainingTime(eventDatetime: Date) {
 
 export default function Countdown({ eventDatetime }: CountdownProperties) {
   const [remaining, setRemaining] = useState(getRemainingTime(eventDatetime))
+  const [styles] = useTheme()
 
   const clearInterval = useInterval(() => {
     setRemaining(getRemainingTime(eventDatetime))
@@ -32,7 +35,8 @@ export default function Countdown({ eventDatetime }: CountdownProperties) {
 
   return (
     <section>
-      <div className="flex h-20 items-center md:px-4">
+      <div style={styles} className="flex items-center pb-20 md:px-4">
+        {/* // TODO(adelrodriguez): Set a loading component */}
         <ClientOnly
           fallback={
             <div className="flex w-full justify-center">
@@ -58,7 +62,6 @@ export default function Countdown({ eventDatetime }: CountdownProperties) {
           )}
         </ClientOnly>
       </div>
-      {/* // TODO(adelrodriguez): Set a loading component */}
     </section>
   )
 }

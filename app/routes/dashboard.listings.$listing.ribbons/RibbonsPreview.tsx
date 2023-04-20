@@ -73,18 +73,43 @@ export default function RibbonsPreview({
         <span className="isolate inline-flex rounded-md shadow-sm">
           <button
             type="button"
-            className="relative inline-flex items-center rounded-l-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"
+            className={clsx(
+              "relative inline-flex items-center rounded-l-md px-3 py-2 text-sm font-semibold ring-1 ring-inset ring-gray-300",
+              "focus:z-10",
+              previewSize === "mobile"
+                ? "bg-gray-600"
+                : "bg-white hover:bg-gray-50"
+            )}
             onClick={() => setPreviewSize("mobile")}
+            disabled={previewSize === "mobile"}
           >
-            <DevicePhoneMobileIcon className="h-5 w-5 text-gray-700" />
+            <DevicePhoneMobileIcon
+              className={clsx(
+                "h-5 w-5",
+                previewSize === "mobile" ? "text-white" : "text-gray-700"
+              )}
+            />
           </button>
 
           <button
             type="button"
-            className="relative -ml-px inline-flex items-center rounded-r-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"
+            className={clsx(
+              "relative -ml-px inline-flex items-center rounded-r-md  px-3 py-2 text-sm font-semibold ring-1 ring-inset ring-gray-300",
+              "hover:bg-gray-50",
+              "focus:z-10",
+              previewSize === "desktop"
+                ? "bg-gray-600"
+                : "bg-white hover:bg-gray-50"
+            )}
             onClick={() => setPreviewSize("desktop")}
+            disabled={previewSize === "desktop"}
           >
-            <ComputerDesktopIcon className="h-5 w-5 text-gray-700" />
+            <ComputerDesktopIcon
+              className={clsx(
+                "h-5 w-5",
+                previewSize === "desktop" ? "text-white" : "text-gray-700"
+              )}
+            />
           </button>
         </span>
       </div>

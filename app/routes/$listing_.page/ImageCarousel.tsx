@@ -3,8 +3,11 @@ import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid"
 import clsx from "clsx"
 import { useEffect, useRef, useState } from "react"
 
+import { Image } from "~/components/common"
 import { generateCloudflareImageUrl } from "~/utils/cloudflare"
 import type { ImageCarouselProperties } from "~/utils/ribbons"
+
+import useTheme from "./ThemeProvider"
 
 export default function ImageCarousel({
   images,
@@ -13,6 +16,7 @@ export default function ImageCarousel({
 }: ImageCarouselProperties) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const carouselInterval = useRef<NodeJS.Timer>()
+  const [styles] = useTheme()
 
   useEffect(() => {
     carouselInterval.current = setInterval(() => {
@@ -41,10 +45,10 @@ export default function ImageCarousel({
 
   return (
     <section>
-      <div className="p-4">
+      <div className="px-4 pb-20" style={styles}>
         <div
           className={clsx("relative w-full overflow-hidden", {
-            "h-64": !height,
+            "h-screen": !height,
           })}
           style={{ height: height || undefined }}
         >
@@ -59,10 +63,10 @@ export default function ImageCarousel({
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <img
+              <Image
                 src={generateCloudflareImageUrl(image, "public")}
                 alt=""
-                className="absolute h-full w-full object-cover"
+                className="absolute h-full w-full rounded-md object-cover"
               />
             </Transition>
           ))}

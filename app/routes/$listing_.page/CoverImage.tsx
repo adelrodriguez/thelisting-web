@@ -6,12 +6,15 @@ import { Image } from "~/components/common"
 import { generateCloudflareImageUrl } from "~/utils/cloudflare"
 import type { CoverImageProperties } from "~/utils/ribbons"
 
+import useTheme from "./ThemeProvider"
+
 export default function CoverImage({
   image,
   height,
   onView,
 }: { onView: (image: string) => void } & CoverImageProperties) {
   const ref = useRef<HTMLDivElement>(null)
+  const [styles] = useTheme()
   const inView = useInView(ref)
 
   useEffect(() => {
@@ -19,20 +22,19 @@ export default function CoverImage({
   }, [inView, onView, image])
 
   return (
-    <section ref={ref}>
-      <div
-        className={clsx(
-          "relative block bg-gray-800 lg:hidden",
-          height || "h-screen"
-        )}
-      >
-        {image && (
-          <Image
-            className="h-full w-full object-cover object-center"
-            src={generateCloudflareImageUrl(image, "display")}
-            alt=""
-          />
-        )}
+    <section>
+      <div ref={ref} style={styles}>
+        <div className={clsx("relative block py-20 lg:hidden")}>
+          <div style={{ height: height ? height : "100vh" }}>
+            {image && (
+              <Image
+                className="h-full w-full object-cover object-center"
+                src={generateCloudflareImageUrl(image, "display")}
+                alt=""
+              />
+            )}
+          </div>
+        </div>
       </div>
     </section>
   )
