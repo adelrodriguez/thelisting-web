@@ -115,7 +115,7 @@ export default function ListingPage() {
             <h3 className="font-body text-2xl">{listing.subtitle}</h3>
           </div>
         </div>
-        <div className="z-10 flex flex-1 flex-col justify-center shadow-xl shadow-gray-700 lg:w-2/5 lg:flex-none">
+        <div className="z-10 flex flex-1 flex-col justify-center border-white shadow-gray-700 lg:w-2/5 lg:flex-none lg:border-l-8">
           {listing.ribbons.map((ribbon) => {
             const result = RibbonSchema.safeParse(ribbon)
 

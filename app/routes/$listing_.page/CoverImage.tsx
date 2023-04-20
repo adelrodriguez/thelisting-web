@@ -28,7 +28,7 @@ export default function CoverImage({
           <div style={{ height: height ? height : "100vh" }}>
             {image && (
               <Image
-                className="h-full w-full object-cover object-center"
+                className="h-full w-full border-y-8 border-white object-cover object-center"
                 src={generateCloudflareImageUrl(image, "display")}
                 alt=""
               />
