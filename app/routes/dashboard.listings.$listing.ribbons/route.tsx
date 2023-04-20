@@ -73,7 +73,7 @@ export default function DashboardListingRibbonsPage() {
   }
 
   return (
-    <DndProvider backend={HTML5Backend}>
+    <>
       <div className="mt-4 grid grid-cols-1 items-start gap-4 md:grid-cols-4 md:gap-8">
         <div className="gap-4 md:col-span-2">
           <section aria-labelledby="section-1-title">
@@ -94,7 +94,9 @@ export default function DashboardListingRibbonsPage() {
                     </Link>
                   </div>
                 ) : (
-                  <PageRibbons ribbons={ribbons} onMove={submitOrder} />
+                  <DndProvider backend={HTML5Backend}>
+                    <PageRibbons ribbons={ribbons} onMove={submitOrder} />
+                  </DndProvider>
                 )}
               </div>
             </div>
@@ -118,6 +120,6 @@ export default function DashboardListingRibbonsPage() {
         </div>
       </div>
       <Outlet />
-    </DndProvider>
+    </>
   )
 }
