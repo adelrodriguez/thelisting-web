@@ -15,7 +15,7 @@ export default function Text({
 
   return (
     <section>
-      <div style={styles} className="px-4 py-10">
+      <div style={styles} className="px-8 py-20">
         {decorationImage && (
           <div className="h-32 lg:h-40">
             <img
@@ -29,7 +29,7 @@ export default function Text({
           <h3 className="font-serif text-2xl font-semibold tracking-wide md:text-3xl">
             {title}
           </h3>
-          <p className="mt-2 whitespace-pre-wrap font-body text-lg tracking-tight">
+          <p className="mt-4 whitespace-pre-wrap font-body text-lg leading-7 tracking-tight">
             {body}
           </p>
         </div>
