@@ -69,7 +69,7 @@ export default function DashboardSettingsPage() {
   return (
     <ValidatedForm
       validator={validator}
-      method="post"
+      method="POST"
       className="m-auto mt-8 flex flex-col gap-y-6 sm:w-[500px]"
       id="editUser"
       onSubmit={() => {

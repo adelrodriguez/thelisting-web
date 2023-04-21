@@ -113,7 +113,7 @@ export default function WhatsAppBroadcastPage() {
       <ValidatedForm
         validator={validator}
         className="m-auto mt-8 flex flex-col gap-y-6 sm:w-[500px]"
-        method="post"
+        method="POST"
       >
         <FormSelect
           label="Template"

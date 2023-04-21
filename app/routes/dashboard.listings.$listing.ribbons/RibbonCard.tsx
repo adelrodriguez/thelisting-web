@@ -176,7 +176,7 @@ export default function RibbonCard({
               )}
               <div className="mt-2 flex justify-end gap-2">
                 <fetcher.Form
-                  method="post"
+                  method="POST"
                   action={`/api/ribbons/${ribbon.id}?/delete`}
                 >
                   <Button className="w-full" variant="danger">

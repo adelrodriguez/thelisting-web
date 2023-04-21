@@ -166,7 +166,7 @@ export default function DashboardListingItemDetailPage() {
         <ValidatedForm
           validator={validator}
           id="editItem"
-          method="post"
+          method="POST"
           className="flex flex-col gap-y-6 pt-4"
           onSubmit={() => {
             enqueueSnackbar("Item updated 🎉", {

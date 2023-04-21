@@ -139,7 +139,7 @@ export default function AddToListingPage() {
                       margin: DEFAULT_MARGIN,
                       products: productFields,
                     }}
-                    method="post"
+                    method="POST"
                     onSubmit={() => {
                       enqueueSnackbar("Items are being added to the listing", {
                         description:

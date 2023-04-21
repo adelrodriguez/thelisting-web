@@ -35,7 +35,7 @@ export default function ImageGalleryRibbonForm({
       id={id}
       className="flex flex-col gap-2"
       action={`/api/ribbons/${ribbon.id}/properties`}
-      method="post"
+      method="POST"
       validator={validator}
       defaultValues={defaultValues}
       fetcher={fetcher}

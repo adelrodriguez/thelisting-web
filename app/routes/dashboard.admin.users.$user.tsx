@@ -77,7 +77,7 @@ export default function AdminToolsUserEditPage() {
   return (
     <ValidatedForm
       validator={validator}
-      method="post"
+      method="POST"
       className="m-auto mt-8 flex w-full max-w-xl flex-col gap-y-6"
       id="editUser"
       onSubmit={() => {
