@@ -5,18 +5,23 @@ import {
   unstable_createMemoryUploadHandler as createMemoryUploadHandler,
   unstable_parseMultipartFormData as parseMultipartFormData,
 } from "@remix-run/node"
-import { badRequest } from "remix-utils"
+import { ReasonPhrases, StatusCodes } from "http-status-codes"
 
 import auth from "~/helpers/auth.server"
 import { uploadImageToCloudflare } from "~/utils/cloudflare.server"
-import { getFormData, Unauthorized } from "~/utils/http.server"
 
 export async function loader({ request, context }: LoaderArgs) {
   const db = context.db
   const user = await auth.isAuthenticated(request)
 
   if (!user) {
-    return Unauthorized
+    throw json(
+      { message: "You must be logged in to view images" },
+      {
+        status: StatusCodes.UNAUTHORIZED,
+        statusText: ReasonPhrases.UNAUTHORIZED,
+      }
+    )
   }
 
   const images = await db.image.findMany({
@@ -33,14 +38,23 @@ export async function action({ request, context }: ActionArgs) {
   const user = await auth.isAuthenticated(request)
 
   if (!user) {
-    return Unauthorized
+    return json(
+      { message: "You must be logged in to upload images" },
+      {
+        status: StatusCodes.UNAUTHORIZED,
+        statusText: ReasonPhrases.UNAUTHORIZED,
+      }
+    )
   }
 
-  const formData = await getFormData(request)
+  const formData = await request.clone().formData()
   const filename = formData.get("filename")
 
   if (!filename || typeof filename !== "string") {
-    throw badRequest("Missing filename")
+    throw json(
+      { message: "Missing filename" },
+      { status: StatusCodes.BAD_REQUEST, statusText: ReasonPhrases.BAD_REQUEST }
+    )
   }
 
   const uploadHandler = composeUploadHandlers(async ({ name, data }) => {
@@ -58,7 +72,10 @@ export async function action({ request, context }: ActionArgs) {
   const fileId = multipartFormData.get("file")
 
   if (!fileId || typeof fileId !== "string") {
-    throw badRequest("Missing image")
+    throw json(
+      { message: "Missing image" },
+      { status: StatusCodes.BAD_REQUEST, statusText: ReasonPhrases.BAD_REQUEST }
+    )
   }
 
   const image = await db.image.create({

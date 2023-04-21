@@ -12,7 +12,7 @@ import RegistryItem from "./RegistryItem"
 export default function Registry({
   items,
 }: {
-  items: Omit<Item, "createdAt" | "updatedAt">[]
+  items: Pick<Item, "id" | "sku" | "commerceId" | "stock" | "quantity">[]
 }) {
   const cart = useCart()
   const [scope, animate] = useAnimate()

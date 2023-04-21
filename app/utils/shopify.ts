@@ -1,8 +1,9 @@
+import { json } from "@remix-run/node"
+import { ReasonPhrases, StatusCodes } from "http-status-codes"
 import { z } from "zod"
 
 import type { CustomAttribute } from "~/config/consts"
 import { CUSTOM_ATTRIBUTES } from "~/config/consts"
-import { BadRequest } from "~/utils/http.server"
 import { undefinedToNull } from "~/utils/undefined"
 
 export const OrderPaymentWebhookPayloadSchema = z.object({
@@ -50,7 +51,10 @@ export function getShopifyWebhookHeaders(headers: Headers) {
   const event = headers.get("X-Shopify-Topic")
 
   if (!webhookId || !event) {
-    throw BadRequest
+    throw json(
+      { message: "Missing webhook headers" },
+      { status: StatusCodes.BAD_REQUEST, statusText: ReasonPhrases.BAD_REQUEST }
+    )
   }
 
   return { event, webhookId }

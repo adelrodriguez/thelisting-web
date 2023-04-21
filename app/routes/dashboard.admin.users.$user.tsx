@@ -12,7 +12,6 @@ import {
 
 import { FormInput, FormListRadioGroup, FormSubmit } from "~/components/form"
 import { isUserAdmin } from "~/utils/auth.server"
-import { getFormData } from "~/utils/http.server"
 import { getParam, json } from "~/utils/remix"
 import { getUserFullName, UserSchema } from "~/utils/user"
 
@@ -58,7 +57,7 @@ export async function action({ request, params, context }: ActionArgs) {
     throw notFound("User not found")
   }
 
-  const formData = await getFormData(request)
+  const formData = await request.formData()
   const result = await validator.validate(formData)
 
   if (result.error) return validationError(result.error)

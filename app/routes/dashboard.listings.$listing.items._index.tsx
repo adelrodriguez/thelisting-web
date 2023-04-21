@@ -2,7 +2,8 @@ import { Menu, Transition } from "@headlessui/react"
 import { EllipsisVerticalIcon } from "@heroicons/react/20/solid"
 import type { Item } from "@prisma/client"
 import type { LoaderArgs } from "@remix-run/node"
-import { Link } from "@remix-run/react"
+import { json } from "@remix-run/node"
+import { Link, useLoaderData } from "@remix-run/react"
 import {
   createColumnHelper,
   flexRender,
@@ -10,34 +11,29 @@ import {
   useReactTable,
 } from "@tanstack/react-table"
 import { Fragment } from "react"
+import { z } from "zod"
+import { zx } from "zodix"
 
 import { ViewOnShopify } from "~/components/admin"
 import { Button } from "~/components/common"
 import { useProduct } from "~/utils/hooks"
-import { NotFound } from "~/utils/http.server"
-import { getParam, json, useLoaderData } from "~/utils/remix"
 
 export async function loader({ params, context }: LoaderArgs) {
   const { db } = context
-  const sku = getParam(params, "listing")
-
-  if (isNaN(Number(sku))) throw NotFound
+  const { listing: sku } = zx.parseParams(params, {
+    listing: z.coerce.number(),
+  })
 
   const items = await db.item.findMany({
-    orderBy: {
-      sku: "asc",
-    },
-    where: {
-      listing: {
-        sku: Number(sku),
-      },
-    },
+    orderBy: { sku: "asc" },
+    where: { listing: { sku } },
   })
 
   return json({ items })
 }
 
-const columnHelper = createColumnHelper<Item>()
+const columnHelper =
+  createColumnHelper<Pick<Item, "sku" | "commerceId" | "quantity" | "stock">>()
 
 const columns = [
   columnHelper.accessor("sku", {
@@ -47,7 +43,7 @@ const columns = [
     cell: (props) => {
       const item = props.row.original
 
-      return <TitleCell item={item} />
+      return <TitleCell sku={item.sku} commerceId={item.commerceId} />
     },
     header: "Title",
   }),
@@ -159,8 +155,14 @@ export default function DashboardListingItemsPage() {
   )
 }
 
-function TitleCell({ item }: { item: Item }) {
-  const { data, isLoading, isError } = useProduct(item.commerceId!)
+function TitleCell({
+  sku,
+  commerceId,
+}: {
+  sku: Item["sku"]
+  commerceId: Item["commerceId"]
+}) {
+  const { data, isLoading, isError } = useProduct(commerceId!)
 
   if (isLoading) return <div>Loading...</div>
 
@@ -168,7 +170,7 @@ function TitleCell({ item }: { item: Item }) {
 
   return (
     <Link
-      to={`./${item.sku}`}
+      to={`./${sku}`}
       className="text-gray-600 hover:text-gray-900 hover:underline"
     >
       {data.title}

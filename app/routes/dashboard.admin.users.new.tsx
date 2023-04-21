@@ -7,7 +7,6 @@ import { ValidatedForm, validationError } from "remix-validated-form"
 
 import { FormInput, FormListRadioGroup, FormSubmit } from "~/components/form"
 import auth from "~/helpers/auth.server"
-import { getFormData } from "~/utils/http.server"
 import { redirect } from "~/utils/remix"
 import { UserSchema } from "~/utils/user"
 
@@ -27,7 +26,7 @@ export async function action({ request, context }: ActionArgs) {
 
   if (!user) throw unauthorized("You must be logged in to create a listing")
 
-  const formData = await getFormData(request)
+  const formData = await request.formData()
 
   const result = await validator.validate(formData)
 

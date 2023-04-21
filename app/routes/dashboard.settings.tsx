@@ -12,7 +12,6 @@ import { z } from "zod"
 
 import { FormInput, FormSubmit } from "~/components/form"
 import auth from "~/helpers/auth.server"
-import { getFormData } from "~/utils/http.server"
 
 export const handle = {
   crumb: () => ({
@@ -51,7 +50,7 @@ export async function action({ request, context }: LoaderArgs) {
   if (!user)
     throw unauthorized("You must be logged in to edit your user settings")
 
-  const formData = await getFormData(request)
+  const formData = await request.formData()
   const result = await validator.validate(formData)
 
   if (result.error) return validationError(result.error)

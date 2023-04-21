@@ -17,7 +17,6 @@ import { FormattedNumber, Image } from "~/components/common"
 import type { NotFoundBoundaryData } from "~/components/error"
 import { FormInput, FormTextArea, SubmitButton } from "~/components/form"
 import { useProduct } from "~/utils/hooks"
-import { getFormData } from "~/utils/http.server"
 import { getPriceSymbol } from "~/utils/money"
 import { json, useLoaderData, getParam } from "~/utils/remix"
 
@@ -76,7 +75,7 @@ export async function loader({ params, context }: LoaderArgs) {
 
 export async function action({ request, params, context }: ActionArgs) {
   const { db } = context
-  const formData = await getFormData(request)
+  const formData = await request.formData()
   const result = await validator.validate(formData)
   const sku = getParam(params, "item")
 

@@ -1,4 +1,5 @@
 import type { ActionArgs } from "@remix-run/node"
+import { json } from "@remix-run/node"
 import { useActionData } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
 import { useSnackbar } from "notistack"
@@ -11,7 +12,6 @@ import { FormTextArea } from "~/components/form"
 import { FormInput, FormSelect } from "~/components/form"
 import { WHATSAPP_MESSAGE_TEMPLATES } from "~/config/consts"
 import whatsapp from "~/services/whatsapp.server"
-import { getFormData } from "~/utils/http.server"
 
 export const handle = {
   crumb: () => ({
@@ -44,7 +44,7 @@ const whatsAppBroadcastFormSchema = z.object({
 const validator = withZod(whatsAppBroadcastFormSchema)
 
 export async function action({ request }: ActionArgs) {
-  const formData = await getFormData(request)
+  const formData = await request.formData()
   const { data, error } = await validator.validate(formData)
 
   if (error) return validationError(error)
@@ -70,7 +70,7 @@ export async function action({ request }: ActionArgs) {
     })
   )
 
-  return response
+  return json(response)
 }
 
 export default function WhatsAppBroadcastPage() {

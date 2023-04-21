@@ -18,7 +18,6 @@ import { AddItemToListingQueue } from "~/helpers/queues"
 import { useScrapedProducts } from "~/routes/dashboard.admin.product-scraper/route"
 import alegra from "~/services/alegra.server"
 import { useDialogPage } from "~/utils/hooks"
-import { getFormData } from "~/utils/http.server"
 import { goToParent, json, useLoaderData } from "~/utils/remix"
 
 const AddToListingSchema = z.object({
@@ -60,7 +59,7 @@ export async function loader({ context }: LoaderArgs) {
 export async function action({ request, context }: ActionArgs) {
   const db = context.db
 
-  const formData = await getFormData(request)
+  const formData = await request.formData()
   const result = await validator.validate(formData)
 
   if (result.error) return validationError(result.error)

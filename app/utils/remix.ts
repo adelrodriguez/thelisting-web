@@ -19,6 +19,9 @@ export const goHome = () => redirect("/")
 
 export const goToLogin = () => redirect("/login")
 
+/**
+ * @deprecated just do this in the handler
+ */
 export function getParam(
   params: Params<string>,
   key: string,
