@@ -9,7 +9,12 @@ import { z } from "zod"
 import { zx } from "zodix"
 
 import { Button } from "~/components/common"
-import { Form, Input, SubmitButton } from "~/components/form"
+import { Form, Input, Select, SubmitButton } from "~/components/form"
+import {
+  GOOGLE_WEB_FONTS_DEVELOPER_API_KEY,
+  GOOGLE_WEB_FONTS_URL,
+} from "~/config/env.server"
+import { GoogleWebFontsListSchema } from "~/utils/font"
 import { ListingThemeSchema } from "~/utils/listing"
 import type { ErrorBoundaryProps } from "~/utils/remix"
 import { useFetcher } from "~/utils/remix"
@@ -32,19 +37,26 @@ export async function loader({ params, context }: LoaderArgs) {
     z.object({ listing: z.coerce.number() })
   )
 
-  const listing = await db.listing.findUniqueOrThrow({
-    select: { path: true, theme: true },
-    where: { sku },
-  })
-
-  const ribbons = await db.ribbon.findMany({
-    orderBy: { position: "asc" },
-    where: { listing: { sku } },
-  })
+  const [listing, ribbons, fonts] = await Promise.all([
+    db.listing.findUniqueOrThrow({
+      select: { path: true, theme: true },
+      where: { sku },
+    }),
+    db.ribbon.findMany({
+      orderBy: { position: "asc" },
+      where: { listing: { sku } },
+    }),
+    (
+      await fetch(
+        `${GOOGLE_WEB_FONTS_URL}?key=${GOOGLE_WEB_FONTS_DEVELOPER_API_KEY}`
+      )
+    ).json(),
+  ])
 
   const theme = ListingThemeSchema.parse(listing.theme)
 
   return json({
+    fonts: GoogleWebFontsListSchema.parse(fonts),
     listing,
     ribbons,
     ...setFormDefaults("edit-theme", theme),
@@ -99,7 +111,7 @@ export function ErrorBoundary({ error }: ErrorBoundaryProps) {
 }
 
 export default function DashboardListingRibbonsPage() {
-  const { listing, ribbons } = useLoaderData<typeof loader>()
+  const { listing, ribbons, fonts } = useLoaderData<typeof loader>()
   const fetcher = useFetcher()
 
   async function submitOrder(ribbonIds: string[]) {
@@ -172,6 +184,22 @@ export default function DashboardListingRibbonsPage() {
                     label="Secondary Color"
                   />
                   <Input type="color" name="colors.text" label="Text Color" />
+                  <Select
+                    name="fonts.heading"
+                    label="Heading Font"
+                    options={fonts.map((font) => ({
+                      label: font,
+                      value: font,
+                    }))}
+                  />
+                  <Select
+                    name="fonts.body"
+                    label="Body Font"
+                    options={fonts.map((font) => ({
+                      label: font,
+                      value: font,
+                    }))}
+                  />
                   <SubmitButton loadingText="Saving..." className="mt-2">
                     Save
                   </SubmitButton>

@@ -31,6 +31,9 @@ module.exports = z.object({
 
   GA_TRACKING_ID: z.string(),
 
+  GOOGLE_WEB_FONTS_DEVELOPER_API_KEY: z.string(),
+  GOOGLE_WEB_FONTS_URL: z.string(),
+
   HOOKDECK_SIGNING_SECRET: z.string(),
 
   LOGIN_SENDER_EMAIL: z.string(),
