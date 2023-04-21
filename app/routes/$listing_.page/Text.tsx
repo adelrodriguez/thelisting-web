@@ -1,3 +1,4 @@
+import { Link } from "@remix-run/react"
 import clsx from "clsx"
 
 import { generateCloudflareImageUrl } from "~/utils/cloudflare"
@@ -10,6 +11,8 @@ export default function Text({
   body,
   decorationImage,
   textAlignment,
+  url,
+  label,
 }: TextProperties) {
   const [styles] = useTheme()
 
@@ -32,6 +35,19 @@ export default function Text({
           <p className="mt-4 whitespace-pre-wrap font-body text-lg leading-7 tracking-tight">
             {body}
           </p>
+          {url && label && (
+            <div className="mt-8">
+              <Link
+                to={url}
+                className={clsx(
+                  "mt-4 rounded-full border-2 border-white bg-transparent px-6 py-2.5 font-body font-semibold tracking-wide text-white transition-all",
+                  "hover:bg-white hover:text-black hover:mix-blend-screen"
+                )}
+              >
+                {label}
+              </Link>
+            </div>
+          )}
         </div>
       </div>
     </section>

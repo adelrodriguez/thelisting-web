@@ -1,8 +1,10 @@
 import type { Ribbon } from "@prisma/client"
 import { useFetcher } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
+import { useState } from "react"
 import { ValidatedForm as Form } from "remix-validated-form"
 
+import { Checkbox } from "~/components/common"
 import { ImageInput, Input, Select, TextArea } from "~/components/form"
 import { TextPropertiesSchema } from "~/utils/ribbons"
 
@@ -15,6 +17,8 @@ export default function TextRibbonForm({
   ribbon: Ribbon
   id: string
 }) {
+  // TODO(adelrodriguez): actually have this as a field in the form
+  const [showLinkFields, setShowLinkFields] = useState(false)
   const fetcher = useFetcher()
   const result = TextPropertiesSchema.safeParse(ribbon.properties)
   let defaultValues
@@ -47,6 +51,22 @@ export default function TextRibbonForm({
           { label: "Justify", value: "text-justify" },
         ]}
       />
+      <div className="flex items-center">
+        <Checkbox
+          id="has-link"
+          checked={showLinkFields}
+          onChange={(e) => setShowLinkFields(e.target.checked)}
+        />
+        <label htmlFor="has-link" className="ml-2">
+          Has a link
+        </label>
+      </div>
+      {showLinkFields && (
+        <>
+          <Input label="URL" name="url" />
+          <Input label="Label" name="label" />
+        </>
+      )}
     </Form>
   )
 }

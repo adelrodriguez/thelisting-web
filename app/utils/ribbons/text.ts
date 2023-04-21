@@ -9,7 +9,7 @@ export const TextPropertiesSchema = z.object({
   label: z.string().optional(),
   textAlignment: z.string().optional(),
   title: z.string().optional(),
-  url: z.string().url().optional(),
+  url: z.string().optional(),
 })
 export type TextProperties = z.infer<typeof TextPropertiesSchema>
 

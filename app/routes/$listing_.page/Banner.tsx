@@ -15,7 +15,7 @@ export default function Banner({
   imagePosition,
   decorationImage,
 }: BannerProperties) {
-  const [styles, theme] = useTheme()
+  const [styles] = useTheme()
   const { t } = useTranslation("listing")
 
   return (
@@ -42,17 +42,15 @@ export default function Banner({
             )}
           </div>
 
-          <Link to="../" relative="path" className="z-10">
-            <button
-              type="button"
-              className="right-1/2 mt-10 rounded-lg border-2 bg-transparent px-6 py-2.5 font-body font-semibold tracking-wide shadow-sm outline-white transition-all hover:scale-105 hover:shadow-2xl"
-              style={{
-                borderColor: theme.colors?.primary,
-                color: theme.colors?.primary,
-              }}
-            >
-              {t("goToRegistry")}
-            </button>
+          <Link
+            to="../"
+            relative="path"
+            className={clsx(
+              "right-1/2 z-10 mt-10 rounded-lg border-2 bg-transparent px-6 py-2.5 font-body font-semibold tracking-wide shadow-sm outline-white transition-all ",
+              "hover:scale-125 hover:bg-white hover:text-black hover:mix-blend-screen hover:shadow-2xl"
+            )}
+          >
+            {t("goToRegistry")}
           </Link>
         </div>
         {backgroundImage && (
