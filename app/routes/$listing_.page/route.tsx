@@ -1,15 +1,18 @@
 import { RibbonType } from "@prisma/client"
-import type { LoaderArgs } from "@remix-run/node"
+import type { LoaderArgs, V2_MetaFunction } from "@remix-run/node"
+import { json } from "@remix-run/node"
 import { redirect } from "@remix-run/node"
+import { useLoaderData } from "@remix-run/react"
 import { AnimatePresence, motion } from "framer-motion"
 import { useCallback, useState } from "react"
 import { notFound } from "remix-utils"
+import { z } from "zod"
+import { zx } from "zodix"
 
 import type { NotFoundBoundaryData } from "~/components/error"
 import { isProduction } from "~/config/vars"
 import { generateCloudflareImageUrl } from "~/utils/cloudflare"
-import type { MetaFunction } from "~/utils/remix"
-import { getParam, json, useLoaderData } from "~/utils/remix"
+import { ListingThemeSchema } from "~/utils/listing"
 import { CoverImagePropertiesSchema, RibbonSchema } from "~/utils/ribbons"
 
 import Banner from "./Banner"
@@ -22,7 +25,7 @@ import { ThemeProvider } from "./ThemeProvider"
 
 export async function loader({ params, context }: LoaderArgs) {
   const db = context.db
-  const path = getParam(params, "listing")
+  const { listing: path } = zx.parseParams(params, { listing: z.string() })
 
   const listing = await db.listing.findFirst({
     include: {
@@ -64,26 +67,19 @@ export async function loader({ params, context }: LoaderArgs) {
   return json({ coverImages, listing })
 }
 
-export const meta: MetaFunction<typeof loader> = ({ data }) => {
-  try {
-    return {
-      description: data.listing.subtitle || "",
-      "og:description": data.listing.subtitle || "",
-      ...(data.listing.coverImage
-        ? {
-            "og:image": generateCloudflareImageUrl(
-              data.listing.coverImage,
-              "thumbnail"
-            ),
-          }
-        : {}),
-      "og:title": `${data.listing.title} | The Listing`,
-      title: `${data.listing.title} | The Listing`,
-    }
-  } catch (error) {
-    return {}
-  }
-}
+export const meta: V2_MetaFunction<typeof loader> = ({ data }) => [
+  { title: `${data.listing.title} | The Listing` },
+  { content: data.listing.subtitle, name: "description" },
+  { content: data.listing.subtitle, name: "og:description" },
+  { charSet: "utf-8" },
+  {
+    content: data.listing.coverImage
+      ? generateCloudflareImageUrl(data.listing.coverImage)
+      : "", // TODO(adelrodriguez): Add default image
+    name: "og:image",
+  },
+  { content: `${data.listing.title} | The Listing`, name: "og:title" },
+]
 
 export default function ListingPage() {
   const { listing, coverImages } = useLoaderData<typeof loader>()
@@ -93,7 +89,7 @@ export default function ListingPage() {
   }, [])
 
   return (
-    <ThemeProvider listing={listing}>
+    <ThemeProvider theme={ListingThemeSchema.parse(listing.theme)}>
       <main className="flex flex-1">
         <div className="relative hidden w-0 flex-1 lg:block">
           <AnimatePresence>

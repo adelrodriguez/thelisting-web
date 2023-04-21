@@ -1,7 +1,7 @@
 type PublicEnvs = {
   gaTrackingId: string
-  release: string | undefined
-  sentryDsn: string | undefined
+  release?: string | undefined
+  sentryDsn?: string | undefined
   shopifyStore: string
   shopifyStorefrontAccessToken: string
   shopifyStorefrontAPIEndpoint: string

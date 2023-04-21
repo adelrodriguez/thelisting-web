@@ -9,7 +9,11 @@ import { sortByQuantity } from "~/utils/item"
 
 import RegistryItem from "./RegistryItem"
 
-export default function Registry({ items }: { items: Item[] }) {
+export default function Registry({
+  items,
+}: {
+  items: Omit<Item, "createdAt" | "updatedAt">[]
+}) {
   const cart = useCart()
   const [scope, animate] = useAnimate()
   const shake = useCallback(() => {

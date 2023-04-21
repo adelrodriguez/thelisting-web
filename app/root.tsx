@@ -1,5 +1,11 @@
-import type { MetaFunction, LinksFunction, LoaderArgs } from "@remix-run/node"
+import type {
+  LinksFunction,
+  LoaderArgs,
+  V2_MetaFunction,
+} from "@remix-run/node"
+import { json } from "@remix-run/node"
 import type { ThrownResponse } from "@remix-run/react"
+import { useLoaderData } from "@remix-run/react"
 import {
   Links,
   LiveReload,
@@ -31,19 +37,10 @@ import i18next from "~/helpers/i18next.server"
 import stylesheet from "~/styles/app.css"
 import { useChangeLanguage } from "~/utils/hooks"
 import { i18nCookie } from "~/utils/i18next"
-import { json, useLoaderData } from "~/utils/remix"
 
 import { isProduction } from "./config/vars"
 
 const client = new QueryClient()
-
-export const meta: MetaFunction = () => ({
-  charset: "utf-8",
-  description:
-    "Listas de regalo personalizadas para todo tipo de eventos. Te permitimos elegir artículos de cualquier tienda que desees; logistica de compra y entrega incluida.",
-  title: "The Listing",
-  viewport: "width=device-width,initial-scale=1",
-})
 
 export const links: LinksFunction = () => [
   { href: stylesheet, rel: "stylesheet" },
@@ -52,6 +49,17 @@ export const links: LinksFunction = () => [
     href: "https://use.typekit.net/vno7ewy.css",
     rel: "stylesheet",
   },
+]
+
+export const meta: V2_MetaFunction = () => [
+  { title: "The Listing" },
+  {
+    content:
+      "Listas de regalo personalizadas para todo tipo de eventos. Te permitimos elegir artículos de cualquier tienda que desees; logistica de compra y entrega incluida.",
+    name: "description",
+  },
+  { charSet: "utf-8" },
+  { content: "width=device-width,initial-scale=1", name: "viewport" },
 ]
 
 export function CatchBoundary() {

@@ -4,6 +4,7 @@ require("./app/config/env.server.js")
 module.exports = {
   future: {
     unstable_tailwind: true,
+    v2_meta: true,
     v2_routeConvention: true,
   },
   ignoredRouteFiles: [

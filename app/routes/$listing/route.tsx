@@ -1,5 +1,6 @@
-import type { LoaderArgs } from "@remix-run/node"
-import { Outlet } from "@remix-run/react"
+import type { LoaderArgs, V2_MetaFunction } from "@remix-run/node"
+import { json } from "@remix-run/node"
+import { Outlet, useLoaderData } from "@remix-run/react"
 import clsx from "clsx"
 import { notFound } from "remix-utils"
 
@@ -8,9 +9,7 @@ import type { NotFoundBoundaryData } from "~/components/error"
 import { THE_LISTING_LOGO_BLACK } from "~/config/consts"
 import { generateCloudflareImageUrl } from "~/utils/cloudflare"
 import { CartProvider } from "~/utils/hooks"
-import type { MetaFunction } from "~/utils/remix"
 import { getParam } from "~/utils/remix"
-import { json, useLoaderData } from "~/utils/remix"
 
 import Registry from "./Registry"
 
@@ -37,26 +36,19 @@ export async function loader({ params, context }: LoaderArgs) {
   return json({ listing })
 }
 
-export const meta: MetaFunction<typeof loader> = ({ data }) => {
-  try {
-    return {
-      description: data.listing.subtitle || "",
-      "og:description": data.listing.subtitle || "",
-      ...(data.listing.coverImage
-        ? {
-            "og:image": generateCloudflareImageUrl(
-              data.listing.coverImage,
-              "thumbnail"
-            ),
-          }
-        : {}),
-      "og:title": `${data.listing.title} | The Listing`,
-      title: `${data.listing.title} | The Listing`,
-    }
-  } catch (error) {
-    return {}
-  }
-}
+export const meta: V2_MetaFunction<typeof loader> = ({ data }) => [
+  { title: `${data.listing.title} | The Listing` },
+  { content: data.listing.subtitle, name: "description" },
+  { content: data.listing.subtitle, name: "og:description" },
+  { charSet: "utf-8" },
+  {
+    content: data.listing.coverImage
+      ? generateCloudflareImageUrl(data.listing.coverImage)
+      : "", // TODO(adelrodriguez): Add default image
+    name: "og:image",
+  },
+  { content: `${data.listing.title} | The Listing`, name: "og:title" },
+]
 
 export default function ListingPage() {
   const { listing } = useLoaderData<typeof loader>()

@@ -7,8 +7,9 @@ import {
   WrenchIcon,
   BellIcon,
 } from "@heroicons/react/24/outline"
-import type { LoaderArgs } from "@remix-run/node"
-import { Link, NavLink, Outlet } from "@remix-run/react"
+import type { LoaderArgs, V2_MetaFunction } from "@remix-run/node"
+import { json } from "@remix-run/node"
+import { Link, NavLink, Outlet, useLoaderData } from "@remix-run/react"
 import clsx from "clsx"
 import { SnackbarProvider } from "notistack"
 import { Fragment } from "react"
@@ -16,8 +17,6 @@ import { Fragment } from "react"
 import { Logo } from "~/components/branding"
 import { Notification } from "~/components/common"
 import auth from "~/helpers/auth.server"
-import type { MetaFunction } from "~/utils/remix"
-import { json, useLoaderData } from "~/utils/remix"
 
 import Breadcrumbs from "./Breadcrumbs"
 
@@ -55,9 +54,9 @@ export async function loader({ request }: LoaderArgs) {
   return json({ user })
 }
 
-export const meta: MetaFunction = () => ({
-  title: "Dashboard | The Listing",
-})
+export const meta: V2_MetaFunction = () => [
+  { title: "Dashboard | The Listing" },
+]
 
 export default function DashboardLayout() {
   const { user } = useLoaderData<typeof loader>()

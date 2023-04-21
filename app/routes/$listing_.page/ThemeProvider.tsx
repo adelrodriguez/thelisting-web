@@ -1,10 +1,9 @@
-import type { Listing } from "@prisma/client"
 import type { CSSProperties, ReactNode } from "react"
 import { useContext } from "react"
 import { createContext } from "react"
 import type { z } from "zod"
 
-import { ListingThemeSchema } from "~/utils/listing"
+import type { ListingThemeSchema } from "~/utils/listing"
 
 type Theme = z.infer<typeof ListingThemeSchema>
 
@@ -14,14 +13,11 @@ Context.displayName = "Theme"
 
 export function ThemeProvider({
   children,
-  listing,
+  theme,
 }: {
   children: ReactNode
-  listing: Listing
+  theme: Theme
 }) {
-  // TODO(adelrodriguez): Add error handling
-  const theme = ListingThemeSchema.parse(listing.theme)
-
   return <Context.Provider value={theme}>{children}</Context.Provider>
 }
 
