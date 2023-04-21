@@ -21,27 +21,17 @@ export default function Banner({
   return (
     <section>
       <div className="relative" style={styles}>
-        {backgroundImage && (
-          <div className="absolute inset-0">
-            <img
-              className={clsx("h-full w-full", imageFit, imagePosition)}
-              src={generateCloudflareImageUrl(backgroundImage, "display")}
-              alt=""
-            />
-          </div>
-        )}
-
         <div className="flex h-screen flex-col items-center justify-center">
-          {decorationImage && (
-            <div className="h-32 lg:h-40">
-              <img
-                className="h-full w-full object-contain"
-                src={generateCloudflareImageUrl(decorationImage, "display")}
-                alt=""
-              />
-            </div>
-          )}
-          <div className="z-10 px-4 pt-10 pb-5">
+          <div className="relative px-4">
+            {decorationImage && (
+              <div className="absolute inset-0 -top-10 h-32 -translate-y-full lg:h-40">
+                <img
+                  className="h-full w-full object-contain"
+                  src={generateCloudflareImageUrl(decorationImage, "display")}
+                  alt=""
+                />
+              </div>
+            )}
             <h1 className="text-center font-headline text-5xl font-bold tracking-wide lg:text-6xl">
               {title}
             </h1>
@@ -52,10 +42,10 @@ export default function Banner({
             )}
           </div>
 
-          <Link to="../" relative="path">
+          <Link to="../" relative="path" className="z-10">
             <button
               type="button"
-              className="right-1/2 mt-10 rounded-lg border-2 bg-transparent px-6 py-2.5 font-body text-base font-semibold tracking-wide shadow-sm outline-white transition-all hover:scale-105 hover:shadow-2xl"
+              className="right-1/2 mt-10 rounded-lg border-2 bg-transparent px-6 py-2.5 font-body font-semibold tracking-wide shadow-sm outline-white transition-all hover:scale-105 hover:shadow-2xl"
               style={{
                 borderColor: theme.colors?.primary,
                 color: theme.colors?.primary,
@@ -65,6 +55,15 @@ export default function Banner({
             </button>
           </Link>
         </div>
+        {backgroundImage && (
+          <div className="absolute inset-0">
+            <img
+              className={clsx("h-full w-full", imageFit, imagePosition)}
+              src={generateCloudflareImageUrl(backgroundImage, "display")}
+              alt=""
+            />
+          </div>
+        )}
       </div>
     </section>
   )
