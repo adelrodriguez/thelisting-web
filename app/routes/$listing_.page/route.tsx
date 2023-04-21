@@ -17,6 +17,7 @@ import Countdown from "./Countdown"
 import CoverImage from "./CoverImage"
 import ImageCarousel from "./ImageCarousel"
 import ImageGallery from "./ImageGallery"
+import Text from "./Text"
 import { ThemeProvider } from "./ThemeProvider"
 
 export async function loader({ params, context }: LoaderArgs) {
@@ -146,6 +147,9 @@ export default function ListingPage() {
                 return (
                   <ImageGallery {...result.data.properties} key={ribbon.id} />
                 )
+              }
+              case RibbonType.Text: {
+                return <Text {...result.data.properties} key={ribbon.id} />
               }
               default:
                 return null

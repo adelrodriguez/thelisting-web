@@ -1,5 +1,6 @@
 import { Disclosure } from "@headlessui/react"
 import {
+  Bars3CenterLeftIcon,
   ClockIcon,
   ComputerDesktopIcon,
   EllipsisVerticalIcon,
@@ -22,6 +23,7 @@ import CountdownRibbonForm from "./CountdownRibbonForm"
 import CoverImageRibbonForm from "./CoverImageRibbonForm"
 import ImageGalleryRibbonForm from "./ImagaGalleryRibbonForm"
 import ImageCarouselRibbonForm from "./ImageCarouselRibbonForm"
+import TextRibbonForm from "./TextRibbonForm"
 
 export const ItemTypes = {
   RIBBON: "ribbon",
@@ -47,6 +49,10 @@ const RIBBON_CARD = {
   [RibbonType.ImageGallery]: {
     bgColor: "bg-blue-500",
     icon: <RectangleGroupIcon className="h-6 w-6" aria-hidden="true" />,
+  },
+  [RibbonType.Text]: {
+    bgColor: "bg-gray-500",
+    icon: <Bars3CenterLeftIcon className="h-6 w-6" aria-hidden="true" />,
   },
 }
 
@@ -164,6 +170,9 @@ export default function RibbonCard({
                   ribbon={ribbon}
                   id={`form-${ribbon.id}`}
                 />
+              )}
+              {ribbon.type === RibbonType.Text && (
+                <TextRibbonForm ribbon={ribbon} id={`form-${ribbon.id}`} />
               )}
               <div className="mt-2 flex justify-end gap-2">
                 <fetcher.Form

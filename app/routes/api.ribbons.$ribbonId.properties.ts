@@ -15,6 +15,7 @@ import {
   CoverImagePropertiesSchema,
   ImageCarouselPropertiesSchema,
   ImageGalleryPropertiesSchema,
+  TextPropertiesSchema,
 } from "~/utils/ribbons"
 
 export async function action({ params, request, context }: ActionArgs) {
@@ -37,35 +38,19 @@ export async function action({ params, request, context }: ActionArgs) {
     return notFound("No ribbon found")
   }
 
-  let schema: z.ZodSchema<any>
-
-  switch (ribbon.type) {
-    case RibbonType.Banner: {
-      schema = BannerPropertiesSchema
-      break
-    }
-    case RibbonType.Countdown: {
-      schema = CountdownPropertiesSchema
-      break
-    }
-    case RibbonType.CoverImage: {
-      schema = CoverImagePropertiesSchema
-      break
-    }
-    case RibbonType.ImageCarousel: {
-      schema = ImageCarouselPropertiesSchema
-      break
-    }
-    case RibbonType.ImageGallery: {
-      schema = ImageGalleryPropertiesSchema
-      break
-    }
-    default: {
-      return json({ error: "Invalid ribbon type" }, { status: 400 })
-    }
+  const schemas = {
+    [RibbonType.Banner]: BannerPropertiesSchema,
+    [RibbonType.Countdown]: CountdownPropertiesSchema,
+    [RibbonType.CoverImage]: CoverImagePropertiesSchema,
+    [RibbonType.ImageCarousel]: ImageCarouselPropertiesSchema,
+    [RibbonType.ImageGallery]: ImageGalleryPropertiesSchema,
+    [RibbonType.Text]: TextPropertiesSchema,
   }
 
-  const validator = withZod(schema)
+  // TODO(adelrodriguez): TS expects all schemas to have similar properties,
+  // throws error because they don't
+  // @ts-expect-error
+  const validator = withZod(schemas[ribbon.type])
   const formData = await request.formData()
   const result = await validator.validate(formData)
 

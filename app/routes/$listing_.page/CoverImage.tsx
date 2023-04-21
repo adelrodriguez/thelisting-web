@@ -24,7 +24,7 @@ export default function CoverImage({
   return (
     <section>
       <div ref={ref} style={styles}>
-        <div className={clsx("relative block py-20 lg:hidden")}>
+        <div className={clsx("relative block lg:hidden")}>
           <div style={{ height: height ? height : "100vh" }}>
             {image && (
               <Image

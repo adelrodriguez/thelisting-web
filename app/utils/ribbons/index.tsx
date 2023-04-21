@@ -5,6 +5,7 @@ import { CountdownRibbonSchema } from "./countdown"
 import { CoverImageRibbonSchema } from "./cover-image"
 import { ImageCarouselRibbonSchema } from "./image-carousel"
 import { ImageGalleryRibbonSchema } from "./image-gallery"
+import { TextRibbonSchema } from "./text"
 
 export * from "./banner"
 export * from "./base"
@@ -12,6 +13,7 @@ export * from "./countdown"
 export * from "./cover-image"
 export * from "./image-gallery"
 export * from "./image-carousel"
+export * from "./text"
 
 export const RibbonSchema = z.discriminatedUnion("type", [
   BannerRibbonSchema,
@@ -19,6 +21,7 @@ export const RibbonSchema = z.discriminatedUnion("type", [
   CoverImageRibbonSchema,
   ImageCarouselRibbonSchema,
   ImageGalleryRibbonSchema,
+  TextRibbonSchema,
 ])
 
 export type Ribbon = z.infer<typeof RibbonSchema>

@@ -31,7 +31,7 @@ export default function Banner({
           </div>
         )}
 
-        <div className="relative flex h-screen flex-col items-center justify-center">
+        <div className="flex h-screen flex-col items-center justify-center">
           {decorationImage && (
             <div className="h-32 lg:h-40">
               <img
@@ -41,8 +41,8 @@ export default function Banner({
               />
             </div>
           )}
-          <div className="px-4 pt-10 pb-5">
-            <h1 className="z-10 text-center font-headline text-5xl font-bold tracking-wide lg:text-6xl">
+          <div className="z-10 px-4 pt-10 pb-5">
+            <h1 className="text-center font-headline text-5xl font-bold tracking-wide lg:text-6xl">
               {title}
             </h1>
             {subtitle && (
