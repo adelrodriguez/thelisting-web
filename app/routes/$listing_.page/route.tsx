@@ -67,19 +67,25 @@ export async function loader({ params, context }: LoaderArgs) {
   return json({ coverImages, listing })
 }
 
-export const meta: V2_MetaFunction<typeof loader> = ({ data }) => [
-  { title: `${data.listing.title} | The Listing` },
-  { content: data.listing.subtitle, name: "description" },
-  { content: data.listing.subtitle, name: "og:description" },
-  { charSet: "utf-8" },
-  {
-    content: data.listing.coverImage
-      ? generateCloudflareImageUrl(data.listing.coverImage)
-      : "", // TODO(adelrodriguez): Add default image
-    name: "og:image",
-  },
-  { content: `${data.listing.title} | The Listing`, name: "og:title" },
-]
+export const meta: V2_MetaFunction<typeof loader> = ({ data }) => {
+  try {
+    return [
+      { title: `${data.listing.title} | The Listing` },
+      { content: data.listing.subtitle, name: "description" },
+      { content: data.listing.subtitle, name: "og:description" },
+      { charSet: "utf-8" },
+      {
+        content: data.listing.coverImage
+          ? generateCloudflareImageUrl(data.listing.coverImage)
+          : "", // TODO(adelrodriguez): Add default image
+        name: "og:image",
+      },
+      { content: `${data.listing.title} | The Listing`, name: "og:title" },
+    ]
+  } catch (error) {
+    return []
+  }
+}
 
 export default function ListingPage() {
   const { listing, coverImages } = useLoaderData<typeof loader>()

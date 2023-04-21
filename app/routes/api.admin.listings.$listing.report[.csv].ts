@@ -1,24 +1,20 @@
 import type { LoaderArgs } from "@remix-run/node"
 import { flattenConnection } from "@shopify/hydrogen-react"
 import Papa from "papaparse"
+import { z } from "zod"
+import { zx } from "zodix"
 
 import { PRODUCT_METAFIELDS } from "~/config/consts"
 import { round } from "~/utils/number"
-import { getParam } from "~/utils/remix"
 import { getProduct } from "~/utils/shopify.server"
 
 export async function loader({ params, context }: LoaderArgs) {
   const db = context.db
-  const listing = getParam(params, "listing")
+  const { listing: listingId } = zx.parseParams(params, { listing: z.string() })
 
   const items = await db.item.findMany({
-    include: {
-      itemPurchases: true,
-    },
-
-    where: {
-      listingId: listing,
-    },
+    include: { itemPurchases: true },
+    where: { listingId },
   })
 
   const data = (

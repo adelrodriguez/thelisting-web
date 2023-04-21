@@ -1,12 +1,15 @@
 import type { ActionArgs, LoaderArgs } from "@remix-run/node"
+import { redirect } from "@remix-run/node"
+import { json } from "@remix-run/node"
+import { useLoaderData } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
 import { useSnackbar } from "notistack"
 import { ValidatedForm, validationError } from "remix-validated-form"
 import { z } from "zod"
+import { zx } from "zodix"
 
 import { FormInput, FormSubmit } from "~/components/form"
 import { isUserAdmin } from "~/utils/auth.server"
-import { getParam, json, redirect, useLoaderData } from "~/utils/remix"
 import { getShopifyId } from "~/utils/shopify"
 
 export const handle = {
@@ -28,18 +31,20 @@ const validator = withZod(CreateItemSchema)
 export async function loader({ request, params }: LoaderArgs) {
   await isUserAdmin(request)
 
-  const sku = getParam(params, "listing")
-
-  return json({
-    listingSku: sku,
+  const { listing: sku } = zx.parseParams(params, {
+    listing: z.coerce.number(),
   })
+
+  return json({ listingSku: sku })
 }
 
 export async function action({ request, params, context }: ActionArgs) {
   const { db } = context
 
   await isUserAdmin(request)
-  const listingSku = getParam(params, "listing")
+  const { listing: sku } = zx.parseParams(params, {
+    listing: z.coerce.number(),
+  })
 
   const formData = await request.formData()
   const result = await validator.validate(formData)
@@ -48,7 +53,7 @@ export async function action({ request, params, context }: ActionArgs) {
 
   const listing = await db.listing.findUniqueOrThrow({
     select: { id: true },
-    where: { sku: Number(listingSku) },
+    where: { sku },
   })
 
   const item = await db.item.create({
@@ -57,12 +62,12 @@ export async function action({ request, params, context }: ActionArgs) {
       description: result.data.description,
       listingId: listing.id,
       quantity: result.data.quantity,
-      sku: listingSku + "-" + result.data.sku,
+      sku: sku + "-" + result.data.sku,
       stock: result.data.quantity,
     },
   })
 
-  return redirect(`/dashboard/listings/${listingSku}/items/${item.sku}`)
+  return redirect(`/dashboard/listings/${sku}/items/${item.sku}`)
 }
 
 export default function CreateListingsPage() {

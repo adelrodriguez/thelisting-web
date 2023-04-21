@@ -1,5 +1,7 @@
 import type { ActionArgs, LoaderArgs } from "@remix-run/node"
+import { json } from "@remix-run/node"
 import type { RouteMatch } from "@remix-run/react"
+import { useLoaderData } from "@remix-run/react"
 import { Outlet } from "@remix-run/react"
 import { Link } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
@@ -11,6 +13,7 @@ import {
   validationError,
 } from "remix-validated-form"
 import { z } from "zod"
+import { zx } from "zodix"
 
 import { ViewOnShopify } from "~/components/admin"
 import { FormattedNumber, Image } from "~/components/common"
@@ -18,7 +21,6 @@ import type { NotFoundBoundaryData } from "~/components/error"
 import { FormInput, FormTextArea, SubmitButton } from "~/components/form"
 import { useProduct } from "~/utils/hooks"
 import { getPriceSymbol } from "~/utils/money"
-import { json, useLoaderData, getParam } from "~/utils/remix"
 
 export const handle = {
   crumb: ({ params }: RouteMatch) => ({
@@ -42,7 +44,9 @@ const validator = withZod(EditItemSchema)
 
 export async function loader({ params, context }: LoaderArgs) {
   const { db } = context
-  const sku = getParam(params, "item", "Item not found")
+  const { item: sku } = zx.parseParams(params, {
+    item: z.string(),
+  })
 
   const item = await db.item.findUnique({ where: { sku } })
 
@@ -69,7 +73,7 @@ export async function loader({ params, context }: LoaderArgs) {
         stat: itemPurchases.reduce((acc, cur) => acc + cur.quantity, 0),
       },
     ],
-    ...setFormDefaults("editItem", item),
+    ...setFormDefaults("edit-item", item),
   })
 }
 
@@ -77,7 +81,9 @@ export async function action({ request, params, context }: ActionArgs) {
   const { db } = context
   const formData = await request.formData()
   const result = await validator.validate(formData)
-  const sku = getParam(params, "item")
+  const { item: sku } = zx.parseParams(params, {
+    item: z.string(),
+  })
 
   if (result.error) return validationError(result.error)
 
@@ -164,7 +170,7 @@ export default function DashboardListingItemDetailPage() {
         </h3>
         <ValidatedForm
           validator={validator}
-          id="editItem"
+          id="edit-item"
           method="POST"
           className="flex flex-col gap-y-6 pt-4"
           onSubmit={() => {

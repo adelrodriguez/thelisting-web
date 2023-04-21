@@ -2,17 +2,20 @@ import { Disclosure } from "@headlessui/react"
 import { GiftIcon, CurrencyDollarIcon } from "@heroicons/react/24/solid"
 import { ListingStatus } from "@prisma/client"
 import type { LoaderArgs } from "@remix-run/node"
+import { json } from "@remix-run/node"
+import { useLoaderData } from "@remix-run/react"
 import currency from "currency.js"
 import { intlFormat } from "date-fns"
+import { ReasonPhrases, StatusCodes } from "http-status-codes"
 import { useTranslation } from "react-i18next"
-import { notFound } from "remix-utils"
+import { z } from "zod"
+import { zx } from "zodix"
 
 import { Button, FormattedNumber } from "~/components/common"
 import { OrderItem } from "~/components/registry"
 import i18next from "~/helpers/i18next.server"
 import { useTrackPageview } from "~/utils/hooks"
 import { getPriceSymbol } from "~/utils/money"
-import { getParam, json, useLoaderData } from "~/utils/remix"
 
 export const handle = {
   i18n: ["common", "registry"],
@@ -20,10 +23,10 @@ export const handle = {
 
 export async function loader({ request, params, context }: LoaderArgs) {
   const db = context.db
-  const path = getParam(params, "listing")
+  const { listing: path } = zx.parseParams(params, { listing: z.string() })
   const t = await i18next.getFixedT(request, "registry")
 
-  const listing = await db.listing.findUnique({
+  const listing = await db.listing.findFirst({
     select: {
       id: true,
       purchases: {
@@ -46,11 +49,20 @@ export async function loader({ request, params, context }: LoaderArgs) {
       status: true,
       title: true,
     },
-    where: { path },
+    where: { path, status: ListingStatus.Published },
   })
 
-  if (!listing || listing.status !== ListingStatus.Published) {
-    throw notFound("The listing you are looking for does not exist.")
+  if (!listing) {
+    throw json(
+      {
+        message: "Sorry, we couldn’t find the page you’re looking for.",
+        title: "Not Found",
+      },
+      {
+        status: StatusCodes.NOT_FOUND,
+        statusText: ReasonPhrases.NOT_FOUND,
+      }
+    )
   }
 
   const totalPurchased = listing.purchases.reduce(
@@ -165,11 +177,9 @@ export default function ListingReviewPage() {
                                   {t("registry:giftedOn")}
                                 </dt>
                                 <dd className="mt-1 text-gray-500">
-                                  <time
-                                    dateTime={purchase.createdAt.toDateString()}
-                                  >
+                                  <time dateTime={purchase.createdAt}>
                                     {intlFormat(
-                                      purchase.createdAt,
+                                      new Date(purchase.createdAt),
                                       {
                                         day: "numeric",
                                         month: "long",

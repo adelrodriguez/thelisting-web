@@ -1,7 +1,9 @@
 import { UserRole } from "@prisma/client"
 import type { ActionArgs, LoaderArgs } from "@remix-run/node"
+import { json } from "@remix-run/node"
 import type { RouteMatch } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
+import { ReasonPhrases, StatusCodes } from "http-status-codes"
 import { useSnackbar } from "notistack"
 import { notFound } from "remix-utils"
 import {
@@ -9,10 +11,11 @@ import {
   ValidatedForm,
   validationError,
 } from "remix-validated-form"
+import { z } from "zod"
+import { zx } from "zodix"
 
 import { FormInput, FormListRadioGroup, FormSubmit } from "~/components/form"
 import { isUserAdmin } from "~/utils/auth.server"
-import { getParam, json } from "~/utils/remix"
 import { getUserFullName, UserSchema } from "~/utils/user"
 
 const validator = withZod(UserSchema)
@@ -26,17 +29,25 @@ export const handle = {
 
 export async function loader({ params, context }: LoaderArgs) {
   const { db } = context
-  const userId = getParam(params, "user")
+  const { user: id } = zx.parseParams(params, { user: z.string() })
 
   const user = await db.user.findUnique({
-    where: { id: userId },
+    where: { id },
   })
 
   if (!user) {
-    throw notFound("User not found")
+    throw json(
+      {
+        message: "Sorry, we couldn’t find the page you’re looking for.",
+      },
+      {
+        status: StatusCodes.NOT_FOUND,
+        statusText: ReasonPhrases.NOT_FOUND,
+      }
+    )
   }
 
-  return json({ user, ...setFormDefaults("editUser", user) })
+  return json(setFormDefaults("edit-user", user))
 }
 
 export async function action({ request, params, context }: ActionArgs) {
@@ -78,7 +89,7 @@ export default function AdminToolsUserEditPage() {
       validator={validator}
       method="POST"
       className="m-auto mt-8 flex w-full max-w-xl flex-col gap-y-6"
-      id="editUser"
+      id="edit-user"
       onSubmit={() => {
         enqueueSnackbar("User updated 🎉", {
           description: "The user was successfully updated",

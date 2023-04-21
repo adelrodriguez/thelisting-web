@@ -3,6 +3,8 @@ import { redirect } from "@remix-run/node"
 import { Link } from "@remix-run/react"
 import { ReasonPhrases, StatusCodes } from "http-status-codes"
 import { useTranslation } from "react-i18next"
+import { z } from "zod"
+import { zx } from "zodix"
 
 import { FormattedNumber, Image } from "~/components/common"
 import { OrderItem } from "~/components/registry"
@@ -10,7 +12,7 @@ import Sentry from "~/services/sentry"
 import { generateCloudflareImageUrl } from "~/utils/cloudflare"
 import useTrackPageview from "~/utils/hooks/use-track-pageview"
 import { getPriceSymbol } from "~/utils/money"
-import { getParam, json, useLoaderData } from "~/utils/remix"
+import { json, useLoaderData } from "~/utils/remix"
 import { getShopifyId } from "~/utils/shopify"
 import { getOrder } from "~/utils/shopify.server"
 
@@ -21,7 +23,7 @@ export const handle = {
 export async function loader({ params, request, context }: LoaderArgs) {
   const db = context.db
   const requestUrl = new URL(request.url)
-  const path = getParam(params, "listing")
+  const { listing: path } = zx.parseParams(params, { listing: z.string() })
   const orderId = requestUrl.searchParams.get("order_id")
 
   if (!orderId) throw redirect(`/${path}`)
@@ -34,10 +36,16 @@ export async function loader({ params, request, context }: LoaderArgs) {
     })
 
     if (!listing) {
-      throw json("Sorry, we couldn’t find the Listing you’re looking for.", {
-        status: StatusCodes.NOT_FOUND,
-        statusText: ReasonPhrases.NOT_FOUND,
-      })
+      throw json(
+        {
+          message: "Sorry, we couldn’t find the page you’re looking for.",
+          title: "Not Found",
+        },
+        {
+          status: StatusCodes.NOT_FOUND,
+          statusText: ReasonPhrases.NOT_FOUND,
+        }
+      )
     }
 
     return json({ listing, order })
