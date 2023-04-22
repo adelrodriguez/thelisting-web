@@ -1,9 +1,9 @@
 import type { Item } from "@prisma/client"
 import { useTranslation } from "react-i18next"
 
-import { Alert, FormattedNumber, Image } from "~/components/common"
+import { Alert, Image } from "~/components/common"
 import { useProduct } from "~/utils/hooks"
-import { getPriceSymbol } from "~/utils/money"
+import { formatPrice } from "~/utils/money"
 
 export default function OrderItem({
   commerceId,
@@ -50,13 +50,7 @@ export default function OrderItem({
         </p>
       </div>
       <p className="font-semibold text-gray-900">
-        <FormattedNumber
-          prefix={getPriceSymbol(currencyCode)}
-          thousands
-          decimals={2}
-        >
-          {(cost || price) * quantity}
-        </FormattedNumber>
+        {formatPrice((cost || price) * quantity, currencyCode)}
       </p>
     </div>
   )

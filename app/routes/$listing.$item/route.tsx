@@ -8,9 +8,8 @@ import { Fragment, useState } from "react"
 import { useTranslation } from "react-i18next"
 
 import { Button, Image } from "~/components/common"
-import { FormattedNumber } from "~/components/common"
 import { useCart, useProduct } from "~/utils/hooks"
-import { getPriceSymbol } from "~/utils/money"
+import { formatPrice } from "~/utils/money"
 
 import QuantityInput from "./QuantityInput"
 
@@ -127,13 +126,7 @@ export default function ListingItemDetailPage() {
                         </h3>
 
                         <p className="font-body text-2xl text-gray-900">
-                          <FormattedNumber
-                            prefix={getPriceSymbol(currencyCode)}
-                            thousands
-                            decimals={2}
-                          >
-                            {price}
-                          </FormattedNumber>
+                          {formatPrice(price, currencyCode)}
                         </p>
 
                         <div className="mt-6">

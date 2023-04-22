@@ -11,10 +11,11 @@ import { useInterpret, useSelector } from "@xstate/react"
 import { useSnackbar } from "notistack"
 import { useEffect, useState } from "react"
 
-import { Button, Checkbox, FormattedNumber } from "~/components/common"
+import { Button, Checkbox } from "~/components/common"
 import { Spinner } from "~/components/loading"
 import { isDevelopment } from "~/config/vars"
 import { scraperMachine } from "~/helpers/machines"
+import { formatPrice } from "~/utils/money"
 import { round } from "~/utils/number"
 import type {
   ScrapedProductPayload,
@@ -120,11 +121,7 @@ const columns = [
 
       if (!value) return null
 
-      return (
-        <FormattedNumber prefix="$" thousands decimals={2}>
-          {value}
-        </FormattedNumber>
-      )
+      return formatPrice(value)
     },
     header: "Price",
   }),

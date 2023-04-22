@@ -7,12 +7,12 @@ import { useTranslation } from "react-i18next"
 import { z } from "zod"
 import { zx } from "zodix"
 
-import { FormattedNumber, Image } from "~/components/common"
+import { Image } from "~/components/common"
 import { OrderItem } from "~/components/registry"
 import Sentry from "~/services/sentry"
 import { generateCloudflareImageUrl } from "~/utils/cloudflare"
 import useTrackPageview from "~/utils/hooks/use-track-pageview"
-import { getPriceSymbol } from "~/utils/money"
+import { formatPrice } from "~/utils/money"
 import { getShopifyId } from "~/utils/shopify"
 import { getOrder } from "~/utils/shopify.server"
 
@@ -106,13 +106,7 @@ export default function ListingThankYouPage() {
             <div className="flex items-center justify-between border-t border-gray-200 pt-6 text-gray-900">
               <dt className="text-base">{t("common:total")}</dt>
               <dd className="text-base">
-                <FormattedNumber
-                  prefix={getPriceSymbol(total.currencyCode)}
-                  thousands
-                  decimals={2}
-                >
-                  {total.amount}
-                </FormattedNumber>
+                {formatPrice(total.amount, total.currencyCode)}
               </dd>
             </div>
 

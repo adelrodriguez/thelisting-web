@@ -14,7 +14,8 @@ import { format, parseISO } from "date-fns"
 import { Fragment } from "react"
 
 import { ViewOnShopify } from "~/components/admin"
-import { Button, FormattedNumber } from "~/components/common"
+import { Button } from "~/components/common"
+import { formatPrice } from "~/utils/money"
 import type { ArrayElement } from "~/utils/type"
 
 export async function loader({ context }: LoaderArgs) {
@@ -111,10 +112,8 @@ const columns = [
     cell: (props) => {
       const purchases = props.getValue()
 
-      return (
-        <FormattedNumber prefix={"$"} thousands decimals={2}>
-          {purchases.reduce((acc, purchase) => acc + purchase.total, 0)}
-        </FormattedNumber>
+      return formatPrice(
+        purchases.reduce((acc, purchase) => acc + purchase.total, 0)
       )
     },
     header: "Total Sales",
@@ -124,13 +123,11 @@ const columns = [
     cell: (props) => {
       const purchases = props.getValue()
 
-      return (
-        <FormattedNumber prefix={"$"} thousands decimals={2}>
-          {purchases.reduce(
-            (acc, purchase) => acc + (purchase.total - purchase.cost),
-            0
-          )}
-        </FormattedNumber>
+      return formatPrice(
+        purchases.reduce(
+          (acc, purchase) => acc + (purchase.total - purchase.cost),
+          0
+        )
       )
     },
     header: "Total Revenue",

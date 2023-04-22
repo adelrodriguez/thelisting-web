@@ -17,11 +17,11 @@ import { useTranslation } from "react-i18next"
 import { z } from "zod"
 import { zx } from "zodix"
 
-import { Button, FormattedNumber } from "~/components/common"
+import { Button } from "~/components/common"
 import Tooltip from "~/components/common/Tooltip"
 import { Spinner } from "~/components/loading"
 import { useCart, useDialogPage, useTrackPageview } from "~/utils/hooks"
-import { getPriceSymbol } from "~/utils/money"
+import { formatPrice } from "~/utils/money"
 
 import AddNoteReminderDialog from "./AddNoteReminderDialog"
 import CartItem from "./CartItem"
@@ -147,15 +147,7 @@ export default function ListingCartPage() {
                         <dl className="space-y-2 text-sm font-medium text-gray-500">
                           <div className="flex justify-between">
                             <dt>{t("common:subtotal")}</dt>
-                            <dd>
-                              <FormattedNumber
-                                prefix={getPriceSymbol("DOP")}
-                                thousands
-                                decimals={2}
-                              >
-                                {cart.subtotal}
-                              </FormattedNumber>
-                            </dd>
+                            <dd>{formatPrice(cart.subtotal, "DOP")}</dd>
                           </div>
 
                           <div className="flex justify-between">
@@ -165,28 +157,12 @@ export default function ListingCartPage() {
                                 <InformationCircleIcon className="ml-0.5 h-4 w-4" />
                               </Tooltip>
                             </dt>
-                            <dd>
-                              <FormattedNumber
-                                prefix={getPriceSymbol("DOP")}
-                                thousands
-                                decimals={2}
-                              >
-                                {cart.shipping}
-                              </FormattedNumber>
-                            </dd>
+                            <dd>{formatPrice(cart.shipping, "DOP")}</dd>
                           </div>
 
                           <div className="flex items-center justify-between  text-gray-900">
                             <dt>{t("common:total")}</dt>
-                            <dd>
-                              <FormattedNumber
-                                prefix={getPriceSymbol("DOP")}
-                                thousands
-                                decimals={2}
-                              >
-                                {cart.total}
-                              </FormattedNumber>
-                            </dd>
+                            <dd>{formatPrice(cart.total, "DOP")}</dd>
                           </div>
                         </dl>
 

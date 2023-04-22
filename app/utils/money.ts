@@ -7,6 +7,15 @@ export const CurrencySchema = z
   .enum([CURRENCIES.DOP, CURRENCIES.USD])
   .catch(CURRENCIES.DOP)
 
+export function formatPrice(price: number, currencyCode?: string): string {
+  return currency(price, {
+    decimal: ".",
+    precision: 2,
+    separator: ",",
+    symbol: getPriceSymbol(currencyCode),
+  }).format()
+}
+
 export function getPriceSymbol(currencyCode?: string): string {
   switch (currencyCode) {
     case CURRENCIES.DOP:

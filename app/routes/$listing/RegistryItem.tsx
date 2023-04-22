@@ -4,9 +4,9 @@ import * as Sentry from "@sentry/remix"
 import clsx from "clsx"
 import { useTranslation } from "react-i18next"
 
-import { FormattedNumber, Image } from "~/components/common"
+import { Image } from "~/components/common"
 import { useProduct } from "~/utils/hooks"
-import { getPriceSymbol } from "~/utils/money"
+import { formatPrice } from "~/utils/money"
 
 export default function RegistryItem({
   available,
@@ -66,13 +66,7 @@ export default function RegistryItem({
 
       <h3 className="mt-4 text-base text-gray-700">{title}</h3>
       <p className="mt-1 text-lg font-medium text-gray-700">
-        <FormattedNumber
-          prefix={getPriceSymbol(currencyCode)}
-          thousands
-          decimals={2}
-        >
-          {price}
-        </FormattedNumber>
+        {formatPrice(price, currencyCode)}
       </p>
     </Link>
   )

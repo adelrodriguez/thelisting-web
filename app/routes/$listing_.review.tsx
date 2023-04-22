@@ -11,11 +11,11 @@ import { useTranslation } from "react-i18next"
 import { z } from "zod"
 import { zx } from "zodix"
 
-import { Button, FormattedNumber } from "~/components/common"
+import { Button } from "~/components/common"
 import { OrderItem } from "~/components/registry"
 import i18next from "~/helpers/i18next.server"
 import { useTrackPageview } from "~/utils/hooks"
-import { getPriceSymbol } from "~/utils/money"
+import { formatPrice, getPriceSymbol } from "~/utils/money"
 
 export const handle = {
   i18n: ["common", "registry"],
@@ -195,13 +195,7 @@ export default function ListingReviewPage() {
                                   {t("registry:totalGifted")}
                                 </dt>
                                 <dd className="mt-1 text-gray-500">
-                                  <FormattedNumber
-                                    prefix={getPriceSymbol("DOP")}
-                                    thousands
-                                    decimals={2}
-                                  >
-                                    {purchase.cost}
-                                  </FormattedNumber>
+                                  {formatPrice(purchase.cost, "DOP")}
                                 </dd>
                               </div>
                             </dl>

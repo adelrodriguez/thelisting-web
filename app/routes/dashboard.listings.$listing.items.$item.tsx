@@ -16,11 +16,11 @@ import { z } from "zod"
 import { zx } from "zodix"
 
 import { ViewOnShopify } from "~/components/admin"
-import { FormattedNumber, Image } from "~/components/common"
+import { Image } from "~/components/common"
 import type { NotFoundBoundaryData } from "~/components/error"
 import { FormInput, FormTextArea, SubmitButton } from "~/components/form"
 import { useProduct } from "~/utils/hooks"
-import { getPriceSymbol } from "~/utils/money"
+import { formatPrice } from "~/utils/money"
 
 export const handle = {
   crumb: ({ params }: RouteMatch) => ({
@@ -123,13 +123,7 @@ export default function DashboardListingItemDetailPage() {
                 <div className="mt-2 md:mt-0">
                   <h4 className="text-lg font-bold">{data.title}</h4>
                   <p className="mt-1">
-                    <FormattedNumber
-                      prefix={getPriceSymbol(data.currencyCode)}
-                      thousands
-                      decimals={2}
-                    >
-                      {data.price}
-                    </FormattedNumber>
+                    {formatPrice(data.price, data.currencyCode)}
                   </p>
                 </div>
               </div>

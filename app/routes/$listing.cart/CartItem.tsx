@@ -2,9 +2,9 @@ import type { Item } from "@prisma/client"
 import { useTranslation } from "react-i18next"
 import { Link } from "react-router-dom"
 
-import { Alert, FormattedNumber } from "~/components/common"
+import { Alert } from "~/components/common"
 import { useCart, useProduct } from "~/utils/hooks"
-import { getPriceSymbol } from "~/utils/money"
+import { formatPrice } from "~/utils/money"
 
 export default function CartItem({
   commerceId,
@@ -46,15 +46,7 @@ export default function CartItem({
             <h3>
               <Link to={`../${sku}`}>{title}</Link>
             </h3>
-            <p className="ml-4">
-              <FormattedNumber
-                prefix={getPriceSymbol(currencyCode)}
-                thousands
-                decimals={2}
-              >
-                {price}
-              </FormattedNumber>
-            </p>
+            <p className="ml-4">{formatPrice(price, currencyCode)}</p>
           </div>
         </div>
         <div className="flex flex-1 items-end justify-between text-sm">
