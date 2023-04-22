@@ -1,6 +1,7 @@
 import { RibbonType } from "@prisma/client"
 import { UserRole } from "@prisma/client"
 import type { ActionArgs } from "@remix-run/node"
+import { json } from "@remix-run/node"
 import { withZod } from "@remix-validated-form/with-zod"
 import { notFound, unauthorized } from "remix-utils"
 import { validationError } from "remix-validated-form"
@@ -8,7 +9,6 @@ import { z } from "zod"
 import { zx } from "zodix"
 
 import auth from "~/helpers/auth.server"
-import { json } from "~/utils/remix"
 import {
   BannerPropertiesSchema,
   CountdownPropertiesSchema,

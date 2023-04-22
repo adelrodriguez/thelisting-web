@@ -1,7 +1,7 @@
+import { redirect } from "@remix-run/node"
 import { Outlet } from "@remix-run/react"
 import { StatusCodes } from "http-status-codes"
 import { useTranslation } from "react-i18next"
-import { redirect } from "remix-typedjson"
 
 import { isProduction } from "~/config/vars"
 

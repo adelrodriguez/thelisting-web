@@ -1,6 +1,9 @@
 import { Dialog, Transition } from "@headlessui/react"
 import { XMarkIcon } from "@heroicons/react/24/outline"
 import type { ActionArgs, LoaderArgs } from "@remix-run/node"
+import { redirect } from "@remix-run/node"
+import { json } from "@remix-run/node"
+import { useLoaderData } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
 import { useSnackbar } from "notistack"
 import { Fragment, useEffect } from "react"
@@ -18,7 +21,6 @@ import { AddItemToListingQueue } from "~/helpers/queues"
 import { useScrapedProducts } from "~/routes/dashboard.admin.product-scraper/route"
 import alegra from "~/services/alegra.server"
 import { useDialogPage } from "~/utils/hooks"
-import { goToParent, json, useLoaderData } from "~/utils/remix"
 
 const AddToListingSchema = z.object({
   exchangeRate: z.coerce.number().min(1),
@@ -85,7 +87,7 @@ export async function action({ request, context }: ActionArgs) {
     }))
   )
 
-  return goToParent()
+  return redirect("..")
 }
 
 export default function AddToListingPage() {

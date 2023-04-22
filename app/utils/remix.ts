@@ -1,28 +1,49 @@
-import type { TypedMetaFunction, UseDataFunctionReturn } from "remix-typedjson"
-import {
-  typedjson,
-  useTypedActionData,
-  useTypedFetcher,
-  useTypedLoaderData,
-  redirect,
-} from "remix-typedjson"
+import { json } from "@remix-run/node"
+import { ReasonPhrases, StatusCodes } from "http-status-codes"
 
-export type ErrorBoundaryProps = {
-  error: Error
+export function notFound(
+  { message, title }: { message: string; title?: string } = {
+    message: "Not found",
+  }
+) {
+  return json(
+    { message, title },
+    { status: StatusCodes.NOT_FOUND, statusText: ReasonPhrases.NOT_FOUND }
+  )
 }
 
-export const goToParent = () => redirect("..")
-
-export const goHome = () => redirect("/")
-
-export const goToLogin = () => redirect("/login")
-
-// Export remix-typedjson
-export {
-  typedjson as json,
-  redirect,
-  useTypedActionData as useActionData,
-  useTypedFetcher as useFetcher,
-  useTypedLoaderData as useLoaderData,
+export function unauthorized(
+  { message, title }: { message: string; title?: string } = {
+    message: "Unauthorized",
+  }
+) {
+  return json(
+    { message, title },
+    {
+      status: StatusCodes.UNAUTHORIZED,
+      statusText: ReasonPhrases.UNAUTHORIZED,
+    }
+  )
 }
-export type { TypedMetaFunction as MetaFunction, UseDataFunctionReturn }
+
+export function forbidden(
+  { message, title }: { message: string; title?: string } = {
+    message: "Forbidden",
+  }
+) {
+  return json(
+    { message, title },
+    { status: StatusCodes.FORBIDDEN, statusText: ReasonPhrases.FORBIDDEN }
+  )
+}
+
+export function badRequest(
+  { message, title }: { message: string; title?: string } = {
+    message: "Bad request",
+  }
+) {
+  return json(
+    { message, title },
+    { status: StatusCodes.BAD_REQUEST, statusText: ReasonPhrases.BAD_REQUEST }
+  )
+}

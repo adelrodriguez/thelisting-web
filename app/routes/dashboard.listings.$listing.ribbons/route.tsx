@@ -1,6 +1,7 @@
 import { ArrowTopRightOnSquareIcon } from "@heroicons/react/20/solid"
 import type { ActionArgs, LoaderArgs } from "@remix-run/node"
-import { Link, Outlet } from "@remix-run/react"
+import { json } from "@remix-run/node"
+import { Link, Outlet, useFetcher, useLoaderData } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
 import { DndProvider } from "react-dnd"
 import { HTML5Backend } from "react-dnd-html5-backend"
@@ -16,10 +17,6 @@ import {
 } from "~/config/env.server"
 import { GoogleWebFontsListSchema } from "~/utils/font"
 import { ListingThemeSchema } from "~/utils/listing"
-import type { ErrorBoundaryProps } from "~/utils/remix"
-import { useFetcher } from "~/utils/remix"
-import { useLoaderData } from "~/utils/remix"
-import { json } from "~/utils/remix"
 
 import PageRibbons from "./PageRibbons"
 import RibbonsPreview from "./RibbonsPreview"
@@ -106,7 +103,8 @@ export async function action({ request, context, params }: ActionArgs) {
   return null
 }
 
-export function ErrorBoundary({ error }: ErrorBoundaryProps) {
+// TODO(adelrodriguez): Fix this
+export function ErrorBoundary({ error }: { error: Error }) {
   return <div className="pt-2">There was an error. Error: {error.message}</div>
 }
 
@@ -144,6 +142,8 @@ export default function DashboardListingRibbonsPage() {
                   </div>
                 ) : (
                   <DndProvider backend={HTML5Backend}>
+                    {/* TODO: Fix this type error that's happening due to serialization from Remix */}
+                    {/* @ts-expect-error */}
                     <PageRibbons ribbons={ribbons} onMove={submitOrder} />
                   </DndProvider>
                 )}
@@ -220,6 +220,8 @@ export default function DashboardListingRibbonsPage() {
                   <ArrowTopRightOnSquareIcon className="inline-block h-4 w-4" />
                 </Link>
               </div>
+              {/* TODO: Fix this type error that's happening due to serialization from Remix */}
+              {/* @ts-expect-error */}
               <RibbonsPreview ribbons={ribbons} path={listing.path} />
             </div>
           </section>

@@ -1,5 +1,6 @@
 import { UserRole } from "@prisma/client"
 import type { ActionArgs } from "@remix-run/node"
+import { redirect } from "@remix-run/node"
 import { withZod } from "@remix-validated-form/with-zod"
 import { useSnackbar } from "notistack"
 import { unauthorized } from "remix-utils"
@@ -7,7 +8,6 @@ import { ValidatedForm, validationError } from "remix-validated-form"
 
 import { FormInput, FormListRadioGroup, FormSubmit } from "~/components/form"
 import auth from "~/helpers/auth.server"
-import { redirect } from "~/utils/remix"
 import { UserSchema } from "~/utils/user"
 
 const validator = withZod(UserSchema)

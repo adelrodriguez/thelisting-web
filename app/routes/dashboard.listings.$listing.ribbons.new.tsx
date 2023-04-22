@@ -1,6 +1,9 @@
 import { Dialog, Transition } from "@headlessui/react"
 import { RibbonType } from "@prisma/client"
 import type { ActionArgs, LoaderArgs } from "@remix-run/node"
+import { redirect } from "@remix-run/node"
+import { json } from "@remix-run/node"
+import { useLoaderData } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
 import { Fragment } from "react"
 import { ValidatedForm as Form, validationError } from "remix-validated-form"
@@ -9,7 +12,6 @@ import { zx } from "zodix"
 
 import { Input, SubmitButton, ListRadioGroup } from "~/components/form"
 import { useDialogPage } from "~/utils/hooks"
-import { redirect, useLoaderData } from "~/utils/remix"
 import {
   RibbonTypeSchema,
   RibbonNameSchema,
@@ -31,11 +33,12 @@ const serverValidator = withZod(
   })
 )
 
-export async function loader({ request }: LoaderArgs) {
-  const requestUrl = new URL(request.url)
-  const position = requestUrl.searchParams.get("position")
+export async function loader({ params }: LoaderArgs) {
+  const { position } = zx.parseParams(params, {
+    position: z.coerce.number().default(0),
+  })
 
-  return { position }
+  return json({ position })
 }
 
 export async function action({ params, context, request }: ActionArgs) {

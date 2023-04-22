@@ -1,21 +1,20 @@
 import { Menu, Transition } from "@headlessui/react"
 import { EllipsisVerticalIcon, EyeIcon } from "@heroicons/react/20/solid"
 import { ArrowDownOnSquareIcon } from "@heroicons/react/24/outline"
-import type { LoaderArgs } from "@remix-run/node"
-import { Link } from "@remix-run/react"
+import type { LoaderArgs, SerializeFrom } from "@remix-run/node"
+import { json } from "@remix-run/node"
+import { Link, useLoaderData } from "@remix-run/react"
 import {
   createColumnHelper,
   flexRender,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import { format } from "date-fns"
+import { format, parseISO } from "date-fns"
 import { Fragment } from "react"
 
 import { ViewOnShopify } from "~/components/admin"
 import { Button, FormattedNumber } from "~/components/common"
-import type { UseDataFunctionReturn } from "~/utils/remix"
-import { json, useLoaderData } from "~/utils/remix"
 import type { ArrayElement } from "~/utils/type"
 
 export async function loader({ context }: LoaderArgs) {
@@ -40,11 +39,12 @@ export async function loader({ context }: LoaderArgs) {
   return json({ listings })
 }
 
-type LoaderReturn = UseDataFunctionReturn<typeof loader>["listings"]
-
-const columnHelper = createColumnHelper<ArrayElement<LoaderReturn>>()
+const columnHelper =
+  createColumnHelper<ArrayElement<SerializeFrom<typeof loader>["listings"]>>()
 
 const columns = [
+  // For some reason this results in a possible infinite type error
+  // @ts-expect-error
   columnHelper.accessor("sku", {
     header: "SKU",
   }),
@@ -87,7 +87,7 @@ const columns = [
     cell: (props) => {
       const date = props.getValue()
 
-      return format(date, "MMM d, yyyy")
+      return format(parseISO(date), "MMM d, yyyy")
     },
     header: "Event Date",
   }),
@@ -150,7 +150,7 @@ const columns = [
 
       if (!date) return null
 
-      return format(date, "MMM d, yyyy")
+      return format(parseISO(date), "MMM d, yyyy")
     },
     header: "Published At",
   }),
@@ -160,7 +160,7 @@ const columns = [
 
       if (!date) return null
 
-      return format(date, "MMM d, yyyy")
+      return format(parseISO(date), "MMM d, yyyy")
     },
     header: "Closed At",
   }),

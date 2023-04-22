@@ -1,13 +1,15 @@
 import { ListingStatus, ListingType, UserRole } from "@prisma/client"
 import type { ActionArgs, LoaderArgs } from "@remix-run/node"
+import { json } from "@remix-run/node"
 import type { RouteMatch } from "@remix-run/react"
+import { useActionData, useLoaderData } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
 import { format, subMilliseconds } from "date-fns"
 import { getTimezoneOffset } from "date-fns-tz"
 import { StatusCodes } from "http-status-codes"
 import { useSnackbar } from "notistack"
 import { useEffect } from "react"
-import { forbidden, notFound, unauthorized } from "remix-utils"
+import { notFound } from "remix-utils"
 import { setFormDefaults } from "remix-validated-form"
 import { z } from "zod"
 import { zfd } from "zod-form-data"
@@ -35,7 +37,7 @@ import {
   ListingTitleSchema,
   ListingTypeSchema,
 } from "~/utils/listing"
-import { json, useActionData, useLoaderData } from "~/utils/remix"
+import { forbidden, unauthorized } from "~/utils/remix"
 import { getUserFullName } from "~/utils/user"
 
 export const handle = {
@@ -77,10 +79,7 @@ export async function loader({ params, context }: LoaderArgs) {
   ])
 
   if (!listing) {
-    throw notFound({
-      message: "Listing not found",
-      title: "Listing not found",
-    })
+    throw notFound({ message: "Listing not found.", title: "Not Found" })
   }
 
   return json({
@@ -96,7 +95,12 @@ export async function action({ request, params, context }: ActionArgs) {
   const db = context.db
   const user = await auth.isAuthenticated(request)
 
-  if (!user) throw unauthorized("You must be logged in to update a listing.")
+  if (!user) {
+    throw unauthorized({
+      message: "You must be logged in to do that.",
+      title: "Unauthorized",
+    })
+  }
 
   const { listing: sku } = zx.parseParams(
     params,
@@ -110,6 +114,7 @@ export async function action({ request, params, context }: ActionArgs) {
   if (listing.ownerId !== user.id && user.role !== UserRole.Admin) {
     throw forbidden({
       message: "You do not have permission to update this listing.",
+      title: "Forbidden",
     })
   }
 
@@ -153,7 +158,7 @@ export async function action({ request, params, context }: ActionArgs) {
 
   if (result.error) {
     return json(
-      { ...result.error, data: null, success: false },
+      { ...result.error, listing: null, success: false },
       { status: StatusCodes.UNPROCESSABLE_ENTITY }
     )
   }
@@ -194,7 +199,7 @@ export async function action({ request, params, context }: ActionArgs) {
     }
   }
 
-  return json({ data: updatedListing, success: true })
+  return json({ listing: updatedListing, success: true })
 }
 
 export default function DashboardListingPage() {

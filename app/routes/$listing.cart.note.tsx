@@ -1,8 +1,9 @@
 import { Dialog, Transition } from "@headlessui/react"
 import { XMarkIcon } from "@heroicons/react/24/outline"
 import { NoteType } from "@prisma/client"
-import type { ActionArgs } from "@remix-run/node"
-import { useNavigate } from "@remix-run/react"
+import type { ActionArgs, LoaderArgs } from "@remix-run/node"
+import { json } from "@remix-run/node"
+import { useActionData, useLoaderData, useNavigate } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
 import { StatusCodes } from "http-status-codes"
 import { Fragment, useEffect } from "react"
@@ -15,17 +16,18 @@ import { zx } from "zodix"
 import { Alert, Button } from "~/components/common"
 import { Form, SubmitButton, TextArea } from "~/components/form"
 import { useCart, useDialogPage, useTrackPageview } from "~/utils/hooks"
-import { json, useActionData, useLoaderData } from "~/utils/remix"
 
 export const handle = {
   i18n: ["registry", "common"],
 }
 
-export async function loader({ request, context }: ActionArgs) {
+export async function loader({ request, context }: LoaderArgs) {
   const db = context.db
   const query = zx.parseQuerySafe(request, z.object({ note_id: z.string() }))
 
-  if (!query.success) return json({ note: null })
+  if (!query.success) {
+    return json({ note: null })
+  }
 
   const note = await db.note.findUnique({
     select: { text: true },
@@ -46,6 +48,7 @@ export async function action({ request, params, context }: ActionArgs) {
     request,
     z.object({ note_id: z.string() })
   )
+
   const { listing: listingPath } = zx.parseParams(
     params,
     z.object({ listing: z.string() })
@@ -63,7 +66,7 @@ export async function action({ request, params, context }: ActionArgs) {
   if (result.error) {
     return json(
       {
-        data: null,
+        note: null,
         success: false,
         ...result.error,
       },
@@ -72,7 +75,7 @@ export async function action({ request, params, context }: ActionArgs) {
   }
 
   if (!result.data.text) {
-    return json({ data: null, success: true })
+    return json({ note: null, success: true })
   }
 
   if (!parsedQuery.success) {
@@ -89,7 +92,7 @@ export async function action({ request, params, context }: ActionArgs) {
       },
     })
 
-    return json({ data: note, success: true })
+    return json({ note, success: true })
   }
 
   const note = await db.note.update({
@@ -97,7 +100,7 @@ export async function action({ request, params, context }: ActionArgs) {
     where: { id: parsedQuery.data.note_id },
   })
 
-  return json({ data: note, success: true })
+  return json({ note, success: true })
 }
 
 export default function ListingCartNotePage() {
@@ -118,7 +121,7 @@ export default function ListingCartNotePage() {
 
     if (!actionData.success) return
 
-    cart.attachNoteId(actionData.data === null ? null : actionData.data.id)
+    cart.attachNoteId(actionData.note === null ? null : actionData.note.id)
 
     close()
     // eslint-disable-next-line react-hooks/exhaustive-deps

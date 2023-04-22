@@ -1,26 +1,27 @@
 import type { User } from "@prisma/client"
 import { UserRole } from "@prisma/client"
-import type { LoaderArgs } from "@remix-run/node"
-import { Link, useNavigate } from "@remix-run/react"
+import type { LoaderArgs, SerializeFrom } from "@remix-run/node"
+import { redirect } from "@remix-run/node"
+import { json } from "@remix-run/node"
+import { Link, useLoaderData, useNavigate } from "@remix-run/react"
 import {
   createColumnHelper,
   flexRender,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import { format } from "date-fns"
+import { format, parseISO } from "date-fns"
 import { forbidden } from "remix-utils"
 
 import { Button } from "~/components/common"
 import auth from "~/helpers/auth.server"
-import { goToLogin, json, useLoaderData } from "~/utils/remix"
 
 export async function loader({ request, context }: LoaderArgs) {
   const { db } = context
   const user = await auth.isAuthenticated(request)
 
   if (!user) {
-    throw goToLogin()
+    throw redirect("/login")
   }
 
   if (user.role !== UserRole.Admin) {
@@ -36,7 +37,7 @@ export async function loader({ request, context }: LoaderArgs) {
   return json({ users })
 }
 
-const columnHelper = createColumnHelper<User>()
+const columnHelper = createColumnHelper<SerializeFrom<User>>()
 
 const columns = [
   columnHelper.accessor("firstName", {
@@ -62,7 +63,7 @@ const columns = [
         return null
       }
 
-      return format(lastLoginAt, "yyyy-MM-dd HH:mm:ss")
+      return format(parseISO(lastLoginAt), "yyyy-MM-dd HH:mm:ss")
     },
     header: "Last Login At",
   }),

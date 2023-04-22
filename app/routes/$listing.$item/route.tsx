@@ -1,7 +1,9 @@
 import { Dialog, Transition } from "@headlessui/react"
 import { XMarkIcon } from "@heroicons/react/24/outline"
 import type { LoaderArgs } from "@remix-run/node"
-import { useNavigate } from "@remix-run/react"
+import { redirect } from "@remix-run/node"
+import { json } from "@remix-run/node"
+import { useLoaderData, useNavigate } from "@remix-run/react"
 import { Fragment, useState } from "react"
 import { useTranslation } from "react-i18next"
 
@@ -9,7 +11,6 @@ import { Button, Image } from "~/components/common"
 import { FormattedNumber } from "~/components/common"
 import { useCart, useProduct } from "~/utils/hooks"
 import { getPriceSymbol } from "~/utils/money"
-import { goToParent, json, useLoaderData } from "~/utils/remix"
 
 import QuantityInput from "./QuantityInput"
 
@@ -27,18 +28,18 @@ export async function loader({ params, context }: LoaderArgs) {
     })
 
     if (!item) {
-      return goToParent()
+      throw redirect("..")
     }
 
-    return json(item)
+    return json({ item })
   } catch (error) {
-    return goToParent()
+    throw redirect("..")
   }
 }
 
 export default function ListingItemDetailPage() {
   const cart = useCart()
-  const item = useLoaderData<typeof loader>()
+  const { item } = useLoaderData<typeof loader>()
   const navigate = useNavigate()
   const { data, isLoading, isError } = useProduct(item.commerceId ?? "")
   const [open, setOpen] = useState(true)

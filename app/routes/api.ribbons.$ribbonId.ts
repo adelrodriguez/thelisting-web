@@ -1,11 +1,11 @@
 import { UserRole } from "@prisma/client"
 import type { ActionArgs } from "@remix-run/node"
+import { json } from "@remix-run/node"
 import { namedAction, unauthorized } from "remix-utils"
 import { z } from "zod"
 import { zx } from "zodix"
 
 import auth from "~/helpers/auth.server"
-import { json } from "~/utils/remix"
 
 export async function action({ params, request, context }: ActionArgs) {
   const { db } = context

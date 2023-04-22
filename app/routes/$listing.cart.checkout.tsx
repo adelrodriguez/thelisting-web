@@ -9,11 +9,10 @@ import { Alert } from "~/components/common"
 import { getSession } from "~/helpers/session.server"
 import { CartItemsSchema } from "~/utils/cart"
 import { checkStock } from "~/utils/checkout.server"
-import { goToParent } from "~/utils/remix"
 import { createCheckout } from "~/utils/shopify.server"
 
 export function loader() {
-  return goToParent()
+  return redirect("..")
 }
 
 const CheckoutDataSchema = z.object({

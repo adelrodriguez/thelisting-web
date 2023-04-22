@@ -1,5 +1,6 @@
 import { Transition } from "@headlessui/react"
 import type { ActionArgs, LoaderArgs } from "@remix-run/node"
+import { redirect } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import {
   Form,
@@ -7,7 +8,7 @@ import {
   useNavigate,
   useNavigation,
 } from "@remix-run/react"
-import { StatusCodes } from "http-status-codes"
+import { ReasonPhrases, StatusCodes } from "http-status-codes"
 import { useTranslation } from "react-i18next"
 import { z } from "zod"
 import { parseFormSafe } from "zodix"
@@ -17,7 +18,6 @@ import { Alert, Button, Image } from "~/components/common"
 import { Spinner } from "~/components/loading"
 import auth from "~/helpers/auth.server"
 import sessionStorage from "~/helpers/session.server"
-import { redirect } from "~/utils/remix"
 
 export const handle = {
   i18n: ["login", "common"],
@@ -46,7 +46,10 @@ export async function action({ request }: ActionArgs) {
   )
 
   if (!result.success) {
-    return redirect("/login?error", { status: StatusCodes.SEE_OTHER })
+    return redirect("/login?error", {
+      status: StatusCodes.SEE_OTHER,
+      statusText: ReasonPhrases.SEE_OTHER,
+    })
   }
 
   // The success redirect is required in this action, this is where the user is
