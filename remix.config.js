@@ -16,11 +16,11 @@ module.exports = {
     "**/*.stories.*",
   ],
   serverDependenciesToBundle: [
-    "react-dnd",
+    "@react-dnd/asap",
     "@react-dnd/invariant",
     "@react-dnd/shallowequal",
     "dnd-core",
-    "@react-dnd/asap",
     "react-dnd-html5-backend",
+    "react-dnd",
   ],
 }

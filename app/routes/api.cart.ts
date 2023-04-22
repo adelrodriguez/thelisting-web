@@ -1,6 +1,6 @@
-import { createId } from "@paralleldrive/cuid2"
 import type { ActionArgs, LoaderArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
+import { nanoid } from "nanoid"
 
 import { ONE_DAY, REDIS_KEYS } from "~/config/consts"
 import { commitSession, getSession } from "~/helpers/session.server"
@@ -16,7 +16,7 @@ export async function loader({ request, context }: LoaderArgs) {
   if (!listing) return json({ cart: null })
 
   if (!cartId) {
-    session.set("cartsKey", createId())
+    session.set("cartsKey", nanoid())
 
     return json(
       { cart: null },

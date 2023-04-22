@@ -1,8 +1,8 @@
 import { MinusIcon } from "@heroicons/react/20/solid"
-import { createId } from "@paralleldrive/cuid2"
 import type { Ribbon } from "@prisma/client"
 import { useFetcher } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
+import { nanoid } from "nanoid"
 import { useFieldArray } from "remix-validated-form"
 
 import { Button } from "~/components/common"
@@ -63,7 +63,7 @@ export default function ImageCarouselRibbonForm({
       <div className="flex items-center justify-between">
         <h3 className="font-semibold">Images</h3>
         <Button
-          onClick={() => push({ id: createId() })}
+          onClick={() => push({ id: nanoid() })}
           type="button"
           size="xs"
           disabled={inputs.length >= 10}
