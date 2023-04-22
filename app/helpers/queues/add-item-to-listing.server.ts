@@ -1,6 +1,6 @@
 import type { Listing } from "@prisma/client"
 import type { Processor } from "bullmq"
-import { MD5 } from "crypto-js"
+import crypto from "node:crypto"
 import invariant from "tiny-invariant"
 
 import { QUEUE_NAMES } from "~/config/consts"
@@ -54,9 +54,12 @@ export const processor: Processor<QueueData> = async (job) => {
     invariant(!existingItem, `Item ${sku} already exists`)
 
     // Create hashed tag
-    const tag = MD5(
-      `product:${scrapedProduct.url}|amount:${scrapedProduct.amount || 0}`
-    ).toString()
+    const tag = crypto
+      .createHash("md5")
+      .update(
+        `product:${scrapedProduct.url}|amount:${scrapedProduct.amount || 0}`
+      )
+      .toString()
 
     job.log(`Created tag ${tag}`)
 

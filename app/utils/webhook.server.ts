@@ -1,6 +1,5 @@
 import type { PrismaClient, WebhookService } from "@prisma/client"
-import Base64 from "crypto-js/enc-base64"
-import hmacSHA256 from "crypto-js/hmac-sha256"
+import crypto from "node:crypto"
 import invariant from "tiny-invariant"
 
 import { HOOKDECK_SIGNING_SECRET } from "~/config/env.server"
@@ -16,10 +15,11 @@ export function verifyWebhook(headers: Headers, requestText: string): boolean {
   const hmacHeader = headers.get("x-hookdeck-signature")
   const hmacHeader2 = headers.get("x-hookdeck-signature-2")
 
-  // Encode the request body with the signing secret.
-  const hmac = Base64.stringify(
-    hmacSHA256(requestText, HOOKDECK_SIGNING_SECRET)
-  )
+  // Encode the request body with the signing secret
+  const hmac = crypto
+    .createHmac("sha256", HOOKDECK_SIGNING_SECRET)
+    .update(requestText)
+    .digest("base64")
 
   const isPayloadVerified = hmac === hmacHeader || hmac === hmacHeader2
 
