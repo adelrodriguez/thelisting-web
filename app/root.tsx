@@ -59,7 +59,7 @@ export const meta: V2_MetaFunction = () => [
     name: "description",
   },
   { charSet: "utf-8" },
-  { content: "width=device-width,initial-scale=1", name: "viewport" },
+  { content: "width=device-width, initial-scale=1", name: "viewport" },
 ]
 
 export function CatchBoundary() {

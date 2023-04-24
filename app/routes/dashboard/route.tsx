@@ -56,6 +56,7 @@ export async function loader({ request }: LoaderArgs) {
 
 export const meta: V2_MetaFunction = () => [
   { title: "Dashboard | The Listing" },
+  { content: "width=device-width, initial-scale=1", name: "viewport" },
 ]
 
 export default function DashboardLayout() {

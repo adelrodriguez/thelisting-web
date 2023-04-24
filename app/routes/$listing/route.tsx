@@ -56,6 +56,7 @@ export const meta: V2_MetaFunction<typeof loader> = ({ data }) => {
         name: "og:image",
       },
       { content: `${data.listing.title} | The Listing`, name: "og:title" },
+      { content: "width=device-width, initial-scale=1", name: "viewport" },
     ]
   } catch (error) {
     return []
