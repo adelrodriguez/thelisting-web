@@ -3,7 +3,7 @@ import { NavLink, Outlet, useMatches, useNavigate } from "@remix-run/react"
 import clsx from "clsx"
 
 import { Select } from "~/components/common"
-import { handle as detailsHandle } from "~/routes/dashboard.listings.$listing.details"
+import { handle as indexHandle } from "~/routes/dashboard.listings.$listing._index"
 import { handle as itemsHandle } from "~/routes/dashboard.listings.$listing.items"
 import { handle as ribbonsHandle } from "~/routes/dashboard.listings.$listing.ribbons/route"
 import { handle as statsHandle } from "~/routes/dashboard.listings.$listing.stats"
@@ -16,8 +16,8 @@ export const handle = {
 }
 
 const tabs = [
+  { id: indexHandle, label: "Details", value: "./" },
   { id: statsHandle.id, label: "Stats", value: "./stats" },
-  { id: detailsHandle, label: "Details", value: "./details" },
   { id: itemsHandle.id, label: "Items", value: "./items" },
   { id: ribbonsHandle.id, label: "Ribbons", value: "./ribbons" },
 ]
