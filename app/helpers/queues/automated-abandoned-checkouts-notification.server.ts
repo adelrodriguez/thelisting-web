@@ -18,6 +18,9 @@ export const processor: Processor = async (job) => {
     const abandonedCheckouts = await db.checkout.findMany({
       where: {
         completedAt: null,
+        email: {
+          not: null,
+        },
         notified: false,
         updatedAt: {
           lte: subMinutes(new Date(), 14),
@@ -26,6 +29,11 @@ export const processor: Processor = async (job) => {
     })
 
     job.log(`Found ${abandonedCheckouts.length} abandoned checkouts`)
+
+    if (abandonedCheckouts.length === 0) {
+      return
+    }
+
     job.log("Notifying about abandoned checkouts...")
 
     for (const checkout of abandonedCheckouts) {
