@@ -33,8 +33,8 @@ const serverValidator = withZod(
   })
 )
 
-export async function loader({ params }: LoaderArgs) {
-  const { position } = zx.parseParams(params, {
+export async function loader({ request }: LoaderArgs) {
+  const { position } = zx.parseQuery(request, {
     position: z.coerce.number().default(0),
   })
 
@@ -140,7 +140,7 @@ export default function DashboardListingRibbonsEditPage() {
                     type="hidden"
                     name="position"
                     className="hidden"
-                    defaultValue={position ?? "0"}
+                    defaultValue={position}
                   />
 
                   <Input

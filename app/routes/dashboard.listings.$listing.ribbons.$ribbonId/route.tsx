@@ -1,14 +1,13 @@
 import { Dialog, Transition } from "@headlessui/react"
+import {
+  Square2StackIcon,
+  TrashIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline"
 import { UserRole, RibbonType } from "@prisma/client"
 import type { ActionArgs, LoaderArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
-import {
-  Form,
-  useActionData,
-  useLoaderData,
-  useNavigation,
-  useSubmit,
-} from "@remix-run/react"
+import { Form, useActionData, useLoaderData } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
 import { Fragment, useEffect } from "react"
 import { namedAction } from "remix-utils"
@@ -16,9 +15,7 @@ import { ValidatedForm } from "remix-validated-form"
 import { z } from "zod"
 import { zx } from "zodix"
 
-import { Button } from "~/components/common"
-import { Input } from "~/components/form"
-import { Spinner } from "~/components/loading"
+import { Input, SubmitButton } from "~/components/form"
 import auth from "~/helpers/auth.server"
 import { useDialogPage } from "~/utils/hooks"
 import { notFound, unauthorized } from "~/utils/remix"
@@ -85,6 +82,23 @@ export async function action({ params, request, context }: ActionArgs) {
       })
       return json({ ribbon: deletedRibbon, success: true })
     },
+    async details() {
+      const formData = await request.formData()
+      const result = await detailsValidator.validate(formData)
+
+      if (result.error) {
+        return json({ success: false, ...result.error })
+      }
+
+      const updatedRibbon = await db.ribbon.update({
+        data: {
+          name: result.data.name,
+        },
+        where: { id: ribbonId },
+      })
+
+      return json({ ribbon: updatedRibbon, success: true })
+    },
     async duplicate() {
       const ribbonCount = await db.ribbon.count({
         where: { listingId: ribbon.listingId },
@@ -102,7 +116,7 @@ export async function action({ params, request, context }: ActionArgs) {
 
       return json({ ribbon: duplicatedRibbon, success: true })
     },
-    async update() {
+    async properties() {
       const schemas = {
         [RibbonType.Banner]: BannerPropertiesSchema,
         [RibbonType.Countdown]: CountdownPropertiesSchema,
@@ -113,12 +127,9 @@ export async function action({ params, request, context }: ActionArgs) {
       }
 
       const formData = await request.formData()
-      const validator = withZod(
-        z.object({
-          name: RibbonNameSchema,
-          properties: schemas[ribbon.type],
-        })
-      )
+      // TODO(adelrodriguez): Fix this type error
+      // @ts-expect-error (due to union type)
+      const validator = withZod(schemas[ribbon.type])
       const result = await validator.validate(formData)
 
       if (result.error) {
@@ -126,12 +137,7 @@ export async function action({ params, request, context }: ActionArgs) {
       }
 
       const updatedRibbon = await db.ribbon.update({
-        data: {
-          name: result.data.name,
-          // TODO(adelrodriguez): Fix this type error
-          // @ts-expect-error (due to the eventDatetime property of the CountdownPropertiesSchema)
-          properties: result.data.properties,
-        },
+        data: { properties: result.data },
         where: { id: ribbonId },
       })
 
@@ -144,8 +150,6 @@ export default function DashboardListingRibbonsEditPage() {
   const { ribbon } = useLoaderData<typeof loader>()
   const actionData = useActionData<typeof action>()
   const { close, leave, open } = useDialogPage()
-  const navigation = useNavigation()
-  const submit = useSubmit()
 
   useEffect(() => {
     if (!actionData) return
@@ -156,28 +160,6 @@ export default function DashboardListingRibbonsEditPage() {
   }, [actionData, close])
 
   const formId = `form-${ribbon.id}`
-
-  function handleSubmit() {
-    const $form1 = document.getElementById("details-form") as HTMLFormElement
-    const $form2 = document.getElementById(formId) as HTMLFormElement
-
-    const formData1 = new FormData($form1)
-    const formData2 = new FormData($form2)
-
-    const formData = new FormData()
-
-    for (const [key, value] of formData1.entries()) {
-      formData.append(key, value)
-    }
-
-    for (const [key, value] of formData2.entries()) {
-      formData.append(`properties.${key}`, value)
-    }
-
-    formData.append("_action", "update")
-
-    submit(formData, { method: "POST" })
-  }
 
   return (
     <Transition.Root appear show={open} as={Fragment}>
@@ -207,11 +189,33 @@ export default function DashboardListingRibbonsEditPage() {
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
               <Dialog.Panel className="relative w-full transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:max-w-5xl sm:p-6">
-                <Dialog.Title
-                  as="h3"
-                  className="text-lg font-medium leading-6 text-gray-900"
-                >
-                  Edit Ribbon
+                <Dialog.Title as="div" className="flex justify-between">
+                  <h3 className="text-lg font-medium leading-6 text-gray-900">
+                    Edit Ribbon
+                  </h3>
+                  <div className="flex items-center gap-x-4">
+                    <Form
+                      method="POST"
+                      action="?/delete"
+                      className="flex items-center"
+                    >
+                      <button title="Delete the ribbon">
+                        <TrashIcon className="h-5 w-5 text-red-500" />
+                      </button>
+                    </Form>
+                    <Form
+                      method="POST"
+                      action="?/duplicate"
+                      className="flex items-center"
+                    >
+                      <button>
+                        <Square2StackIcon className="h-5 w-5 text-gray-500" />
+                      </button>
+                    </Form>
+                    <button onClick={close}>
+                      <XMarkIcon className="h-5 w-5 text-gray-500" />
+                    </button>
+                  </div>
                 </Dialog.Title>
 
                 <div className="mt-4 space-y-12">
@@ -231,19 +235,26 @@ export default function DashboardListingRibbonsEditPage() {
                         defaultValues={{ name: ribbon.name }}
                         method="POST"
                         action="?/details"
-                        className="space-y-6"
+                        className="grid"
                         id="details-form"
                       >
                         <Input
                           name="name"
                           label="Name"
                           description="The name of the ribbon, as it will appear on the menu"
+                          id="details-form"
                         />
+                        <SubmitButton
+                          loadingText="Updating..."
+                          className="mt-4 justify-self-end"
+                        >
+                          Update
+                        </SubmitButton>
                       </ValidatedForm>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-900/10 pb-12 md:grid-cols-4">
+                  <div className="grid grid-cols-1 gap-x-8 gap-y-10 md:grid-cols-4">
                     <div>
                       <h2 className="text-base font-semibold leading-7 text-gray-900">
                         Properties
@@ -253,7 +264,7 @@ export default function DashboardListingRibbonsEditPage() {
                       </p>
                     </div>
 
-                    <div className="col-span-1 md:col-span-3">
+                    <div className="col-span-1 grid md:col-span-3">
                       {ribbon.type === RibbonType.Banner && (
                         <BannerRibbonForm
                           properties={ribbon.properties}
@@ -290,36 +301,13 @@ export default function DashboardListingRibbonsEditPage() {
                           formId={formId}
                         />
                       )}
-                    </div>
-                  </div>
-
-                  <div className="mt-2 flex justify-between">
-                    <Form method="POST" action="?/duplicate">
-                      <Button variant="secondary" onClick={close}>
-                        Duplicate
-                      </Button>
-                    </Form>
-
-                    <div className="flex gap-2">
-                      <Form method="POST" action="?/delete">
-                        <Button className="w-full" variant="danger">
-                          Delete
-                        </Button>
-                      </Form>
-                      <Button
-                        type="button"
-                        onClick={handleSubmit}
-                        disabled={navigation.state === "submitting"}
+                      <SubmitButton
+                        formId={formId}
+                        loadingText="Updating..."
+                        className="mt-4 justify-self-end"
                       >
-                        {navigation.state === "submitting" ? (
-                          <>
-                            <Spinner className="mr-2" />
-                            Updating...
-                          </>
-                        ) : (
-                          "Update"
-                        )}
-                      </Button>
+                        Update
+                      </SubmitButton>
                     </div>
                   </div>
                 </div>

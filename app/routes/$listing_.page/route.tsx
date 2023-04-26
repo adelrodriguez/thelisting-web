@@ -108,8 +108,10 @@ export default function ListingPage() {
     setCurrentImage(image)
   }, [])
 
+  const theme = ListingThemeSchema.parse(listing.theme)
+
   return (
-    <ThemeProvider theme={ListingThemeSchema.parse(listing.theme)}>
+    <ThemeProvider theme={theme}>
       <main className="flex flex-1">
         <div className="relative hidden w-0 flex-1 lg:block">
           <AnimatePresence>
@@ -138,7 +140,10 @@ export default function ListingPage() {
             <h3 className="font-body text-2xl">{listing.subtitle}</h3>
           </div>
         </div>
-        <div className="z-10 flex flex-1 flex-col justify-center border-white shadow-gray-700 lg:w-2/5 lg:flex-none lg:border-l-8">
+        <div
+          className="justify-cente z-10 flex flex-1 flex-col shadow-gray-700 lg:w-2/5 lg:flex-none lg:border-l-8"
+          style={{ borderColor: theme.colors?.secondary }}
+        >
           {listing.ribbons.map((ribbon) => {
             const result = RibbonSchema.safeParse(ribbon)
 

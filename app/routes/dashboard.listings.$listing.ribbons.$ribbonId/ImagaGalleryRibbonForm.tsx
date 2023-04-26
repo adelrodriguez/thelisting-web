@@ -44,7 +44,7 @@ export default function ImageGalleryRibbonForm({
           className="w-1/2"
           min={1}
           step={1}
-          description="The height of the carousel"
+          description="The number of images to display per column."
         />
       </div>
       <div className="flex items-center justify-between">
