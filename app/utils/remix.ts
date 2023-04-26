@@ -3,7 +3,8 @@ import { ReasonPhrases, StatusCodes } from "http-status-codes"
 
 export function notFound(
   { message, title }: { message: string; title?: string } = {
-    message: "Not found",
+    message: "The requested resource was not found.",
+    title: "Not Found",
   }
 ) {
   return json(
@@ -14,7 +15,8 @@ export function notFound(
 
 export function unauthorized(
   { message, title }: { message: string; title?: string } = {
-    message: "Unauthorized",
+    message: "You are not authorized to access this resource.",
+    title: "Unauthorized",
   }
 ) {
   return json(
@@ -28,7 +30,8 @@ export function unauthorized(
 
 export function forbidden(
   { message, title }: { message: string; title?: string } = {
-    message: "Forbidden",
+    message: "You are not allowed to access this resource.",
+    title: "Forbidden",
   }
 ) {
   return json(
@@ -39,7 +42,8 @@ export function forbidden(
 
 export function badRequest(
   { message, title }: { message: string; title?: string } = {
-    message: "Bad request",
+    message: "The request was invalid.",
+    title: "Bad Request",
   }
 ) {
   return json(

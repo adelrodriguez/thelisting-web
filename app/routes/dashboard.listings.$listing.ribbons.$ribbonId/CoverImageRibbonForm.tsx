@@ -1,5 +1,3 @@
-import type { Ribbon } from "@prisma/client"
-import { useFetcher } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
 import { ValidatedForm as Form } from "remix-validated-form"
 
@@ -9,14 +7,13 @@ import { CoverImagePropertiesSchema } from "~/utils/ribbons"
 const validator = withZod(CoverImagePropertiesSchema)
 
 export default function CoverImageRibbonForm({
-  ribbon,
-  id,
+  properties,
+  formId,
 }: {
-  ribbon: Ribbon
-  id: string
+  properties: unknown
+  formId: string
 }) {
-  const fetcher = useFetcher()
-  const result = CoverImagePropertiesSchema.safeParse(ribbon.properties)
+  const result = CoverImagePropertiesSchema.safeParse(properties)
   let defaultValues
 
   if (result.success) {
@@ -25,13 +22,12 @@ export default function CoverImageRibbonForm({
 
   return (
     <Form
-      id={id}
+      id={formId}
       className="flex flex-col gap-2"
-      action={`/api/ribbons/${ribbon.id}/properties`}
       method="POST"
       validator={validator}
       defaultValues={defaultValues}
-      fetcher={fetcher}
+      action="?/properties"
     >
       <ImageInput name="image" label="Cover Image" />
       <Input

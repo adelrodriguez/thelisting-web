@@ -1,4 +1,3 @@
-import { Disclosure } from "@headlessui/react"
 import {
   Bars3CenterLeftIcon,
   ClockIcon,
@@ -11,19 +10,9 @@ import {
 } from "@heroicons/react/20/solid"
 import type { Ribbon } from "@prisma/client"
 import { RibbonType } from "@prisma/client"
-import { Link, useFetcher } from "@remix-run/react"
+import { Link } from "@remix-run/react"
 import clsx from "clsx"
 import { useDrag, useDrop } from "react-dnd"
-
-import { Button } from "~/components/common"
-import { SubmitButton } from "~/components/form"
-
-import BannerRibbonForm from "./BannerRibbonForm"
-import CountdownRibbonForm from "./CountdownRibbonForm"
-import CoverImageRibbonForm from "./CoverImageRibbonForm"
-import ImageGalleryRibbonForm from "./ImagaGalleryRibbonForm"
-import ImageCarouselRibbonForm from "./ImageCarouselRibbonForm"
-import TextRibbonForm from "./TextRibbonForm"
 
 export const ItemTypes = {
   RIBBON: "ribbon",
@@ -67,7 +56,6 @@ export default function RibbonCard({
   find: (id: string) => readonly [number, Ribbon]
   onFinish: () => void
 }) {
-  const fetcher = useFetcher()
   const originalIndex = find(ribbon.id)[0]
 
   const [{ isDragging }, drag, preview] = useDrag(() => ({
@@ -104,96 +92,42 @@ export default function RibbonCard({
 
   return (
     <div className="group">
-      <Disclosure>
-        <Disclosure.Button className="w-full text-left">
+      <Link to={ribbon.id}>
+        <div
+          className={clsx(
+            "col-span-1 flex rounded-md shadow-sm transition-opacity",
+            isDragging ? "opacity-0" : "opacity-100"
+          )}
+          ref={(node) => preview(drop(node))}
+        >
           <div
             className={clsx(
-              "col-span-1 flex rounded-md shadow-sm transition-opacity",
-              isDragging ? "opacity-0" : "opacity-100"
+              "flex w-16 flex-shrink-0 items-center justify-center rounded-l-md text-sm font-medium text-white",
+              RIBBON_CARD[ribbon.type].bgColor
             )}
-            ref={(node) => preview(drop(node))}
           >
-            <div
-              className={clsx(
-                "flex w-16 flex-shrink-0 items-center justify-center rounded-l-md text-sm font-medium text-white",
-                RIBBON_CARD[ribbon.type].bgColor
-              )}
-            >
-              {RIBBON_CARD[ribbon.type].icon}
+            {RIBBON_CARD[ribbon.type].icon}
+          </div>
+          <div className="flex flex-1 items-center justify-between truncate rounded-r-md border-b border-r border-t border-gray-200 bg-white">
+            <div className="flex-1 truncate px-4 py-2 text-sm">
+              <h3 className="font-medium text-gray-900 hover:text-gray-600">
+                {ribbon.name}
+              </h3>
+              <p className="text-gray-500">{ribbon.type}</p>
             </div>
-            <div className="flex flex-1 items-center justify-between truncate rounded-r-md border-b border-r border-t border-gray-200 bg-white">
-              <div className="flex-1 truncate px-4 py-2 text-sm">
-                <h3 className="font-medium text-gray-900 hover:text-gray-600">
-                  {ribbon.name}
-                </h3>
-                <p className="text-gray-500">{ribbon.type}</p>
-              </div>
-              <div
-                className="flex flex-shrink-0 pr-2 hover:cursor-grab"
-                ref={drag}
-              >
-                <EllipsisVerticalIcon
-                  className="-mr-3 h-5 w-auto"
-                  aria-hidden="true"
-                />
-                <EllipsisVerticalIcon
-                  className="h-5 w-auto"
-                  aria-hidden="true"
-                />
-              </div>
+            <div
+              className="flex flex-shrink-0 pr-2 hover:cursor-grab"
+              ref={drag}
+            >
+              <EllipsisVerticalIcon
+                className="-mr-3 h-5 w-auto"
+                aria-hidden="true"
+              />
+              <EllipsisVerticalIcon className="h-5 w-auto" aria-hidden="true" />
             </div>
           </div>
-        </Disclosure.Button>
-        <Disclosure.Panel className="py-2">
-          {!isDragging && (
-            <>
-              {ribbon.type === RibbonType.Banner && (
-                <BannerRibbonForm ribbon={ribbon} id={`form-${ribbon.id}`} />
-              )}
-              {ribbon.type === RibbonType.Countdown && (
-                <CountdownRibbonForm ribbon={ribbon} id={`form-${ribbon.id}`} />
-              )}
-              {ribbon.type === RibbonType.CoverImage && (
-                <CoverImageRibbonForm
-                  ribbon={ribbon}
-                  id={`form-${ribbon.id}`}
-                />
-              )}
-              {ribbon.type === RibbonType.ImageCarousel && (
-                <ImageCarouselRibbonForm
-                  ribbon={ribbon}
-                  id={`form-${ribbon.id}`}
-                />
-              )}
-              {ribbon.type === RibbonType.ImageGallery && (
-                <ImageGalleryRibbonForm
-                  ribbon={ribbon}
-                  id={`form-${ribbon.id}`}
-                />
-              )}
-              {ribbon.type === RibbonType.Text && (
-                <TextRibbonForm ribbon={ribbon} id={`form-${ribbon.id}`} />
-              )}
-              <div className="mt-2 flex justify-end gap-2">
-                <fetcher.Form
-                  method="POST"
-                  action={`/api/ribbons/${ribbon.id}?/delete`}
-                >
-                  <Button className="w-full" variant="danger">
-                    Delete
-                  </Button>
-                </fetcher.Form>
-                <SubmitButton
-                  formId={`form-${ribbon.id}`}
-                  loadingText="Updating..."
-                >
-                  Update
-                </SubmitButton>
-              </div>
-            </>
-          )}
-        </Disclosure.Panel>
-      </Disclosure>
+        </div>
+      </Link>
       <div
         className={clsx("relative mt-2 hidden", {
           "group-hover:block": !isDragging,

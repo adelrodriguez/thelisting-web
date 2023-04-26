@@ -1,5 +1,3 @@
-import type { Ribbon } from "@prisma/client"
-import { useFetcher } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
 import { useState } from "react"
 import { ValidatedForm as Form } from "remix-validated-form"
@@ -11,16 +9,15 @@ import { TextPropertiesSchema } from "~/utils/ribbons"
 const validator = withZod(TextPropertiesSchema)
 
 export default function TextRibbonForm({
-  ribbon,
-  id,
+  properties,
+  formId,
 }: {
-  ribbon: Ribbon
-  id: string
+  properties: unknown
+  formId: string
 }) {
   // TODO(adelrodriguez): actually have this as a field in the form
   const [showLinkFields, setShowLinkFields] = useState(false)
-  const fetcher = useFetcher()
-  const result = TextPropertiesSchema.safeParse(ribbon.properties)
+  const result = TextPropertiesSchema.safeParse(properties)
   let defaultValues
 
   if (result.success) {
@@ -29,13 +26,12 @@ export default function TextRibbonForm({
 
   return (
     <Form
-      id={id}
+      id={formId}
       className="flex flex-col gap-2"
-      action={`/api/ribbons/${ribbon.id}/properties`}
       method="POST"
       validator={validator}
       defaultValues={defaultValues}
-      fetcher={fetcher}
+      action="?/properties"
     >
       <ImageInput name="decorationImage" label="Decoration Image" />
       <Input label="Title" name="title" />

@@ -1,5 +1,3 @@
-import type { Ribbon } from "@prisma/client"
-import { useFetcher } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
 import { format, startOfToday } from "date-fns"
 import { ValidatedForm as Form } from "remix-validated-form"
@@ -9,15 +7,14 @@ import { CountdownPropertiesSchema } from "~/utils/ribbons"
 
 const validator = withZod(CountdownPropertiesSchema)
 
-export default function BannerRibbonForm({
-  ribbon,
-  id,
+export default function CountdownRibbonForm({
+  properties,
+  formId,
 }: {
-  ribbon: Ribbon
-  id: string
+  properties: unknown
+  formId: string
 }) {
-  const fetcher = useFetcher()
-  const result = CountdownPropertiesSchema.safeParse(ribbon.properties)
+  const result = CountdownPropertiesSchema.safeParse(properties)
   let defaultValues
 
   if (result.success) {
@@ -28,17 +25,16 @@ export default function BannerRibbonForm({
 
   return (
     <Form
-      id={id}
+      id={formId}
       className="flex flex-col gap-2"
-      action={`/api/ribbons/${ribbon.id}/properties`}
       method="POST"
-      fetcher={fetcher}
       validator={validator}
       // TODO(adelrodriguez): Fix this type error. The issue here is that an
       // input only takes strings, but our schema describes a Date object. Maybe
       // creating a custom component that can accept Date objects?
       // @ts-expect-error
       defaultValues={defaultValues}
+      action="?/properties"
     >
       <Input
         label="Event Date & Time"

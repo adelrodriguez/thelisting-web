@@ -1,27 +1,24 @@
 import { MinusIcon } from "@heroicons/react/20/solid"
-import type { Ribbon } from "@prisma/client"
-import { useFetcher } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
 import { nanoid } from "nanoid"
 import { useFieldArray } from "remix-validated-form"
 
 import { Button } from "~/components/common"
 import { Form, ImageInput, Input } from "~/components/form"
-import { ImageCarouselPropertiesSchema } from "~/utils/ribbons"
+import { ImageGalleryPropertiesSchema } from "~/utils/ribbons"
 
-const validator = withZod(ImageCarouselPropertiesSchema)
+const validator = withZod(ImageGalleryPropertiesSchema)
 
-export default function ImageCarouselRibbonForm({
-  ribbon,
-  id,
+export default function ImageGalleryRibbonForm({
+  properties,
+  formId,
 }: {
-  ribbon: Ribbon
-  id: string
+  properties: unknown
+  formId: string
 }) {
-  const fetcher = useFetcher()
-  const result = ImageCarouselPropertiesSchema.safeParse(ribbon.properties)
+  const result = ImageGalleryPropertiesSchema.safeParse(properties)
   const [inputs, { push, remove }] = useFieldArray<{ id: string }>("images", {
-    formId: id,
+    formId,
   })
 
   let defaultValues
@@ -32,32 +29,22 @@ export default function ImageCarouselRibbonForm({
 
   return (
     <Form
-      id={id}
+      id={formId}
       className="flex flex-col gap-2"
-      action={`/api/ribbons/${ribbon.id}/properties`}
       method="POST"
       validator={validator}
       defaultValues={defaultValues}
-      fetcher={fetcher}
+      action="?/properties"
     >
       <div className="flex gap-2">
         <Input
-          name="height"
-          label="Height"
+          name="groupSize"
+          label="Group Size"
           type="number"
           className="w-1/2"
-          min={0}
-          step={1}
-          description="The height of the carousel"
-        />
-        <Input
-          type="number"
-          name="duration"
-          label="Duration"
-          className="w-1/2"
-          description="The duration to show each image for (in seconds)"
           min={1}
           step={1}
+          description="The height of the carousel"
         />
       </div>
       <div className="flex items-center justify-between">

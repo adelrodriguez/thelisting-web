@@ -22,7 +22,7 @@ export default function Banner({
     <section>
       <div className="relative" style={styles}>
         <div className="flex h-screen flex-col items-center justify-center">
-          <div className="relative px-4">
+          <div className="relative z-10 px-4">
             {decorationImage && (
               <div className="absolute inset-0 -top-10 h-32 -translate-y-full lg:h-40">
                 <img
