@@ -193,23 +193,21 @@ export default function DashboardListingItemDetailPage() {
             step="1"
             min={0}
           />
+          <div className="flex justify-end">
+            {itemPurchaseCount === 0 && (
+              <Link to="delete">
+                <button
+                  type="button"
+                  className="mr-4 rounded-md bg-red-50 px-3 py-2 text-sm font-semibold text-red-600 shadow-sm  ring-0 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                  disabled={itemPurchaseCount > 0}
+                >
+                  Delete
+                </button>
+              </Link>
+            )}
+            <SubmitButton loadingText="Updating...">Update</SubmitButton>
+          </div>
         </ValidatedForm>
-        <div className="mt-4 flex justify-end">
-          {itemPurchaseCount === 0 && (
-            <Link to="delete">
-              <button
-                type="button"
-                className="mr-4 rounded-md bg-red-50 px-3 py-2 text-sm font-semibold text-red-600 shadow-sm  ring-0 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-                disabled={itemPurchaseCount > 0}
-              >
-                Delete
-              </button>
-            </Link>
-          )}
-          <SubmitButton loadingText="Updating..." form="editItem">
-            Update
-          </SubmitButton>
-        </div>
       </div>
       <Outlet />
     </div>
