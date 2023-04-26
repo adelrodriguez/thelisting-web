@@ -14,7 +14,7 @@ export default function CoverImage({
   onView,
 }: { onView: (image: string) => void } & CoverImageProperties) {
   const ref = useRef<HTMLDivElement>(null)
-  const [styles] = useTheme()
+  const [styles, theme] = useTheme()
   const inView = useInView(ref)
 
   useEffect(() => {
@@ -28,9 +28,10 @@ export default function CoverImage({
           <div style={{ height: height ? height : "100vh" }}>
             {image && (
               <Image
-                className="h-full w-full border-y-8 border-white object-cover object-center"
+                className="h-full w-full border-y-8  object-cover object-center"
                 src={generateCloudflareImageUrl(image, "display")}
                 alt=""
+                style={{ borderColor: theme.colors?.secondary }}
               />
             )}
           </div>

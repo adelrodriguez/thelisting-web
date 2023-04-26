@@ -1,3 +1,4 @@
+import type { ComponentPropsWithoutRef } from "react"
 import type { ResponsiveSize } from "remix-image"
 import RemixImage from "remix-image"
 
@@ -6,12 +7,10 @@ export default function Image({
   className,
   src,
   responsive,
+  style,
 }: {
-  alt: string
-  className: string
-  src: string
   responsive?: ResponsiveSize[]
-}) {
+} & ComponentPropsWithoutRef<"img">) {
   return (
     <RemixImage
       className={className}
@@ -21,6 +20,7 @@ export default function Image({
       responsive={responsive}
       dprVariants={[1, 3]}
       placeholder="blur"
+      style={style}
     />
   )
 }
