@@ -52,7 +52,7 @@ export async function loader({ context, request }: LoaderArgs) {
         select: { cost: true, id: true, total: true },
       },
     },
-    orderBy: { createdAt: "desc" },
+    orderBy: { eventDate: "asc" },
     take: 100,
     where: { status },
   })
