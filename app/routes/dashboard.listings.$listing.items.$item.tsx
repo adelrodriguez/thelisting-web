@@ -18,7 +18,7 @@ import { zx } from "zodix"
 import { ViewOnShopify } from "~/components/admin"
 import { Image } from "~/components/common"
 import type { NotFoundBoundaryData } from "~/components/error"
-import { FormInput, FormTextArea, SubmitButton } from "~/components/form"
+import { FormInput, SubmitButton, TextArea } from "~/components/form"
 import { useProduct } from "~/utils/hooks"
 import { formatPrice } from "~/utils/money"
 
@@ -174,7 +174,7 @@ export default function DashboardListingItemDetailPage() {
             })
           }}
         >
-          <FormTextArea
+          <TextArea
             label="Description"
             name="description"
             description="Custom description that the client wants to show on the product"

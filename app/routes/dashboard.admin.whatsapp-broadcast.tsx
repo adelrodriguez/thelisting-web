@@ -7,9 +7,7 @@ import { useEffect } from "react"
 import { ValidatedForm, validationError } from "remix-validated-form"
 import { z } from "zod"
 
-import { FormSubmit } from "~/components/form"
-import { FormTextArea } from "~/components/form"
-import { FormInput, FormSelect } from "~/components/form"
+import { FormInput, FormSelect, FormSubmit, TextArea } from "~/components/form"
 import { WHATSAPP_MESSAGE_TEMPLATES } from "~/config/consts"
 import whatsapp from "~/services/whatsapp.server"
 
@@ -146,10 +144,11 @@ export default function WhatsAppBroadcastPage() {
           label="Media URL"
           description="The URL to the media to attach to the message"
         />
-        <FormTextArea
+        <TextArea
           name="phoneNumbers"
           label="Phone Numbers"
           description="Comma-separated list of phone numbers with country codes (e.g. 18091234567,18097654321)"
+          rows={4}
         />
         <FormSubmit />
       </ValidatedForm>
