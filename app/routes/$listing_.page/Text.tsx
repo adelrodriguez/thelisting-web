@@ -14,11 +14,11 @@ export default function Text({
   url,
   label,
 }: TextProperties) {
-  const [styles] = useTheme()
+  const [style, theme] = useTheme()
 
   return (
     <section>
-      <div style={styles} className="px-8 py-20">
+      <div style={style} className="px-8 py-20">
         {decorationImage && (
           <div className="h-32 lg:h-40">
             <img
@@ -29,18 +29,19 @@ export default function Text({
           </div>
         )}
         <div className={clsx("pt-10", textAlignment)}>
-          <h3 className="font-serif text-2xl font-semibold tracking-wide md:text-3xl">
+          <h3
+            className="text-2xl font-semibold tracking-wide md:text-3xl"
+            style={{ fontFamily: theme.fonts?.heading }}
+          >
             {title}
           </h3>
-          <p className="mt-4 whitespace-pre-wrap font-body text-lg leading-7 tracking-tight">
-            {body}
-          </p>
+          <p className="mt-4 whitespace-pre-wrap text-lg leading-7">{body}</p>
           {url && label && (
             <div className="mt-8">
               <Link
                 to={url}
                 className={clsx(
-                  "mt-4 rounded-full border-2 border-white bg-transparent px-6 py-2.5 font-body font-semibold tracking-wide text-white transition-all",
+                  "mt-4 rounded-full border-2 border-white bg-transparent px-6 py-2.5 font-semibold tracking-wide text-white transition-all",
                   "hover:bg-white hover:text-black hover:mix-blend-screen"
                 )}
               >

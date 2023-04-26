@@ -80,3 +80,5 @@ export const QUEUE_NAMES = {
   NotifyPurchase: "NOTIFY_PURCHASE",
   SaveOrderCustomer: "SAVE_ORDER_CUSTOMER",
 }
+
+export const GOOGLE_FONTS_CSS_API_URL = `https://fonts.googleapis.com/css2`

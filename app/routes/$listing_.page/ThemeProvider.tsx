@@ -31,6 +31,7 @@ export default function useTheme(): [CSSProperties, Theme] {
   const styles: CSSProperties = {
     backgroundColor: theme.colors?.background,
     color: theme.colors?.text,
+    fontFamily: theme.fonts?.body,
   }
 
   return [styles, theme]

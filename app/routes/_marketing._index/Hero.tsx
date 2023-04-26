@@ -21,7 +21,7 @@ export default function Hero() {
       <div className="px-6 lg:px-8">
         <div className="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
           <div className="text-center">
-            <h1 className="font-header text-6xl font-bold tracking-tight text-white sm:text-6xl">
+            <h1 className="font-heading text-6xl font-bold tracking-tight text-white sm:text-6xl">
               {t("hero.h1")}
             </h1>
             <p className="mt-6 font-body text-xl font-light leading-8 text-gray-300">

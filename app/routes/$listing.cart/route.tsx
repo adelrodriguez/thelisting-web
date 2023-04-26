@@ -110,7 +110,7 @@ export default function ListingCartPage() {
                     <div className="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
                       <div className="flex-1 overflow-y-auto py-6 px-4 sm:px-6">
                         <div className="flex items-start justify-between">
-                          <Dialog.Title className="font-header text-2xl font-bold text-gray-900">
+                          <Dialog.Title className="font-heading text-2xl font-bold text-gray-900">
                             {t("cart")}
                           </Dialog.Title>
                           <div className="ml-3 flex h-7 items-center">

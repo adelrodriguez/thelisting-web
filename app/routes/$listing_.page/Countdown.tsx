@@ -20,7 +20,7 @@ function getRemainingTime(eventDatetime: Date) {
 
 export default function Countdown({ eventDatetime }: CountdownProperties) {
   const [remaining, setRemaining] = useState(getRemainingTime(eventDatetime))
-  const [styles] = useTheme()
+  const [styles, theme] = useTheme()
 
   const clearInterval = useInterval(() => {
     setRemaining(getRemainingTime(eventDatetime))
@@ -50,7 +50,10 @@ export default function Countdown({ eventDatetime }: CountdownProperties) {
                 .filter((key) => key !== "years")
                 .map((key) => (
                   <div className="flex flex-col items-center" key={key}>
-                    <div className="font-header text-2xl font-bold lg:text-3xl xl:text-5xl">
+                    <div
+                      className="text-2xl font-bold lg:text-3xl xl:text-5xl"
+                      style={{ fontFamily: theme.fonts?.heading }}
+                    >
                       {remaining[key as keyof typeof remaining]}
                     </div>
                     <div className="font-body text-sm font-bold">

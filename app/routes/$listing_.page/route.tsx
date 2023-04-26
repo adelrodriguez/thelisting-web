@@ -3,6 +3,7 @@ import type { LoaderArgs, V2_MetaFunction } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { redirect } from "@remix-run/node"
 import { useLoaderData } from "@remix-run/react"
+import clsx from "clsx"
 import { AnimatePresence, motion } from "framer-motion"
 import { useCallback, useState } from "react"
 import { notFound } from "remix-utils"
@@ -12,6 +13,7 @@ import { zx } from "zodix"
 import type { NotFoundBoundaryData } from "~/components/error"
 import { isProduction } from "~/config/vars"
 import { generateCloudflareImageUrl } from "~/utils/cloudflare"
+import { generateGoogleFontsUrl } from "~/utils/font"
 import { ListingThemeSchema } from "~/utils/listing"
 import { CoverImagePropertiesSchema, RibbonSchema } from "~/utils/ribbons"
 
@@ -69,6 +71,16 @@ export async function loader({ params, context }: LoaderArgs) {
 
 export const meta: V2_MetaFunction<typeof loader> = ({ data }) => {
   try {
+    const result = ListingThemeSchema.safeParse(data.listing.theme)
+    let fontURL = ""
+
+    if (result.success) {
+      fontURL = generateGoogleFontsUrl([
+        result.data.fonts?.heading,
+        result.data.fonts?.body,
+      ])
+    }
+
     return [
       { title: `${data.listing.title} | The Listing` },
       { content: data.listing.subtitle, name: "description" },
@@ -82,6 +94,7 @@ export const meta: V2_MetaFunction<typeof loader> = ({ data }) => {
       },
       { content: `${data.listing.title} | The Listing`, name: "og:title" },
       { content: "width=device-width, initial-scale=1", name: "viewport" },
+      { href: fontURL, rel: "stylesheet", tagName: "link" },
     ]
   } catch (error) {
     return []
@@ -111,9 +124,15 @@ export default function ListingPage() {
               className="sticky inset-0 h-screen w-full object-cover object-center"
             />
           </AnimatePresence>
+          <div
+            className={clsx("absolute inset-0 bg-gray-400", {
+              "mix-blend-multiply": !!listing.coverImage,
+            })}
+            aria-hidden="true"
+          />
 
           <div className="fixed left-10 bottom-[10%] text-white">
-            <h1 className="mb-4 font-header text-5xl font-bold">
+            <h1 className="mb-4 font-headline text-6xl font-bold tracking-tight">
               {listing.title}
             </h1>
             <h3 className="font-body text-2xl">{listing.subtitle}</h3>

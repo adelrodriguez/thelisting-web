@@ -113,7 +113,7 @@ export default function ListingItemDetailPage() {
                       </div>
                     </div>
                     <div className="sm:col-span-8 lg:col-span-7">
-                      <h2 className="font-header text-2xl font-bold text-gray-900 sm:pr-12">
+                      <h2 className="font-heading text-2xl font-bold text-gray-900 sm:pr-12">
                         {title}
                       </h2>
 

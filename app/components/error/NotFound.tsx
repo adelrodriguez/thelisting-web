@@ -37,7 +37,7 @@ export default function NotFound({
                   <p className="font-body text-base font-semibold text-gray-600">
                     {status}
                   </p>
-                  <h1 className="mt-2 font-header text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl">
+                  <h1 className="mt-2 font-heading text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl">
                     {data.title}
                   </h1>
                   <p className="mt-2 font-body text-base text-gray-500">

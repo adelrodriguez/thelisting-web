@@ -79,7 +79,7 @@ export default function LoginPage() {
       <div className="flex flex-1 flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
         <main className="mx-auto w-full max-w-sm lg:w-96">
           <Logo />
-          <h2 className="my-6 font-header text-3xl font-bold tracking-tight text-gray-900">
+          <h2 className="my-6 font-heading text-3xl font-bold tracking-tight text-gray-900">
             {t("welcome")}
           </h2>
 
