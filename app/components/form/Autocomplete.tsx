@@ -36,7 +36,7 @@ export default function Autocomplete<T extends AutocompleteOption>({
   return (
     <>
       <Combobox as="div" {...getInputProps()}>
-        <Combobox.Label className="block text-sm font-medium leading-6 text-gray-900">
+        <Combobox.Label className="flex justify-between text-sm font-medium leading-6 text-gray-900">
           <label
             className="block text-sm font-medium leading-6 text-gray-900"
             htmlFor={name}
@@ -47,9 +47,16 @@ export default function Autocomplete<T extends AutocompleteOption>({
             <span className="text-sm leading-6 text-gray-500">Required</span>
           )}
         </Combobox.Label>
-        <div className="relative mt-1">
+        <div className="relative my-1">
           <Combobox.Input<T["value"]>
-            className="w-full rounded-md border-0 bg-white py-1.5 pl-3 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
+            className={clsx(
+              "w-full rounded-md border-0 bg-white py-1.5 pl-3 pr-10  shadow-sm ring-1 ring-inset ",
+              "focus:ring-2 focus:ring-inset",
+              "sm:text-sm sm:leading-6",
+              error
+                ? "text-red-900 ring-red-300 focus:ring-red-500"
+                : "text-gray-900 ring-gray-300 focus:ring-slate-600"
+            )}
             onChange={(event) => setQuery(event.target.value)}
             displayValue={(value) =>
               options.find((o) => o.value === value)?.label || ""
@@ -65,20 +72,20 @@ export default function Autocomplete<T extends AutocompleteOption>({
             <VirtualizedOptions options={filteredOptions} />
           )}
         </div>
-      </Combobox>
-      {description && (
-        <p
-          className={clsx("text-sm text-gray-500", {
-            hidden: error,
-          })}
-          id={`${name}-description`}
-        >
-          {description}
+        {description && (
+          <p
+            className={clsx("text-sm text-gray-500", {
+              hidden: error,
+            })}
+            id={`${name}-description`}
+          >
+            {description}
+          </p>
+        )}
+        <p className={clsx("text-sm text-red-600", error ? "block" : "hidden")}>
+          {error}
         </p>
-      )}
-      <p className={clsx("text-sm text-red-600", error ? "block" : "hidden")}>
-        {error}
-      </p>
+      </Combobox>
     </>
   )
 }
@@ -124,10 +131,9 @@ function VirtualizedOptions({ options }: { options: AutocompleteOption[] }) {
             {({ active, selected }) => (
               <>
                 <span
-                  className={clsx(
-                    "block truncate",
-                    selected && "font-semibold"
-                  )}
+                  className={clsx("block truncate", {
+                    "font-semibold": selected,
+                  })}
                 >
                   {options[virtualItem.index]!.label}
                 </span>
