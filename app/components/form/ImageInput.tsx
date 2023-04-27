@@ -1,4 +1,4 @@
-import { PhotoIcon, FolderOpenIcon } from "@heroicons/react/20/solid"
+import { PhotoIcon, FolderOpenIcon, XMarkIcon } from "@heroicons/react/20/solid"
 import type { Image } from "@prisma/client"
 import { useQuery } from "@tanstack/react-query"
 import clsx from "clsx"
@@ -22,7 +22,6 @@ export default function ImageInput({
   const [value, setValue] = useControlField<string | null>(name)
   const $input = useRef<HTMLInputElement>(null)
   const [open, setOpen] = useState(false)
-
   const { data } = useQuery(
     ["images", value],
     async () => {
@@ -35,7 +34,6 @@ export default function ImageInput({
       enabled: !!value,
     }
   )
-
   const { placeholder } = props
 
   useEffect(() => {
@@ -102,17 +100,28 @@ export default function ImageInput({
               })}
             />
           </div>
-          <button
-            type="button"
-            className="relative -ml-px inline-flex items-center gap-x-1.5 rounded-r-md px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-            onClick={() => setOpen(true)}
-          >
-            <FolderOpenIcon
-              className="h-5 w-5 text-gray-400"
-              aria-hidden="true"
-            />
-            Select
-          </button>
+          {value ? (
+            <button
+              type="button"
+              className="relative -ml-px inline-flex items-center gap-x-1.5 rounded-r-md px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+              onClick={() => setValue(null)}
+            >
+              <XMarkIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+              Remove
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="relative -ml-px inline-flex items-center gap-x-1.5 rounded-r-md px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+              onClick={() => setOpen(true)}
+            >
+              <FolderOpenIcon
+                className="h-5 w-5 text-gray-400"
+                aria-hidden="true"
+              />
+              Select
+            </button>
+          )}
         </div>
         {description && (
           <p
