@@ -54,6 +54,7 @@ export default function ImageGalleryRibbonForm({
           type="button"
           size="xs"
           disabled={inputs.length >= 10}
+          variant="secondary"
         >
           Add an image
         </Button>
