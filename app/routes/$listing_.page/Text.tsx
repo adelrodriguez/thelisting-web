@@ -7,12 +7,13 @@ import type { TextProperties } from "~/utils/ribbons"
 import useTheme from "./ThemeProvider"
 
 export default function Text({
-  title,
   body,
   decorationImage,
+  hasUrl,
   textAlignment,
+  title,
   url,
-  label,
+  urlLabel,
 }: TextProperties) {
   const [style, theme] = useTheme()
 
@@ -36,16 +37,16 @@ export default function Text({
             {title}
           </h3>
           <p className="mt-4 whitespace-pre-wrap text-lg leading-7">{body}</p>
-          {url && label && (
+          {hasUrl && (
             <div className="mt-8">
               <Link
-                to={url}
+                to={url!}
                 className={clsx(
                   "mt-4 rounded-full border-2 border-white bg-transparent px-6 py-2.5 font-semibold tracking-wide text-white transition-all",
                   "hover:bg-white hover:text-black hover:mix-blend-screen"
                 )}
               >
-                {label}
+                {urlLabel}
               </Link>
             </div>
           )}

@@ -1,9 +1,15 @@
 import { withZod } from "@remix-validated-form/with-zod"
-import { useState } from "react"
+import { useSnackbar } from "notistack"
+import { useEffect, useState } from "react"
 import { ValidatedForm as Form } from "remix-validated-form"
 
-import { Checkbox } from "~/components/common"
-import { ImageInput, Input, Select, TextArea } from "~/components/form"
+import {
+  Checkbox,
+  ImageInput,
+  Input,
+  Select,
+  TextArea,
+} from "~/components/form"
 import { TextPropertiesSchema } from "~/utils/ribbons"
 
 const validator = withZod(TextPropertiesSchema)
@@ -15,14 +21,27 @@ export default function TextRibbonForm({
   properties: unknown
   formId: string
 }) {
-  // TODO(adelrodriguez): actually have this as a field in the form
-  const [showLinkFields, setShowLinkFields] = useState(false)
-  const result = TextPropertiesSchema.safeParse(properties)
   let defaultValues
+
+  const result = TextPropertiesSchema.safeParse(properties)
+  const [hasUrl, setHasUrl] = useState(false)
+  const { enqueueSnackbar } = useSnackbar()
 
   if (result.success) {
     defaultValues = result.data
   }
+
+  useEffect(() => {
+    if (result.success) {
+      setHasUrl(!!result.data.hasUrl)
+    } else {
+      enqueueSnackbar("Unable to parse ribbon properties", {
+        description: JSON.stringify(result.error.flatten().fieldErrors),
+        variant: "error",
+      })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <Form
@@ -47,20 +66,17 @@ export default function TextRibbonForm({
           { label: "Justify", value: "text-justify" },
         ]}
       />
-      <div className="flex items-center">
-        <Checkbox
-          id="has-link"
-          checked={showLinkFields}
-          onChange={(e) => setShowLinkFields(e.target.checked)}
-        />
-        <label htmlFor="has-link" className="ml-2">
-          Has a link
-        </label>
-      </div>
-      {showLinkFields && (
+      <Checkbox
+        label="Has URL"
+        name="hasUrl"
+        description="Show a clickable button with a link"
+        onChange={(e) => setHasUrl(e.target.checked)}
+        value="true"
+      />
+      {hasUrl && (
         <>
           <Input label="URL" name="url" />
-          <Input label="Label" name="label" />
+          <Input label="Label" name="urlLabel" />
         </>
       )}
     </Form>
