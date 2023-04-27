@@ -59,7 +59,7 @@ export const processor: Processor<QueueData> = async (job) => {
       .update(
         `product:${scrapedProduct.url}|amount:${scrapedProduct.amount || 0}`
       )
-      .toString()
+      .digest("hex")
 
     job.log(`Created tag ${tag}`)
 
