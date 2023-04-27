@@ -182,7 +182,7 @@ export default function DashboardListingRibbonsPage() {
                     label="Secondary Color"
                   />
                   <Input type="color" name="colors.text" label="Text Color" />
-                  <Select
+                  <Autocomplete
                     name="fonts.heading"
                     label="Heading Font"
                     options={fonts.map((font) => ({
@@ -190,7 +190,7 @@ export default function DashboardListingRibbonsPage() {
                       value: font,
                     }))}
                   />
-                  <Select
+                  <Autocomplete
                     name="fonts.body"
                     label="Body Font"
                     options={fonts.map((font) => ({
