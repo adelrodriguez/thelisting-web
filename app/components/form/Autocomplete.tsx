@@ -1,12 +1,13 @@
 import { Combobox } from "@headlessui/react"
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid"
+import { useVirtualizer } from "@tanstack/react-virtual"
 import clsx from "clsx"
-import { useState } from "react"
+import { useRef, useState } from "react"
 import { useField } from "remix-validated-form"
 
 type AutocompleteOption = {
   label: string
-  value: string
+  value: string | undefined
 }
 
 export default function Autocomplete<T extends AutocompleteOption>({
@@ -46,7 +47,7 @@ export default function Autocomplete<T extends AutocompleteOption>({
             <span className="text-sm leading-6 text-gray-500">Required</span>
           )}
         </Combobox.Label>
-        <div className="relative mt-2">
+        <div className="relative mt-1">
           <Combobox.Input<T["value"]>
             className="w-full rounded-md border-0 bg-white py-1.5 pl-3 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
             onChange={(event) => setQuery(event.target.value)}
@@ -60,46 +61,8 @@ export default function Autocomplete<T extends AutocompleteOption>({
               aria-hidden="true"
             />
           </Combobox.Button>
-
           {filteredOptions.length > 0 && (
-            <Combobox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-              {filteredOptions.map((option) => (
-                <Combobox.Option
-                  key={option.value}
-                  value={option.value}
-                  className={({ active }) =>
-                    clsx(
-                      "relative cursor-default select-none py-2 pl-8 pr-4",
-                      active ? "bg-slate-600 text-white" : "text-gray-900"
-                    )
-                  }
-                >
-                  {({ active, selected }) => (
-                    <>
-                      <span
-                        className={clsx(
-                          "block truncate",
-                          selected && "font-semibold"
-                        )}
-                      >
-                        {option.label}
-                      </span>
-
-                      {selected && (
-                        <span
-                          className={clsx(
-                            "absolute inset-y-0 left-0 flex items-center pl-1.5",
-                            active ? "text-white" : "text-slate-600"
-                          )}
-                        >
-                          <CheckIcon className="h-5 w-5" aria-hidden="true" />
-                        </span>
-                      )}
-                    </>
-                  )}
-                </Combobox.Option>
-              ))}
-            </Combobox.Options>
+            <VirtualizedOptions options={filteredOptions} />
           )}
         </div>
       </Combobox>
@@ -117,5 +80,73 @@ export default function Autocomplete<T extends AutocompleteOption>({
         {error}
       </p>
     </>
+  )
+}
+
+function VirtualizedOptions({ options }: { options: AutocompleteOption[] }) {
+  const ref = useRef<HTMLUListElement>(null)
+
+  const virtualizer = useVirtualizer({
+    count: options.length,
+    estimateSize: () => 36,
+    getScrollElement: () => ref.current,
+    overscan: 20,
+  })
+
+  return (
+    <Combobox.Options
+      className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+      ref={ref}
+    >
+      <div
+        style={{
+          height: `${virtualizer.getTotalSize()}px`,
+          position: "relative",
+          width: "100%",
+        }}
+      >
+        {virtualizer.getVirtualItems().map((virtualItem) => (
+          <Combobox.Option
+            key={virtualItem.key}
+            value={options[virtualItem.index]!.value}
+            className={({ active }) =>
+              clsx(
+                "absolute left-0 top-0 w-full cursor-default select-none py-2 pl-8 pr-4",
+                active ? "bg-slate-600 text-white" : "text-gray-900"
+              )
+            }
+            style={{
+              height: `${virtualItem.size}px`,
+
+              transform: `translateY(${virtualItem.start}px)`,
+            }}
+          >
+            {({ active, selected }) => (
+              <>
+                <span
+                  className={clsx(
+                    "block truncate",
+                    selected && "font-semibold"
+                  )}
+                >
+                  {options[virtualItem.index]!.label}
+                </span>
+
+                {selected && (
+                  <span
+                    className={clsx(
+                      "absolute inset-y-0 left-0 flex items-center pl-1.5",
+                      active ? "text-white" : "text-slate-600"
+                    )}
+                  >
+                    <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                  </span>
+                )}
+              </>
+            )}
+          </Combobox.Option>
+        ))}
+      </div>
+    </Combobox.Options>
   )
 }
