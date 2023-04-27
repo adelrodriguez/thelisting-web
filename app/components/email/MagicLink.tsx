@@ -7,6 +7,7 @@ import { Img } from "@react-email/img"
 import { Link } from "@react-email/link"
 import { Preview } from "@react-email/preview"
 import { Section } from "@react-email/section"
+import { Tailwind } from "@react-email/tailwind"
 import { Text } from "@react-email/text"
 
 import { THE_LISTING_LOGO_BLACK } from "~/config/consts"
@@ -25,91 +26,55 @@ export default function Email({
 
   return (
     <Html>
-      <Head />
-      <Preview>Log in with this magic link.</Preview>
-      <Section style={main}>
-        <Container style={container}>
-          <Img
-            src={baseUrl + THE_LISTING_LOGO_BLACK}
-            height={48}
-            alt="The Listing"
-            style={logo}
-          />
-          <Text style={heading}>
-            🪄 {user.firstName}, here's your magic link
-          </Text>
-          <Text style={paragraph}>
-            <Link style={link} href={magicLink}>
-              👉 Click here to log in 👈
-            </Link>
-          </Text>
+      <Head>
+        <title>Login to The Listing</title>
+      </Head>
+      <Preview>Log in with this magic link 🪄</Preview>
+      <Tailwind>
+        <Section className="bg-white">
+          <Container className="mx-auto px-6 pt-5 pb-12">
+            <Img
+              src={baseUrl + THE_LISTING_LOGO_BLACK}
+              height={48}
+              alt="The Listing"
+              className="mx-auto"
+            />
+            <Text className="mt-12 mb-6 text-center text-xl font-bold">
+              🪄 {user.firstName}, here's your magic link
+            </Text>
+            <Text className="text-center leading-6">
+              <Link className="text-base text-amber-500" href={magicLink}>
+                👉 Click here to log in 👈
+              </Link>
+            </Text>
 
-          <Text style={paragraph}>
-            If you didn't request this, please ignore this email.
-          </Text>
-          <Text style={paragraph}>
-            Best,
-            <br />- The Listing Team
-          </Text>
-          <Hr style={hr} />
-          <Img
-            src={`${baseUrl}/assets/images/ribbon.svg`}
-            width={32}
-            height={32}
-            style={{
-              WebkitFilter: "grayscale(100%)",
-              filter: "grayscale(100%)",
-              margin: "20px 0",
-            }}
-          />
-          <Text style={footer}>The Listing SRL</Text>
-        </Container>
-      </Section>
+            <Text className="text-sm leading-6">
+              You can also copy and paste this link into your browser:{" "}
+              <Link href={magicLink}>{magicLink}</Link>
+            </Text>
+
+            <Text className="text-sm leading-6">
+              If you didn't request this, please ignore this email.
+            </Text>
+            <Text className="text-sm leading-6">
+              Best,
+              <br />- The Listing Team
+            </Text>
+            <Hr className="mt-12 border-gray-500" />
+            <Img
+              src={`${baseUrl}/assets/images/ribbon.svg`}
+              width={32}
+              height={32}
+              style={{
+                WebkitFilter: "grayscale(100%)",
+                filter: "grayscale(100%)",
+                margin: "20px 0",
+              }}
+            />
+            <Text className="ml-1 text-sm text-gray-600">The Listing SRL</Text>
+          </Container>
+        </Section>
+      </Tailwind>
     </Html>
   )
-}
-
-const fontFamily =
-  '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif'
-
-const main = {
-  backgroundColor: "#ffffff",
-}
-
-const container = {
-  margin: "0 auto",
-  padding: "20px 25px 48px",
-}
-
-const logo = {
-  margin: "0 auto",
-}
-
-const heading = {
-  fontFamily,
-  fontSize: "28px",
-  fontWeight: "bold",
-  margin: "48px 0 24px",
-}
-
-const paragraph = {
-  fontFamily,
-  fontSize: "16px",
-  lineHeight: "26px",
-}
-
-const link = {
-  color: "#e57c68",
-}
-
-const hr = {
-  borderColor: "#dddddd",
-  marginTop: "48px",
-}
-
-const footer = {
-  color: "#8898aa",
-  fontFamily,
-  fontSize: "12px",
-  marginLeft: "4px",
 }
