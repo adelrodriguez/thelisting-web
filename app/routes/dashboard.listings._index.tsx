@@ -271,6 +271,11 @@ export default function DashboardListingPage() {
                   >
                     {listing.status}
                   </div>
+                  {listing.isInternal && (
+                    <div className="rounded-md bg-blue-50 py-1 px-2 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-600/10">
+                      Internal
+                    </div>
+                  )}
                 </dd>
               </div>
               <div className="flex justify-between gap-x-4 py-3">
