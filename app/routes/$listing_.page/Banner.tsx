@@ -16,7 +16,7 @@ export default function Banner({
   decorationImage,
 }: BannerProperties) {
   const [styles, theme] = useTheme()
-  const { t } = useTranslation("listing")
+  const { t } = useTranslation("listing", { useSuspense: true })
 
   return (
     <section>
