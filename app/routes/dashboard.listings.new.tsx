@@ -12,6 +12,7 @@ import { unauthorized } from "remix-utils"
 import { z } from "zod"
 
 import {
+  Autocomplete,
   Form,
   Input,
   InputWithAddOn,
@@ -213,7 +214,7 @@ export default function CreateListingsPage() {
           description="The type of event you're hosting"
           required
         />
-        <Select
+        <Autocomplete
           options={[
             { label: "Select an option", value: "" },
             ...users.map((user) => ({

@@ -16,6 +16,7 @@ import { zfd } from "zod-form-data"
 import { zx } from "zodix"
 
 import {
+  Autocomplete,
   Checkbox,
   Form,
   ImageInput,
@@ -294,7 +295,7 @@ export default function DashboardListingPage() {
         description="The type of event you're hosting"
         required
       />
-      <Select
+      <Autocomplete
         options={[
           { label: "Select an option", value: "" },
           ...users.map((user) => ({
