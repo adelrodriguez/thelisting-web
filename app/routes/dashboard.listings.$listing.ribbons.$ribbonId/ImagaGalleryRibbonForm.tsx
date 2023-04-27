@@ -1,6 +1,5 @@
 import { MinusIcon } from "@heroicons/react/20/solid"
 import { withZod } from "@remix-validated-form/with-zod"
-import { nanoid } from "nanoid"
 import { useFieldArray } from "remix-validated-form"
 
 import { Button } from "~/components/common"
@@ -17,7 +16,7 @@ export default function ImageGalleryRibbonForm({
   formId: string
 }) {
   const result = ImageGalleryPropertiesSchema.safeParse(properties)
-  const [inputs, { push, remove }] = useFieldArray<{ id: string }>("images", {
+  const [inputs, { push, remove }] = useFieldArray("images", {
     formId,
   })
 
@@ -50,7 +49,7 @@ export default function ImageGalleryRibbonForm({
       <div className="flex items-center justify-between">
         <h3 className="font-semibold">Images</h3>
         <Button
-          onClick={() => push({ id: nanoid() })}
+          onClick={() => push(undefined)}
           type="button"
           size="xs"
           disabled={inputs.length >= 10}
@@ -61,8 +60,8 @@ export default function ImageGalleryRibbonForm({
       </div>
 
       <div className="flex flex-col-reverse">
-        {inputs.map((input, index) => (
-          <div key={`inputs${input.id}`} className="flex w-full items-end">
+        {inputs.map((_, index) => (
+          <div key={`inputs${index}`} className="flex w-full items-end">
             <ImageInput
               name={`images[${index}]`}
               label={`Image ${index + 1}`}
