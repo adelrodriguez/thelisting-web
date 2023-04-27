@@ -21,15 +21,17 @@ export type Currency = (typeof CURRENCIES)[keyof typeof CURRENCIES]
 
 export const REDIS_KEYS = {
   Cart: "cart",
+  GoogleFonts: "google-fonts",
   ProductScraper: "scraper:product",
 } as const
 export type RedisKey = (typeof REDIS_KEYS)[keyof typeof REDIS_KEYS]
 
 // Durations in seconds
 export const ONE_MINUTE = 60
-export const ONE_HOUR = 60 * 60
-export const ONE_DAY = 60 * 60 * 24
+export const ONE_HOUR = ONE_MINUTE * 60
+export const ONE_DAY = ONE_HOUR * 24
 export const ONE_WEEK = ONE_DAY * 7
+export const ONE_MONTH = ONE_DAY * 30
 
 // Fees
 export const SHOPIFY_FEE = 1 // 1%

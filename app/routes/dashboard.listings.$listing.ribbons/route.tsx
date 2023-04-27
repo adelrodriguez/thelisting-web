@@ -10,12 +10,14 @@ import { z } from "zod"
 import { zx } from "zodix"
 
 import { Button } from "~/components/common"
-import { Form, Input, Select, SubmitButton } from "~/components/form"
 import {
-  GOOGLE_WEB_FONTS_DEVELOPER_API_KEY,
-  GOOGLE_WEB_FONTS_URL,
-} from "~/config/env.server"
-import { GoogleWebFontsListSchema } from "~/utils/font"
+  Autocomplete,
+  Form,
+  Input,
+  Select,
+  SubmitButton,
+} from "~/components/form"
+import { getGoogleWebFontsList } from "~/utils/font"
 import { ListingThemeSchema } from "~/utils/listing"
 
 import PageRibbons from "./PageRibbons"
@@ -43,17 +45,13 @@ export async function loader({ params, context }: LoaderArgs) {
       orderBy: { position: "asc" },
       where: { listing: { sku } },
     }),
-    (
-      await fetch(
-        `${GOOGLE_WEB_FONTS_URL}?key=${GOOGLE_WEB_FONTS_DEVELOPER_API_KEY}`
-      )
-    ).json(),
+    getGoogleWebFontsList(),
   ])
 
   const theme = ListingThemeSchema.parse(listing.theme)
 
   return json({
-    fonts: GoogleWebFontsListSchema.parse(fonts),
+    fonts,
     listing,
     ribbons,
     ...setFormDefaults("edit-theme", theme),
