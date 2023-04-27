@@ -1,55 +1,19 @@
-import { createBullBoard } from "@bull-board/api"
-import { BullMQAdapter } from "@bull-board/api/bullMQAdapter"
-import { ExpressAdapter } from "@bull-board/express"
 import { createRequestHandler } from "@remix-run/express"
-import { Queue } from "bullmq"
 import compression from "compression"
 import express from "express"
-import basicAuth from "express-basic-auth"
-import Redis from "ioredis"
 import morgan from "morgan"
 import { networkInterfaces } from "node:os"
 import path from "node:path"
 
-import { QUEUE_NAMES } from "~/config/consts"
-import {
-  BULL_BOARD_PASSWORD,
-  RAILWAY_STATIC_URL,
-  REDIS_JOBS_URL,
-} from "~/config/env.server"
 import { isDevelopment } from "~/config/vars"
 import cache from "~/helpers/cache.server"
 import db from "~/helpers/db.server"
 import logger from "~/helpers/logger.server"
-import { AutomatedAbandonedCheckoutsNotification } from "~/helpers/queues"
+
+import bullboard from "./bullboard"
+import cron from "./cron"
 
 const port = process.env.PORT || 3000
-
-const serverAdapter = new ExpressAdapter()
-const jobBoardPath = "/dashboard/admin/bullboard"
-serverAdapter.setBasePath(jobBoardPath)
-
-const connection = new Redis(REDIS_JOBS_URL, {
-  enableReadyCheck: false,
-  maxRetriesPerRequest: null,
-})
-
-createBullBoard({
-  options: {
-    uiConfig: {
-      boardLogo: {
-        height: "auto",
-        path: `https://${RAILWAY_STATIC_URL}/assets/images/ribbon.svg`,
-        width: 50,
-      },
-      boardTitle: "The Listing",
-    },
-  },
-  queues: Object.values(QUEUE_NAMES)
-    .map((queueName) => new Queue(queueName, { connection }))
-    .map((queue) => new BullMQAdapter(queue)),
-  serverAdapter: serverAdapter,
-})
 
 const BUILD_DIR = path.join(process.cwd(), "build")
 
@@ -60,14 +24,7 @@ app.use(compression())
 // http://expressjs.com/en/advanced/best-practice-security.html#at-a-minimum-disable-x-powered-by-header
 app.disable("x-powered-by")
 
-app.use(
-  jobBoardPath,
-  basicAuth({
-    challenge: true,
-    users: { admin: BULL_BOARD_PASSWORD ?? "admin" },
-  }),
-  serverAdapter.getRouter()
-)
+app.use(...bullboard)
 
 // Remix fingerprints its assets so we can cache forever.
 app.use(
@@ -112,22 +69,9 @@ app.listen(port, () => {
     logger.info(`Local network IP: http://${getLocalNetworkIP()}:${port}}`)
 
   // Start cron jobs
+  logger.info("Starting cron jobs")
   cron()
 })
-
-async function cron() {
-  logger.info("Starting cron jobs")
-
-  await AutomatedAbandonedCheckoutsNotification.add("abandoned", null, {
-    removeOnComplete: {
-      age: 1000 * 60 * 60 * 24 * 7, // 7 days
-    },
-    removeOnFail: 5000,
-    repeat: {
-      pattern: "*/5 * * * *", // every 5 minutes
-    },
-  })
-}
 
 function purgeRequireCache() {
   // purge require cache on requests for "server side HMR" this won't let
