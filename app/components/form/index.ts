@@ -4,6 +4,7 @@ export { default as FormListRadioGroup } from "./FormListRadioGroup"
 export { default as FormSelect } from "./FormSelect"
 export { default as FormSubmit } from "./FormSubmit"
 
+export { default as Autocomplete } from "./Autocomplete"
 export { default as Checkbox } from "./Checkbox"
 export { default as Form } from "./Form"
 export { default as ImageInput } from "./ImageInput"
