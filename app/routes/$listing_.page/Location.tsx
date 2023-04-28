@@ -21,17 +21,7 @@ export default function Location({
     <section>
       <div className="px-4 pb-10" style={styles}>
         <iframe
-          src={`${src}&z=12z`}
           className="w-full rounded-md shadow-lg"
-          style={{ border: 0, height: height || "100vh" }}
-          allowFullScreen
-          loading="lazy"
-          referrerPolicy="no-referrer-when-downgrade"
-          title={caption || "Map"}
-        />
-        <iframe
-          width="600"
-          height="450"
           style={{ border: 0, height: height || "100vh" }}
           loading="lazy"
           allowFullScreen
