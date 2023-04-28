@@ -5,6 +5,7 @@ import { CountdownRibbonSchema } from "./countdown"
 import { CoverImageRibbonSchema } from "./cover-image"
 import { ImageCarouselRibbonSchema } from "./image-carousel"
 import { ImageGalleryRibbonSchema } from "./image-gallery"
+import { LocationRibbonSchema } from "./location"
 import { TextRibbonSchema } from "./text"
 
 export * from "./banner"
@@ -13,6 +14,7 @@ export * from "./countdown"
 export * from "./cover-image"
 export * from "./image-gallery"
 export * from "./image-carousel"
+export * from "./location"
 export * from "./text"
 
 export const RibbonSchema = z.discriminatedUnion("type", [
@@ -21,6 +23,7 @@ export const RibbonSchema = z.discriminatedUnion("type", [
   CoverImageRibbonSchema,
   ImageCarouselRibbonSchema,
   ImageGalleryRibbonSchema,
+  LocationRibbonSchema,
   TextRibbonSchema,
 ])
 

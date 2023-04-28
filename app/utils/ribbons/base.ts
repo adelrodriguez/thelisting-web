@@ -14,6 +14,7 @@ export const RibbonTypeSchema = z.enum([
   RibbonType.CoverImage,
   RibbonType.ImageCarousel,
   RibbonType.ImageGallery,
+  RibbonType.Location,
   RibbonType.Text,
 ])
 

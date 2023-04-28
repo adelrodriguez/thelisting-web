@@ -3,6 +3,7 @@ import {
   ClockIcon,
   ComputerDesktopIcon,
   EllipsisVerticalIcon,
+  MapIcon,
   PhotoIcon,
   PlusIcon,
   RectangleGroupIcon,
@@ -38,6 +39,10 @@ const RIBBON_CARD = {
   [RibbonType.ImageGallery]: {
     bgColor: "bg-blue-500",
     icon: <RectangleGroupIcon className="h-6 w-6" aria-hidden="true" />,
+  },
+  [RibbonType.Location]: {
+    bgColor: "bg-red-500",
+    icon: <MapIcon className="h-6 w-6" aria-hidden="true" />,
   },
   [RibbonType.Text]: {
     bgColor: "bg-gray-500",
