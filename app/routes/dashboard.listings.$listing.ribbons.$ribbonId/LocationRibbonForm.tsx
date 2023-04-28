@@ -31,6 +31,7 @@ export default function LocationRibbonForm({
     >
       <Input label="Caption" name="caption" />
       <Input label="Height" name="height" type="number" />
+      <Input label="Address" name="address" />
       <TextArea label="Embed Code" name="embedCode" rows={5} />
     </Form>
   )

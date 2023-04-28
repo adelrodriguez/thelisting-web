@@ -27,6 +27,7 @@ import {
   ImageCarouselPropertiesSchema,
   ImageGalleryPropertiesSchema,
   TextPropertiesSchema,
+  LocationPropertiesSchema,
 } from "~/utils/ribbons"
 
 import BannerRibbonForm from "./BannerRibbonForm"
@@ -34,6 +35,7 @@ import CountdownRibbonForm from "./CountdownRibbonForm"
 import CoverImageRibbonForm from "./CoverImageRibbonForm"
 import ImageGalleryRibbonForm from "./ImagaGalleryRibbonForm"
 import ImageCarouselRibbonForm from "./ImageCarouselRibbonForm"
+import LocationRibbonForm from "./LocationRibbonForm"
 import TextRibbonForm from "./TextRibbonForm"
 
 const detailsValidator = withZod(
@@ -124,6 +126,7 @@ export async function action({ params, request, context }: ActionArgs) {
         [RibbonType.ImageCarousel]: ImageCarouselPropertiesSchema,
         [RibbonType.ImageGallery]: ImageGalleryPropertiesSchema,
         [RibbonType.Text]: TextPropertiesSchema,
+        [RibbonType.Location]: LocationPropertiesSchema,
       }
 
       const formData = await request.formData()
@@ -291,6 +294,12 @@ export default function DashboardListingRibbonsEditPage() {
                       )}
                       {ribbon.type === RibbonType.ImageGallery && (
                         <ImageGalleryRibbonForm
+                          properties={ribbon.properties}
+                          formId={formId}
+                        />
+                      )}
+                      {ribbon.type === RibbonType.Location && (
+                        <LocationRibbonForm
                           properties={ribbon.properties}
                           formId={formId}
                         />

@@ -19,7 +19,7 @@ export default function Text({
 
   return (
     <section>
-      <div style={style} className="px-8 py-20">
+      <div style={style} className="px-4 py-10">
         {decorationImage && (
           <div className="h-32 lg:h-40">
             <img

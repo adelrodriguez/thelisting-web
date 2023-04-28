@@ -21,7 +21,7 @@ export default function ImageGallery({
 
   return (
     <section>
-      <div className="px-4 pb-20" style={styles}>
+      <div className="px-4 py-20" style={styles}>
         <div className="grid grid-cols-2 gap-2">
           {groupedImages.map((images, index) => (
             <div key={`group${index}`} className="flex flex-col gap-2">

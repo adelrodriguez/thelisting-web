@@ -35,7 +35,7 @@ export default function Countdown({ eventDatetime }: CountdownProperties) {
 
   return (
     <section>
-      <div style={styles} className="flex items-center pb-20 md:px-4">
+      <div style={styles} className="flex items-center py-20 px-4">
         {/* // TODO(adelrodriguez): Set a loading component */}
         <ClientOnly
           fallback={

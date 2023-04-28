@@ -10,13 +10,7 @@ import { z } from "zod"
 import { zx } from "zodix"
 
 import { Button } from "~/components/common"
-import {
-  Autocomplete,
-  Form,
-  Input,
-  Select,
-  SubmitButton,
-} from "~/components/form"
+import { Autocomplete, Form, Input, SubmitButton } from "~/components/form"
 import { getGoogleWebFontsList } from "~/utils/font"
 import { ListingThemeSchema } from "~/utils/listing"
 

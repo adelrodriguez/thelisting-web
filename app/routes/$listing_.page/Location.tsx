@@ -4,6 +4,7 @@ import useTheme from "./ThemeProvider"
 
 export default function Location({
   caption,
+  address,
   embedCode,
   height,
 }: LocationProperties) {
@@ -26,6 +27,17 @@ export default function Location({
           allowFullScreen
           loading="lazy"
           referrerPolicy="no-referrer-when-downgrade"
+          title={caption || "Map"}
+        />
+        <iframe
+          width="600"
+          height="450"
+          style={{ border: 0, height: height || "100vh" }}
+          loading="lazy"
+          allowFullScreen
+          referrerPolicy="no-referrer-when-downgrade"
+          src={`https://www.google.com/maps/embed/v1/place?key=${"AIzaSyAl-2Y0iQhC9oY3d-csjh2SOM-cJurXcg0"}
+    &q=${encodeURIComponent(address!)}`}
           title={caption || "Map"}
         />
         {caption && <p className="mt-4 text-center text-lg">{caption}</p>}

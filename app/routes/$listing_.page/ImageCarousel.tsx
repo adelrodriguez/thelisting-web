@@ -45,7 +45,7 @@ export default function ImageCarousel({
 
   return (
     <section>
-      <div className="px-4 pb-20" style={styles}>
+      <div className="px-4 py-10" style={styles}>
         <div
           className={clsx("relative w-full overflow-hidden", {
             "h-screen": !height,

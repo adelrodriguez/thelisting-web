@@ -33,13 +33,13 @@ export default function Banner({
               </div>
             )}
             <h1
-              className="text-center text-5xl font-bold tracking-wide lg:text-6xl"
+              className="text-center text-5xl font-bold tracking-wide lg:text-7xl"
               style={{ fontFamily: theme.fonts?.heading }}
             >
               {title}
             </h1>
             {subtitle && (
-              <p className="mt-2 text-center text-xl font-light tracking-tight md:text-2xl">
+              <p className="mt-2 text-center text-xl font-light tracking-tight md:text-3xl">
                 {subtitle}
               </p>
             )}
@@ -50,8 +50,9 @@ export default function Banner({
             relative="path"
             className={clsx(
               "right-1/2 z-10 mt-10 rounded-lg border-2 bg-transparent px-6 py-2.5 font-semibold tracking-wide shadow-sm outline-white transition-all ",
-              "hover:scale-125 hover:bg-white hover:text-black hover:mix-blend-screen hover:shadow-2xl"
+              "hover:scale-125 hover:shadow-2xl"
             )}
+            style={{ borderColor: theme.colors?.secondary }}
           >
             {t("goToRegistry")}
           </Link>
