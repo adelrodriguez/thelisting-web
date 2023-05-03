@@ -8,7 +8,6 @@ import { z } from "zod"
 import { zx } from "zodix"
 
 import { Button } from "~/components/common"
-import { SubmitButton } from "~/components/form"
 import { useDialogPage } from "~/utils/hooks"
 import { removeProductsFromCollection } from "~/utils/shopify.server"
 
@@ -113,13 +112,14 @@ export default function Example() {
                 </div>
                 <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
                   <Form method="POST">
-                    <SubmitButton
-                      variant="danger"
+                    <Button
                       className="w-full sm:ml-3 sm:w-auto"
                       title="This item has been purchased and cannot be deleted."
+                      type="submit"
+                      variant="danger"
                     >
                       Delete
-                    </SubmitButton>
+                    </Button>
                   </Form>
 
                   <Button
