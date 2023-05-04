@@ -223,11 +223,15 @@ export default function DashboardListingPage() {
                     <Menu.Item>
                       {({ active }) => (
                         <Link
-                          to={`https://admin.shopify.com/store/${
-                            window.env.shopifyStore
-                          }/Collections/${getShopifyIdNumber(
-                            listing.commerceId!
-                          )}`}
+                          to={
+                            listing.commerceId
+                              ? `https://admin.shopify.com/store/${
+                                  window.env.shopifyStore
+                                }/Collections/${getShopifyIdNumber(
+                                  listing.commerceId
+                                )}`
+                              : "#"
+                          }
                           className={clsx(
                             active ? "bg-gray-50" : "",
                             "flex items-center px-3 py-1 text-sm leading-6 text-gray-900"
