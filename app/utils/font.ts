@@ -27,7 +27,12 @@ export async function getGoogleWebFontsList() {
   }
 
   const res = await fetch(
-    `${GOOGLE_WEB_FONTS_URL}?key=${GOOGLE_WEB_FONTS_DEVELOPER_API_KEY}`
+    `${GOOGLE_WEB_FONTS_URL}?key=${GOOGLE_WEB_FONTS_DEVELOPER_API_KEY}`,
+    {
+      headers: {
+        Referer: "https://www.giftthelisting.com/",
+      },
+    }
   )
 
   const data = await res.json()
