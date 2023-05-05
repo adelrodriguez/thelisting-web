@@ -33,5 +33,5 @@
   "[shellscript]": {
     "editor.defaultFormatter": "foxundermoon.shell-format"
   },
-  "explorer.sortOrder": "mixed"
+  "explorer.sortOrder": "default"
 }
