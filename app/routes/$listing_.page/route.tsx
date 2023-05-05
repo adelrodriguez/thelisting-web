@@ -129,7 +129,7 @@ export default function ListingPage() {
           </AnimatePresence>
           <div
             className={clsx("absolute inset-0 bg-gray-300", {
-              "mix-blend-multiply": !!listing.coverImage,
+              "mix-blend-multiply": !!currentImage,
             })}
             aria-hidden="true"
           />
