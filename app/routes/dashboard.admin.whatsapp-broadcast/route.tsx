@@ -1,24 +1,20 @@
-import { MinusIcon } from "@heroicons/react/20/solid"
 import type { ActionArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { useActionData } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
+import { StatusCodes } from "http-status-codes"
 import { useSnackbar } from "notistack"
 import { useEffect } from "react"
-import {
-  useFieldArray,
-  ValidatedForm,
-  validationError,
-} from "remix-validated-form"
+import { ValidatedForm } from "remix-validated-form"
 import { z } from "zod"
 
-import { Button } from "~/components/common"
 import {
   ImageInput,
   Input,
   InputWithAddOn,
   Select,
   SubmitButton,
+  TextArea,
 } from "~/components/form"
 import { WHATSAPP_MESSAGE_TEMPLATES } from "~/config/consts"
 import whatsapp from "~/services/whatsapp.server"
@@ -37,9 +33,9 @@ const validator = withZod(
     image: z.string().uuid("You must provide an image"),
     path: z.string().min(1),
     phoneNumbers: z
-      .array(z.string())
-      .min(1, { message: "Please add a number" }),
-
+      .string()
+      .min(1, { message: "You must provide at least one phone number" })
+      .transform((value) => value.split(",")),
     template: z.enum(
       [
         WHATSAPP_MESSAGE_TEMPLATES.BabyShowerGuestNotification,
@@ -54,21 +50,25 @@ const validator = withZod(
 
 export async function action({ request }: ActionArgs) {
   const formData = await request.formData()
-  const { data, error } = await validator.validate(formData)
+  const result = await validator.validate(formData)
 
-  if (error) return validationError(error)
+  if (result.error) {
+    return json({ ...result.error, response: null, success: false } as const, {
+      status: StatusCodes.UNPROCESSABLE_ENTITY,
+    })
+  }
 
   const response = await Promise.allSettled(
-    data.phoneNumbers.map(async (phoneNumber) => {
+    result.data.phoneNumbers.map(async (phoneNumber) => {
       try {
         // We are awaiting the promise here because we want to catch any errors
         return await whatsapp.sendGuestNotification(
-          data.template,
+          result.data.template,
           phoneNumber,
           {
-            customer: data.customer,
-            mediaUrl: generateCloudflareImageUrl(data.image, "public"),
-            path: data.path,
+            customer: result.data.customer,
+            mediaUrl: generateCloudflareImageUrl(result.data.image, "public"),
+            path: result.data.path,
           }
         )
       } catch (error) {
@@ -79,22 +79,19 @@ export async function action({ request }: ActionArgs) {
     })
   )
 
-  return json(response)
+  return json({ response, success: true } as const)
 }
 
 export default function WhatsAppBroadcastPage() {
-  const data = useActionData<typeof action>()
+  const actionData = useActionData<typeof action>()
   const { enqueueSnackbar } = useSnackbar()
-  const [inputs, { push, remove }] = useFieldArray("phoneNumbers", {
-    formId: "whatsapp-broadcast",
-  })
 
   useEffect(() => {
-    if (!data) return
+    if (!actionData) return
 
-    if (!Array.isArray(data)) return
+    if (!actionData.success) return
 
-    data.forEach((result) => {
+    actionData.response.forEach((result) => {
       if (result.status === "fulfilled") {
         enqueueSnackbar("Message sent", {
           description: `Message sent successfully to ${result.value.phoneNumber}`,
@@ -107,7 +104,7 @@ export default function WhatsAppBroadcastPage() {
         })
       }
     })
-  }, [data, enqueueSnackbar])
+  }, [actionData, enqueueSnackbar])
 
   return (
     <div className="mx-auto max-w-7xl py-12 px-4 sm:px-6 lg:px-8">
@@ -163,43 +160,12 @@ export default function WhatsAppBroadcastPage() {
           label="Message Image"
           description="The image to attach to the message"
         />
-        <div className="flex items-start justify-between">
-          <div className="flex-1">
-            <h3 className="font-semibold">Phone Numbers</h3>
-            <p className="text-xs">
-              The phone number to send the message to, including the country
-              code (e.g. +18091234567)
-            </p>
-          </div>
-
-          <Button
-            onClick={() => push("")}
-            type="button"
-            size="xs"
-            variant="secondary"
-          >
-            Add a number
-          </Button>
-        </div>
-        <div className="flex flex-col gap-y-2">
-          {inputs.map((_, index) => (
-            <div key={`inputs${index}`} className="flex w-full items-end">
-              <Input
-                name={`phoneNumbers[${index}]`}
-                label={`Phone Number ${index + 1}`}
-                className="mr-2 w-full"
-              />
-              <Button
-                onClick={() => remove(index)}
-                className="my-1"
-                variant="secondary"
-                type="button"
-              >
-                <MinusIcon className="h-5 w-5" />
-              </Button>
-            </div>
-          ))}
-        </div>
+        <TextArea
+          name="phoneNumbers"
+          label="Phone Numbers"
+          description="Comma-separated list of phone numbers with country codes (e.g. 18091234567,18097654321)"
+          rows={4}
+        />
         <SubmitButton loadingText="Sending...">Send</SubmitButton>
       </ValidatedForm>
     </div>
