@@ -9,7 +9,6 @@ import {
   ClearCartQueue,
   CreatePurchaseQueue,
 } from "~/helpers/queues"
-import Sentry from "~/services/sentry"
 import {
   getShopifyWebhookHeaders,
   parseOrderCreationWebhookPayload,
@@ -87,8 +86,6 @@ export async function action({ request, context }: ActionArgs) {
       }
     )
   } catch (error) {
-    Sentry.captureException(error)
-
     if (error instanceof z.ZodError) {
       logger.error("Error parsing request body")
       logger.error(error.message)
@@ -97,6 +94,8 @@ export async function action({ request, context }: ActionArgs) {
         statusText: ReasonPhrases.BAD_REQUEST,
       })
     }
+
+    logger.error("Error processing webhook", { error: error as Error })
 
     return serverError(
       { message: (error as Error).message },

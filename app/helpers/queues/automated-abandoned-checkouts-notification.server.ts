@@ -8,8 +8,8 @@ import {
   TWILIO_PHONE_NUMBER,
 } from "~/config/env.server"
 import db from "~/helpers/db.server"
+import logger from "~/helpers/logger.server"
 import { createQueue } from "~/helpers/queue.server"
-import Sentry from "~/services/sentry"
 import twilio from "~/services/twilio.server"
 import { getShopifyIdNumber } from "~/utils/shopify"
 
@@ -62,7 +62,11 @@ export const processor: Processor = async (job) => {
       })
     }
   } catch (error) {
-    Sentry.captureException(error)
+    logger.error((error as Error).message, {
+      error,
+      jobId: job.id,
+      queue: QUEUE_NAMES.AutomatedAbandonedCheckoutsNotification,
+    })
 
     throw error
   }

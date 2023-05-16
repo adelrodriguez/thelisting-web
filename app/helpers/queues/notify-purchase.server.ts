@@ -8,7 +8,6 @@ import { SHOPIFY_SHIPPING_ITEM_1_ID } from "~/config/env.server"
 import db from "~/helpers/db.server"
 import logger from "~/helpers/logger.server"
 import { createQueue } from "~/helpers/queue.server"
-import Sentry from "~/services/sentry"
 import whatsapp from "~/services/whatsapp.server"
 import { getPriceSymbol } from "~/utils/money"
 import { getShopifyId, transformCustomAttributes } from "~/utils/shopify"
@@ -58,8 +57,11 @@ export const processor: Processor<QueueData> = async (job) => {
       recipient: listing.owner.firstName,
     })
   } catch (error) {
-    logger.error(error)
-    Sentry.captureException(error)
+    logger.error((error as Error).message, {
+      error,
+      jobId: job.id,
+      queue: QUEUE_NAMES.NotifyPurchase,
+    })
 
     throw error
   }

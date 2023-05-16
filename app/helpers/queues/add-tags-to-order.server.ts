@@ -1,8 +1,8 @@
 import type { Processor } from "bullmq"
 
 import { QUEUE_NAMES } from "~/config/consts"
+import logger from "~/helpers/logger.server"
 import { createQueue } from "~/helpers/queue.server"
-import Sentry from "~/services/sentry"
 import { GenericError } from "~/utils/error"
 import { getShopifyId, transformCustomAttributes } from "~/utils/shopify"
 import { addTags, getOrder } from "~/utils/shopify.server"
@@ -33,7 +33,11 @@ export const processor: Processor<QueueData> = async (job) => {
 
     job.log(`Added tags "${tags.join(", ")}" to order ${order.id}`)
   } catch (error) {
-    Sentry.captureException(error)
+    logger.error((error as Error).message, {
+      error,
+      jobId: job.id,
+      queue: QUEUE_NAMES.AddTagsToOrder,
+    })
 
     throw error
   }

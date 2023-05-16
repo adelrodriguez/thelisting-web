@@ -1,16 +1,13 @@
 import { RemixBrowser } from "@remix-run/react"
-import { useLocation, useMatches } from "@remix-run/react"
 import i18next from "i18next"
 import LanguageDetector from "i18next-browser-languagedetector"
 import Backend from "i18next-http-backend"
-import { startTransition, StrictMode, useEffect } from "react"
+import { startTransition, StrictMode } from "react"
 import { hydrateRoot } from "react-dom/client"
 import { I18nextProvider, initReactI18next } from "react-i18next"
 import { getInitialNamespaces } from "remix-i18next"
 
-import { isProduction } from "~/config/vars"
 import i18n from "~/i18n"
-import Sentry from "~/services/sentry"
 
 async function hydrate() {
   await i18next
@@ -34,31 +31,6 @@ async function hydrate() {
         </StrictMode>
       </I18nextProvider>
     )
-  })
-}
-if (isProduction) {
-  Sentry.init({
-    dist: "client",
-    dsn: window.env.sentryDsn,
-    environment: process.env.NODE_ENV,
-    integrations: [
-      new Sentry.BrowserTracing({
-        routingInstrumentation: Sentry.remixRouterInstrumentation(
-          useEffect,
-          useLocation,
-          useMatches
-        ),
-      }),
-      new Sentry.Replay(),
-    ],
-    release: window.env.release,
-    // If the entire session is not sampled, use the below sample rate to sample
-    // sessions when an error occurs.
-    replaysOnErrorSampleRate: 1.0,
-    // This sets the sample rate to be 10%. You may want this to be 100% while
-    // in development and sample at a lower rate in production
-    replaysSessionSampleRate: isProduction ? 0.1 : 1.0,
-    tracesSampleRate: 1,
   })
 }
 

@@ -2,7 +2,6 @@ import type { ActionArgs } from "@remix-run/node"
 import { redirect } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { useCatch, useNavigate } from "@remix-run/react"
-import * as Sentry from "@sentry/remix"
 import { z } from "zod"
 
 import { Alert } from "~/components/common"
@@ -54,7 +53,7 @@ export async function action({
     }
 
     if (hasStock.some((isAvailable) => !isAvailable)) {
-      throw json("Some items are no longer available.", { status: 400 })
+      return json("Some items are no longer available.", { status: 400 })
     }
 
     const checkout = await createCheckout(cartItems, {
@@ -67,7 +66,6 @@ export async function action({
     return redirect(checkout.url)
   } catch (error) {
     logger.error(error)
-    Sentry.captureException(error)
     throw json("There was an error creating your order.", { status: 500 })
   }
 }

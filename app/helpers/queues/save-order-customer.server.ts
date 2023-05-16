@@ -2,10 +2,10 @@ import type { Processor } from "bullmq"
 
 import { QUEUE_NAMES } from "~/config/consts"
 import db from "~/helpers/db.server"
+import logger from "~/helpers/logger.server"
 import { createQueue } from "~/helpers/queue.server"
 import { CreateInvoiceQueue } from "~/helpers/queues"
 import alegra from "~/services/alegra.server"
-import Sentry from "~/services/sentry"
 import { parseCreateContactRequest } from "~/utils/alegra"
 import { getShopifyId } from "~/utils/shopify"
 import { getOrder } from "~/utils/shopify.server"
@@ -69,7 +69,11 @@ export const processor: Processor<QueueData> = async (job) => {
       orderId: job.data.orderId,
     })
   } catch (error) {
-    Sentry.captureException(error)
+    logger.error((error as Error).message, {
+      error,
+      jobId: job.id,
+      queue: QUEUE_NAMES.SaveOrderCustomer,
+    })
 
     throw error
   }

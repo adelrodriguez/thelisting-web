@@ -307,7 +307,7 @@ export type Attribute = {
   value?: Maybe<Scalars['String']>;
 };
 
-/** Specifies the input fields required for an attribute. */
+/** The input fields for an attribute. */
 export type AttributeInput = {
   /** Key or name of the attribute. */
   key: Scalars['String'];
@@ -1059,7 +1059,7 @@ export type CartFreePaymentMethodInput = {
   billingAddress: MailingAddressInput;
 };
 
-/** Specifies the input fields to create a cart. */
+/** The input fields to create a cart. */
 export type CartInput = {
   /** An array of key-value pairs that contains additional information about the cart. */
   attributes?: InputMaybe<Array<AttributeInput>>;
@@ -1083,7 +1083,7 @@ export type CartInput = {
   note?: InputMaybe<Scalars['String']>;
 };
 
-/** Specifies the input fields for a cart metafield value to set. */
+/** The input fields for a cart metafield value to set. */
 export type CartInputMetafieldInput = {
   /** The key name of the metafield. */
   key: Scalars['String'];
@@ -1158,7 +1158,7 @@ export type CartLineEstimatedCost = {
   totalAmount: MoneyV2;
 };
 
-/** Specifies the input fields to create a merchandise line on a cart. */
+/** The input fields to create a merchandise line on a cart. */
 export type CartLineInput = {
   /** An array of key-value pairs that contains additional information about the merchandise line. */
   attributes?: InputMaybe<Array<AttributeInput>>;
@@ -1170,7 +1170,7 @@ export type CartLineInput = {
   sellingPlanId?: InputMaybe<Scalars['ID']>;
 };
 
-/** Specifies the input fields to update a line item on a cart. */
+/** The input fields to update a line item on a cart. */
 export type CartLineUpdateInput = {
   /** An array of key-value pairs that contains additional information about the merchandise line. */
   attributes?: InputMaybe<Array<AttributeInput>>;
@@ -1211,7 +1211,7 @@ export type CartLinesUpdatePayload = {
   userErrors: Array<CartUserError>;
 };
 
-/** Specifies the input fields to delete a cart metafield. */
+/** The input fields to delete a cart metafield. */
 export type CartMetafieldDeleteInput = {
   /** The key name of the cart metafield. */
   key: Scalars['String'];
@@ -1228,7 +1228,7 @@ export type CartMetafieldDeletePayload = {
   userErrors: Array<MetafieldDeleteUserError>;
 };
 
-/** Specifies the input fields for a cart metafield value to set. */
+/** The input fields for a cart metafield value to set. */
 export type CartMetafieldsSetInput = {
   /** The key name of the cart metafield. */
   key: Scalars['String'];
@@ -1476,7 +1476,7 @@ export type CheckoutLineItemsArgs = {
   reverse?: InputMaybe<Scalars['Boolean']>;
 };
 
-/** Specifies the fields required to update a checkout's attributes. */
+/** The input fields required to update a checkout's attributes. */
 export type CheckoutAttributesUpdateV2Input = {
   /**
    * Allows setting partial addresses on a Checkout, skipping the full validation of attributes.
@@ -1513,7 +1513,7 @@ export type CheckoutBuyerIdentity = {
   countryCode?: Maybe<CountryCode>;
 };
 
-/** Specifies the identity of the customer associated with the checkout. */
+/** The input fields for the identity of the customer associated with the checkout. */
 export type CheckoutBuyerIdentityInput = {
   /**
    * The country code of one of the shop's
@@ -1570,7 +1570,7 @@ export type CheckoutCompleteWithTokenizedPaymentV3Payload = {
   userErrors: Array<UserError>;
 };
 
-/** Specifies the fields required to create a checkout. */
+/** The input fields required to create a checkout. */
 export type CheckoutCreateInput = {
   /**
    * Allows setting partial addresses on a Checkout, skipping the full validation of attributes.
@@ -1850,7 +1850,7 @@ export type CheckoutLineItemEdge = {
   node: CheckoutLineItem;
 };
 
-/** Specifies the input fields to create a line item on a checkout. */
+/** The input fields to create a line item on a checkout. */
 export type CheckoutLineItemInput = {
   /** Extra information in the form of an array of Key-Value pairs about the line item. */
   customAttributes?: InputMaybe<Array<AttributeInput>>;
@@ -1860,7 +1860,7 @@ export type CheckoutLineItemInput = {
   variantId: Scalars['ID'];
 };
 
-/** Specifies the input fields to update a line item on the checkout. */
+/** The input fields to update a line item on the checkout. */
 export type CheckoutLineItemUpdateInput = {
   /** Extra information in the form of an array of Key-Value pairs about the line item. */
   customAttributes?: InputMaybe<Array<AttributeInput>>;
@@ -3168,7 +3168,7 @@ export type CustomerAccessToken = {
   expiresAt: Scalars['DateTime'];
 };
 
-/** Specifies the input fields required to create a customer access token. */
+/** The input fields required to create a customer access token. */
 export type CustomerAccessTokenCreateInput = {
   /** The email associated to the customer. */
   email: Scalars['String'];
@@ -3230,7 +3230,7 @@ export type CustomerActivateByUrlPayload = {
   customerUserErrors: Array<CustomerUserError>;
 };
 
-/** Specifies the input fields required to activate a customer. */
+/** The input fields to activate a customer. */
 export type CustomerActivateInput = {
   /** The activation token required to activate the customer. */
   activationToken: Scalars['String'];
@@ -3296,7 +3296,7 @@ export type CustomerAddressUpdatePayload = {
   userErrors: Array<UserError>;
 };
 
-/** The fields required to create a new customer. */
+/** The input fields to create a new customer. */
 export type CustomerCreateInput = {
   /** Indicates whether the customer has consented to be sent marketing material via email. */
   acceptsMarketing?: InputMaybe<Scalars['Boolean']>;
@@ -3407,7 +3407,7 @@ export type CustomerResetByUrlPayload = {
   userErrors: Array<UserError>;
 };
 
-/** Specifies the fields required to reset a customer’s password. */
+/** The input fields to reset a customer's password. */
 export type CustomerResetInput = {
   /** New password that will be set as part of the reset password process. */
   password: Scalars['String'];
@@ -3431,7 +3431,7 @@ export type CustomerResetPayload = {
   userErrors: Array<UserError>;
 };
 
-/** Specifies the fields required to update the Customer information. */
+/** The input fields to update the Customer information. */
 export type CustomerUpdateInput = {
   /** Indicates whether the customer has consented to be sent marketing material via email. */
   acceptsMarketing?: InputMaybe<Scalars['Boolean']>;
@@ -3827,7 +3827,7 @@ export type GenericFile = Node & {
   url?: Maybe<Scalars['URL']>;
 };
 
-/** Used to specify a geographical location. */
+/** The input fields used to specify a geographical location. */
 export type GeoCoordinateInput = {
   /** The coordinate's latitude value. */
   latitude: Scalars['Float'];
@@ -3859,7 +3859,7 @@ export type HasMetafieldsMetafieldsArgs = {
   identifiers: Array<HasMetafieldsIdentifier>;
 };
 
-/** Identifies a metafield on an owner resource by namespace and key. */
+/** The input fields to identify a metafield on an owner resource by namespace and key. */
 export type HasMetafieldsIdentifier = {
   /** The identifier for the metafield. */
   key: Scalars['String'];
@@ -4524,7 +4524,7 @@ export type MailingAddressEdge = {
   node: MailingAddress;
 };
 
-/** Specifies the fields accepted to create or update a mailing address. */
+/** The input fields to create or update a mailing address. */
 export type MailingAddressInput = {
   /**
    * The first line of the address. Typically the street address or PO Box number.
@@ -5060,7 +5060,7 @@ export type Model3dSource = {
   url: Scalars['String'];
 };
 
-/** Specifies the fields for a monetary value with currency. */
+/** The input fields for a monetary value with currency. */
 export type MoneyInput = {
   /** Decimal money amount. */
   amount: Scalars['Decimal'];
@@ -6024,7 +6024,10 @@ export enum PaymentTokenType {
   Vault = 'VAULT'
 }
 
-/** A filter used to view a subset of products in a collection matching a specific price range. */
+/**
+ * The input fields for a filter used to view a subset of products in a collection matching a specific price range.
+ *
+ */
 export type PriceRangeFilter = {
   /** The maximum price in the range. Empty indicates no max price. */
   max?: InputMaybe<Scalars['Float']>;
@@ -6301,7 +6304,7 @@ export type ProductEdge = {
   node: Product;
 };
 
-/** A filter used to view a subset of products in a collection. */
+/** The input fields for a filter used to view a subset of products in a collection. */
 export type ProductFilter = {
   /** Filter on if the product is available for sale. */
   available?: InputMaybe<Scalars['Boolean']>;
@@ -6913,7 +6916,7 @@ export type SelectedOption = {
   value: Scalars['String'];
 };
 
-/** Specifies the input fields required for a selected option. */
+/** The input fields required for a selected option. */
 export type SelectedOptionInput = {
   /** The product option’s name. */
   name: Scalars['String'];
@@ -7653,7 +7656,10 @@ export type UserError = DisplayableError & {
   message: Scalars['String'];
 };
 
-/** A filter used to view a subset of products in a collection matching a specific variant option. */
+/**
+ * The input fields for a filter used to view a subset of products in a collection matching a specific variant option.
+ *
+ */
 export type VariantOptionFilter = {
   /** The name of the variant option to filter on. */
   name: Scalars['String'];

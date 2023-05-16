@@ -1,6 +1,5 @@
 import { ALEGRA_API_TOKEN, ALEGRA_API_USERNAME } from "~/config/env.server"
 import logger from "~/helpers/logger.server"
-import Sentry from "~/services/sentry"
 import type {
   CreateContactRequest,
   CreateContactResponse,
@@ -70,7 +69,6 @@ export class Alegra {
 
           return parseCreateContactResponse(data)
         } catch (error) {
-          Sentry.captureException(error)
           throw new AlegraError(
             (error as Error).message,
             "create_contact_error"
@@ -86,7 +84,6 @@ export class Alegra {
 
           return parseGetContactResponse(data)
         } catch (error) {
-          Sentry.captureException(error)
           throw new AlegraError((error as Error).message, "get_contact_error")
         }
       },
@@ -117,7 +114,6 @@ export class Alegra {
 
           return parseGetCurrencyResponse(data)
         } catch (error) {
-          Sentry.captureException(error)
           throw new AlegraError((error as Error).message, "get_currency_error")
         }
       },
@@ -137,8 +133,6 @@ export class Alegra {
 
           return parseCreateInvoiceResponse(data)
         } catch (error) {
-          Sentry.captureException(error)
-
           throw new AlegraError(
             (error as Error).message,
             "create_invoice_error"
@@ -159,8 +153,6 @@ export class Alegra {
 
           return parseSendInvoiceResponse(data)
         } catch (error) {
-          Sentry.captureException(error)
-
           throw new AlegraError((error as Error).message, "send_invoice_error")
         }
       },
