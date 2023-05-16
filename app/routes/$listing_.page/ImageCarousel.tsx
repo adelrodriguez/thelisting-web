@@ -7,7 +7,7 @@ import { Image } from "~/components/common"
 import { generateCloudflareImageUrl } from "~/utils/cloudflare"
 import type { ImageCarouselProperties } from "~/utils/ribbons"
 
-import useTheme from "./ThemeProvider"
+import SectionWrapper from "./SectionWrapper"
 
 export default function ImageCarousel({
   images,
@@ -16,7 +16,6 @@ export default function ImageCarousel({
 }: ImageCarouselProperties) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const carouselInterval = useRef<NodeJS.Timer>()
-  const [styles] = useTheme()
 
   useEffect(() => {
     carouselInterval.current = setInterval(() => {
@@ -44,8 +43,8 @@ export default function ImageCarousel({
   }
 
   return (
-    <section>
-      <div className="px-4 py-10" style={styles}>
+    <SectionWrapper>
+      <div className="px-4 py-10">
         <div
           className={clsx("relative w-full overflow-hidden", {
             "h-screen": !height,
@@ -96,6 +95,6 @@ export default function ImageCarousel({
           </div>
         </div>
       </div>
-    </section>
+    </SectionWrapper>
   )
 }

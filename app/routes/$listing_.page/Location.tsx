@@ -1,28 +1,13 @@
 import type { LocationProperties } from "~/utils/ribbons"
 
-import useTheme from "./ThemeProvider"
+import SectionWrapper from "./SectionWrapper"
 
-export default function Location({
-  caption,
-  address,
-  embedCode,
-  height,
-}: LocationProperties) {
-  const [styles] = useTheme()
-  const regex = /<iframe[^>]*src="([^"]*)/i
-  const match = embedCode.match(regex)
-  const src = match ? match[1] : null
-
-  if (!src) {
-    return null
-  }
-
+export default function Location({ caption, address }: LocationProperties) {
   return (
-    <section>
-      <div className="px-4 pb-10" style={styles}>
+    <SectionWrapper>
+      <div className="pb-10">
         <iframe
-          className="w-full rounded-md shadow-lg"
-          style={{ border: 0, height: height || "100vh" }}
+          className="h-screen w-full border-0 shadow-lg"
           loading="lazy"
           allowFullScreen
           referrerPolicy="no-referrer-when-downgrade"
@@ -32,6 +17,6 @@ export default function Location({
         />
         {caption && <p className="mt-4 text-center text-lg">{caption}</p>}
       </div>
-    </section>
+    </SectionWrapper>
   )
 }

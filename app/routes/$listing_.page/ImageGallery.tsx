@@ -2,13 +2,12 @@ import { Image } from "~/components/common"
 import { generateCloudflareImageUrl } from "~/utils/cloudflare"
 import type { ImageGalleryProperties } from "~/utils/ribbons"
 
-import useTheme from "./ThemeProvider"
+import SectionWrapper from "./SectionWrapper"
 
 export default function ImageGallery({
   images,
   groupSize,
 }: ImageGalleryProperties) {
-  const [styles] = useTheme()
   const groupedImages = images.reduce((acc: string[][], image, index) => {
     if (index % groupSize === 0) {
       acc.push([])
@@ -20,8 +19,8 @@ export default function ImageGallery({
   }, [])
 
   return (
-    <section>
-      <div className="px-4 py-20" style={styles}>
+    <SectionWrapper>
+      <div className="px-4 py-20">
         <div className="grid grid-cols-2 gap-2">
           {groupedImages.map((images, index) => (
             <div key={`group${index}`} className="flex flex-col gap-2">
@@ -38,6 +37,6 @@ export default function ImageGallery({
           ))}
         </div>
       </div>
-    </section>
+    </SectionWrapper>
   )
 }

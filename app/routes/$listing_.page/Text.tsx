@@ -4,6 +4,7 @@ import clsx from "clsx"
 import { generateCloudflareImageUrl } from "~/utils/cloudflare"
 import type { TextProperties } from "~/utils/ribbons"
 
+import SectionWrapper from "./SectionWrapper"
 import useTheme from "./ThemeProvider"
 
 export default function Text({
@@ -15,11 +16,11 @@ export default function Text({
   url,
   urlLabel,
 }: TextProperties) {
-  const [style, theme] = useTheme()
+  const { theme } = useTheme()
 
   return (
-    <section>
-      <div style={style} className="px-4 py-10">
+    <SectionWrapper className="h-screen min-h-screen">
+      <div className="h-full px-4 py-10">
         {decorationImage && (
           <div className="h-32 lg:h-40">
             <img
@@ -52,6 +53,6 @@ export default function Text({
           )}
         </div>
       </div>
-    </section>
+    </SectionWrapper>
   )
 }

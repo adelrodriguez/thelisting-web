@@ -21,7 +21,7 @@ export function ThemeProvider({
   return <Context.Provider value={theme}>{children}</Context.Provider>
 }
 
-export default function useTheme(): [CSSProperties, Theme] {
+export default function useTheme(): { styles: CSSProperties; theme: Theme } {
   const theme = useContext(Context)
 
   if (theme === undefined) {
@@ -34,5 +34,5 @@ export default function useTheme(): [CSSProperties, Theme] {
     fontFamily: theme.fonts?.body,
   }
 
-  return [styles, theme]
+  return { styles, theme }
 }

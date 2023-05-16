@@ -143,7 +143,11 @@ export default function ListingPage() {
         </div>
         <div
           className="justify-cente z-10 flex flex-1 flex-col shadow-gray-700 lg:w-2/5 lg:flex-none lg:border-l-8"
-          style={{ borderColor: theme.colors?.secondary }}
+          style={{
+            backgroundColor: theme.colors?.background,
+            borderColor: theme.colors?.secondary,
+            color: theme.colors?.text,
+          }}
         >
           {listing.ribbons.map((ribbon) => {
             const result = RibbonSchema.safeParse(ribbon)

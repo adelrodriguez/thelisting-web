@@ -7,6 +7,7 @@ import { useInterval } from "~/utils/hooks"
 import type { CountdownProperties } from "~/utils/ribbons"
 import { capitalize } from "~/utils/string"
 
+import SectionWrapper from "./SectionWrapper"
 import useTheme from "./ThemeProvider"
 
 function getRemainingTime(eventDatetime: Date) {
@@ -20,7 +21,7 @@ function getRemainingTime(eventDatetime: Date) {
 
 export default function Countdown({ eventDatetime }: CountdownProperties) {
   const [remaining, setRemaining] = useState(getRemainingTime(eventDatetime))
-  const [styles, theme] = useTheme()
+  const { theme } = useTheme()
 
   const clearInterval = useInterval(() => {
     setRemaining(getRemainingTime(eventDatetime))
@@ -34,37 +35,35 @@ export default function Countdown({ eventDatetime }: CountdownProperties) {
   }, [clearInterval, eventDatetime])
 
   return (
-    <section>
-      <div style={styles} className="flex items-center py-20 px-4">
-        {/* // TODO(adelrodriguez): Set a loading component */}
-        <ClientOnly
-          fallback={
-            <div className="flex w-full justify-center">
-              <Spinner className="h-10 w-10" />
-            </div>
-          }
-        >
-          {() => (
-            <div className="flex w-full justify-around">
-              {Object.keys(remaining)
-                .filter((key) => key !== "years")
-                .map((key) => (
-                  <div className="flex flex-col items-center" key={key}>
-                    <div
-                      className="text-2xl font-bold lg:text-3xl xl:text-5xl"
-                      style={{ fontFamily: theme.fonts?.heading }}
-                    >
-                      {remaining[key as keyof typeof remaining]}
-                    </div>
-                    <div className="font-body text-sm font-bold">
-                      {capitalize(key)}
-                    </div>
+    <SectionWrapper className="h-screen">
+      {/* // TODO(adelrodriguez): Set a loading component */}
+      <ClientOnly
+        fallback={
+          <div className="flex w-full justify-center">
+            <Spinner className="h-10 w-10" />
+          </div>
+        }
+      >
+        {() => (
+          <div className="flex h-full w-full items-center justify-around">
+            {Object.keys(remaining)
+              .filter((key) => key !== "years")
+              .map((key) => (
+                <div className="flex flex-col items-center" key={key}>
+                  <div
+                    className="text-2xl font-bold lg:text-3xl xl:text-5xl"
+                    style={{ fontFamily: theme.fonts?.heading }}
+                  >
+                    {remaining[key as keyof typeof remaining]}
                   </div>
-                ))}
-            </div>
-          )}
-        </ClientOnly>
-      </div>
-    </section>
+                  <div className="font-body text-sm font-bold">
+                    {capitalize(key)}
+                  </div>
+                </div>
+              ))}
+          </div>
+        )}
+      </ClientOnly>
+    </SectionWrapper>
   )
 }

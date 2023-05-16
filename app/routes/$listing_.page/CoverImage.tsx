@@ -6,24 +6,25 @@ import { Image } from "~/components/common"
 import { generateCloudflareImageUrl } from "~/utils/cloudflare"
 import type { CoverImageProperties } from "~/utils/ribbons"
 
+import SectionWrapper from "./SectionWrapper"
 import useTheme from "./ThemeProvider"
 
 export default function CoverImage({
   image,
   height,
-  onView,
-}: { onView: (image: string) => void } & CoverImageProperties) {
+}: // onView,
+{ onView: (image: string) => void } & CoverImageProperties) {
   const ref = useRef<HTMLDivElement>(null)
-  const [styles, theme] = useTheme()
+  const { theme } = useTheme()
   const inView = useInView(ref)
 
-  useEffect(() => {
-    if (inView) onView(image)
-  }, [inView, onView, image])
+  // useEffect(() => {
+  //   if (inView) onView(image)
+  // }, [inView, onView, image])
 
   return (
-    <section>
-      <div ref={ref} style={styles}>
+    <SectionWrapper className="min-h-screen sm:min-h-0">
+      <div ref={ref}>
         <div className={clsx("relative block lg:hidden")}>
           <div style={{ height: height ? height : "100vh" }}>
             {image && (
@@ -37,6 +38,6 @@ export default function CoverImage({
           </div>
         </div>
       </div>
-    </section>
+    </SectionWrapper>
   )
 }

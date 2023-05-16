@@ -30,9 +30,7 @@ export default function LocationRibbonForm({
       action="?/properties"
     >
       <Input label="Caption" name="caption" />
-      <Input label="Height" name="height" type="number" />
-      <Input label="Address" name="address" />
-      <TextArea label="Embed Code" name="embedCode" rows={5} />
+      <TextArea label="Address" name="address" rows={2} />
     </Form>
   )
 }
