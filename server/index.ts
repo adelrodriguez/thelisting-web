@@ -1,4 +1,5 @@
 import { createRequestHandler } from "@remix-run/express"
+import { broadcastDevReady } from "@remix-run/node"
 import compression from "compression"
 import express from "express"
 import morgan from "morgan"
@@ -64,9 +65,13 @@ app.all(
 )
 
 app.listen(port, () => {
-  logger.info(`Express server listening on port ${port}`)
-  isDevelopment &&
+  const build = require(BUILD_DIR)
+  logger.info("Ready: http://localhost:" + port)
+
+  if (isDevelopment) {
     logger.info(`Local network IP: http://${getLocalNetworkIP()}:${port}}`)
+    broadcastDevReady(build)
+  }
 
   // Start cron jobs
   logger.info("Starting cron jobs")
