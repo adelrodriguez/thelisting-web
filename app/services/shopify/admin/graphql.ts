@@ -37388,7 +37388,7 @@ export type ShippingRefundInput = {
 };
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type Shop = HasMetafields & HasPublishedTranslations & Node & {
@@ -37684,7 +37684,7 @@ export type Shop = HasMetafields & HasPublishedTranslations & Node & {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopAssignedFulfillmentOrdersArgs = {
@@ -37700,7 +37700,7 @@ export type ShopAssignedFulfillmentOrdersArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopAvailableChannelAppsArgs = {
@@ -37713,7 +37713,7 @@ export type ShopAvailableChannelAppsArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopChannelsArgs = {
@@ -37726,7 +37726,7 @@ export type ShopChannelsArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopCollectionByHandleArgs = {
@@ -37735,7 +37735,7 @@ export type ShopCollectionByHandleArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopCollectionSavedSearchesArgs = {
@@ -37748,7 +37748,7 @@ export type ShopCollectionSavedSearchesArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopCollectionsArgs = {
@@ -37764,7 +37764,7 @@ export type ShopCollectionsArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopCurrencySettingsArgs = {
@@ -37777,7 +37777,7 @@ export type ShopCurrencySettingsArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopCustomerSavedSearchesArgs = {
@@ -37792,7 +37792,7 @@ export type ShopCustomerSavedSearchesArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopCustomerTagsArgs = {
@@ -37801,7 +37801,7 @@ export type ShopCustomerTagsArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopCustomersArgs = {
@@ -37816,7 +37816,7 @@ export type ShopCustomersArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopDraftOrderSavedSearchesArgs = {
@@ -37829,7 +37829,7 @@ export type ShopDraftOrderSavedSearchesArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopDraftOrderTagsArgs = {
@@ -37838,7 +37838,7 @@ export type ShopDraftOrderTagsArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopDraftOrdersArgs = {
@@ -37853,7 +37853,7 @@ export type ShopDraftOrdersArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopFulfillmentOrdersArgs = {
@@ -37869,7 +37869,7 @@ export type ShopFulfillmentOrdersArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopInventoryItemsArgs = {
@@ -37883,7 +37883,7 @@ export type ShopInventoryItemsArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopLocationsArgs = {
@@ -37900,7 +37900,7 @@ export type ShopLocationsArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopMarketingEventsArgs = {
@@ -37915,7 +37915,7 @@ export type ShopMarketingEventsArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopMetafieldArgs = {
@@ -37925,7 +37925,7 @@ export type ShopMetafieldArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopMetafieldsArgs = {
@@ -37940,7 +37940,7 @@ export type ShopMetafieldsArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopOrderSavedSearchesArgs = {
@@ -37953,7 +37953,7 @@ export type ShopOrderSavedSearchesArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopOrderTagsArgs = {
@@ -37963,7 +37963,7 @@ export type ShopOrderTagsArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopOrdersArgs = {
@@ -37978,7 +37978,7 @@ export type ShopOrdersArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopPriceRuleSavedSearchesArgs = {
@@ -37991,7 +37991,7 @@ export type ShopPriceRuleSavedSearchesArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopPriceRulesArgs = {
@@ -38007,7 +38007,7 @@ export type ShopPriceRulesArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopPrivateMetafieldArgs = {
@@ -38017,7 +38017,7 @@ export type ShopPrivateMetafieldArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopPrivateMetafieldsArgs = {
@@ -38031,7 +38031,7 @@ export type ShopPrivateMetafieldsArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopProductByHandleArgs = {
@@ -38040,7 +38040,7 @@ export type ShopProductByHandleArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopProductImagesArgs = {
@@ -38054,7 +38054,7 @@ export type ShopProductImagesArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopProductSavedSearchesArgs = {
@@ -38067,7 +38067,7 @@ export type ShopProductSavedSearchesArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopProductTagsArgs = {
@@ -38076,7 +38076,7 @@ export type ShopProductTagsArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopProductTypesArgs = {
@@ -38085,7 +38085,7 @@ export type ShopProductTypesArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopProductVariantsArgs = {
@@ -38100,7 +38100,7 @@ export type ShopProductVariantsArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopProductVendorsArgs = {
@@ -38109,7 +38109,7 @@ export type ShopProductVendorsArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopProductsArgs = {
@@ -38125,7 +38125,7 @@ export type ShopProductsArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopSearchArgs = {
@@ -38137,7 +38137,7 @@ export type ShopSearchArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopStaffMembersArgs = {
@@ -38150,7 +38150,7 @@ export type ShopStaffMembersArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopStorefrontAccessTokensArgs = {
@@ -38163,7 +38163,7 @@ export type ShopStorefrontAccessTokensArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopTranslationsArgs = {
@@ -38173,7 +38173,7 @@ export type ShopTranslationsArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopUploadedImagesByIdsArgs = {
