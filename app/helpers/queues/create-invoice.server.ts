@@ -1,4 +1,3 @@
-import * as Sentry from "@sentry/remix"
 import type { Processor } from "bullmq"
 
 import type { Currency } from "~/config/consts"
@@ -60,7 +59,11 @@ export const processor: Processor<QueueData> = async (job) => {
 
     logger.info(`Invoice ${invoiceNumber} sent to ${emails.join(", ")}`)
   } catch (error) {
-    Sentry.captureException(error)
+    logger.error((error as Error).message, {
+      error,
+      jobId: job.id,
+      queue: QUEUE_NAMES.CreateInvoice,
+    })
 
     throw error
   }

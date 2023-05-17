@@ -3,8 +3,9 @@ require("./app/config/env.server.js")
 /** @type {import('@remix-run/dev').AppConfig} */
 module.exports = {
   future: {
-    unstable_tailwind: true,
+    unstable_dev: true,
     v2_meta: true,
+    v2_normalizeFormMethod: true,
     v2_routeConvention: true,
   },
   ignoredRouteFiles: [
@@ -23,4 +24,5 @@ module.exports = {
     "react-dnd-html5-backend",
     "react-dnd",
   ],
+  tailwind: true,
 }

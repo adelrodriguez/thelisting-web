@@ -1,7 +1,6 @@
 import type { EntryContext } from "@remix-run/node"
 import { Response } from "@remix-run/node"
 import { RemixServer } from "@remix-run/react"
-import * as Sentry from "@sentry/remix"
 import { createInstance } from "i18next"
 import Backend from "i18next-fs-backend"
 import isbot from "isbot"
@@ -10,9 +9,6 @@ import { renderToPipeableStream } from "react-dom/server"
 import { I18nextProvider, initReactI18next } from "react-i18next"
 import { PassThrough } from "stream"
 
-import { RAILWAY_GIT_COMMIT_SHA, SENTRY_DSN } from "~/config/env.server"
-import { isProduction } from "~/config/vars"
-import db from "~/helpers/db.server"
 import i18next from "~/helpers/i18next.server"
 import i18n from "~/i18n"
 
@@ -80,15 +76,5 @@ export default async function handleRequest(
     )
 
     setTimeout(abort, ABORT_DELAY)
-  })
-}
-
-if (isProduction) {
-  Sentry.init({
-    dsn: SENTRY_DSN,
-    environment: process.env.NODE_ENV,
-    integrations: [new Sentry.Integrations.Prisma({ client: db })],
-    release: RAILWAY_GIT_COMMIT_SHA,
-    tracesSampleRate: 1,
   })
 }

@@ -1,10 +1,11 @@
 import type { Item } from "@prisma/client"
 import { Link } from "@remix-run/react"
-import * as Sentry from "@sentry/remix"
 import clsx from "clsx"
+import { useEffect } from "react"
 import { useTranslation } from "react-i18next"
 
 import { Image } from "~/components/common"
+import * as gtag from "~/utils/gtag.client"
 import { useProduct } from "~/utils/hooks"
 import { formatPrice } from "~/utils/money"
 
@@ -19,6 +20,16 @@ export default function RegistryItem({
 }) {
   const { data, isLoading, isError, error } = useProduct(commerceId)
   const { t } = useTranslation("registry")
+
+  useEffect(() => {
+    if (isError) {
+      gtag.event({
+        action: "exception",
+        category: "registry-item",
+        parameters: { error },
+      })
+    }
+  }, [isError, error])
 
   if (isLoading) {
     return (
@@ -37,8 +48,6 @@ export default function RegistryItem({
   }
 
   if (isError) {
-    Sentry.captureException(error)
-
     return null
   }
 

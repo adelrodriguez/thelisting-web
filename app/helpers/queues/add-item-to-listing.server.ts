@@ -6,7 +6,6 @@ import invariant from "tiny-invariant"
 import { QUEUE_NAMES } from "~/config/consts"
 import db from "~/helpers/db.server"
 import { createQueue } from "~/helpers/queue.server"
-import Sentry from "~/services/sentry"
 import {
   calculatePriceWithMargin,
   multiplyPriceByExchangeRate,
@@ -17,6 +16,8 @@ import {
   getProductsByTag,
   publishToCurrentChannel,
 } from "~/utils/shopify.server"
+
+import logger from "../logger.server"
 
 export type QueueData = {
   exchangeRate: number // The exchange rate from USD to DOP
@@ -142,7 +143,11 @@ export const processor: Processor<QueueData> = async (job) => {
 
     job.log(`Upsert item ${item.id}`)
   } catch (error) {
-    Sentry.captureException(error)
+    logger.error((error as Error).message, {
+      error,
+      jobId: job.id,
+      queue: QUEUE_NAMES.AddItemToListing,
+    })
 
     throw error
   }

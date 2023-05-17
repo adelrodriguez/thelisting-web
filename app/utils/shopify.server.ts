@@ -12,7 +12,6 @@ import {
   shopifyStorefrontAPIHeaders,
 } from "~/config/vars.server"
 import logger from "~/helpers/logger.server"
-import Sentry from "~/services/sentry"
 import {
   getOrderCustomAttributesQuery,
   getProductsByTagQuery,
@@ -90,7 +89,6 @@ export async function createCheckout(
     logger.error("Unable to create checkout", {
       userErrors: checkoutCreate?.userErrors,
     })
-    Sentry.captureException(checkoutCreate?.userErrors)
     throw new ShopifyError("Unable to create checkout", "checkout_create_error")
   }
 
@@ -222,7 +220,6 @@ export async function createProduct({
     logger.error("Unable to create product", {
       userErrors: productCreate?.userErrors,
     })
-    Sentry.captureException(productCreate?.userErrors)
     throw new ShopifyError("Unable to create product", "product_create_error")
   }
 
@@ -320,7 +317,6 @@ export async function addProductsToCollection(
     logger.error("Unable to add products to collection", {
       userErrors: collectionAddProducts?.userErrors,
     })
-    Sentry.captureException(collectionAddProducts?.userErrors)
     throw new ShopifyError(
       "Unable to add products to collection",
       "add_products_to_collection_error"
@@ -348,7 +344,6 @@ export async function removeProductsFromCollection(
     logger.error("Unable to remove products from collection", {
       userErrors: collectionRemoveProducts?.userErrors,
     })
-    Sentry.captureException(collectionRemoveProducts?.userErrors)
     throw new ShopifyError(
       "Unable to remove products from collection",
       "remove_products_from_collection_error"
@@ -373,8 +368,6 @@ export async function addTags(id: string, tags: string[]) {
     logger.error("Unable to create checkout", {
       userErrors: tagsAdd?.userErrors,
     })
-
-    Sentry.captureException(tagsAdd?.userErrors)
 
     throw new ShopifyError("Unable to create tags", "checkout_create_error")
   }

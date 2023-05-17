@@ -4,12 +4,12 @@ import { redirect } from "@remix-run/node"
 import { Link, useLoaderData } from "@remix-run/react"
 import { ReasonPhrases, StatusCodes } from "http-status-codes"
 import { useTranslation } from "react-i18next"
+import invariant from "tiny-invariant"
 import { z } from "zod"
 import { zx } from "zodix"
 
 import { Image } from "~/components/common"
 import { OrderItem } from "~/components/registry"
-import Sentry from "~/services/sentry"
 import { generateCloudflareImageUrl } from "~/utils/cloudflare"
 import useTrackPageview from "~/utils/hooks/use-track-pageview"
 import { formatPrice } from "~/utils/money"
@@ -22,13 +22,15 @@ export const handle = {
 
 export async function loader({ params, request, context }: LoaderArgs) {
   const db = context.db
+  const logger = context.logger
   const requestUrl = new URL(request.url)
-  const { listing: path } = zx.parseParams(params, { listing: z.string() })
   const orderId = requestUrl.searchParams.get("order_id")
 
-  if (!orderId) throw redirect(`/${path}`)
-
   try {
+    const { listing: path } = zx.parseParams(params, { listing: z.string() })
+
+    invariant(orderId, "No order id found in request")
+
     const order = await getOrder(getShopifyId(orderId, "Order"))
 
     const listing = await db.listing.findFirst({
@@ -50,10 +52,11 @@ export async function loader({ params, request, context }: LoaderArgs) {
 
     return json({ listing, order })
   } catch (error) {
-    Sentry.captureMessage(
-      `Error loading order on listing ${path}. Order id: ${orderId}`
-    )
-    throw redirect(`/${path}`)
+    logger.error((error as Error).message, {
+      orderId,
+    })
+
+    return redirect("/")
   }
 }
 

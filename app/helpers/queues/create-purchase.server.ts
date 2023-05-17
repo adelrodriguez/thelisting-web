@@ -4,9 +4,9 @@ import type { Processor } from "bullmq"
 import { QUEUE_NAMES } from "~/config/consts"
 import { SHOPIFY_SHIPPING_ITEM_1_ID } from "~/config/env.server"
 import db from "~/helpers/db.server"
+import logger from "~/helpers/logger.server"
 import { createQueue } from "~/helpers/queue.server"
 import { CreateItemPurchaseQueue } from "~/helpers/queues"
-import Sentry from "~/services/sentry"
 import { GenericError } from "~/utils/error"
 import { getShopifyId, transformCustomAttributes } from "~/utils/shopify"
 import { getOrder } from "~/utils/shopify.server"
@@ -111,7 +111,11 @@ export const processor: Processor<QueueData> = async (job) => {
 
     job.log(`Finished processing purchase ${purchase.id}`)
   } catch (error) {
-    Sentry.captureException(error)
+    logger.error((error as Error).message, {
+      error,
+      jobId: job.id,
+      queue: QUEUE_NAMES.CreatePurchase,
+    })
 
     throw error
   }

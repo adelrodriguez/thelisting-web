@@ -1060,7 +1060,7 @@ export type AppRevenueAttributionRecordEdge = {
   node: AppRevenueAttributionRecord;
 };
 
-/** Allows to supply an app revenue attribution record. */
+/** The input fields to supply an app revenue attribution record. */
 export type AppRevenueAttributionRecordInput = {
   /** The financial amount captured in this attribution. */
   amount: MoneyInput;
@@ -1187,7 +1187,7 @@ export type AppSubscriptionDiscountAmount = {
 };
 
 /**
- * Specifies a discount to the recurring pricing portion of a subscription over a number of billing intervals.
+ * The input fields to specify a discount to the recurring pricing portion of a subscription over a number of billing intervals.
  *
  */
 export type AppSubscriptionDiscountInput = {
@@ -1211,7 +1211,7 @@ export type AppSubscriptionDiscountPercentage = {
 /** The value of the discount. */
 export type AppSubscriptionDiscountValue = AppSubscriptionDiscountAmount | AppSubscriptionDiscountPercentage;
 
-/** Specifies the value discounted every billing interval. */
+/** The input fields to specify the value discounted every billing interval. */
 export type AppSubscriptionDiscountValueInput = {
   /** The monetary value of a discount. */
   amount?: InputMaybe<Scalars['Decimal']>;
@@ -1253,7 +1253,7 @@ export type AppSubscriptionLineItemUsageRecordsArgs = {
   sortKey?: InputMaybe<AppUsageRecordSortKeys>;
 };
 
-/** Allows an app to add more than one pricing plan to an app subscription. */
+/** The input fields to add more than one pricing plan to an app subscription. */
 export type AppSubscriptionLineItemInput = {
   /** The pricing model for the app subscription. */
   plan: AppPlanInput;
@@ -1393,7 +1393,7 @@ export type AppUsagePricing = {
   terms: Scalars['String'];
 };
 
-/** Allows an app to issue arbitrary charges for app usage associated with a subscription. */
+/** The input fields to issue arbitrary charges for app usage associated with a subscription. */
 export type AppUsagePricingInput = {
   /** The maximum amount of usage charges that can be incurred within a subscription billing interval. */
   cappedAmount: MoneyInput;
@@ -1479,7 +1479,7 @@ export type Attribute = {
   value?: Maybe<Scalars['String']>;
 };
 
-/** Specifies the input fields required for an attribute. */
+/** The input fields for an attribute. */
 export type AttributeInput = {
   /** Key or name of the attribute. */
   key: Scalars['String'];
@@ -2404,7 +2404,7 @@ export type CatalogConnection = {
   totalCount: Scalars['UnsignedInt64'];
 };
 
-/** The context that the catalog's publishing and pricing rules apply to. */
+/** The input fields for the context in which the catalog's publishing and pricing rules apply. */
 export type CatalogContextInput = {
   /** The IDs of the company locations to associate to the catalog. */
   companyLocationIds?: InputMaybe<Array<Scalars['ID']>>;
@@ -3364,7 +3364,7 @@ export type CollectionCreatePayload = {
   userErrors: Array<UserError>;
 };
 
-/** Specifies the collection to delete. */
+/** The input fields for specifying the collection to delete. */
 export type CollectionDeleteInput = {
   /** The ID of the collection to be deleted. */
   id: Scalars['ID'];
@@ -3393,7 +3393,7 @@ export type CollectionEdge = {
   node: Collection;
 };
 
-/** Specifies the input fields required to create a collection. */
+/** The input fields required to create a collection. */
 export type CollectionInput = {
   /** The description of the collection, in HTML format. */
   descriptionHtml?: InputMaybe<Scalars['String']>;
@@ -3480,13 +3480,13 @@ export type CollectionPublicationEdge = {
   node: CollectionPublication;
 };
 
-/** Specifies the publications to which a collection will be published. */
+/** The input fields for publications to which a collection will be published. */
 export type CollectionPublicationInput = {
   /** The ID of the publication. */
   publicationId?: InputMaybe<Scalars['ID']>;
 };
 
-/** Specifies a collection to publish and the sales channels to publish it to. */
+/** The input fields for specifying a collection to publish and the sales channels to publish it to. */
 export type CollectionPublishInput = {
   /** The channels where the collection will be published. */
   collectionPublications: Array<CollectionPublicationInput>;
@@ -3601,7 +3601,7 @@ export type CollectionRuleConditions = {
 /** Specifies object with additional rule attributes. */
 export type CollectionRuleConditionsRuleObject = CollectionRuleMetafieldCondition;
 
-/** Specifies a rule to associate with a collection. */
+/** The input fields for a rule to associate with a collection. */
 export type CollectionRuleInput = {
   /** The attribute that the rule focuses on. For example, `title` or `product_type`. */
   column: CollectionRuleColumn;
@@ -3672,7 +3672,7 @@ export type CollectionRuleSet = {
   rules: Array<CollectionRule>;
 };
 
-/** Specifies a rule set for the collection. */
+/** The input fields for a rule set of the collection. */
 export type CollectionRuleSetInput = {
   /**
    * Whether products must match any or all of the rules to be included in the collection.
@@ -3728,7 +3728,10 @@ export enum CollectionSortOrder {
   PriceDesc = 'PRICE_DESC'
 }
 
-/** Specifies the collection to unpublish and the sales channels to remove it from. */
+/**
+ * The input fields for specifying the collection to unpublish and the sales channels to remove it from.
+ *
+ */
 export type CollectionUnpublishInput = {
   /** The channels where the collection is published. */
   collectionPublications: Array<CollectionPublicationInput>;
@@ -4088,7 +4091,7 @@ export type CompanyAddressDeletePayload = {
   userErrors: Array<BusinessCustomerUserError>;
 };
 
-/** Specifies the input fields to create or update the address of a company location. */
+/** The input fields to create or update the address of a company location. */
 export type CompanyAddressInput = {
   /** The first line of the address. Typically the street address or PO Box number. */
   address1?: InputMaybe<Scalars['String']>;
@@ -4274,7 +4277,7 @@ export type CompanyContactEdge = {
   node: CompanyContact;
 };
 
-/** The company contact attributes to use when creating a company or updating a company contact. */
+/** The input fields for company contact attributes when creating or updating a company contact. */
 export type CompanyContactInput = {
   /** The unique email address of the company contact. */
   email?: InputMaybe<Scalars['String']>;
@@ -4324,7 +4327,7 @@ export type CompanyContactRole = Node & {
 };
 
 /**
- * The role and location to assign to a company contact.
+ * The input fields for the role and location to assign to a company contact.
  *
  */
 export type CompanyContactRoleAssign = {
@@ -4484,7 +4487,7 @@ export type CompanyContactsDeletePayload = {
 };
 
 /**
- * Provides the fields and values to use when creating a company and its associated resources.
+ * The input fields and values for creating a company and its associated resources.
  *
  */
 export type CompanyCreateInput = {
@@ -4526,7 +4529,7 @@ export type CompanyEdge = {
   node: Company;
 };
 
-/** The company attributes to use when creating or updating a company. */
+/** The input fields for company attributes when creating or updating a company. */
 export type CompanyInput = {
   /**
    * The date and time ([ISO 8601 format](http://en.wikipedia.org/wiki/ISO_8601)) at
@@ -4844,7 +4847,7 @@ export type CompanyLocationEdge = {
   node: CompanyLocation;
 };
 
-/** The company location fields to use when creating or updating a company location. */
+/** The input fields for company location when creating or updating a company location. */
 export type CompanyLocationInput = {
   /** The input fields to create or update the billing address for a company location. */
   billingAddress?: InputMaybe<CompanyAddressInput>;
@@ -4898,7 +4901,7 @@ export type CompanyLocationRevokeTaxRegistrationPayload = {
 };
 
 /**
- * The role and contact to assign on a location.
+ * The input fields for the role and contact to assign on a location.
  *
  */
 export type CompanyLocationRoleAssign = {
@@ -4930,7 +4933,7 @@ export enum CompanyLocationSortKeys {
   UpdatedAt = 'UPDATED_AT'
 }
 
-/** The company location fields to use when creating or updating a company location. */
+/** The input fields for company location when creating or updating a company location. */
 export type CompanyLocationUpdateInput = {
   /** The configuration for the buyer's checkout at the company location. */
   buyerExperienceConfiguration?: InputMaybe<BuyerExperienceConfigurationInput>;
@@ -5006,7 +5009,7 @@ export type CompanyUpdatePayload = {
   userErrors: Array<BusinessCustomerUserError>;
 };
 
-/** The context data that determines the pricing of a variant. */
+/** The input fields for the context data that determines the pricing of a variant. */
 export type ContextualPricingContext = {
   /**
    * The CompanyLocation ID used to fetch company location specific prices.
@@ -5573,7 +5576,7 @@ export type CountryHarmonizedSystemCodeEdge = {
 };
 
 /**
- * The fields required to specify a harmonized system code.
+ * The input fields required to specify a harmonized system code.
  *
  */
 export type CountryHarmonizedSystemCodeInput = {
@@ -5583,7 +5586,7 @@ export type CountryHarmonizedSystemCodeInput = {
   harmonizedSystemCode: Scalars['String'];
 };
 
-/** Specifies the input fields required to create a media object. */
+/** The input fields required to create a media object. */
 export type CreateMediaInput = {
   /** The alt text associated with the media. */
   alt?: InputMaybe<Scalars['String']>;
@@ -6440,7 +6443,7 @@ export type CustomerCreditCardBillingAddress = {
   zip?: Maybe<Scalars['String']>;
 };
 
-/** Specifies the customer to delete. */
+/** The input fields to delete a customer. */
 export type CustomerDeleteInput = {
   /** The ID of the customer to delete. */
   id: Scalars['ID'];
@@ -6590,7 +6593,7 @@ export type CustomerEmailMarketingConsentState = {
 };
 
 /**
- * The email consent information to update for a given customer ID.
+ * The input fields for the email consent information to update for a given customer ID.
  *
  */
 export type CustomerEmailMarketingConsentUpdateInput = {
@@ -6681,7 +6684,7 @@ export type CustomerGenerateAccountActivationUrlPayload = {
   userErrors: Array<UserError>;
 };
 
-/** Provides the fields and values to use when creating or updating a customer. */
+/** The input fields and values to use when creating or updating a customer. */
 export type CustomerInput = {
   /** The addresses for a customer. */
   addresses?: InputMaybe<Array<MailingAddressInput>>;
@@ -6852,7 +6855,7 @@ export enum CustomerMergeErrorFieldType {
 }
 
 /**
- * Provides fields to override default customer merge rules.
+ * The input fields to override default customer merge rules.
  *
  */
 export type CustomerMergeOverrideFields = {
@@ -7312,7 +7315,7 @@ export type CustomerPaymentMethodRemoteCreditCardCreatePayload = {
 };
 
 /**
- * Input for a remote gateway payment method, only one remote reference permitted.
+ * The input fields for a remote gateway payment method, only one remote reference permitted.
  *
  */
 export type CustomerPaymentMethodRemoteInput = {
@@ -7620,7 +7623,7 @@ export type CustomerSegmentMembersQueryCreatePayload = {
   userErrors: Array<CustomerSegmentMembersQueryUserError>;
 };
 
-/** Provides the fields and values to use when creating a customer segment members query. */
+/** The input fields and values for creating a customer segment members query. */
 export type CustomerSegmentMembersQueryInput = {
   /** The query that's used to filter the members. The query is composed of a combination of conditions on facts about customers such as `email_subscription_status = 'SUBSCRIBED'` with [this syntax](https://shopify.dev/api/shopifyql/segment-query-language-reference). */
   query?: InputMaybe<Scalars['String']>;
@@ -7742,7 +7745,7 @@ export type CustomerSmsMarketingConsentState = {
 };
 
 /**
- * The SMS marketing consent information to update for a given customer ID.
+ * The input fields for updating SMS marketing consent information for a given customer ID.
  *
  */
 export type CustomerSmsMarketingConsentUpdateInput = {
@@ -8609,7 +8612,7 @@ export type DeliveryLocationGroupZoneInput = {
   name?: InputMaybe<Scalars['String']>;
 };
 
-/** A local pickup setting associated with a location. */
+/** The input fields for a local pickup setting associated with a location. */
 export type DeliveryLocationLocalPickupEnableInput = {
   /** The instructions for the local pickup. */
   instructions?: InputMaybe<Scalars['String']>;
@@ -9241,7 +9244,7 @@ export type DiscountAmount = {
   appliesOnEachItem: Scalars['Boolean'];
 };
 
-/** Specifies the value of the discount and how it is applied. */
+/** The input fields for the value of the discount and how it is applied. */
 export type DiscountAmountInput = {
   /** The value of the discount. */
   amount?: InputMaybe<Scalars['Decimal']>;
@@ -9475,7 +9478,7 @@ export type DiscountAutomaticBasicCreatePayload = {
   userErrors: Array<DiscountUserError>;
 };
 
-/** The input that's used to create or update an automatic basic discount. */
+/** The input fields to create or update an automatic basic discount. */
 export type DiscountAutomaticBasicInput = {
   /** Determines which discount classes the discount can combine with. */
   combinesWith?: InputMaybe<DiscountCombinesWithInput>;
@@ -9573,7 +9576,7 @@ export type DiscountAutomaticBxgyCreatePayload = {
   userErrors: Array<DiscountUserError>;
 };
 
-/** Specifies input field to create or update an automatic Buy X, Get Y (BXGY) discount. */
+/** The input fields to create or update an automatic Buy X, Get Y (BXGY) discount. */
 export type DiscountAutomaticBxgyInput = {
   /** Determines which discount classes the discount can combine with. */
   combinesWith?: InputMaybe<DiscountCombinesWithInput>;
@@ -9976,7 +9979,7 @@ export type DiscountCodeBasicCreatePayload = {
   userErrors: Array<DiscountUserError>;
 };
 
-/** The input field to create or update a basic code discount. */
+/** The input fields to create or update a basic code discount. */
 export type DiscountCodeBasicInput = {
   /** Whether the discount can be applied only once per customer. */
   appliesOncePerCustomer?: InputMaybe<Scalars['Boolean']>;
@@ -10107,7 +10110,7 @@ export type DiscountCodeBxgyCreatePayload = {
   userErrors: Array<DiscountUserError>;
 };
 
-/** Specifies input field to create or update a BXGY code discount. */
+/** The input fields to create or update a BXGY code discount. */
 export type DiscountCodeBxgyInput = {
   /** Whether the discount can be applied only once per customer. */
   appliesOncePerCustomer?: InputMaybe<Scalars['Boolean']>;
@@ -10237,7 +10240,7 @@ export type DiscountCodeFreeShippingCreatePayload = {
   userErrors: Array<DiscountUserError>;
 };
 
-/** Specifies input field to create or update free shipping code discount. */
+/** The input fields to create or update a free shipping code discount. */
 export type DiscountCodeFreeShippingInput = {
   /** Whether the discount applies on regular one-time-purchase items. */
   appliesOnOneTimePurchase?: InputMaybe<Scalars['Boolean']>;
@@ -10430,7 +10433,7 @@ export type DiscountCollectionsCollectionsArgs = {
   reverse?: InputMaybe<Scalars['Boolean']>;
 };
 
-/** Specifies the collections attached to a discount. */
+/** The input fields for collections attached to a discount. */
 export type DiscountCollectionsInput = {
   /** Specifies list of collection ids to add. */
   add?: InputMaybe<Array<Scalars['ID']>>;
@@ -10449,7 +10452,7 @@ export type DiscountCombinesWith = {
   shippingDiscounts: Scalars['Boolean'];
 };
 
-/** Determines which discount classes the discount can combine with. */
+/** The input fields to determine which discount classes the discount can combine with. */
 export type DiscountCombinesWithInput = {
   /** Combines with order discounts. */
   orderDiscounts?: InputMaybe<Scalars['Boolean']>;
@@ -10468,7 +10471,7 @@ export type DiscountCountries = {
   includeRestOfWorld: Scalars['Boolean'];
 };
 
-/** Specifies a list of countries to add or remove from the free shipping discount. */
+/** The input fields for a list of countries to add or remove from the free shipping discount. */
 export type DiscountCountriesInput = {
   /** The country codes to add to the list of countries where the discount applies. */
   add?: InputMaybe<Array<CountryCode>>;
@@ -10501,7 +10504,7 @@ export type DiscountCustomerBuys = {
   value: DiscountCustomerBuysValue;
 };
 
-/** The prerequisite items and quantity for the discount. */
+/** The input fields for prerequisite items and quantity for the discount. */
 export type DiscountCustomerBuysInput = {
   /** The IDs of items that the customer buys. The items can be either collections or products. */
   items?: InputMaybe<DiscountItemsInput>;
@@ -10512,7 +10515,7 @@ export type DiscountCustomerBuysInput = {
 /** The prerequisite for the discount to be applicable. For example, the discount might require a customer to buy a minimum quantity of select items. Alternatively, the discount might require a customer to spend a minimum amount on select items. */
 export type DiscountCustomerBuysValue = DiscountPurchaseAmount | DiscountQuantity;
 
-/** The prerequisite quantity or the minimum purchase amount required for the discount. */
+/** The input fields for prerequisite quantity or minimum purchase amount required for the discount. */
 export type DiscountCustomerBuysValueInput = {
   /** The prerequisite minimum purchase amount required for the discount to be applicable. */
   amount?: InputMaybe<Scalars['Decimal']>;
@@ -10548,7 +10551,7 @@ export type DiscountCustomerGetsInput = {
 /** The type of the discount value and how it will be applied. For example, it might be a percentage discount on a fixed number of items. Alternatively, it might be a fixed amount evenly distributed across all items or on each individual item. A third example is a percentage discount on all items. */
 export type DiscountCustomerGetsValue = DiscountAmount | DiscountOnQuantity | DiscountPercentage;
 
-/** Specifies the quantity of items discounted and the discount value. */
+/** The input fields for the quantity of items discounted and the discount value. */
 export type DiscountCustomerGetsValueInput = {
   /** The value of the discount. */
   discountAmount?: InputMaybe<DiscountAmountInput>;
@@ -10565,7 +10568,7 @@ export type DiscountCustomerSegments = {
   segments: Array<Segment>;
 };
 
-/** Specifies which customer segments to add to or remove from the discount. */
+/** The input fields for which customer segments to add to or remove from the discount. */
 export type DiscountCustomerSegmentsInput = {
   /** A list of customer segments to add to the current list of customer segments. */
   add?: InputMaybe<Array<Scalars['ID']>>;
@@ -10576,7 +10579,7 @@ export type DiscountCustomerSegmentsInput = {
 /** The type used for targeting a set of customers who are eligible for the discount. For example, the discount might be available to all customers or it might only be available to a specific set of customers. You can define the set of customers by targeting a list of customer segments, or by targeting a list of specific customers. */
 export type DiscountCustomerSelection = DiscountCustomerAll | DiscountCustomerSegments | DiscountCustomers;
 
-/** Specifies the customers who can use this discount. */
+/** The input fields for the customers who can use this discount. */
 export type DiscountCustomerSelectionInput = {
   /** Whether all customers can use this discount. */
   all?: InputMaybe<Scalars['Boolean']>;
@@ -10593,7 +10596,7 @@ export type DiscountCustomers = {
   customers: Array<Customer>;
 };
 
-/** Specifies which customers to add to or remove from the discount. */
+/** The input fields for which customers to add to or remove from the discount. */
 export type DiscountCustomersInput = {
   /** A list of customers to add to the current list of customers who can use the discount. */
   add?: InputMaybe<Array<Scalars['ID']>>;
@@ -10604,7 +10607,7 @@ export type DiscountCustomersInput = {
 /** The type of discount that will be applied. Currently, only a percentage discount is supported. */
 export type DiscountEffect = DiscountPercentage;
 
-/** Specifies how the discount will be applied. Currently, only percentage off is supported. */
+/** The input fields for how the discount will be applied. Currently, only percentage off is supported. */
 export type DiscountEffectInput = {
   /** The percentage value of the discount. Value must be between 0.00 - 1.00. */
   percentage?: InputMaybe<Scalars['Float']>;
@@ -10667,7 +10670,10 @@ export enum DiscountErrorCode {
 /** The type used to target the items required for discount eligibility, or the items to which the application of a discount might apply. For example, for a customer to be eligible for a discount, they're required to add an item from a specified collection to their order. Alternatively, a customer might be required to add a specific product or product variant. When using this type to target which items the discount will apply to, the discount might apply to all items on the order, or to specific products and product variants, or items in a given collection. */
 export type DiscountItems = AllDiscountItems | DiscountCollections | DiscountProducts;
 
-/** The items attached to a discount. You can specify the discount items by product ID or collection ID. */
+/**
+ * The input fields for the items attached to a discount. You can specify the discount items by product ID or collection ID.
+ *
+ */
 export type DiscountItemsInput = {
   /** Whether all items should be selected. */
   all?: InputMaybe<Scalars['Boolean']>;
@@ -10684,16 +10690,16 @@ export type DiscountMinimumQuantity = {
   greaterThanOrEqualToQuantity: Scalars['UnsignedInt64'];
 };
 
-/** The minimum quantity required for the discount. */
+/** The input fields for the minimum quantity required for the discount. */
 export type DiscountMinimumQuantityInput = {
   /** The minimum quantity of items that's required for the discount to be applied. */
   greaterThanOrEqualToQuantity?: InputMaybe<Scalars['UnsignedInt64']>;
 };
 
-/** The type of mimumum requirement that must be met for the discount to be applied. For example, a customer must spend a minimum subtotal to be eligible for the discount. Alternatively, a customer must purchase a minimum quantity of items to be eligible for the discount. */
+/** The type of minimum requirement that must be met for the discount to be applied. For example, a customer must spend a minimum subtotal to be eligible for the discount. Alternatively, a customer must purchase a minimum quantity of items to be eligible for the discount. */
 export type DiscountMinimumRequirement = DiscountMinimumQuantity | DiscountMinimumSubtotal;
 
-/** The minimum quantity or subtotal required for a discount. */
+/** The input fields for the minimum quantity or subtotal required for a discount. */
 export type DiscountMinimumRequirementInput = {
   /** The minimum required quantity. */
   quantity?: InputMaybe<DiscountMinimumQuantityInput>;
@@ -10708,7 +10714,7 @@ export type DiscountMinimumSubtotal = {
   greaterThanOrEqualToSubtotal: MoneyV2;
 };
 
-/** The minimum subtotal required for a discount. */
+/** The input fields for the minimum subtotal required for a discount. */
 export type DiscountMinimumSubtotalInput = {
   /** The minimum subtotal that's required for the discount to be applied. */
   greaterThanOrEqualToSubtotal?: InputMaybe<Scalars['Decimal']>;
@@ -10833,7 +10839,7 @@ export type DiscountOnQuantity = {
   quantity: DiscountQuantity;
 };
 
-/** Specifies the quantity of items discounted and the discount value. */
+/** The input fields for the quantity of items discounted and the discount value. */
 export type DiscountOnQuantityInput = {
   /** The percentage value of the discount. */
   effect?: InputMaybe<DiscountEffectInput>;
@@ -10877,7 +10883,7 @@ export type DiscountProductsProductsArgs = {
   reverse?: InputMaybe<Scalars['Boolean']>;
 };
 
-/** Specifies the products and product variants attached to a discount. */
+/** The input fields for the products and product variants attached to a discount. */
 export type DiscountProductsInput = {
   /** Specifies list of product variant ids to add. */
   productVariantsToAdd?: InputMaybe<Array<Scalars['ID']>>;
@@ -11024,7 +11030,7 @@ export type DiscountRedeemCodeEdge = {
   node: DiscountRedeemCode;
 };
 
-/** The redeem code to attach to a discount. */
+/** The input fields for the redeem code to attach to a discount. */
 export type DiscountRedeemCodeInput = {
   /** The code that a customer can use at checkout to receive the associated discount. */
   code: Scalars['String'];
@@ -11056,7 +11062,7 @@ export enum DiscountShareableUrlTargetType {
 /** The type used to target the eligible countries of an order's shipping destination for which the discount applies. For example, the discount might be applicable when shipping to all countries, or only to a set of countries. */
 export type DiscountShippingDestinationSelection = DiscountCountries | DiscountCountryAll;
 
-/** Specifies the destinations where the free shipping discount will be applied. */
+/** The input fields for the destinations where the free shipping discount will be applied. */
 export type DiscountShippingDestinationSelectionInput = {
   /** Whether the discount code applies to all countries. */
   all?: InputMaybe<Scalars['Boolean']>;
@@ -11710,7 +11716,7 @@ export type DraftOrderCreatePayload = {
   userErrors: Array<UserError>;
 };
 
-/** Specifies the draft order to delete by its ID. */
+/** The input fields to specify the draft order to delete by its ID. */
 export type DraftOrderDeleteInput = {
   /**
    * The ID of the draft order to delete.
@@ -12147,7 +12153,7 @@ export type EditableProperty = {
   reason?: Maybe<Scalars['FormattedString']>;
 };
 
-/** Specifies the fields for an email. */
+/** The input fields for an email. */
 export type EmailInput = {
   /** Specifies any bcc recipients for the email. */
   bcc?: InputMaybe<Array<Scalars['String']>>;
@@ -12261,7 +12267,7 @@ export type EventBridgeWebhookSubscriptionCreatePayload = {
 };
 
 /**
- * Specifies the input fields for an EventBridge webhook subscription.
+ * The input fields for an EventBridge webhook subscription.
  *
  */
 export type EventBridgeWebhookSubscriptionInput = {
@@ -12648,7 +12654,11 @@ export type FlowTriggerReceivePayload = {
 };
 
 /**
- * Represents a fulfillment. In Shopify, a fulfillment represents a shipment of one or more items in an order. When an order has been completely fulfilled, it means that all the items that are included in the order have been sent to the customer. There can be more than one fulfillment for an order.
+ * Represents a fulfillment.
+ * In Shopify, a fulfillment represents a shipment of one or more items in an order.
+ * When an order has been completely fulfilled, it means that all the items that are included
+ * in the order have been sent to the customer.
+ * There can be more than one fulfillment for an order.
  *
  */
 export type Fulfillment = LegacyInteroperability & Node & {
@@ -12704,7 +12714,11 @@ export type Fulfillment = LegacyInteroperability & Node & {
 
 
 /**
- * Represents a fulfillment. In Shopify, a fulfillment represents a shipment of one or more items in an order. When an order has been completely fulfilled, it means that all the items that are included in the order have been sent to the customer. There can be more than one fulfillment for an order.
+ * Represents a fulfillment.
+ * In Shopify, a fulfillment represents a shipment of one or more items in an order.
+ * When an order has been completely fulfilled, it means that all the items that are included
+ * in the order have been sent to the customer.
+ * There can be more than one fulfillment for an order.
  *
  */
 export type FulfillmentEventsArgs = {
@@ -12718,7 +12732,11 @@ export type FulfillmentEventsArgs = {
 
 
 /**
- * Represents a fulfillment. In Shopify, a fulfillment represents a shipment of one or more items in an order. When an order has been completely fulfilled, it means that all the items that are included in the order have been sent to the customer. There can be more than one fulfillment for an order.
+ * Represents a fulfillment.
+ * In Shopify, a fulfillment represents a shipment of one or more items in an order.
+ * When an order has been completely fulfilled, it means that all the items that are included
+ * in the order have been sent to the customer.
+ * There can be more than one fulfillment for an order.
  *
  */
 export type FulfillmentFulfillmentLineItemsArgs = {
@@ -12731,7 +12749,11 @@ export type FulfillmentFulfillmentLineItemsArgs = {
 
 
 /**
- * Represents a fulfillment. In Shopify, a fulfillment represents a shipment of one or more items in an order. When an order has been completely fulfilled, it means that all the items that are included in the order have been sent to the customer. There can be more than one fulfillment for an order.
+ * Represents a fulfillment.
+ * In Shopify, a fulfillment represents a shipment of one or more items in an order.
+ * When an order has been completely fulfilled, it means that all the items that are included
+ * in the order have been sent to the customer.
+ * There can be more than one fulfillment for an order.
  *
  */
 export type FulfillmentFulfillmentOrdersArgs = {
@@ -12744,7 +12766,11 @@ export type FulfillmentFulfillmentOrdersArgs = {
 
 
 /**
- * Represents a fulfillment. In Shopify, a fulfillment represents a shipment of one or more items in an order. When an order has been completely fulfilled, it means that all the items that are included in the order have been sent to the customer. There can be more than one fulfillment for an order.
+ * Represents a fulfillment.
+ * In Shopify, a fulfillment represents a shipment of one or more items in an order.
+ * When an order has been completely fulfilled, it means that all the items that are included
+ * in the order have been sent to the customer.
+ * There can be more than one fulfillment for an order.
  *
  */
 export type FulfillmentTrackingInfoArgs = {
@@ -14097,7 +14123,7 @@ export type FulfillmentOrderEdge = {
   node: FulfillmentOrder;
 };
 
-/** Input arguments for the fulfillment hold applied on the fulfillment order. */
+/** The input fields for the fulfillment hold applied on the fulfillment order. */
 export type FulfillmentOrderHoldInput = {
   /** A configurable ID used to track the automation system releasing these holds. */
   externalId?: InputMaybe<Scalars['String']>;
@@ -14265,7 +14291,7 @@ export type FulfillmentOrderLineItemsInput = {
   fulfillmentOrderLineItems?: InputMaybe<Array<FulfillmentOrderLineItemInput>>;
 };
 
-/** Specifies the input fields for marking fulfillment order line items as ready for pickup. */
+/** The input fields for marking fulfillment order line items as ready for pickup. */
 export type FulfillmentOrderLineItemsPreparedForPickupInput = {
   /**
    * The fulfillment orders associated with the line items which are ready to be picked up by a customer.
@@ -14920,11 +14946,184 @@ export enum FulfillmentStatus {
 /** Represents the tracking information for a fulfillment. */
 export type FulfillmentTrackingInfo = {
   __typename?: 'FulfillmentTrackingInfo';
-  /** The name of the tracking company. */
+  /**
+   * The name of the tracking company.
+   *
+   * For tracking company names from the list below
+   * Shopify will automatically build tracking URLs for all provided tracking numbers,
+   * which will make the tracking numbers clickable in the interface.
+   *
+   * Additionally, for the tracking companies listed on the
+   * [Shipping Carriers help page](https://help.shopify.com/manual/shipping/understanding-shipping/shipping-carriers#integrated-shipping-carriers)
+   * Shopify will automatically update the fulfillment's `shipment_status` field during the fulfillment process.
+   *
+   * ### Supported tracking companies
+   *
+   * The following tracking companies display for shops located in any country:
+   *
+   *   * 4PX
+   *   * AGS
+   *   * Amazon Logistics UK
+   *   * Amazon Logistics US
+   *   * An Post
+   *   * Anjun Logistics
+   *   * APC
+   *   * Asendia USA
+   *   * Australia Post
+   *   * Bonshaw
+   *   * BPost
+   *   * BPost International
+   *   * Canada Post
+   *   * Canpar
+   *   * CDL Last Mile
+   *   * China Post
+   *   * Chronopost
+   *   * Chukou1
+   *   * Colissimo
+   *   * Comingle
+   *   * Coordinadora
+   *   * Correios
+   *   * Correos
+   *   * CTT
+   *   * CTT Express
+   *   * Cyprus Post
+   *   * Delnext
+   *   * Deutsche Post
+   *   * DHL eCommerce
+   *   * DHL eCommerce Asia
+   *   * DHL Express
+   *   * DoorDash
+   *   * DPD
+   *   * DPD Local
+   *   * DPD UK
+   *   * DTD Express
+   *   * DX
+   *   * Eagle
+   *   * Estes
+   *   * Evri
+   *   * FedEx
+   *   * First Global Logistics
+   *   * First Line
+   *   * FSC
+   *   * Fulfilla
+   *   * GLS
+   *   * Guangdong Weisuyi Information Technology (WSE)
+   *   * Heppner Internationale Spedition GmbH & Co.
+   *   * Iceland Post
+   *   * IDEX
+   *   * Israel Post
+   *   * Japan Post (EN)
+   *   * Japan Post (JA)
+   *   * La Poste
+   *   * Lasership
+   *   * Latvia Post
+   *   * Lietuvos Paštas
+   *   * Logisters
+   *   * Lone Star Overnight
+   *   * M3 Logistics
+   *   * Meteor Space
+   *   * Mondial Relay
+   *   * New Zealand Post
+   *   * NinjaVan
+   *   * North Russia Supply Chain (Shenzhen) Co.
+   *   * OnTrac
+   *   * Packeta
+   *   * Pago Logistics
+   *   * Ping An Da Tengfei Express
+   *   * Pitney Bowes
+   *   * Portal PostNord
+   *   * Poste Italiane
+   *   * PostNL
+   *   * PostNord DK
+   *   * PostNord NO
+   *   * PostNord SE
+   *   * Purolator
+   *   * Qxpress
+   *   * Qyun Express
+   *   * Royal Mail
+   *   * Royal Shipments
+   *   * Sagawa (EN)
+   *   * Sagawa (JA)
+   *   * Sendle
+   *   * SF Express
+   *   * SFC Fulfillment
+   *   * SHREE NANDAN COURIER
+   *   * Singapore Post
+   *   * Southwest Air Cargo
+   *   * StarTrack
+   *   * Step Forward Freight
+   *   * Swiss Post
+   *   * TForce Final Mile
+   *   * Tinghao
+   *   * TNT
+   *   * Toll IPEC
+   *   * United Delivery Service
+   *   * UPS
+   *   * USPS
+   *   * Venipak
+   *   * We Post
+   *   * Whistl
+   *   * Wizmo
+   *   * WMYC
+   *   * Xpedigo
+   *   * XPO Logistics
+   *   * Yamato (EN)
+   *   * Yamato (JA)
+   *   * YiFan Express
+   *   * YunExpress
+   *
+   * The following tracking companies are displayed for shops located in specific countries:
+   *
+   *   * **Australia**: Australia Post, Sendle, Aramex Australia, TNT Australia, Hunter Express, Couriers Please, Bonds, Allied Express, Direct Couriers, Northline, GO Logistics
+   *   * **Austria**: Österreichische Post
+   *   * **Bulgaria**: Speedy
+   *   * **Canada**: Intelcom, BoxKnight, Loomis, GLS
+   *   * **China**: China Post, DHL eCommerce Asia, WanbExpress, YunExpress, Anjun Logistics, SFC Fulfillment, FSC
+   *   * **Czechia**: Zásilkovna
+   *   * **Germany**: Deutsche Post (DE), Deutsche Post (EN), DHL, DHL Express, Swiship, Hermes, GLS
+   *   * **Spain**: SEUR
+   *   * **France**: Colissimo, Mondial Relay, Colis Privé, GLS
+   *   * **United Kingdom**: Evri, DPD UK, Parcelforce, Yodel, DHL Parcel, Tuffnells
+   *   * **Greece**: ACS Courier
+   *   * **Hong Kong SAR**: SF Express
+   *   * **Ireland**: Fastway, DPD Ireland
+   *   * **India**: DTDC, India Post, Delhivery, Gati KWE, Professional Couriers, XpressBees, Ecom Express, Ekart, Shadowfax, Bluedart
+   *   * **Italy**: BRT, GLS Italy
+   *   * **Japan**: エコ配, 西濃運輸, 西濃スーパーエキスプレス, 福山通運, 日本通運, 名鉄運輸, 第一貨物
+   *   * **Netherlands**: DHL Parcel, DPD
+   *   * **Norway**: Bring
+   *   * **Poland**: Inpost
+   *   * **Turkey**: PTT, Yurtiçi Kargo, Aras Kargo, Sürat Kargo
+   *   * **United States**: GLS, Alliance Air Freight, Pilot Freight, LSO, Old Dominion, R+L Carriers, Southwest Air Cargo
+   *   * **South Africa**: Fastway, Skynet.
+   *
+   */
   company?: Maybe<Scalars['String']>;
-  /** The tracking number of the fulfillment. */
+  /**
+   * The tracking number of the fulfillment.
+   *
+   * The tracking number is clickable in the interface if one of the following applies
+   * (the highest in the list has the highest priority):
+   *
+   * * Tracking url provided in the `url` field.
+   * * [Shopify-known tracking company name](#supported-tracking-companies) specified in the `company` field.
+   *   Shopify will build the tracking URL automatically based on the tracking number specified.
+   * * The tracking number has a Shopify-known format.
+   *   Shopify will guess the tracking provider and build the tracking url based on the tracking number format.
+   *   Not all tracking carriers are supported, and multiple tracking carriers may use similarly formatted tracking numbers.
+   *   This can result in an invalid tracking URL.
+   *   It is highly recommended that you send the tracking company and the tracking URL.
+   *
+   */
   number?: Maybe<Scalars['String']>;
-  /** The URLs to track the fulfillment. */
+  /**
+   * The URLs to track the fulfillment.
+   *
+   * The tracking URL is displayed in the merchant's admin on the order page.
+   * The tracking URL is displayed in the shipping confirmation email, which can optionally be sent to the customer.
+   * When accounts are enabled, it is also displayed in the customer's order history.
+   *
+   */
   url?: Maybe<Scalars['URL']>;
 };
 
@@ -14937,17 +15136,118 @@ export type FulfillmentTrackingInfoUpdateV2Payload = {
   userErrors: Array<UserError>;
 };
 
-/** The input fields that specify all possible fields for tracking information. */
+/**
+ * The input fields that specify all possible fields for tracking information.
+ *
+ * > Note:
+ * > If you provide the `url` field, you should not provide the `urls` field.
+ * >
+ * > If you provide the `number` field, you should not provide the `numbers` field.
+ * >
+ * > If you provide the `url` field, you should provide the `number` field.
+ * >
+ * > If you provide the `urls` field, you should provide the `numbers` field.
+ *
+ */
 export type FulfillmentTrackingInput = {
-  /** The name of the tracking company. */
+  /**
+   * The name of the tracking company.
+   *
+   * If you specify a tracking company name from
+   * [the list](https://shopify.dev/api/admin-graphql/latest/objects/FulfillmentTrackingInfo#supported-tracking-companies),
+   * Shopify will automatically build tracking URLs for all provided tracking numbers,
+   * which will make the tracking numbers clickable in the interface.
+   * The same tracking company will be applied to all tracking numbers specified.
+   *
+   * Additionally, for the tracking companies listed on the
+   * [Shipping Carriers help page](https://help.shopify.com/manual/shipping/understanding-shipping/shipping-carriers#integrated-shipping-carriers)
+   * Shopify will automatically update the fulfillment's `shipment_status` field during the fulfillment process.
+   *
+   * > Note:
+   * > Send the tracking company name exactly as written in
+   * > [the list](https://shopify.dev/api/admin-graphql/latest/objects/FulfillmentTrackingInfo#supported-tracking-companies)
+   * > (capitalization matters).
+   *
+   */
   company?: InputMaybe<Scalars['String']>;
-  /** The tracking number of the fulfillment. */
+  /**
+   * The tracking number of the fulfillment.
+   *
+   * The tracking number will be clickable in the interface if one of the following applies
+   * (the highest in the list has the highest priority):
+   *
+   * * Tracking url provided in the `url` field.
+   * * [Shopify-known tracking company name](https://shopify.dev/api/admin-graphql/latest/objects/FulfillmentTrackingInfo#supported-tracking-companies)
+   *   specified in the `company` field.
+   *   Shopify will build the tracking URL automatically based on the tracking number specified.
+   * * The tracking number has a Shopify-known format.
+   *   Shopify will guess the tracking provider and build the tracking url based on the tracking number format.
+   *   Not all tracking carriers are supported, and multiple tracking carriers may use similarly formatted tracking numbers.
+   *   This can result in an invalid tracking URL.
+   *   It is highly recommended that you send the tracking company and the tracking URL.
+   *
+   */
   number?: InputMaybe<Scalars['String']>;
-  /** The tracking numbers of the fulfillment, if there are multiple. */
+  /**
+   * The tracking numbers of the fulfillment, one or many.
+   *
+   * With multiple tracking numbers, you can provide tracking information
+   * for all shipments associated with the fulfillment, if there are more than one.
+   * For example, if you are shipping assembly parts of one furniture item in several boxes.
+   *
+   * Tracking numbers will be clickable in the interface if one of the following applies
+   * (the highest in the list has the highest priority):
+   *
+   * * Tracking URLs provided in the `urls` field.
+   *   The tracking URLs will be matched to the tracking numbers based on their positions in the arrays.
+   * * [Shopify-known tracking company name](https://shopify.dev/api/admin-graphql/latest/objects/FulfillmentTrackingInfo#supported-tracking-companies)
+   *   specified in the `company` field.
+   *   Shopify will build tracking URLs automatically for all tracking numbers specified.
+   *   The same tracking company will be applied to all tracking numbers.
+   * * Tracking numbers have a Shopify-known format.
+   *   Shopify will guess tracking providers and build tracking URLs based on the tracking number formats.
+   *   Not all tracking carriers are supported, and multiple tracking carriers may use similarly formatted tracking numbers.
+   *   This can result in an invalid tracking URL.
+   *   It is highly recommended that you send the tracking company and the tracking URLs.
+   *
+   *
+   */
   numbers?: InputMaybe<Array<Scalars['String']>>;
-  /** The URL to track the fulfillment. */
+  /**
+   * The URL to track the fulfillment.
+   *
+   * The tracking URL is displayed in the merchant's admin on the order page.
+   * The tracking URL is displayed in the shipping confirmation email, which can optionally be sent to the customer.
+   * When accounts are enabled, it is also displayed in the customer's order history.
+   *
+   * The URL must be an [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986) and
+   * [RFC 3987](https://datatracker.ietf.org/doc/html/rfc3987)-compliant URI string.
+   * For example, `"https://www.myshipping.com/track/?tracknumbers=TRACKING_NUMBER"` is a valid URL.
+   * It includes a scheme (`https`) and a host (`myshipping.com`).
+   *
+   */
   url?: InputMaybe<Scalars['URL']>;
-  /** The URLs to track the fulfillment, if there are multiple. */
+  /**
+   * The URLs to track the fulfillment, one or many.
+   *
+   * The tracking URLs are displayed in the merchant's admin on the order page.
+   * The tracking URLs are displayed in the shipping confirmation email, which can optionally be sent to the customer.
+   * When accounts are enabled, the tracking URLs are also displayed in the customer's order history.
+   *
+   * If you are not specifying a
+   * [Shopify-known](https://shopify.dev/api/admin-graphql/latest/objects/FulfillmentTrackingInfo#supported-tracking-companies)
+   * tracking company name in the `company` field,
+   * then provide tracking URLs for all tracking numbers from the `numbers` field.
+   *
+   * Tracking URLs from the `urls` array field are being matched with the tracking numbers from the `numbers` array
+   * field correspondingly their positions in the arrays.
+   *
+   * Each URL must be an [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986) and
+   * [RFC 3987](https://datatracker.ietf.org/doc/html/rfc3987)-compliant URI string.
+   * For example, `"https://www.myshipping.com/track/?tracknumbers=TRACKING_NUMBER"` is a valid URL.
+   * It includes a scheme (`https`) and a host (`myshipping.com`).
+   *
+   */
   urls?: InputMaybe<Array<Scalars['URL']>>;
 };
 
@@ -15077,7 +15377,7 @@ export type GiftCardConnection = {
   pageInfo: PageInfo;
 };
 
-/** Specifies the input fields to issue a gift card. */
+/** The input fields to issue a gift card. */
 export type GiftCardCreateInput = {
   /**
    * The gift card's code. It must be 8-20 characters long and contain only letters(a-z) and numbers(0-9).
@@ -15210,7 +15510,7 @@ export enum GiftCardSortKeys {
   UpdatedAt = 'UPDATED_AT'
 }
 
-/** Specifies the input fields to update a gift card. */
+/** The input fields to update a gift card. */
 export type GiftCardUpdateInput = {
   /**
    * The ID of the customer who will receive the gift card. The ID cannot be changed if the gift card already has an assigned customer ID.
@@ -15519,7 +15819,7 @@ export type ImageEdge = {
   node: Image;
 };
 
-/** Specifies the input fields for an image. */
+/** The input fields for an image. */
 export type ImageInput = {
   /** A word or phrase to share the nature or contents of an image. */
   altText?: InputMaybe<Scalars['String']>;
@@ -15587,7 +15887,7 @@ export type ImageUploadParameter = {
   value: Scalars['String'];
 };
 
-/** The incoming line item. */
+/** The input fields for the incoming line item. */
 export type IncomingRequestLineItemInput = {
   /** The ID of the rejected line item. */
   fulfillmentOrderLineItemId: Scalars['ID'];
@@ -15604,7 +15904,7 @@ export type InventoryActivatePayload = {
   userErrors: Array<UserError>;
 };
 
-/** Specifies the items and their adjustments. */
+/** The input fields for items and their adjustments. */
 export type InventoryAdjustItemInput = {
   /** The change applied to the `available` quantity of the item at the location. */
   availableDelta: Scalars['Int'];
@@ -15612,7 +15912,7 @@ export type InventoryAdjustItemInput = {
   inventoryItemId: Scalars['ID'];
 };
 
-/** The information required to adjust inventory quantities. */
+/** The input fields required to adjust inventory quantities. */
 export type InventoryAdjustQuantitiesInput = {
   /** The quantity changes of items at locations to be made. */
   changes: Array<InventoryChangeInput>;
@@ -15674,7 +15974,7 @@ export enum InventoryAdjustQuantitiesUserErrorCode {
   MaxOneLedgerDocument = 'MAX_ONE_LEDGER_DOCUMENT'
 }
 
-/** Specifies the fields required to adjust the inventory quantity. */
+/** The input fields required to adjust the inventory quantity. */
 export type InventoryAdjustQuantityInput = {
   /** The change applied to the `available` quantity of the item at the location. */
   availableDelta: Scalars['Int'];
@@ -15733,7 +16033,10 @@ export type InventoryBulkAdjustQuantityAtLocationPayload = {
   userErrors: Array<UserError>;
 };
 
-/** Specifies whether the inventory item should be activated or not at the specified location. */
+/**
+ * The input fields to specify whether the inventory item should be activated or not at the specified location.
+ *
+ */
 export type InventoryBulkToggleActivationInput = {
   /** Whether the inventory item can be stocked at the specified location. To deactivate, set the value to false which removes an inventory item's quantities from that location, and turns off inventory at that location. */
   activate: Scalars['Boolean'];
@@ -15767,7 +16070,10 @@ export type InventoryBulkToggleActivationUserError = DisplayableError & {
 export enum InventoryBulkToggleActivationUserErrorCode {
   /** Cannot unstock an inventory item from the only location at which it is stocked. */
   CannotDeactivateFromOnlyLocation = 'CANNOT_DEACTIVATE_FROM_ONLY_LOCATION',
-  /** Cannot unstock this inventory item from this location because it has committed and incoming quantities. */
+  /**
+   * Cannot unstock this inventory item from this location because it has committed and incoming quantities.
+   * @deprecated This error code is deprecated. Both INCOMING_INVENTORY_AT_LOCATION and COMMITTED_INVENTORY_AT_LOCATION codes will be returned as individual errors instead.
+   */
   CommittedAndIncomingInventoryAtLocation = 'COMMITTED_AND_INCOMING_INVENTORY_AT_LOCATION',
   /** Cannot unstock this inventory item from this location because it has committed quantities. */
   CommittedInventoryAtLocation = 'COMMITTED_INVENTORY_AT_LOCATION',
@@ -15812,7 +16118,7 @@ export type InventoryChange = {
 };
 
 /**
- * Represents the change to be made to an inventory item at a location.
+ * The input fields for the change to be made to an inventory item at a location.
  *
  */
 export type InventoryChangeInput = {
@@ -15945,7 +16251,7 @@ export type InventoryItemEdge = {
   node: InventoryItem;
 };
 
-/** Specifies the input fields for an inventory item. */
+/** The input fields for an inventory item. */
 export type InventoryItemInput = {
   /** Unit cost associated with the inventory item, the currency is the shop's default currency. */
   cost?: InputMaybe<Scalars['Decimal']>;
@@ -15953,7 +16259,7 @@ export type InventoryItemInput = {
   tracked?: InputMaybe<Scalars['Boolean']>;
 };
 
-/** Inventory item. */
+/** The input fields for an inventory item. */
 export type InventoryItemUpdateInput = {
   /** Unit cost associated with the inventory item, the currency is the shop's default currency. */
   cost?: InputMaybe<Scalars['Decimal']>;
@@ -16052,7 +16358,7 @@ export type InventoryLevelEdge = {
   node: InventoryLevel;
 };
 
-/** Specifies the input fields for an inventory level. */
+/** The input fields for an inventory level. */
 export type InventoryLevelInput = {
   /** The available quantity of an inventory item at a location. */
   availableQuantity: Scalars['Int'];
@@ -16060,7 +16366,7 @@ export type InventoryLevelInput = {
   locationId: Scalars['ID'];
 };
 
-/** The information required to move inventory quantities. */
+/** The input fields required to move inventory quantities. */
 export type InventoryMoveQuantitiesInput = {
   /** The quantity changes of items at locations to be made. */
   changes: Array<InventoryMoveQuantityChange>;
@@ -16142,7 +16448,7 @@ export type InventoryMoveQuantityChange = {
 };
 
 /**
- * Represents the change to be made to an inventory item at a location.
+ * The input fields representing the change to be made to an inventory item at a location.
  *
  */
 export type InventoryMoveQuantityTerminalInput = {
@@ -16190,7 +16496,7 @@ export type InventoryQuantityName = {
   name: Scalars['String'];
 };
 
-/** The information required to set inventory on hand quantities. */
+/** The input fields required to set inventory on hand quantities. */
 export type InventorySetOnHandQuantitiesInput = {
   /** The reason for the quantity changes. */
   reason: Scalars['String'];
@@ -16239,7 +16545,7 @@ export enum InventorySetOnHandQuantitiesUserErrorCode {
 }
 
 /**
- * Represents the quantity to be set for an inventory item at a location.
+ * The input fields for the quantity to be set for an inventory item at a location.
  *
  */
 export type InventorySetQuantityInput = {
@@ -16721,7 +17027,7 @@ export type LocalizationExtensionEdge = {
 };
 
 /**
- * Specifies the input fields for a LocalizationExtensionInput.
+ * The input fields for a LocalizationExtensionInput.
  *
  */
 export type LocalizationExtensionInput = {
@@ -17450,7 +17756,7 @@ export type MailingAddressEdge = {
   node: MailingAddress;
 };
 
-/** The fields used to create or update a mailing address. */
+/** The input fields to create or update a mailing address. */
 export type MailingAddressInput = {
   /**
    * The first line of the address. Typically the street address or PO Box number.
@@ -17987,7 +18293,7 @@ export type MarketLocalization = {
   value?: Maybe<Scalars['String']>;
 };
 
-/** The fields and values to use when creating or updating a market localization. */
+/** The input fields and values for creating or updating a market localization. */
 export type MarketLocalizationRegisterInput = {
   /** A reference to the value being localized on the resource that this market localization belongs to. */
   key: Scalars['String'];
@@ -18052,7 +18358,7 @@ export type MarketRegionCountry = MarketRegion & Node & {
   name: Scalars['String'];
 };
 
-/** Defines input options for creating a market region. Exactly one option is required. */
+/** The input fields for creating a market region with exactly one required option. */
 export type MarketRegionCreateInput = {
   /** A country code for the region. */
   countryCode: CountryCode;
@@ -18405,7 +18711,7 @@ export type MarketingActivity = Node & {
   utmParameters?: Maybe<UtmParameters>;
 };
 
-/** This type combines budget amount and its marketing budget type. */
+/** The input fields combining budget amount and its marketing budget type. */
 export type MarketingActivityBudgetInput = {
   /** Budget type for marketing activity. */
   budgetType?: InputMaybe<MarketingBudgetBudgetType>;
@@ -18479,7 +18785,7 @@ export type MarketingActivityCreateExternalPayload = {
   userErrors: Array<MarketingActivityUserError>;
 };
 
-/** Specifies the input fields required to create a marketing activity. */
+/** The input fields required to create a marketing activity. */
 export type MarketingActivityCreateInput = {
   /** The budget for this marketing activity. */
   budget?: InputMaybe<MarketingActivityBudgetInput>;
@@ -18655,7 +18961,7 @@ export type MarketingActivityUpdateExternalPayload = {
   userErrors: Array<MarketingActivityUserError>;
 };
 
-/** Specifies the input fields required to update a marketing activity. */
+/** The input fields required to update a marketing activity. */
 export type MarketingActivityUpdateInput = {
   /** The budget for the marketing activity. */
   budget?: InputMaybe<MarketingActivityBudgetInput>;
@@ -18819,7 +19125,7 @@ export type MarketingEngagementCreatePayload = {
   userErrors: Array<UserError>;
 };
 
-/** This object represents marketing engagement input fields for a marketing engagement. */
+/** The input fields for a marketing engagement. */
 export type MarketingEngagementInput = {
   /** The total ad spend for the day, if the marketing event is a paid ad with a daily spend. */
   adSpend?: InputMaybe<MoneyInput>;
@@ -19400,7 +19706,7 @@ export type MetafieldAccess = {
 };
 
 /**
- * The access settings for the metafields under the definition.
+ * The input fields for the access settings for the metafields under the definition.
  *
  */
 export type MetafieldAccessInput = {
@@ -19410,20 +19716,11 @@ export type MetafieldAccessInput = {
 
 /** Possible admin access settings for metafields. */
 export enum MetafieldAdminAccess {
-  /**
-   * Owner gets full access. The merchant has read-only access. No one else has access rights.
-   *
-   */
+  /** Owner gets full access. The merchant has read-only access. No one else has access rights. */
   MerchantRead = 'MERCHANT_READ',
-  /**
-   * Owner gets full access. The merchant has read and write access. No one else has access rights.
-   *
-   */
+  /** Owner gets full access. The merchant has read and write access. No one else has access rights. */
   MerchantReadWrite = 'MERCHANT_READ_WRITE',
-  /**
-   * Owner gets full access. No one else has access rights.
-   *
-   */
+  /** Owner gets full access. No one else has access rights. */
   Private = 'PRIVATE'
 }
 
@@ -19634,7 +19931,7 @@ export type MetafieldDefinitionEdge = {
 };
 
 /**
- * Specifies the input fields that are required to create a metafield definition.
+ * The input fields required to create a metafield definition.
  *
  */
 export type MetafieldDefinitionInput = {
@@ -19642,11 +19939,21 @@ export type MetafieldDefinitionInput = {
   access?: InputMaybe<MetafieldAccessInput>;
   /** The description for the metafield definition. */
   description?: InputMaybe<Scalars['String']>;
-  /** The key name used to identify a metafield definition within a namespace. */
+  /**
+   * The key name used to identify a metafield definition within a namespace.
+   *
+   * Must be 3-64 characters long and only contain alphanumeric, hyphen, and underscore characters.
+   *
+   */
   key: Scalars['String'];
   /** The human-readable name for the metafield definition. */
   name: Scalars['String'];
-  /** The namespace to group a metafield definition. */
+  /**
+   * The namespace to group a metafield definition.
+   *
+   * Must be 3-255 characters long and only contain alphanumeric, hyphen, and underscore characters.
+   *
+   */
   namespace: Scalars['String'];
   /** The resource type that the metafield definition is attached to. */
   ownerType: MetafieldOwnerType;
@@ -19804,7 +20111,7 @@ export enum MetafieldDefinitionUnpinUserErrorCode {
 }
 
 /**
- * Specifies the input fields that are required to update a metafield definition.
+ * The input fields required to update a metafield definition.
  *
  */
 export type MetafieldDefinitionUpdateInput = {
@@ -19924,7 +20231,7 @@ export enum MetafieldDefinitionValidationStatus {
   SomeInvalid = 'SOME_INVALID'
 }
 
-/** Specifies the input fields to delete a metafield. */
+/** The input fields to delete a metafield. */
 export type MetafieldDeleteInput = {
   /** The ID of the metafield to delete. */
   id: Scalars['ID'];
@@ -19964,11 +20271,18 @@ export type MetafieldInput = {
    *
    */
   id?: InputMaybe<Scalars['ID']>;
-  /** The key name of the metafield. Required when creating but optional when updating. */
+  /**
+   * The key name of the metafield. Required when creating but optional when updating.
+   *
+   * Must be 3-64 characters long and can contain alphanumeric, hyphen, and underscore characters.
+   *
+   */
   key?: InputMaybe<Scalars['String']>;
   /**
    * The namespace for a metafield. The namespace is required when you create a metafield and is optional when you
    * update a metafield.
+   *
+   * Must be 3-255 characters long and can contain alphanumeric, hyphen, and underscore characters.
    *
    */
   namespace?: InputMaybe<Scalars['String']>;
@@ -20016,7 +20330,10 @@ export enum MetafieldOwnerType {
   PaymentCustomization = 'PAYMENT_CUSTOMIZATION',
   /** The Product metafield owner type. */
   Product = 'PRODUCT',
-  /** The Product Image metafield owner type. */
+  /**
+   * The Product Image metafield owner type.
+   * @deprecated `PRODUCTIMAGE` is deprecated. Use `MEDIA_IMAGE` instead.
+   */
   Productimage = 'PRODUCTIMAGE',
   /** The Product Variant metafield owner type. */
   Productvariant = 'PRODUCTVARIANT',
@@ -20184,7 +20501,7 @@ export type MetafieldStorefrontVisibilityEdge = {
 };
 
 /**
- * Specifies the input fields to create a `MetafieldStorefrontVisibility` record.
+ * The input fields to create a MetafieldStorefrontVisibility record.
  *
  */
 export type MetafieldStorefrontVisibilityInput = {
@@ -20222,13 +20539,20 @@ export enum MetafieldValueType {
   String = 'STRING'
 }
 
-/** Specifies the input fields for a metafield value to set. */
+/** The input fields for a metafield value to set. */
 export type MetafieldsSetInput = {
-  /** The key name of the metafield. */
+  /**
+   * The key name of the metafield.
+   *
+   * Must be 3-64 characters long and can contain alphanumeric, hyphen, and underscore characters.
+   *
+   */
   key: Scalars['String'];
   /**
    * A container for a group of metafields.
    * Grouping metafields in a namespace prevents your metafields from conflicting with other metafields that have the same key name.
+   *
+   * Must be 3-255 characters long and can contain alphanumeric, hyphen, and underscore characters.
    *
    */
   namespace: Scalars['String'];
@@ -20350,7 +20674,7 @@ export type MetaobjectAccess = {
   storefront: MetaobjectStorefrontAccess;
 };
 
-/** Options for configuring metaobject access controls. */
+/** The input fields for configuring metaobject access controls. */
 export type MetaobjectAccessInput = {
   /**
    * Access configuration for Admin API surface areas, including the GraphQL Admin API.
@@ -20440,7 +20764,7 @@ export type MetaobjectCapabilitiesTranslatable = {
   enabled: Scalars['Boolean'];
 };
 
-/** The input for creating a metaobject capability. */
+/** The input fields for creating a metaobject capability. */
 export type MetaobjectCapabilityCreateInput = {
   /** The input for enabling the publishable capability. */
   publishable?: InputMaybe<MetaobjectCapabilityPublishableInput>;
@@ -20455,7 +20779,7 @@ export type MetaobjectCapabilityData = {
   publishable?: Maybe<MetaobjectCapabilityDataPublishable>;
 };
 
-/** Metaobject capabilities. */
+/** The input fields for metaobject capabilities. */
 export type MetaobjectCapabilityDataInput = {
   /** Publishable capability input. */
   publishable?: InputMaybe<MetaobjectCapabilityDataPublishableInput>;
@@ -20468,25 +20792,25 @@ export type MetaobjectCapabilityDataPublishable = {
   status: MetaobjectStatus;
 };
 
-/** Publishable Capability input to adjust visiblity on channels. */
+/** The input fields for publishable capability to adjust visibility on channels. */
 export type MetaobjectCapabilityDataPublishableInput = {
   /** The visibility status of this metaobject across all channels. */
   status: MetaobjectStatus;
 };
 
-/** Input for enabling and disabling the publishable capability. */
+/** The input fields for enabling and disabling the publishable capability. */
 export type MetaobjectCapabilityPublishableInput = {
   /** Indicates whether the capability should be enabled or disabled. */
   enabled: Scalars['Boolean'];
 };
 
-/** Input for enabling and disabling the translatable capability. */
+/** The input fields for enabling and disabling the translatable capability. */
 export type MetaobjectCapabilityTranslatableInput = {
   /** Indicates whether the capability should be enabled or disabled. */
   enabled: Scalars['Boolean'];
 };
 
-/** The input for updating a metaobject capability. */
+/** The input fields for updating a metaobject capability. */
 export type MetaobjectCapabilityUpdateInput = {
   /** The input for updating the publishable capability. */
   publishable?: InputMaybe<MetaobjectCapabilityPublishableInput>;
@@ -20508,7 +20832,7 @@ export type MetaobjectConnection = {
   pageInfo: PageInfo;
 };
 
-/** The input for creating a metaobject. */
+/** The input fields for creating a metaobject. */
 export type MetaobjectCreateInput = {
   /** Capabilities for the metaobject. */
   capabilities?: InputMaybe<MetaobjectCapabilityDataInput>;
@@ -20592,7 +20916,12 @@ export type MetaobjectDefinitionCreateInput = {
   fieldDefinitions: Array<MetaobjectFieldDefinitionCreateInput>;
   /** A human-readable name for the definition. This can be changed at any time. */
   name?: InputMaybe<Scalars['String']>;
-  /** The type of the metaobject definition. This cannot be changed. */
+  /**
+   * The type of the metaobject definition. This cannot be changed.
+   *
+   * Must be 3-255 characters long and only contain alphanumeric, hyphen, and underscore characters.
+   *
+   */
   type: Scalars['String'];
 };
 
@@ -20730,11 +21059,16 @@ export type MetaobjectFieldDefinition = {
   validations: Array<MetafieldDefinitionValidation>;
 };
 
-/** Options for creating a metaobject field definition. */
+/** The input fields for creating a metaobject field definition. */
 export type MetaobjectFieldDefinitionCreateInput = {
   /** An administrative description of the field. */
   description?: InputMaybe<Scalars['String']>;
-  /** The key of the new field definition. This cannot be changed. */
+  /**
+   * The key of the new field definition. This cannot be changed.
+   *
+   * Must be 3-64 characters long and only contain alphanumeric, hyphen, and underscore characters.
+   *
+   */
   key: Scalars['String'];
   /** A human-readable name for the field. This can be changed at any time. */
   name?: InputMaybe<Scalars['String']>;
@@ -20746,23 +21080,26 @@ export type MetaobjectFieldDefinitionCreateInput = {
   validations?: InputMaybe<Array<MetafieldDefinitionValidationInput>>;
 };
 
-/** Options for deleting a metaobject field definition. */
+/** The input fields for deleting a metaobject field definition. */
 export type MetaobjectFieldDefinitionDeleteInput = {
   /** The key of the field definition to delete. */
   key: Scalars['String'];
 };
 
-/** Possible operations for modifying field definitions. Exactly one option is required. */
+/**
+ * The input fields for possible operations for modifying field definitions. Exactly one option is required.
+ *
+ */
 export type MetaobjectFieldDefinitionOperationInput = {
-  /** Options for creating a metaobject field definition. */
+  /** The input fields for creating a metaobject field definition. */
   create?: InputMaybe<MetaobjectFieldDefinitionCreateInput>;
-  /** Options for deleting a metaobject field definition. */
+  /** The input fields for deleting a metaobject field definition. */
   delete?: InputMaybe<MetaobjectFieldDefinitionDeleteInput>;
-  /** Options for updating a metaobject field definition. */
+  /** The input fields for updating a metaobject field definition. */
   update?: InputMaybe<MetaobjectFieldDefinitionUpdateInput>;
 };
 
-/** Options for updating a metaobject field definition. */
+/** The input fields for updating a metaobject field definition. */
 export type MetaobjectFieldDefinitionUpdateInput = {
   /** An administrative description of the field. */
   description?: InputMaybe<Scalars['String']>;
@@ -20776,7 +21113,7 @@ export type MetaobjectFieldDefinitionUpdateInput = {
   validations?: InputMaybe<Array<MetafieldDefinitionValidationInput>>;
 };
 
-/** A metaobject field value. */
+/** The input fields for a metaobject field value. */
 export type MetaobjectFieldInput = {
   /** The key of the field. */
   key: Scalars['String'];
@@ -20784,7 +21121,7 @@ export type MetaobjectFieldInput = {
   value: Scalars['String'];
 };
 
-/** The input for retrieving a metaobject by handle. */
+/** The input fields for retrieving a metaobject by handle. */
 export type MetaobjectHandleInput = {
   /** The handle of the metaobject to create or update. */
   handle: Scalars['String'];
@@ -20818,7 +21155,7 @@ export enum MetaobjectStorefrontAccess {
   PublicRead = 'PUBLIC_READ'
 }
 
-/** The input for updating a metaobject. */
+/** The input fields for updating a metaobject. */
 export type MetaobjectUpdateInput = {
   /** Capabilities for the metaobject. */
   capabilities?: InputMaybe<MetaobjectCapabilityDataInput>;
@@ -20837,7 +21174,7 @@ export type MetaobjectUpdatePayload = {
   userErrors: Array<MetaobjectUserError>;
 };
 
-/** The input for upserting a metaobject. */
+/** The input fields for upserting a metaobject. */
 export type MetaobjectUpsertInput = {
   /** Capabilities for the metaobject. */
   capabilities?: InputMaybe<MetaobjectCapabilityDataInput>;
@@ -21013,7 +21350,7 @@ export type MoneyBag = {
   shopMoney: MoneyV2;
 };
 
-/** Specifies the fields for a monetary value with currency. */
+/** The input fields for a monetary value with currency. */
 export type MoneyInput = {
   /** Decimal money amount. */
   amount: Scalars['Decimal'];
@@ -21033,7 +21370,10 @@ export type MoneyV2 = {
   currencyCode: CurrencyCode;
 };
 
-/** A single move of an object to a specific position in a set, using a zero-based index. */
+/**
+ * The input fields for a single move of an object to a specific position in a set, using a zero-based index.
+ *
+ */
 export type MoveInput = {
   /** The ID of the object to be moved. */
   id: Scalars['ID'];
@@ -24896,7 +25236,7 @@ export type Node = {
   id: Scalars['ID'];
 };
 
-/** Represents the dimensions of an object. */
+/** The input fields for dimensions of an object. */
 export type ObjectDimensionsInput = {
   /** The height in `unit`s. */
   height: Scalars['Float'];
@@ -26038,7 +26378,7 @@ export enum OrderCancelReason {
   Other = 'OTHER'
 }
 
-/** Specifies the authorized transaction to capture and the total amount to capture from it. */
+/** The input fields for the authorized transaction to capture and the total amount to capture from it. */
 export type OrderCaptureInput = {
   /** The amount to capture. The capture amount can't be greater than the amount of the authorized transaction. */
   amount: Scalars['Money'];
@@ -26059,7 +26399,7 @@ export type OrderCapturePayload = {
   userErrors: Array<UserError>;
 };
 
-/** Specifies an open order to close. */
+/** The input fields for specifying an open order to close. */
 export type OrderCloseInput = {
   /** The ID of the order to close. */
   id: Scalars['ID'];
@@ -26301,7 +26641,7 @@ export type OrderEditSetQuantityPayload = {
   userErrors: Array<UserError>;
 };
 
-/** Specifies the information to be updated on an order when using the orderUpdate mutation. */
+/** The input fields for specifying the information to be updated on an order when using the orderUpdate mutation. */
 export type OrderInput = {
   /** A new list of custom attributes for the order. Overwrites the existing custom attributes. */
   customAttributes?: InputMaybe<Array<AttributeInput>>;
@@ -26347,7 +26687,7 @@ export enum OrderInvoiceSendUserErrorCode {
   OrderInvoiceSendUnsuccessful = 'ORDER_INVOICE_SEND_UNSUCCESSFUL'
 }
 
-/** Specifies the order to mark as paid. */
+/** The input fields for specifying the order to mark as paid. */
 export type OrderMarkAsPaidInput = {
   /** The ID of the order to mark as paid. */
   id: Scalars['ID'];
@@ -26362,7 +26702,7 @@ export type OrderMarkAsPaidPayload = {
   userErrors: Array<UserError>;
 };
 
-/** Specifies a closed order to open. */
+/** The input fields for specifying a closed order to open. */
 export type OrderOpenInput = {
   /** The ID of the order to open. */
   id: Scalars['ID'];
@@ -26835,7 +27175,7 @@ export enum OrderTransactionErrorCode {
   UnsupportedFeature = 'UNSUPPORTED_FEATURE'
 }
 
-/** Specifies the information needed to create an order transaction. */
+/** The input fields for the information needed to create an order transaction. */
 export type OrderTransactionInput = {
   /** The amount of money for this transaction. */
   amount: Scalars['Money'];
@@ -27675,7 +28015,7 @@ export type PriceListAdjustmentSettings = {
   compareAtMode: PriceListCompareAtMode;
 };
 
-/** The input to set a price list's adjustment settings. */
+/** The input fields to set a price list's adjustment settings. */
 export type PriceListAdjustmentSettingsInput = {
   /** Determines how adjustments are applied to compare at prices. */
   compareAtMode?: PriceListCompareAtMode;
@@ -27873,7 +28213,10 @@ export type PriceListPriceEdge = {
   node: PriceListPrice;
 };
 
-/** Provides the fields and values to use when creating or updating a fixed price list price. */
+/**
+ * The input fields for providing the fields and values to use when creating or updating a fixed price list price.
+ *
+ */
 export type PriceListPriceInput = {
   /** The compare-at price of the product variant on this price list. */
   compareAtPrice?: InputMaybe<MoneyInput>;
@@ -27919,7 +28262,7 @@ export enum PriceListPriceUserErrorCode {
   VariantNotFound = 'VARIANT_NOT_FOUND'
 }
 
-/** Represents the price for all variants of a product. */
+/** The input fields representing the price for all variants of a product. */
 export type PriceListProductPriceInput = {
   /** The price of the product to use for all variants with its currency. */
   price: MoneyInput;
@@ -28242,7 +28585,7 @@ export type PriceRuleCustomerSelectionCustomersArgs = {
   sortKey?: InputMaybe<CustomerSortKeys>;
 };
 
-/** Specifies the input fields to update a price rule customer selection. */
+/** The input fields to update a price rule customer selection. */
 export type PriceRuleCustomerSelectionInput = {
   /** List of customers to add to the current list of customers to whom the price rule applies. `savedSearchIds` must be empty. */
   customerIdsToAdd?: InputMaybe<Array<Scalars['ID']>>;
@@ -28339,7 +28682,7 @@ export type PriceRuleDiscountCodeEdge = {
   node: PriceRuleDiscountCode;
 };
 
-/** Specifies the input fields to manipulate a discount code. */
+/** The input fields to manipulate a discount code. */
 export type PriceRuleDiscountCodeInput = {
   /** The code to use the discount. */
   code?: InputMaybe<Scalars['String']>;
@@ -28565,7 +28908,7 @@ export type PriceRuleFixedAmountValue = {
   amount: Scalars['Money'];
 };
 
-/** Specifies the input fields to manipulate a price rule. */
+/** The input fields to manipulate a price rule. */
 export type PriceRuleInput = {
   /** The maximum number of times that the price rule can be allocated onto an order. */
   allocationLimit?: InputMaybe<Scalars['Int']>;
@@ -28646,7 +28989,7 @@ export type PriceRuleItemEntitlementsProductsArgs = {
   reverse?: InputMaybe<Scalars['Boolean']>;
 };
 
-/** Specifies the input fields to update a price rule line item entitlement. */
+/** The input fields to update a price rule line item entitlement. */
 export type PriceRuleItemEntitlementsInput = {
   /** The collections to which the price rule applies. */
   collectionIds?: InputMaybe<Array<Scalars['ID']>>;
@@ -28658,7 +29001,7 @@ export type PriceRuleItemEntitlementsInput = {
   targetAllLineItems?: InputMaybe<Scalars['Boolean']>;
 };
 
-/** Specifies the input fields to update a price rule's item prerequisites. */
+/** The input fields to update a price rule's item prerequisites. */
 export type PriceRuleItemPrerequisitesInput = {
   /** The collections needed for the price rule to be applied. */
   collectionIds?: InputMaybe<Array<Scalars['ID']>>;
@@ -28723,7 +29066,7 @@ export type PriceRuleMoneyRange = {
 };
 
 /**
- * Specifies the input fields to update the money range within which the price rule is applicable.
+ * The input fields to update the money range within which the price rule is applicable.
  *
  */
 export type PriceRuleMoneyRangeInput = {
@@ -28775,7 +29118,7 @@ export type PriceRuleQuantityRange = {
 };
 
 /**
- * Specifies the input fields to update the quantity range within which the price rule is applicable.
+ * The input fields to update the quantity range within which the price rule is applicable.
  *
  */
 export type PriceRuleQuantityRangeInput = {
@@ -28812,7 +29155,7 @@ export enum PriceRuleShareableUrlTargetType {
   Product = 'PRODUCT'
 }
 
-/** Specifies the input fields to update a price rule shipping entitlement. */
+/** The input fields to update a price rule shipping entitlement. */
 export type PriceRuleShippingEntitlementsInput = {
   /** The codes for the countries to which the price rule applies to. */
   countryCodes?: InputMaybe<Array<CountryCode>>;
@@ -28923,7 +29266,7 @@ export type PriceRuleValidityPeriod = {
   start: Scalars['DateTime'];
 };
 
-/** Specifies the input fields to update the validity period of a price rule. */
+/** The input fields to update the validity period of a price rule. */
 export type PriceRuleValidityPeriodInput = {
   /** The time after which the price rule becomes invalid. */
   end?: InputMaybe<Scalars['DateTime']>;
@@ -28934,7 +29277,7 @@ export type PriceRuleValidityPeriodInput = {
 /** The type of the price rule value. The price rule value might be a percentage value, or a fixed amount. */
 export type PriceRuleValue = PriceRuleFixedAmountValue | PriceRulePercentValue;
 
-/** Specifies the input fields to update a price rule. */
+/** The input fields to update a price rule. */
 export type PriceRuleValueInput = {
   /** The fixed amount value of the price rule. */
   fixedAmountValue?: InputMaybe<Scalars['Money']>;
@@ -29057,7 +29400,7 @@ export type PrivateMetafieldUpsertPayload = {
 };
 
 /**
- * The value input contains the value and value type of the private metafield.
+ * The input fields for the value and value type of the private metafield.
  *
  */
 export type PrivateMetafieldValueInput = {
@@ -29504,7 +29847,7 @@ export type ProductVariantsArgs = {
   sortKey?: InputMaybe<ProductVariantSortKeys>;
 };
 
-/** Specifies product images to append. */
+/** The input fields for specifying product images to append. */
 export type ProductAppendImagesInput = {
   /** The ID of the product. */
   id: Scalars['ID'];
@@ -29664,7 +30007,7 @@ export type ProductDeleteImagesPayload = {
   userErrors: Array<UserError>;
 };
 
-/** Specifies the product to delete. */
+/** The input fields for specifying the product to delete. */
 export type ProductDeleteInput = {
   /** The ID of the product. */
   id: Scalars['ID'];
@@ -29718,7 +30061,7 @@ export enum ProductDeleteUserErrorCode {
   ProductDoesNotExist = 'PRODUCT_DOES_NOT_EXIST'
 }
 
-/** Specifies the inputs for the product async duplicate mutation. */
+/** The input fields for the product async duplicate mutation. */
 export type ProductDuplicateAsyncInput = {
   /** Specifies whether or not to duplicate images. */
   includeImages?: InputMaybe<Scalars['Boolean']>;
@@ -29816,7 +30159,7 @@ export type ProductImageUpdatePayload = {
   userErrors: Array<UserError>;
 };
 
-/** Specifies the input fields required to create a product. */
+/** The input fields required to create a product. */
 export type ProductInput = {
   /** The IDs of the collections that this product will be added to. */
   collectionsToJoin?: InputMaybe<Array<Scalars['ID']>>;
@@ -29997,7 +30340,7 @@ export type ProductPublicationEdge = {
   node: ProductPublication;
 };
 
-/** Specifies a publication to which a product will be published. */
+/** The input fields for specifying a publication to which a product will be published. */
 export type ProductPublicationInput = {
   /** ID of the publication. */
   publicationId?: InputMaybe<Scalars['ID']>;
@@ -30005,7 +30348,7 @@ export type ProductPublicationInput = {
   publishDate?: InputMaybe<Scalars['DateTime']>;
 };
 
-/** Specifies a product to publish and the channels to publish it to. */
+/** The input fields for specifying a product to publish and the channels to publish it to. */
 export type ProductPublishInput = {
   /** The product to create or update publications for. */
   id: Scalars['ID'];
@@ -30174,7 +30517,10 @@ export type ProductTaxonomyNode = Node & {
   name: Scalars['String'];
 };
 
-/** Specifies a product to unpublish from a channel and the sales channels to unpublish it from. */
+/**
+ * The input fields for specifying a product to unpublish from a channel and the sales channels to unpublish it from.
+ *
+ */
 export type ProductUnpublishInput = {
   /** The ID of the product to create or update publications for. */
   id: Scalars['ID'];
@@ -30458,7 +30804,7 @@ export type ProductVariantTranslationsArgs = {
   marketId?: InputMaybe<Scalars['ID']>;
 };
 
-/** Specifies the input fields required to append media to a single variant. */
+/** The input fields required to append media to a single variant. */
 export type ProductVariantAppendMediaInput = {
   /** Specifies the media to append to the variant. */
   mediaIds: Array<Scalars['ID']>;
@@ -30526,7 +30872,7 @@ export type ProductVariantDeletePayload = {
   userErrors: Array<UserError>;
 };
 
-/** Specifies the input fields required to detach media from a single variant. */
+/** The input fields required to detach media from a single variant. */
 export type ProductVariantDetachMediaInput = {
   /** Specifies the media to detach from the variant. */
   mediaIds: Array<Scalars['ID']>;
@@ -30557,7 +30903,7 @@ export type ProductVariantEdge = {
   node: ProductVariant;
 };
 
-/** Specifies a product variant to create or update. */
+/** The input fields for specifying a product variant to create or update. */
 export type ProductVariantInput = {
   /** The value of the barcode associated with the product. */
   barcode?: InputMaybe<Scalars['String']>;
@@ -30650,7 +30996,7 @@ export type ProductVariantLeaveSellingPlanGroupsPayload = {
   userErrors: Array<SellingPlanGroupUserError>;
 };
 
-/** Represents a product variant position. */
+/** The input fields representing a product variant position. */
 export type ProductVariantPositionInput = {
   /** Specifies the ID of the product variant to update. */
   id: Scalars['ID'];
@@ -30827,7 +31173,7 @@ export enum ProductVariantsBulkDeleteUserErrorCode {
   ProductDoesNotExist = 'PRODUCT_DOES_NOT_EXIST'
 }
 
-/** Specifies a product variant to create as part of a variant bulk mutation. */
+/** The input fields for specifying a product variant to create as part of a variant bulk mutation. */
 export type ProductVariantsBulkInput = {
   /** The value of the barcode associated with the product variant. */
   barcode?: InputMaybe<Scalars['String']>;
@@ -31020,7 +31366,7 @@ export enum PubSubWebhookSubscriptionCreateUserErrorCode {
 }
 
 /**
- * Specifies the input fields for a PubSub webhook subscription.
+ * The input fields for a PubSub webhook subscription.
  *
  */
 export type PubSubWebhookSubscriptionInput = {
@@ -31185,7 +31531,7 @@ export type PublicationCreateInput = {
   defaultState?: InputMaybe<PublicationCreateInputPublicationDefaultState>;
 };
 
-/** The possible values for the default state of a publication. */
+/** The input fields for the possible values for the default state of a publication. */
 export enum PublicationCreateInputPublicationDefaultState {
   /** The publication is populated with all products. */
   AllProducts = 'ALL_PRODUCTS',
@@ -31223,7 +31569,7 @@ export type PublicationEdge = {
   node: Publication;
 };
 
-/** Specifies the input fields required to publish a resource. */
+/** The input fields required to publish a resource. */
 export type PublicationInput = {
   /** ID of the publication. */
   publicationId?: InputMaybe<Scalars['ID']>;
@@ -31508,7 +31854,7 @@ export type PurchasingCompany = {
 };
 
 /**
- * Represents a purchasing company, which is a combination of company, company contact, and company location.
+ * The input fields for a purchasing company, which is a combination of company, company contact, and company location.
  *
  */
 export type PurchasingCompanyInput = {
@@ -31526,7 +31872,7 @@ export type PurchasingCompanyInput = {
  */
 export type PurchasingEntity = Customer | PurchasingCompany;
 
-/** Represents a purchasing entity. Can either be a customer or a purchasing company. */
+/** The input fields for a purchasing entity. Can either be a customer or a purchasing company. */
 export type PurchasingEntityInput = {
   /** Represents a customer. Null if there is a purchasing company. */
   customerId?: InputMaybe<Scalars['ID']>;
@@ -33488,7 +33834,7 @@ export type RefundDuty = {
   originalDuty?: Maybe<Duty>;
 };
 
-/** The fields required to reimburse duties on a refund. */
+/** The input fields required to reimburse duties on a refund. */
 export type RefundDutyInput = {
   /** The ID of the duty in the refund. */
   dutyId: Scalars['ID'];
@@ -33598,7 +33944,7 @@ export type RefundLineItemEdge = {
   node: RefundLineItem;
 };
 
-/** The fields required to reimburse line items on a refund. */
+/** The input fields required to reimburse line items on a refund. */
 export type RefundLineItemInput = {
   /** The ID of the line item in the refund. */
   lineItemId: Scalars['ID'];
@@ -33635,7 +33981,7 @@ export type RefundShippingInput = {
 };
 
 /**
- * Input for a remote Authorize.net customer payment profile.
+ * The input fields for a remote Authorize.net customer payment profile.
  *
  */
 export type RemoteAuthorizeNetCustomerPaymentProfileInput = {
@@ -33669,7 +34015,7 @@ export type RemoteBraintreePaymentMethodInput = {
 };
 
 /**
- * Input for a remote stripe payment method.
+ * The input fields for a remote stripe payment method.
  *
  */
 export type RemoteStripePaymentMethodInput = {
@@ -34899,7 +35245,7 @@ export type Seo = {
   title?: Maybe<Scalars['String']>;
 };
 
-/** SEO information. */
+/** The input fields for SEO information. */
 export type SeoInput = {
   /** SEO description of the product. */
   description?: InputMaybe<Scalars['String']>;
@@ -35081,7 +35427,7 @@ export type SavedSearchConnection = {
   pageInfo: PageInfo;
 };
 
-/** Specifies the fields required to create a saved search. */
+/** The input fields to create a saved search. */
 export type SavedSearchCreateInput = {
   /** A descriptive name of the saved search. */
   name: Scalars['String'];
@@ -35100,7 +35446,7 @@ export type SavedSearchCreatePayload = {
   userErrors: Array<UserError>;
 };
 
-/** Specifies the fields to delete a saved search. */
+/** The input fields to delete a saved search. */
 export type SavedSearchDeleteInput = {
   /** ID of the saved search to delete. */
   id: Scalars['ID'];
@@ -35129,7 +35475,7 @@ export type SavedSearchEdge = {
   node: SavedSearch;
 };
 
-/** Specifies the fields required to update a saved search. */
+/** The input fields to update a saved search. */
 export type SavedSearchUpdateInput = {
   /** ID of the saved search to update. */
   id: Scalars['ID'];
@@ -35662,7 +36008,10 @@ export type SegmentStatistics = {
   __typename?: 'SegmentStatistics';
   /** The statistics of a given attribute. */
   attributeStatistics: SegmentAttributeStatistics;
-  /** The total number of members in a given segment. */
+  /**
+   * The total number of members in a given segment.
+   * @deprecated Use CustomerSegmentMemberConnection.totalCount instead.
+   */
   totalCount: Scalars['Int'];
 };
 
@@ -35823,7 +36172,7 @@ export type SellingPlanAnchor = {
   type: SellingPlanAnchorType;
 };
 
-/** Specifies the input fields required to create or update a selling plan anchor. */
+/** The input fields required to create or update a selling plan anchor. */
 export type SellingPlanAnchorInput = {
   /**
    * The cutoff day of the anchor.
@@ -36094,7 +36443,7 @@ export type SellingPlanFixedPricingPolicy = SellingPlanPricingPolicyBase & {
   createdAt: Scalars['DateTime'];
 };
 
-/** Specifies the input fields required to create or update a fixed selling plan pricing policy. */
+/** The input fields required to create or update a fixed selling plan pricing policy. */
 export type SellingPlanFixedPricingPolicyInput = {
   /** Price adjustment type defined by the policy. */
   adjustmentType?: InputMaybe<SellingPlanPricingPolicyAdjustmentType>;
@@ -36315,7 +36664,7 @@ export type SellingPlanGroupEdge = {
   node: SellingPlanGroup;
 };
 
-/** Specifies the input fields required to create or update a selling plan group. */
+/** The input fields required to create or update a selling plan group. */
 export type SellingPlanGroupInput = {
   /** Identifier for app, exposed in Liquid and product JSON. */
   appId?: InputMaybe<Scalars['String']>;
@@ -36355,7 +36704,7 @@ export type SellingPlanGroupRemoveProductsPayload = {
   userErrors: Array<SellingPlanGroupUserError>;
 };
 
-/** Specifies resource association with a Selling Plan Group. */
+/** The input fields for resource association with a Selling Plan Group. */
 export type SellingPlanGroupResourceInput = {
   /** The IDs of the Products to add to the Selling Plan Group. */
   productIds?: InputMaybe<Array<Scalars['ID']>>;
@@ -36530,7 +36879,7 @@ export enum SellingPlanGroupUserErrorCode {
   WrongLength = 'WRONG_LENGTH'
 }
 
-/** Specifies the input fields to create or update a selling plan. */
+/** The input fields to create or update a selling plan. */
 export type SellingPlanInput = {
   /** Selling plan policy which describes the billing details. */
   billingPolicy?: InputMaybe<SellingPlanBillingPolicyInput>;
@@ -36614,7 +36963,7 @@ export type SellingPlanPricingPolicyBase = {
   adjustmentValue: SellingPlanPricingPolicyAdjustmentValue;
 };
 
-/** Specifies the input fields required to create or update a selling plan pricing policy. */
+/** The input fields required to create or update a selling plan pricing policy. */
 export type SellingPlanPricingPolicyInput = {
   /** Fixed pricing policy details. */
   fixed?: InputMaybe<SellingPlanFixedPricingPolicyInput>;
@@ -36654,7 +37003,7 @@ export type SellingPlanRecurringBillingPolicy = {
   minCycles?: Maybe<Scalars['Int']>;
 };
 
-/** Specifies the input fields required to create or update a recurring billing policy. */
+/** The input fields required to create or update a recurring billing policy. */
 export type SellingPlanRecurringBillingPolicyInput = {
   /** Specific anchor dates upon which the billing interval calculations should be made. */
   anchors?: InputMaybe<Array<SellingPlanAnchorInput>>;
@@ -36693,7 +37042,7 @@ export type SellingPlanRecurringDeliveryPolicy = {
   preAnchorBehavior: SellingPlanRecurringDeliveryPolicyPreAnchorBehavior;
 };
 
-/** Specifies the input fields to create or update a recurring delivery policy. */
+/** The input fields to create or update a recurring delivery policy. */
 export type SellingPlanRecurringDeliveryPolicyInput = {
   /** The specific anchor dates upon which the delivery interval calculations should be made. */
   anchors?: InputMaybe<Array<SellingPlanAnchorInput>>;
@@ -36747,7 +37096,7 @@ export type SellingPlanRecurringPricingPolicy = SellingPlanPricingPolicyBase & {
   createdAt: Scalars['DateTime'];
 };
 
-/** Specifies the input fields required to create or update a recurring selling plan pricing policy. */
+/** The input fields required to create or update a recurring selling plan pricing policy. */
 export type SellingPlanRecurringPricingPolicyInput = {
   /** Price adjustment type defined by the policy. */
   adjustmentType?: InputMaybe<SellingPlanPricingPolicyAdjustmentType>;
@@ -36907,7 +37256,7 @@ export type ShippingLineEdge = {
   node: ShippingLine;
 };
 
-/** Specifies the shipping details for the order. */
+/** The input fields for specifying the shipping details for the order. */
 export type ShippingLineInput = {
   /** Price of the shipping rate. */
   price?: InputMaybe<Scalars['Money']>;
@@ -37039,7 +37388,7 @@ export type ShippingRefundInput = {
 };
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type Shop = HasMetafields & HasPublishedTranslations & Node & {
@@ -37335,7 +37684,7 @@ export type Shop = HasMetafields & HasPublishedTranslations & Node & {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopAssignedFulfillmentOrdersArgs = {
@@ -37351,7 +37700,7 @@ export type ShopAssignedFulfillmentOrdersArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopAvailableChannelAppsArgs = {
@@ -37364,7 +37713,7 @@ export type ShopAvailableChannelAppsArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopChannelsArgs = {
@@ -37377,7 +37726,7 @@ export type ShopChannelsArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopCollectionByHandleArgs = {
@@ -37386,7 +37735,7 @@ export type ShopCollectionByHandleArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopCollectionSavedSearchesArgs = {
@@ -37399,7 +37748,7 @@ export type ShopCollectionSavedSearchesArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopCollectionsArgs = {
@@ -37415,7 +37764,7 @@ export type ShopCollectionsArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopCurrencySettingsArgs = {
@@ -37428,7 +37777,7 @@ export type ShopCurrencySettingsArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopCustomerSavedSearchesArgs = {
@@ -37443,7 +37792,7 @@ export type ShopCustomerSavedSearchesArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopCustomerTagsArgs = {
@@ -37452,7 +37801,7 @@ export type ShopCustomerTagsArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopCustomersArgs = {
@@ -37467,7 +37816,7 @@ export type ShopCustomersArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopDraftOrderSavedSearchesArgs = {
@@ -37480,7 +37829,7 @@ export type ShopDraftOrderSavedSearchesArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopDraftOrderTagsArgs = {
@@ -37489,7 +37838,7 @@ export type ShopDraftOrderTagsArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopDraftOrdersArgs = {
@@ -37504,7 +37853,7 @@ export type ShopDraftOrdersArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopFulfillmentOrdersArgs = {
@@ -37520,7 +37869,7 @@ export type ShopFulfillmentOrdersArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopInventoryItemsArgs = {
@@ -37534,7 +37883,7 @@ export type ShopInventoryItemsArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopLocationsArgs = {
@@ -37551,7 +37900,7 @@ export type ShopLocationsArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopMarketingEventsArgs = {
@@ -37566,7 +37915,7 @@ export type ShopMarketingEventsArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopMetafieldArgs = {
@@ -37576,7 +37925,7 @@ export type ShopMetafieldArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopMetafieldsArgs = {
@@ -37591,7 +37940,7 @@ export type ShopMetafieldsArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopOrderSavedSearchesArgs = {
@@ -37604,7 +37953,7 @@ export type ShopOrderSavedSearchesArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopOrderTagsArgs = {
@@ -37614,7 +37963,7 @@ export type ShopOrderTagsArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopOrdersArgs = {
@@ -37629,7 +37978,7 @@ export type ShopOrdersArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopPriceRuleSavedSearchesArgs = {
@@ -37642,7 +37991,7 @@ export type ShopPriceRuleSavedSearchesArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopPriceRulesArgs = {
@@ -37658,7 +38007,7 @@ export type ShopPriceRulesArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopPrivateMetafieldArgs = {
@@ -37668,7 +38017,7 @@ export type ShopPrivateMetafieldArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopPrivateMetafieldsArgs = {
@@ -37682,7 +38031,7 @@ export type ShopPrivateMetafieldsArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopProductByHandleArgs = {
@@ -37691,7 +38040,7 @@ export type ShopProductByHandleArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopProductImagesArgs = {
@@ -37705,7 +38054,7 @@ export type ShopProductImagesArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopProductSavedSearchesArgs = {
@@ -37718,7 +38067,7 @@ export type ShopProductSavedSearchesArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopProductTagsArgs = {
@@ -37727,7 +38076,7 @@ export type ShopProductTagsArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopProductTypesArgs = {
@@ -37736,7 +38085,7 @@ export type ShopProductTypesArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopProductVariantsArgs = {
@@ -37751,7 +38100,7 @@ export type ShopProductVariantsArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopProductVendorsArgs = {
@@ -37760,7 +38109,7 @@ export type ShopProductVendorsArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopProductsArgs = {
@@ -37776,7 +38125,7 @@ export type ShopProductsArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopSearchArgs = {
@@ -37788,7 +38137,7 @@ export type ShopSearchArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopStaffMembersArgs = {
@@ -37801,7 +38150,7 @@ export type ShopStaffMembersArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopStorefrontAccessTokensArgs = {
@@ -37814,7 +38163,7 @@ export type ShopStorefrontAccessTokensArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopTranslationsArgs = {
@@ -37824,7 +38173,7 @@ export type ShopTranslationsArgs = {
 
 
 /**
- * Represents a collection of the general settings and information about the shop.
+ * Represents a collection of general settings and information about the shop.
  *
  */
 export type ShopUploadedImagesByIdsArgs = {
@@ -38092,7 +38441,7 @@ export type ShopLocaleEnablePayload = {
 };
 
 /**
- * Specifies the input fields for a shop locale.
+ * The input fields for a shop locale.
  *
  */
 export type ShopLocaleInput = {
@@ -38153,7 +38502,7 @@ export enum ShopPolicyErrorCode {
   TooBig = 'TOO_BIG'
 }
 
-/** Specifies the input fields required to update a policy. */
+/** The input fields required to update a policy. */
 export type ShopPolicyInput = {
   /** Policy text, maximum size of 512kb. */
   body: Scalars['String'];
@@ -38649,7 +38998,7 @@ export enum ShopifyPaymentsDisputeEvidenceFileType {
   UncategorizedFile = 'UNCATEGORIZED_FILE'
 }
 
-/** Specifies the input fields required to update a dispute evidence object. */
+/** The input fields required to update a dispute evidence object. */
 export type ShopifyPaymentsDisputeEvidenceUpdateInput = {
   /** Activity logs. */
   accessActivityLog?: InputMaybe<Scalars['String']>;
@@ -38704,7 +39053,7 @@ export type ShopifyPaymentsDisputeFileUpload = Node & {
   url: Scalars['URL'];
 };
 
-/** Specifies the input fields required to update a dispute file upload object. */
+/** The input fields required to update a dispute file upload object. */
 export type ShopifyPaymentsDisputeFileUploadUpdateInput = {
   /** Whether to delete this file upload. */
   destroy?: InputMaybe<Scalars['Boolean']>;
@@ -39263,7 +39612,7 @@ export enum StagedUploadHttpMethodType {
   Put = 'PUT'
 }
 
-/** The information required to generate staged upload targets. */
+/** The input fields for generating staged upload targets. */
 export type StagedUploadInput = {
   /**
    * The size of the file to upload, in bytes. This is required when the request's resource property is set to
@@ -39627,7 +39976,7 @@ export type StorefrontAccessTokenCreatePayload = {
   userErrors: Array<UserError>;
 };
 
-/** Specifies the input fields to delete a storefront access token. */
+/** The input fields to delete a storefront access token. */
 export type StorefrontAccessTokenDeleteInput = {
   /** The ID of the storefront access token to delete. */
   id: Scalars['ID'];
@@ -39654,7 +40003,7 @@ export type StorefrontAccessTokenEdge = {
   node: StorefrontAccessToken;
 };
 
-/** Specifies the input fields for a storefront access token. */
+/** The input fields for a storefront access token. */
 export type StorefrontAccessTokenInput = {
   /** A title for the storefront access token. */
   title: Scalars['String'];
@@ -39695,7 +40044,7 @@ export type SubscriptionAppliedCodeDiscount = {
   rejectionReason?: Maybe<SubscriptionDiscountRejectionReason>;
 };
 
-/** Specifies the mapping of a subscription line to a discount. */
+/** The input fields for mapping a subscription line to a discount. */
 export type SubscriptionAtomicLineInput = {
   /** The discount to be added to the subscription line. */
   discounts?: InputMaybe<Array<SubscriptionAtomicManualDiscountInput>>;
@@ -39703,7 +40052,7 @@ export type SubscriptionAtomicLineInput = {
   line: SubscriptionLineInput;
 };
 
-/** Specifies the mapping of a subscription line to a discount. */
+/** The input fields for mapping a subscription line to a discount. */
 export type SubscriptionAtomicManualDiscountInput = {
   /** The maximum number of times the subscription discount will be applied on orders. */
   recurringCycleLimit?: InputMaybe<Scalars['Int']>;
@@ -39854,7 +40203,7 @@ export enum SubscriptionBillingAttemptErrorCode {
   UnexpectedError = 'UNEXPECTED_ERROR'
 }
 
-/** Specifies the fields required to complete a subscription billing attempt. */
+/** The input fields required to complete a subscription billing attempt. */
 export type SubscriptionBillingAttemptInput = {
   /**
    * Select the specific billing cycle to be billed.
@@ -40099,7 +40448,10 @@ export enum SubscriptionBillingCycleErrorCode {
   UpcomingCycleLimitExceeded = 'UPCOMING_CYCLE_LIMIT_EXCEEDED'
 }
 
-/** Specifies the subscription contract and selects the associated billing cycle. */
+/**
+ * The input fields for specifying the subscription contract and selecting the associated billing cycle.
+ *
+ */
 export type SubscriptionBillingCycleInput = {
   /** The ID of the subscription contract associated with the billing cycle. */
   contractId: Scalars['ID'];
@@ -40107,7 +40459,7 @@ export type SubscriptionBillingCycleInput = {
   selector: SubscriptionBillingCycleSelector;
 };
 
-/** Parameters for modifying the shedule of a specific billing cycle. */
+/** The input fields for parameters to modify the schedule of a specific billing cycle. */
 export type SubscriptionBillingCycleScheduleEditInput = {
   /** Sets the expected billing date for the billing cycle. */
   billingDate?: InputMaybe<Scalars['DateTime']>;
@@ -40117,7 +40469,7 @@ export type SubscriptionBillingCycleScheduleEditInput = {
   skip?: InputMaybe<Scalars['Boolean']>;
 };
 
-/** Possible reasons for editing the billing cycle's schedule. */
+/** The input fields for possible reasons for editing the billing cycle's schedule. */
 export enum SubscriptionBillingCycleScheduleEditInputScheduleEditReason {
   /** Buyer initiated the schedule edit. */
   BuyerInitiated = 'BUYER_INITIATED',
@@ -40136,7 +40488,7 @@ export type SubscriptionBillingCycleScheduleEditPayload = {
   userErrors: Array<SubscriptionBillingCycleUserError>;
 };
 
-/** Select by either date or index for SubscriptionBillingCycle. */
+/** The input fields to select SubscriptionBillingCycle by either date or index. */
 export type SubscriptionBillingCycleSelector = {
   /** Returns a billing cycle by date. */
   date?: InputMaybe<Scalars['DateTime']>;
@@ -40155,7 +40507,7 @@ export type SubscriptionBillingCycleUserError = DisplayableError & {
   message: Scalars['String'];
 };
 
-/** Select a subset of subscription billing cycles within a date range. */
+/** The input fields to select a subset of subscription billing cycles within a date range. */
 export type SubscriptionBillingCyclesDateRangeSelector = {
   /** The end date and time for the range. */
   endDate: Scalars['DateTime'];
@@ -40163,7 +40515,7 @@ export type SubscriptionBillingCyclesDateRangeSelector = {
   startDate: Scalars['DateTime'];
 };
 
-/** Select a subset of subscription billing cycles within an index range. */
+/** The input fields to select a subset of subscription billing cycles within an index range. */
 export type SubscriptionBillingCyclesIndexRangeSelector = {
   /** The end index for the range. */
   endIndex: Scalars['Int'];
@@ -40206,7 +40558,7 @@ export type SubscriptionBillingPolicy = {
   minCycles?: Maybe<Scalars['Int']>;
 };
 
-/** Specifies the input fields for a Subscription Billing Policy. */
+/** The input fields for a Subscription Billing Policy. */
 export type SubscriptionBillingPolicyInput = {
   /** Specific anchor dates upon which the billing interval calculations should be made. */
   anchors?: InputMaybe<Array<SellingPlanAnchorInput>>;
@@ -40319,7 +40671,7 @@ export type SubscriptionContractOrdersArgs = {
   reverse?: InputMaybe<Scalars['Boolean']>;
 };
 
-/** Specifies the input fields required to create a Subscription Contract. */
+/** The input fields required to create a Subscription Contract. */
 export type SubscriptionContractAtomicCreateInput = {
   /** The attributes used as input for the Subscription Draft. */
   contract: SubscriptionDraftInput;
@@ -40426,7 +40778,7 @@ export type SubscriptionContractConnection = {
   pageInfo: PageInfo;
 };
 
-/** Specifies the input fields required to create a Subscription Contract. */
+/** The input fields required to create a Subscription Contract. */
 export type SubscriptionContractCreateInput = {
   /** The attributes used as input for the Subscription Draft. */
   contract: SubscriptionDraftInput;
@@ -40473,7 +40825,7 @@ export enum SubscriptionContractLastPaymentStatus {
   Succeeded = 'SUCCEEDED'
 }
 
-/** Specifies the input fields required to create a Subscription Contract. */
+/** The input fields required to create a Subscription Contract. */
 export type SubscriptionContractProductChangeInput = {
   /** The price of the product. */
   currentPrice?: InputMaybe<Scalars['Decimal']>;
@@ -40612,7 +40964,7 @@ export type SubscriptionDeliveryMethodLocalDeliveryOption = {
   title?: Maybe<Scalars['String']>;
 };
 
-/** Specifies local delivery option fields. */
+/** The input fields for local delivery option. */
 export type SubscriptionDeliveryMethodLocalDeliveryOptionInput = {
   /** A custom reference to the delivery method for use with automations. */
   code?: InputMaybe<Scalars['String']>;
@@ -40666,7 +41018,7 @@ export type SubscriptionDeliveryMethodPickupOption = {
   title?: Maybe<Scalars['String']>;
 };
 
-/** Specifies pickup option fields. */
+/** The input fields for pickup option. */
 export type SubscriptionDeliveryMethodPickupOptionInput = {
   /** A custom reference to the delivery method for use with automations. */
   code?: InputMaybe<Scalars['String']>;
@@ -40722,7 +41074,7 @@ export type SubscriptionDeliveryMethodShippingOption = {
   title?: Maybe<Scalars['String']>;
 };
 
-/** Specifies shipping option fields. */
+/** The input fields for shipping option. */
 export type SubscriptionDeliveryMethodShippingOptionInput = {
   /** The carrier service ID of the shipping option. */
   carrierServiceId?: InputMaybe<Scalars['ID']>;
@@ -40767,7 +41119,7 @@ export type SubscriptionDeliveryPolicy = {
   intervalCount: Scalars['Int'];
 };
 
-/** Specifies the input fields for a Subscription Delivery Policy. */
+/** The input fields for a Subscription Delivery Policy. */
 export type SubscriptionDeliveryPolicyInput = {
   /** The specific anchor dates upon which the delivery interval calculations should be made. */
   anchors?: InputMaybe<Array<SellingPlanAnchorInput>>;
@@ -41197,7 +41549,7 @@ export type SubscriptionDraftFreeShippingDiscountUpdatePayload = {
   userErrors: Array<SubscriptionDraftUserError>;
 };
 
-/** Specifies the input fields required to create a Subscription Draft. */
+/** The input fields required to create a Subscription Draft. */
 export type SubscriptionDraftInput = {
   /** The billing policy for the subscription contract. */
   billingPolicy?: InputMaybe<SubscriptionBillingPolicyInput>;
@@ -41274,7 +41626,7 @@ export type SubscriptionDraftUserError = DisplayableError & {
   message: Scalars['String'];
 };
 
-/** Specifies the input fields of a subscription free shipping discount on a contract. */
+/** The input fields for a subscription free shipping discount on a contract. */
 export type SubscriptionFreeShippingDiscountInput = {
   /** The maximum number of times the subscription free shipping discount will be applied on orders. */
   recurringCycleLimit?: InputMaybe<Scalars['Int']>;
@@ -41367,7 +41719,7 @@ export type SubscriptionLineEdge = {
   node: SubscriptionLine;
 };
 
-/** Specifies the input fields required to add a new subscription line to a contract. */
+/** The input fields required to add a new subscription line to a contract. */
 export type SubscriptionLineInput = {
   /** The price of the product. */
   currentPrice: Scalars['Decimal'];
@@ -41390,7 +41742,7 @@ export type SubscriptionLineInput = {
   sellingPlanName?: InputMaybe<Scalars['String']>;
 };
 
-/** Specifies the input fields required to update a subscription line on a contract. */
+/** The input fields required to update a subscription line on a contract. */
 export type SubscriptionLineUpdateInput = {
   /** The price of the product. */
   currentPrice?: InputMaybe<Scalars['Decimal']>;
@@ -41515,7 +41867,7 @@ export type SubscriptionManualDiscountEdge = {
   node: SubscriptionManualDiscount;
 };
 
-/** Represents the subscription lines the discount applies on. */
+/** The input fields for the subscription lines the discount applies on. */
 export type SubscriptionManualDiscountEntitledLinesInput = {
   /** Specify whether the subscription discount will apply on all subscription lines. */
   all?: InputMaybe<Scalars['Boolean']>;
@@ -41523,7 +41875,7 @@ export type SubscriptionManualDiscountEntitledLinesInput = {
   lines?: InputMaybe<SubscriptionManualDiscountLinesInput>;
 };
 
-/** Specifies the fixed amount value of the discount and distribution on the lines. */
+/** The input fields for the fixed amount value of the discount and distribution on the lines. */
 export type SubscriptionManualDiscountFixedAmountInput = {
   /** Fixed amount value. */
   amount?: InputMaybe<Scalars['Float']>;
@@ -41531,7 +41883,7 @@ export type SubscriptionManualDiscountFixedAmountInput = {
   appliesOnEachItem?: InputMaybe<Scalars['Boolean']>;
 };
 
-/** Specifies the input fields of a subscription discount on a contract. */
+/** The input fields for a subscription discount on a contract. */
 export type SubscriptionManualDiscountInput = {
   /** Entitled line items used to apply the subscription discount on. */
   entitledLines?: InputMaybe<SubscriptionManualDiscountEntitledLinesInput>;
@@ -41543,7 +41895,7 @@ export type SubscriptionManualDiscountInput = {
   value?: InputMaybe<SubscriptionManualDiscountValueInput>;
 };
 
-/** Line items that a the discount refers to. */
+/** The input fields for line items that the discount refers to. */
 export type SubscriptionManualDiscountLinesInput = {
   /** The ID of the lines to add to the subscription discount. */
   add?: InputMaybe<Array<Scalars['ID']>>;
@@ -41551,7 +41903,7 @@ export type SubscriptionManualDiscountLinesInput = {
   remove?: InputMaybe<Array<Scalars['ID']>>;
 };
 
-/** Specifies the discount value and its distribution. */
+/** The input fields for the discount value and its distribution. */
 export type SubscriptionManualDiscountValueInput = {
   /** Fixed amount input in the currency defined by the subscription. */
   fixedAmount?: InputMaybe<SubscriptionManualDiscountFixedAmountInput>;
@@ -41589,7 +41941,7 @@ export type SubscriptionPricingPolicy = {
   cycleDiscounts: Array<SubscriptionCyclePriceAdjustment>;
 };
 
-/** An array containing all pricing changes for each billing cycle. */
+/** The input fields for an array containing all pricing changes for each billing cycle. */
 export type SubscriptionPricingPolicyCycleDiscountsInput = {
   /** The price adjustment type. */
   adjustmentType: SellingPlanPricingPolicyAdjustmentType;
@@ -41601,7 +41953,7 @@ export type SubscriptionPricingPolicyCycleDiscountsInput = {
   computedPrice: Scalars['Decimal'];
 };
 
-/** Describes expected price changes of the subscription line over time. */
+/** The input fields for expected price changes of the subscription line over time. */
 export type SubscriptionPricingPolicyInput = {
   /** The base price per unit for the subscription line in the contract's currency. */
   basePrice: Scalars['Decimal'];
@@ -42252,7 +42604,7 @@ export enum TranslationErrorCode {
   TooManyKeysForResource = 'TOO_MANY_KEYS_FOR_RESOURCE'
 }
 
-/** Provides the fields and values to use when creating or updating a translation. */
+/** The input fields and values for creating or updating a translation. */
 export type TranslationInput = {
   /** On the resource that this translation belongs to,         the reference to the value being translated. */
   key: Scalars['String'];
@@ -42342,7 +42694,7 @@ export enum UnitSystem {
   MetricSystem = 'METRIC_SYSTEM'
 }
 
-/** Specifies the input fields required to update a media object. */
+/** The input fields required to update a media object. */
 export type UpdateMediaInput = {
   /** The alt text associated to the media. */
   alt?: InputMaybe<Scalars['String']>;
@@ -42931,7 +43283,7 @@ export enum WebhookSubscriptionFormat {
 }
 
 /**
- * Specifies the input fields for a webhook subscription.
+ * The input fields for a webhook subscription.
  *
  */
 export type WebhookSubscriptionInput = {
@@ -43319,7 +43671,7 @@ export type Weight = {
 };
 
 /**
- * Specifies the weight unit and value inputs.
+ * The input fields for the weight unit and value inputs.
  *
  */
 export type WeightInput = {

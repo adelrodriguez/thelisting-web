@@ -6,7 +6,6 @@ import UserAgent from "user-agents"
 import type { Currency } from "~/config/consts"
 import { BROWSERLESS_TOKEN, BROWSERLESS_URL } from "~/config/env.server"
 import logger from "~/helpers/logger.server"
-import Sentry from "~/services/sentry"
 import { CurrencySchema } from "~/utils/money"
 import { cleanAmount, cleanText } from "~/utils/scraper"
 
@@ -160,7 +159,6 @@ export class BaseScraper implements ScraperInterface {
    */
   public logError(message: string): null {
     logger.error(message, { url: this.url })
-    Sentry.captureException({ message, url: this.url })
 
     return null
   }

@@ -2,9 +2,9 @@ import type { Processor } from "bullmq"
 
 import { QUEUE_NAMES } from "~/config/consts"
 import db from "~/helpers/db.server"
+import logger from "~/helpers/logger.server"
 import { createQueue } from "~/helpers/queue.server"
 import { NotifyPurchaseQueue } from "~/helpers/queues"
-import Sentry from "~/services/sentry"
 import { getShopifyId } from "~/utils/shopify"
 
 export type QueueData = {
@@ -37,7 +37,11 @@ export const processor: Processor<QueueData> = async (job) => {
       orderId,
     })
   } catch (error) {
-    Sentry.captureException(error)
+    logger.error((error as Error).message, {
+      error,
+      jobId: job.id,
+      queue: QUEUE_NAMES.MarkPurchaseAsPaid,
+    })
 
     throw error
   }

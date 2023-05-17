@@ -15,7 +15,6 @@ import {
   ScrollRestoration,
   useCatch,
 } from "@remix-run/react"
-import { withSentry } from "@sentry/remix"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 import type { ComponentProps } from "react"
@@ -93,7 +92,7 @@ export async function loader({ request }: LoaderArgs) {
   )
 }
 
-function App() {
+export default function App() {
   const { env, locale } = useLoaderData<typeof loader>()
   const { i18n } = useTranslation()
 
@@ -140,5 +139,3 @@ function App() {
     </html>
   )
 }
-
-export default withSentry(App)
