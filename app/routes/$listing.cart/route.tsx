@@ -74,7 +74,7 @@ export default function ListingCartPage() {
     }
 
     submit(formData, {
-      action: `${listing.path}/cart/checkout`,
+      action: `/${listing.path}/cart/checkout`,
       method: "post",
     })
   }
