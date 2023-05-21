@@ -51,6 +51,11 @@ export default async function scraper(
 
     return payload
   } catch (error) {
+    logger.error(`Error scrapping product ${requestUrl}`, {
+      error: (error as Error).message,
+      url: requestUrl,
+    })
+
     // TODO(adelrodriguez): Handle timeout errors
     throw new UnknownError((error as Error).message)
   }
