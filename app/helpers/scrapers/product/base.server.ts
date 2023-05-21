@@ -51,8 +51,6 @@ export class BaseScraper implements ScraperInterface {
 
   protected waitFor?(): Promise<void>
 
-  readonly waitForSelector?: string
-
   constructor(url: URL) {
     this._url = url
     this._start = undefined
@@ -142,7 +140,11 @@ export class BaseScraper implements ScraperInterface {
     }
 
     if (this.waitFor) {
-      await this.waitFor()
+      try {
+        await this.waitFor()
+      } catch (error) {
+        this.logError((error as Error).message)
+      }
     }
   }
 
