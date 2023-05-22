@@ -6,7 +6,7 @@ export default class SirenaScraper extends BaseScraper {
   static domain = "sirena.do"
 
   protected async waitFor() {
-    this.page.waitForSelector("h2")
+    await this.page.waitForSelector("h2")
   }
 
   public get store(): string | null {

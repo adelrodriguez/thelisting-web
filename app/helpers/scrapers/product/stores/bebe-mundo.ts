@@ -4,7 +4,7 @@ export default class BebeMundoScraper extends BaseScraper {
   static domain = "bebemundo.com.do"
 
   protected async waitFor() {
-    this.page.waitForSelector("img.fotorama__img")
+    await this.page.waitForSelector("img.fotorama__img")
   }
 
   public get store(): string | null {

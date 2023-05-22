@@ -5,7 +5,7 @@ export default class Pandaretta extends BaseScraper {
   static domain = "panderettabordados.com"
 
   protected async waitFor() {
-    this.page.waitForSelector("h1")
+    await this.page.waitForSelector("h1")
   }
 
   public get store(): string | null {
