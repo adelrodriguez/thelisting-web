@@ -25,18 +25,20 @@ export const processor: Processor<QueueData> = async (job) => {
       sku: listing.sku,
     })
 
-    job.log(`Created collection ${collection.id}`)
+    await job.log(`Created collection ${collection.id}`)
 
     await db.listing.update({
       data: { commerceId: collection.id },
       where: { id: listingId },
     })
 
-    job.log(`Updated listing ${listingId} with commerceId ${collection.id}`)
+    await job.log(
+      `Updated listing ${listingId} with commerceId ${collection.id}`
+    )
 
     const published = await publishToCurrentChannel(collection.id)
 
-    job.log(
+    await job.log(
       published
         ? `Published collection ${collection.id}`
         : `Failed to publish collection ${collection.id}`

@@ -38,7 +38,7 @@ export const processor: Processor<QueueData> = async (job) => {
       },
     })
 
-    job.log(`Created item purchase ${purchase.id} → ${item.id}`)
+    await job.log(`Created item purchase ${purchase.id} → ${item.id}`)
 
     await db.item.update({
       data: {
@@ -47,13 +47,13 @@ export const processor: Processor<QueueData> = async (job) => {
       where: { id: item.id },
     })
 
-    job.log(
+    await job.log(
       `Updated item ${item.id} availability: ${item.stock} → ${
         item.stock - job.data.item.quantity
       })`
     )
 
-    job.log("Finished processing item purchase")
+    await job.log("Finished processing item purchase")
   } catch (error) {
     logger.error((error as Error).message, {
       error,

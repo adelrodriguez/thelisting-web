@@ -29,14 +29,16 @@ export const processor: Processor<QueueData> = async (job) => {
       order.customAttributes
     )
 
+    invariant(listingId, "Listing ID is missing")
+
     const listing = await db.listing.findUniqueOrThrow({
       include: { owner: true },
-      where: { id: listingId! },
+      where: { id: listingId },
     })
 
     invariant(listing.owner.phone, "Owner phone is missing")
 
-    job.log(
+    await job.log(
       `Sending purchase notification to ${listing.owner.firstName} ${listing.owner.lastName} at ${listing.owner.phone}`
     )
 
@@ -44,7 +46,7 @@ export const processor: Processor<QueueData> = async (job) => {
       amount: currency(purchase.cost).format({
         symbol: getPriceSymbol(order.totalPriceSet.shopMoney.currencyCode),
       }),
-      buyer: purchase.customer?.name || order.customer?.displayName!,
+      buyer: purchase.customer?.name || order.customer?.displayName || "",
       gift: flattenConnection(order.lineItems)
         .filter(
           (lineItem) =>

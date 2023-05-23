@@ -31,7 +31,7 @@ export const processor: Processor<QueueData> = async (job) => {
 
     await addTags(order.id, tags)
 
-    job.log(`Added tags "${tags.join(", ")}" to order ${order.id}`)
+    await job.log(`Added tags "${tags.join(", ")}" to order ${order.id}`)
   } catch (error) {
     logger.error((error as Error).message, {
       error,

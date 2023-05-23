@@ -40,7 +40,7 @@ class WhatsApp {
   ) {
     return this.bot.sendTemplate(to, template, "ES", [
       {
-        // @ts-ignore Ignoring this since the type definition does not account
+        // @ts-expect-error Ignoring this since the type definition does not account
         // for any parameters in the header type.
         parameters: [
           {

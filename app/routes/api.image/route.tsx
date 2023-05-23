@@ -6,7 +6,7 @@ import { ImageCache } from "~/utils/image.server"
 
 export function loader({ request, context }: LoaderArgs) {
   const cache = context.cache
-  let url = new URL("/", request.url)
+  const url = new URL("/", request.url)
 
   return imageLoader(
     {

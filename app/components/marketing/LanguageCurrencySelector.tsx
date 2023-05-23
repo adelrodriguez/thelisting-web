@@ -8,7 +8,7 @@ export default function LanguageCurrencySelector() {
   const navigate = useNavigate()
 
   function handleLanguageChange(e: ChangeEvent<HTMLSelectElement>) {
-    i18next.changeLanguage(e.target.value, () => {
+    void i18next.changeLanguage(e.target.value, () => {
       const params = new URLSearchParams({ lng: i18next.language })
       navigate("?" + params, { preventScrollReset: true })
     })

@@ -65,6 +65,7 @@ app.all(
 )
 
 app.listen(port, () => {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
   const build = require(BUILD_DIR)
   logger.info("Ready: http://localhost:" + port)
 
@@ -75,7 +76,7 @@ app.listen(port, () => {
 
   // Start cron jobs
   logger.info("Starting cron jobs")
-  cron()
+  void cron()
 })
 
 function purgeRequireCache() {
@@ -96,7 +97,11 @@ function getLocalNetworkIP(): string {
   const results = Object.create(null) // Or just '{}', an empty object
 
   for (const name of Object.keys(nets)) {
-    for (const net of nets[name]!) {
+    const _nets = nets[name]
+
+    if (!_nets) continue
+
+    for (const net of _nets) {
       // Skip over non-IPv4 and internal (i.e. 127.0.0.1) addresses
       // 'IPv4' is in Node <= 17, from 18 it's a number 4 or 6
       const familyV4Value = typeof net.family === "string" ? "IPv4" : 4

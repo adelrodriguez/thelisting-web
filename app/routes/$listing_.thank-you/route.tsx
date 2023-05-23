@@ -99,7 +99,7 @@ export default function ListingThankYouPage() {
               {order.lineItems?.nodes.map((lineItem) => (
                 <li key={lineItem.product?.id} className="py-6">
                   <OrderItem
-                    commerceId={lineItem.product?.id!}
+                    commerceId={lineItem.product?.id || null}
                     quantity={lineItem.quantity}
                   />
                 </li>

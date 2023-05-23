@@ -32,7 +32,7 @@ export default class Storage {
     this.storage.setItem(key, body)
   }
 
-  get<T extends unknown>(key: string): T | null {
+  get<T>(key: string): T | null {
     const item = this.storage.getItem(key)
 
     if (!item) {

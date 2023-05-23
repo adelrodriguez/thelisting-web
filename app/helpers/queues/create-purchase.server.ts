@@ -1,5 +1,6 @@
 import { flattenConnection } from "@shopify/hydrogen-react"
 import type { Processor } from "bullmq"
+import invariant from "tiny-invariant"
 
 import { QUEUE_NAMES } from "~/config/consts"
 import { SHOPIFY_SHIPPING_ITEM_1_ID } from "~/config/env.server"
@@ -7,7 +8,6 @@ import db from "~/helpers/db.server"
 import logger from "~/helpers/logger.server"
 import { createQueue } from "~/helpers/queue.server"
 import { CreateItemPurchaseQueue } from "~/helpers/queues"
-import { GenericError } from "~/utils/error"
 import { getShopifyId, transformCustomAttributes } from "~/utils/shopify"
 import { getOrder } from "~/utils/shopify.server"
 
@@ -22,20 +22,16 @@ export const processor: Processor<QueueData> = async (job) => {
     const { listing_id: listingId, note_id: noteId } =
       transformCustomAttributes(order.customAttributes)
 
-    if (!listingId) {
-      throw new GenericError({
-        code: "listing_id_missing",
-        customData: { order },
-        message: "Missing custom attribute 'listingId' on order",
-      })
-    }
+    invariant(listingId, "Missing custom attribute 'listingId' on order")
 
     const existingPurchase = await db.purchase.findFirst({
       where: { commerceId: order.id },
     })
 
     if (existingPurchase) {
-      job.log(`Purchase ${existingPurchase.id} already exists. Skipping...`)
+      await job.log(
+        `Purchase ${existingPurchase.id} already exists. Skipping...`
+      )
       return
     }
 
@@ -46,7 +42,7 @@ export const processor: Processor<QueueData> = async (job) => {
           SHOPIFY_SHIPPING_ITEM_1_ID
       )
       .map((lineItem) => ({
-        commerceId: lineItem.product?.id!,
+        commerceId: lineItem.product!.id,
         cost: parseFloat(
           flattenConnection(lineItem.product?.variants)[0]?.inventoryItem
             .unitCost?.amount || 0
@@ -57,14 +53,16 @@ export const processor: Processor<QueueData> = async (job) => {
         ),
       }))
 
+    invariant(order.customer?.email, "Missing customer email on order")
+
     const customer = await db.customer.upsert({
       create: {
-        commerceId: order.customer?.id!,
-        email: order.customer?.email!,
-        name: order.customer?.displayName!,
+        commerceId: order.customer?.id,
+        email: order.customer?.email,
+        name: order.customer?.displayName,
       },
       update: {},
-      where: { email: order.customer?.email! },
+      where: { email: order.customer?.email },
     })
 
     const purchase = await db.purchase.create({
@@ -85,12 +83,12 @@ export const processor: Processor<QueueData> = async (job) => {
         where: { id: noteId },
       })
 
-      job.log(`Updated purchase with note ${noteId}`)
+      await job.log(`Updated purchase with note ${noteId}`)
     }
 
-    job.log(`Created purchase ${purchase.id}`)
+    await job.log(`Created purchase ${purchase.id}`)
 
-    job.log(`Queueing ${items.length} item purchases...`)
+    await job.log(`Queueing ${items.length} item purchases...`)
 
     await CreateItemPurchaseQueue.addBulk(
       items.map((item) => ({
@@ -109,7 +107,7 @@ export const processor: Processor<QueueData> = async (job) => {
       }))
     )
 
-    job.log(`Finished processing purchase ${purchase.id}`)
+    await job.log(`Finished processing purchase ${purchase.id}`)
   } catch (error) {
     logger.error((error as Error).message, {
       error,

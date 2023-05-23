@@ -28,13 +28,13 @@ export const processor: Processor = async (job) => {
       },
     })
 
-    job.log(`Found ${abandonedCheckouts.length} abandoned checkouts`)
+    await job.log(`Found ${abandonedCheckouts.length} abandoned checkouts`)
 
     if (abandonedCheckouts.length === 0) {
       return
     }
 
-    job.log("Notifying about abandoned checkouts...")
+    await job.log("Notifying about abandoned checkouts...")
 
     for (const checkout of abandonedCheckouts) {
       const message = await twilio.messages.create({
@@ -50,7 +50,7 @@ export const processor: Processor = async (job) => {
         to: ADMIN_PHONE_NUMBER,
       })
 
-      job.log(`Sent message ${message.sid}`)
+      await job.log(`Sent message ${message.sid}`)
 
       await db.checkout.update({
         data: {

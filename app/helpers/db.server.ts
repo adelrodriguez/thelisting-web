@@ -5,6 +5,7 @@ import { isProduction } from "~/config/vars"
 let db: PrismaClient
 
 declare global {
+  // eslint-disable-next-line no-var
   var __db: PrismaClient | undefined
 }
 
@@ -12,11 +13,11 @@ declare global {
 // saturating the database with connections while developing.
 if (isProduction) {
   db = new PrismaClient()
-  db.$connect()
+  void db.$connect()
 } else {
   if (!global.__db) {
     global.__db = new PrismaClient()
-    global.__db.$connect()
+    void global.__db.$connect()
   }
   db = global.__db
 }

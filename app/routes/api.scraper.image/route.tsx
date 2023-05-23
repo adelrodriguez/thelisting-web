@@ -26,7 +26,7 @@ export async function loader({ request }: LoaderArgs) {
   const reader = res.body!.getReader()
   const response = new ReadableStream({
     start: async (controller) => {
-      while (true) {
+      for (;;) {
         const { done, value } = await reader.read()
 
         // When no more data needs to be consumed, break the reading

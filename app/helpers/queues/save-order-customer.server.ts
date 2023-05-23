@@ -27,10 +27,12 @@ export const processor: Processor<QueueData> = async (job) => {
     const alegraId = customer?.alegraId
 
     if (alegraId) {
-      job.log(`Found Alegra ID ${alegraId} for customer ${customer?.name}`)
+      await job.log(
+        `Found Alegra ID ${alegraId} for customer ${customer?.name}`
+      )
       contactId = alegraId
     } else {
-      job.log("Contact does not exist, creating it")
+      await job.log("Contact does not exist, creating it")
 
       const contact = await alegra.contacts.create(
         parseCreateContactRequest({
@@ -55,12 +57,12 @@ export const processor: Processor<QueueData> = async (job) => {
         update: {
           alegraId: contact.id,
         },
-        where: { email: order.customer?.email! },
+        where: { email: order.customer?.email ?? undefined },
       })
 
       contactId = contact.id
 
-      job.log("Contact created successfully")
+      await job.log("Contact created successfully")
     }
 
     // Create the invoice for the customer

@@ -123,7 +123,7 @@ export type AbandonedCheckout = Navigable & Node & {
    *
    */
   defaultCursor: Scalars['String'];
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The number of products in the checkout. */
   lineItemsQuantity: Scalars['Int'];
@@ -159,7 +159,7 @@ export type Abandonment = Node & {
   emailState?: Maybe<AbandonmentEmailState>;
   /** The number of hours since the customer has last abandoned a checkout. */
   hoursSinceLastAbandonedCheckout?: Maybe<Scalars['Float']>;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** Whether the products in abandonment are available. */
   inventoryAvailable: Scalars['Boolean'];
@@ -271,7 +271,7 @@ export type AccessScope = {
 /** Represents an operation publishing all products to a publication. */
 export type AddAllProductsOperation = Node & ResourceOperation & {
   __typename?: 'AddAllProductsOperation';
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The count of processed rows, summing imported, failed, and skipped rows. */
   processedRowCount?: Maybe<Scalars['Int']>;
@@ -284,7 +284,7 @@ export type AddAllProductsOperation = Node & ResourceOperation & {
 /** The additional fees that have been applied to the order. */
 export type AdditionalFee = Node & {
   __typename?: 'AdditionalFee';
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The name of the additional fee. */
   name: Scalars['String'];
@@ -299,7 +299,7 @@ export type AdjustmentSale = Sale & {
   __typename?: 'AdjustmentSale';
   /** The type of order action that the sale represents. */
   actionType: SaleActionType;
-  /** The unique identifier for the sale. */
+  /** The unique ID for the sale. */
   id: Scalars['ID'];
   /** The line type assocated with the sale. */
   lineType: SaleLineType;
@@ -375,7 +375,7 @@ export type App = Node & {
   handle?: Maybe<Scalars['String']>;
   /** Icon that represents the app. */
   icon: Image;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** Webpage where you can install the app. */
   installUrl?: Maybe<Scalars['URL']>;
@@ -444,7 +444,7 @@ export type AppCatalog = Catalog & Node & {
   __typename?: 'AppCatalog';
   /** The apps associated with the catalog. */
   apps: AppConnection;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** Most recent catalog operations. */
   operations: Array<ResourceOperation>;
@@ -494,7 +494,7 @@ export type AppCredit = Node & {
   createdAt: Scalars['DateTime'];
   /** The description of the app credit. */
   description: Scalars['String'];
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** Whether the app credit is a test transaction. */
   test: Scalars['Boolean'];
@@ -614,7 +614,7 @@ export type AppInstallation = HasMetafields & Node & {
   channel?: Maybe<Channel>;
   /** Credits that can be used towards future app purchases. */
   credits: AppCreditConnection;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The URL to launch the application. */
   launchUrl: Scalars['URL'];
@@ -847,7 +847,7 @@ export type AppPurchaseOneTime = AppPurchase & Node & {
   __typename?: 'AppPurchaseOneTime';
   /** The date and time when the app purchase occurred. */
   createdAt: Scalars['DateTime'];
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The name of the app purchase. */
   name: Scalars['String'];
@@ -965,7 +965,7 @@ export type AppRevenueAttributionRecord = Node & {
   capturedAt: Scalars['DateTime'];
   /** The timestamp at which this revenue attribution was issued. */
   createdAt: Scalars['DateTime'];
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /**
    * The unique value submitted during the creation of the app revenue attribution record.
@@ -1112,7 +1112,7 @@ export type AppSubscription = Node & {
   createdAt: Scalars['DateTime'];
   /** The date and time when the current app subscription period ends. Returns `null` if the subscription isn't active. */
   currentPeriodEnd?: Maybe<Scalars['DateTime']>;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The plans attached to the app subscription. */
   lineItems: Array<AppSubscriptionLineItem>;
@@ -1234,7 +1234,7 @@ export type AppSubscriptionEdge = {
 /** The plan attached to an app subscription. */
 export type AppSubscriptionLineItem = {
   __typename?: 'AppSubscriptionLineItem';
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The pricing model for the app subscription. */
   plan: AppPlanV2;
@@ -1408,7 +1408,7 @@ export type AppUsageRecord = Node & {
   createdAt: Scalars['DateTime'];
   /** The description of the app usage record. */
   description: Scalars['String'];
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /**
    * A unique key generated by the client to avoid duplicate charges.
@@ -1568,7 +1568,7 @@ export type BasicEvent = Event & Node & {
   createdAt: Scalars['DateTime'];
   /** Whether the event is critical. */
   criticalAlert: Scalars['Boolean'];
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** Human readable text that describes the event. */
   message: Scalars['FormattedString'];
@@ -1650,7 +1650,7 @@ export type BulkOperation = Node & {
   errorCode?: Maybe<BulkOperationErrorCode>;
   /** File size in bytes of the file in the `url` field. */
   fileSize?: Maybe<Scalars['UnsignedInt64']>;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /**
    * A running count of all the objects processed.
@@ -1886,7 +1886,7 @@ export type CalculatedAutomaticDiscountApplication = CalculatedDiscountApplicati
   appliedTo: DiscountApplicationLevel;
   /** The description of discount application. Indicates the reason why the discount was applied. */
   description?: Maybe<Scalars['String']>;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** How the discount amount is distributed on the discounted lines. */
   targetSelection: DiscountApplicationTargetSelection;
@@ -1919,7 +1919,7 @@ export type CalculatedDiscountApplication = {
   appliedTo: DiscountApplicationLevel;
   /** The description of discount application. Indicates the reason why the discount was applied. */
   description?: Maybe<Scalars['String']>;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** How the discount amount is distributed on the discounted lines. */
   targetSelection: DiscountApplicationTargetSelection;
@@ -1969,7 +1969,7 @@ export type CalculatedDiscountCodeApplication = CalculatedDiscountApplication & 
   code: Scalars['String'];
   /** The description of discount application. Indicates the reason why the discount was applied. */
   description?: Maybe<Scalars['String']>;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** How the discount amount is distributed on the discounted lines. */
   targetSelection: DiscountApplicationTargetSelection;
@@ -2132,7 +2132,7 @@ export type CalculatedLineItem = {
   editableSubtotalSet: MoneyBag;
   /** Whether the calculated line item has a staged discount. */
   hasStagedLineItemDiscount: Scalars['Boolean'];
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The image object associated to the line item's variant. */
   image?: Maybe<Image>;
@@ -2200,7 +2200,7 @@ export type CalculatedManualDiscountApplication = CalculatedDiscountApplication 
   appliedTo: DiscountApplicationLevel;
   /** The description of discount application. Indicates the reason why the discount was applied. */
   description?: Maybe<Scalars['String']>;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** How the discount amount is distributed on the discounted lines. */
   targetSelection: DiscountApplicationTargetSelection;
@@ -2230,7 +2230,7 @@ export type CalculatedOrder = Node & {
   cartDiscountAmountSet?: Maybe<MoneyBag>;
   /** Whether the changes have been applied and saved to the order. */
   committed: Scalars['Boolean'];
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /**
    * Returns all items on the order that existed before starting the edit.
@@ -2335,7 +2335,7 @@ export type CalculatedScriptDiscountApplication = CalculatedDiscountApplication 
   appliedTo: DiscountApplicationLevel;
   /** The description of discount application. Indicates the reason why the discount was applied. */
   description?: Maybe<Scalars['String']>;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** How the discount amount is distributed on the discounted lines. */
   targetSelection: DiscountApplicationTargetSelection;
@@ -2374,7 +2374,7 @@ export type CardPaymentDetails = {
  *
  */
 export type Catalog = {
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** Most recent catalog operations. */
   operations: Array<ResourceOperation>;
@@ -2445,7 +2445,7 @@ export type CatalogCreatePayload = {
 /** A catalog csv operation represents a CSV file import. */
 export type CatalogCsvOperation = Node & ResourceOperation & {
   __typename?: 'CatalogCsvOperation';
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The count of processed rows, summing imported, failed, and skipped rows. */
   processedRowCount?: Maybe<Scalars['Int']>;
@@ -2647,7 +2647,7 @@ export type Channel = Node & {
   handle: Scalars['String'];
   /** Whether the collection is available to the channel. */
   hasCollection: Scalars['Boolean'];
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The name of the channel. */
   name: Scalars['String'];
@@ -2782,7 +2782,7 @@ export type ChannelDefinition = Node & {
   channelName: Scalars['String'];
   /** Unique string used as a public identifier for the channel definition. */
   handle: Scalars['String'];
-  /** The unique identifier for the channel definition. */
+  /** The unique ID for the channel definition. */
   id: Scalars['ID'];
   /** Name of the sub channel (e.g. Online Store, Instagram Shopping, TikTok Live). */
   subChannelName: Scalars['String'];
@@ -2812,9 +2812,9 @@ export type ChannelInformation = Node & {
   app: App;
   /** The channel definition associated with the channel. */
   channelDefinition?: Maybe<ChannelDefinition>;
-  /** The unique identifier for the channel. */
+  /** The unique ID for the channel. */
   channelId: Scalars['ID'];
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
 };
 
@@ -2825,7 +2825,7 @@ export type CheckoutProfile = Node & {
   createdAt: Scalars['DateTime'];
   /** The date and time when the checkout profile was last edited. */
   editedAt: Scalars['DateTime'];
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** Whether the checkout profile is published or not. */
   isPublished: Scalars['Boolean'];
@@ -2938,7 +2938,7 @@ export type Collection = HasMetafieldDefinitions & HasMetafields & HasPublishedT
   handle: Scalars['String'];
   /** Whether the collection includes the specified product. */
   hasProduct: Scalars['Boolean'];
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The image associated with the collection. */
   image?: Maybe<Image>;
@@ -3790,7 +3790,7 @@ export type CommentEvent = Event & Node & {
   edited: Scalars['Boolean'];
   /** The object reference associated with the comment event. For example, a product or discount). */
   embed?: Maybe<CommentEventEmbed>;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** Human readable text that describes the event. */
   message: Scalars['FormattedString'];
@@ -3805,7 +3805,7 @@ export type CommentEventAttachment = {
   __typename?: 'CommentEventAttachment';
   /** The file extension of the comment event attachment, indicating the file format. */
   fileExtension?: Maybe<Scalars['String']>;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The image attached to the comment event. */
   image?: Maybe<Image>;
@@ -3824,7 +3824,7 @@ export type CommentEventEmbed = Customer | DraftOrder | Order | Product | Produc
 export type CommentEventSubject = {
   /** Whether the timeline subject has a timeline comment. If true, then a timeline comment exists. */
   hasTimelineComment: Scalars['Boolean'];
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
 };
 
@@ -3861,11 +3861,11 @@ export type Company = CommentEventSubject & HasEvents & HasMetafieldDefinitions 
   draftOrders: DraftOrderConnection;
   /** The paginated list of events associated with the host subject. */
   events: EventConnection;
-  /** A unique externally-supplied identifier for the company. */
+  /** A unique externally-supplied ID for the company. */
   externalId?: Maybe<Scalars['String']>;
   /** Whether the merchant added a timeline comment to the company. */
   hasTimelineComment: Scalars['Boolean'];
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The lifetime duration of the company, since it became a customer of the shop. Examples: `2 days`, `3 months`, `1 year`. */
   lifetimeDuration: Scalars['String'];
@@ -4048,7 +4048,7 @@ export type CompanyAddress = Node & {
   formattedAddress: Array<Scalars['String']>;
   /** A comma-separated list of the values for city, province, and country. */
   formattedArea?: Maybe<Scalars['String']>;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /**
    * A unique phone number for the customer.
@@ -4162,7 +4162,7 @@ export type CompanyContact = Node & {
   customer: Customer;
   /** The list of draft orders for the company contact. */
   draftOrders: DraftOrderConnection;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** Whether the contact is the main contact of the company. */
   isMainContact: Scalars['Boolean'];
@@ -4314,7 +4314,7 @@ export type CompanyContactRevokeRolesPayload = {
 /** The role for a [company contact](https://shopify.dev/api/admin-graphql/latest/objects/companycontact). */
 export type CompanyContactRole = Node & {
   __typename?: 'CompanyContactRole';
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /**
    * The name of a role.
@@ -4348,7 +4348,7 @@ export type CompanyContactRoleAssignment = Node & {
   companyLocation: CompanyLocation;
   /** The date and time ([ISO 8601 format](http://en.wikipedia.org/wiki/ISO_8601)) when the assignment record was created. */
   createdAt: Scalars['DateTime'];
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The role that is assigned to the company contact. */
   role: CompanyContactRole;
@@ -4536,7 +4536,7 @@ export type CompanyInput = {
    *           which the company became the customer.
    */
   customerSince?: InputMaybe<Scalars['DateTime']>;
-  /** A unique externally-supplied identifier for the company. */
+  /** A unique externally-supplied ID for the company. */
   externalId?: InputMaybe<Scalars['String']>;
   /** The name of the company. */
   name?: InputMaybe<Scalars['String']>;
@@ -4568,11 +4568,11 @@ export type CompanyLocation = CommentEventSubject & HasEvents & HasMetafieldDefi
   draftOrders: DraftOrderConnection;
   /** The paginated list of events associated with the host subject. */
   events: EventConnection;
-  /** A unique externally-supplied identifier for the company location. */
+  /** A unique externally-supplied ID for the company location. */
   externalId?: Maybe<Scalars['String']>;
   /** Whether the merchant added a timeline comment to the company location. */
   hasTimelineComment: Scalars['Boolean'];
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** Whether the company location is assigned a specific catalog. */
   inCatalog: Scalars['Boolean'];
@@ -4765,7 +4765,7 @@ export type CompanyLocationCatalog = Catalog & Node & {
   companyLocations: CompanyLocationConnection;
   /** The number of company locations associated with the catalog. */
   companyLocationsCount: Scalars['Int'];
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** Most recent catalog operations. */
   operations: Array<ResourceOperation>;
@@ -4855,7 +4855,7 @@ export type CompanyLocationInput = {
   billingSameAsShipping?: InputMaybe<Scalars['Boolean']>;
   /** The configuration for the buyer's checkout at the company location. */
   buyerExperienceConfiguration?: InputMaybe<BuyerExperienceConfigurationInput>;
-  /** A unique externally-supplied identifier for the company location. */
+  /** A unique externally-supplied ID for the company location. */
   externalId?: InputMaybe<Scalars['String']>;
   /** The preferred locale of the company location. */
   locale?: InputMaybe<Scalars['String']>;
@@ -4937,7 +4937,7 @@ export enum CompanyLocationSortKeys {
 export type CompanyLocationUpdateInput = {
   /** The configuration for the buyer's checkout at the company location. */
   buyerExperienceConfiguration?: InputMaybe<BuyerExperienceConfigurationInput>;
-  /** A unique externally-supplied identifier for the company location. */
+  /** A unique externally-supplied ID for the company location. */
   externalId?: InputMaybe<Scalars['String']>;
   /** The preferred locale of the company location. */
   locale?: InputMaybe<Scalars['String']>;
@@ -6080,7 +6080,7 @@ export type Customer = CommentEventSubject & HasEvents & HasMetafieldDefinitions
   firstName?: Maybe<Scalars['String']>;
   /** Whether the timeline subject has a timeline comment. If true, then a timeline comment exists. */
   hasTimelineComment: Scalars['Boolean'];
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The image associated with the customer. */
   image: Image;
@@ -7610,7 +7610,7 @@ export type CustomerSegmentMembersQuery = JobResult & Node & {
   currentCount: Scalars['Int'];
   /** This indicates if the job is still queued or has been run. */
   done: Scalars['Boolean'];
-  /** A globally-unique identifier that's returned when running an asynchronous mutation. */
+  /** A globally-unique ID that's returned when running an asynchronous mutation. */
   id: Scalars['ID'];
 };
 
@@ -7877,7 +7877,7 @@ export type CustomerUpdatePayload = {
 /** Represents a customer's session visiting a shop's online store, including information about the marketing activity attributed to starting the session. */
 export type CustomerVisit = CustomerMoment & Node & {
   __typename?: 'CustomerVisit';
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** URL of the first page the customer landed on for the session. */
   landingPage?: Maybe<Scalars['URL']>;
@@ -8088,7 +8088,7 @@ export type DeletionEvent = {
   __typename?: 'DeletionEvent';
   /** The date and time when the deletion event for the related resource was generated. */
   occurredAt: Scalars['DateTime'];
-  /** The id of the resource that was deleted. */
+  /** The ID of the resource that was deleted. */
   subjectId: Scalars['ID'];
   /** The type of resource that was deleted. */
   subjectType: DeletionEventSubjectType;
@@ -8158,7 +8158,7 @@ export type DeliveryCarrierService = Node & {
   formattedName?: Maybe<Scalars['String']>;
   /** The logo of the service provider. */
   icon: Image;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The name of the shipping service provider. */
   name?: Maybe<Scalars['String']>;
@@ -8188,7 +8188,7 @@ export type DeliveryCondition = Node & {
   conditionCriteria: DeliveryConditionCriteria;
   /** The field to compare the criterion value against, using the operator. */
   field: DeliveryConditionField;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The operator to compare the field and criterion value. */
   operator: DeliveryConditionOperator;
@@ -8223,7 +8223,7 @@ export type DeliveryCountry = Node & {
    *
    */
   code: DeliveryCountryCodeOrRestOfWorld;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The full name of the country. */
   name: Scalars['String'];
@@ -8288,7 +8288,7 @@ export type DeliveryCustomization = HasMetafieldDefinitions & HasMetafields & No
   errorHistory?: Maybe<FunctionsErrorHistory>;
   /** The ID of the Shopify Function implementing the delivery customization. */
   functionId: Scalars['String'];
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** Returns a metafield by namespace and key that belongs to the resource. */
   metafield?: Maybe<Metafield>;
@@ -8522,7 +8522,7 @@ export enum DeliveryLocalPickupTime {
  */
 export type DeliveryLocationGroup = Node & {
   __typename?: 'DeliveryLocationGroup';
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** A list of all locations that are part of this location group. */
   locations: LocationConnection;
@@ -8602,7 +8602,7 @@ export type DeliveryLocationGroupZoneEdge = {
 export type DeliveryLocationGroupZoneInput = {
   /** A list of countries to associate with the zone. */
   countries?: InputMaybe<Array<DeliveryCountryInput>>;
-  /** A globally-unique identifier of the zone. */
+  /** A globally-unique ID of the zone. */
   id?: InputMaybe<Scalars['ID']>;
   /** A list of method definitions to create. */
   methodDefinitionsToCreate?: InputMaybe<Array<DeliveryMethodDefinitionInput>>;
@@ -8644,7 +8644,7 @@ export enum DeliveryLocationLocalPickupSettingsErrorCode {
 /** The delivery method used by a fulfillment order. */
 export type DeliveryMethod = Node & {
   __typename?: 'DeliveryMethod';
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The latest delivery date and time when the fulfillment is expected to arrive at the buyer's location. */
   maxDeliveryDateTime?: Maybe<Scalars['DateTime']>;
@@ -8665,7 +8665,7 @@ export type DeliveryMethodDefinition = Node & {
   active: Scalars['Boolean'];
   /** The description of the method definition. */
   description?: Maybe<Scalars['String']>;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The method conditions that must pass for this method definition to be applied to an order. */
   methodConditions: Array<DeliveryCondition>;
@@ -8721,7 +8721,7 @@ export type DeliveryMethodDefinitionInput = {
   conditionsToUpdate?: InputMaybe<Array<DeliveryUpdateConditionInput>>;
   /** The description of the method definition. */
   description?: InputMaybe<Scalars['String']>;
-  /** A globally-unique identifier of the method definition. Use only when updating a method definiton. */
+  /** A globally-unique ID of the method definition. Use only when updating a method definiton. */
   id?: InputMaybe<Scalars['ID']>;
   /** The name of the method definition. */
   name?: InputMaybe<Scalars['String']>;
@@ -8773,7 +8773,7 @@ export type DeliveryParticipant = Node & {
   carrierService: DeliveryCarrierService;
   /** The merchant-defined fixed fee for this participant. */
   fixedFee?: Maybe<MoneyV2>;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The carrier-specific services offered by the participant, and whether each service is active. */
   participantServices: Array<DeliveryParticipantService>;
@@ -8844,7 +8844,7 @@ export type DeliveryProfile = Node & {
   activeMethodDefinitionsCount: Scalars['Int'];
   /** Whether this is the default profile. */
   default: Scalars['Boolean'];
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** Whether this shop has enabled legacy compatibility mode for delivery profiles. */
   legacyMode: Scalars['Boolean'];
@@ -8994,7 +8994,7 @@ export type DeliveryProfileInput = {
 /** A product and the subset of associated variants that are part of this delivery profile. */
 export type DeliveryProfileItem = Node & {
   __typename?: 'DeliveryProfileItem';
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** A product associated with this profile. */
   product: Product;
@@ -9061,7 +9061,7 @@ export type DeliveryProfileLocationGroupLocationGroupZonesArgs = {
 
 /** The input fields for a location group associated to a delivery profile. */
 export type DeliveryProfileLocationGroupInput = {
-  /** The globally-unique identifier of the delivery profile location group. */
+  /** The globally-unique ID of the delivery profile location group. */
   id?: InputMaybe<Scalars['ID']>;
   /** The list of location IDs to be moved to this location group. */
   locations?: InputMaybe<Array<Scalars['ID']>>;
@@ -9100,7 +9100,7 @@ export type DeliveryProvince = Node & {
   __typename?: 'DeliveryProvince';
   /** The code of the region. */
   code: Scalars['String'];
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The full name of the region. */
   name: Scalars['String'];
@@ -9117,7 +9117,7 @@ export type DeliveryProvinceInput = {
 /** The merchant-defined rate of the [DeliveryMethodDefinition](https://shopify.dev/api/admin-graphql/latest/objects/DeliveryMethodDefinition). */
 export type DeliveryRateDefinition = Node & {
   __typename?: 'DeliveryRateDefinition';
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The price of this rate. */
   price: MoneyV2;
@@ -9125,7 +9125,7 @@ export type DeliveryRateDefinition = Node & {
 
 /** The input fields for a rate definition. */
 export type DeliveryRateDefinitionInput = {
-  /** A globally-unique identifier of the rate definition. */
+  /** A globally-unique ID of the rate definition. */
   id?: InputMaybe<Scalars['ID']>;
   /** The price of the rate definition. */
   price: MoneyInput;
@@ -9178,7 +9178,7 @@ export type DeliveryUpdateConditionInput = {
   criteriaUnit?: InputMaybe<Scalars['String']>;
   /** The property of an order that will be used in comparison. */
   field?: InputMaybe<DeliveryConditionField>;
-  /** A globally-unique identifier of the condition. */
+  /** A globally-unique ID of the condition. */
   id: Scalars['ID'];
   /** The operator to use for comparison. */
   operator?: InputMaybe<DeliveryConditionOperator>;
@@ -9200,7 +9200,7 @@ export type DeliveryZone = Node & {
   __typename?: 'DeliveryZone';
   /** The list of countries within the zone. */
   countries: Array<DeliveryCountry>;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The name of the zone. */
   name: Scalars['String'];
@@ -9532,7 +9532,7 @@ export type DiscountAutomaticBxgy = HasEvents & Node & {
   /** The paginated list of events associated with the host subject. */
   events: EventConnection;
   /**
-   * A legacy unique identifier for the discount.
+   * A legacy unique ID for the discount.
    * @deprecated Use DiscountAutomaticNode.id instead.
    */
   id: Scalars['ID'];
@@ -9654,7 +9654,7 @@ export type DiscountAutomaticNode = HasEvents & HasMetafieldDefinitions & HasMet
   automaticDiscount: DiscountAutomatic;
   /** The paginated list of events associated with the host subject. */
   events: EventConnection;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** Returns a metafield by namespace and key that belongs to the resource. */
   metafield?: Maybe<Metafield>;
@@ -10288,7 +10288,7 @@ export type DiscountCodeNode = HasEvents & HasMetafieldDefinitions & HasMetafiel
   codeDiscount: DiscountCode;
   /** The paginated list of events associated with the host subject. */
   events: EventConnection;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** Returns a metafield by namespace and key that belongs to the resource. */
   metafield?: Maybe<Metafield>;
@@ -10727,7 +10727,7 @@ export type DiscountNode = HasEvents & HasMetafieldDefinitions & HasMetafields &
   discount: Discount;
   /** The paginated list of events associated with the host subject. */
   events: EventConnection;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** Returns a metafield by namespace and key that belongs to the resource. */
   metafield?: Maybe<Metafield>;
@@ -10918,7 +10918,7 @@ export type DiscountRedeemCode = {
   code: Scalars['String'];
   /** The application that created the discount redeem code. */
   createdBy?: Maybe<App>;
-  /** A globally-unique identifier of the discount redeem code. */
+  /** A globally-unique ID of the discount redeem code. */
   id: Scalars['ID'];
 };
 
@@ -10946,7 +10946,7 @@ export type DiscountRedeemCodeBulkCreation = Node & {
   done: Scalars['Boolean'];
   /** The number of codes that weren't created successfully. */
   failedCount: Scalars['Int'];
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The number of codes created successfully. */
   importedCount: Scalars['Int'];
@@ -11198,7 +11198,7 @@ export type Domain = Node & {
   __typename?: 'Domain';
   /** The host name of the domain. For example, `example.com`. */
   host: Scalars['String'];
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The localization of the domain, if the domain doesn't redirect. */
   localization?: Maybe<DomainLocalization>;
@@ -11279,7 +11279,7 @@ export type DraftOrder = CommentEventSubject & HasEvents & HasLocalizationExtens
   events: EventConnection;
   /** Whether the merchant has added timeline comments to the draft order. */
   hasTimelineComment: Scalars['Boolean'];
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The subject defined for the draft invoice email template. */
   invoiceEmailTemplateSubject: Scalars['String'];
@@ -11923,7 +11923,7 @@ export type DraftOrderLineItem = Node & {
    * @deprecated Use `weight` instead.
    */
   grams?: Maybe<Scalars['Int']>;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The image associated with the draft order line item. */
   image?: Maybe<Image>;
@@ -12111,7 +12111,7 @@ export type Duty = Node & {
   countryCodeOfOrigin?: Maybe<CountryCode>;
   /** The harmonized system code of the item used in calculating the duty. */
   harmonizedSystemCode?: Maybe<Scalars['String']>;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The amount of the duty. */
   price: MoneyBag;
@@ -12126,7 +12126,7 @@ export type DutySale = Sale & {
   actionType: SaleActionType;
   /** The duty for the associated sale. */
   duty: Duty;
-  /** The unique identifier for the sale. */
+  /** The unique ID for the sale. */
   id: Scalars['ID'];
   /** The line type assocated with the sale. */
   lineType: SaleLineType;
@@ -12242,7 +12242,7 @@ export type Event = {
   createdAt: Scalars['DateTime'];
   /** Whether the event is critical. */
   criticalAlert: Scalars['Boolean'];
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** Human readable text that describes the event. */
   message: Scalars['FormattedString'];
@@ -12347,7 +12347,7 @@ export type ExternalVideo = Media & Node & {
   embeddedUrl: Scalars['URL'];
   /** The host of the external video. */
   host: MediaHost;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The media content type. */
   mediaContentType: MediaContentType;
@@ -12677,7 +12677,7 @@ export type Fulfillment = LegacyInteroperability & Node & {
   fulfillmentLineItems: FulfillmentLineItemConnection;
   /** A paginated list of fulfillment orders for the fulfillment. */
   fulfillmentOrders: FulfillmentOrderConnection;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The date and time when the fulfillment went into transit. */
   inTransitAt?: Maybe<Scalars['DateTime']>;
@@ -12870,7 +12870,7 @@ export type FulfillmentEvent = Node & {
   estimatedDeliveryAt?: Maybe<Scalars['DateTime']>;
   /** The time at which this fulfillment event happened. */
   happenedAt: Scalars['DateTime'];
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The latitude where this fulfillment event occurred. */
   latitude?: Maybe<Scalars['Float']>;
@@ -13025,7 +13025,7 @@ export type FulfillmentLineItem = Node & {
   discountedTotal: Scalars['Money'];
   /** The total price after discounts are applied in shop and presentment currencies. */
   discountedTotalSet: MoneyBag;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The associated order's line item. */
   lineItem: LineItem;
@@ -13252,7 +13252,7 @@ export type FulfillmentOrder = Node & {
   fulfillmentHolds: Array<FulfillmentHold>;
   /** A list of fulfillments for the fulfillment order. */
   fulfillments: FulfillmentConnection;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The duties delivery method of this fulfillment order. */
   internationalDuties?: Maybe<FulfillmentOrderInternationalDuties>;
@@ -14099,7 +14099,7 @@ export type FulfillmentOrderDestination = Node & {
   email?: Maybe<Scalars['String']>;
   /** The first name of the customer at the destination. */
   firstName?: Maybe<Scalars['String']>;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The last name of the customer at the destination. */
   lastName?: Maybe<Scalars['String']>;
@@ -14191,7 +14191,7 @@ export type FulfillmentOrderInternationalDuties = {
  */
 export type FulfillmentOrderLineItem = Node & {
   __typename?: 'FulfillmentOrderLineItem';
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The image associated to the line item's variant. */
   image?: Maybe<Image>;
@@ -14381,7 +14381,7 @@ export type FulfillmentOrderMerchantRequest = Node & {
   __typename?: 'FulfillmentOrderMerchantRequest';
   /** The fulfillment order associated with the merchant request. */
   fulfillmentOrder: FulfillmentOrder;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The kind of request made. */
   kind: FulfillmentOrderMerchantRequestKind;
@@ -15319,7 +15319,7 @@ export type GenericFile = File & Node & {
   fileErrors: Array<FileError>;
   /** The status of the file. */
   fileStatus: FileStatus;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The generic file's MIME type. */
   mimeType?: Maybe<Scalars['String']>;
@@ -15346,7 +15346,7 @@ export type GiftCard = Node & {
   enabled: Scalars['Boolean'];
   /** The date at which the gift card will expire. */
   expiresOn?: Maybe<Scalars['Date']>;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The initial value of the gift card. */
   initialValue: MoneyV2;
@@ -15460,7 +15460,7 @@ export type GiftCardSale = Sale & {
   __typename?: 'GiftCardSale';
   /** The type of order action that the sale represents. */
   actionType: SaleActionType;
-  /** The unique identifier for the sale. */
+  /** The unique ID for the sale. */
   id: Scalars['ID'];
   /** The line item for the associated sale. */
   lineItem: LineItem;
@@ -15683,7 +15683,7 @@ export type Image = HasMetafields & {
   altText?: Maybe<Scalars['String']>;
   /** The original height of the image in pixels. Returns `null` if the image is not hosted by Shopify. */
   height?: Maybe<Scalars['Int']>;
-  /** A unique identifier for the image. */
+  /** A unique ID for the image. */
   id?: Maybe<Scalars['ID']>;
   /** Returns a metafield by namespace and key that belongs to the resource. */
   metafield?: Maybe<Metafield>;
@@ -15823,7 +15823,7 @@ export type ImageEdge = {
 export type ImageInput = {
   /** A word or phrase to share the nature or contents of an image. */
   altText?: InputMaybe<Scalars['String']>;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id?: InputMaybe<Scalars['ID']>;
   /** The URL of the image. May be a staged upload URL. */
   src?: InputMaybe<Scalars['String']>;
@@ -16003,7 +16003,7 @@ export type InventoryAdjustmentGroup = Node & {
   changes: Array<InventoryChange>;
   /** The date and time the inventory adjustment group was created. */
   createdAt: Scalars['DateTime'];
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The reason for the group of adjustments. */
   reason: Scalars['String'];
@@ -16156,7 +16156,7 @@ export type InventoryItem = LegacyInteroperability & Node & {
   duplicateSkuCount: Scalars['Int'];
   /** The harmonized system code of the item. */
   harmonizedSystemCode?: Maybe<Scalars['String']>;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The URL that points to the inventory history for the item. */
   inventoryHistoryUrl?: Maybe<Scalars['URL']>;
@@ -16306,7 +16306,7 @@ export type InventoryLevel = Node & {
    * @deprecated Use `deactivationAlert` instead.
    */
   deactivationAlertHtml?: Maybe<Scalars['FormattedString']>;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /**
    * The quantity of inventory items that are going to the inventory level's associated location.
@@ -16562,7 +16562,7 @@ export type Job = {
   __typename?: 'Job';
   /** This indicates if the job is still queued or has been run. */
   done: Scalars['Boolean'];
-  /** A globally-unique identifier that's returned when running an asynchronous mutation. */
+  /** A globally-unique ID that's returned when running an asynchronous mutation. */
   id: Scalars['ID'];
   /** This field will only resolve once the job is done. Can be used to ask for object(s) that have been changed by the job. */
   query?: Maybe<QueryRoot>;
@@ -16572,7 +16572,7 @@ export type Job = {
 export type JobResult = {
   /** This indicates if the job is still queued or has been run. */
   done: Scalars['Boolean'];
-  /** A globally-unique identifier that's returned when running an asynchronous mutation. */
+  /** A globally-unique ID that's returned when running an asynchronous mutation. */
   id: Scalars['ID'];
 };
 
@@ -16689,7 +16689,7 @@ export type LineItem = Node & {
    * @deprecated Use [FulfillmentOrderLineItem#remainingQuantity](https://shopify.dev/api/admin-graphql/latest/objects/FulfillmentOrderLineItem#field-fulfillmentorderlineitem-remainingquantity) instead
    */
   fulfillmentStatus: Scalars['String'];
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The image associated to the line item's variant. */
   image?: Maybe<Image>;
@@ -16841,7 +16841,7 @@ export type LineItemMutable = Node & {
    *
    */
   fulfillmentStatus: Scalars['String'];
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The image associated to the line item's variant. */
   image?: Maybe<Image>;
@@ -17087,7 +17087,7 @@ export type Location = HasMetafieldDefinitions & HasMetafields & LegacyInteroper
   hasActiveInventory: Scalars['Boolean'];
   /** Whether this location has orders that need to be fulfilled. */
   hasUnfulfilledOrders: Scalars['Boolean'];
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The quantities of an inventory item at this location. */
   inventoryLevel?: Maybe<InventoryLevel>;
@@ -17685,7 +17685,7 @@ export type MailingAddress = Node & {
   formatted: Array<Scalars['String']>;
   /** A comma-separated list of the values for city, province, and country. */
   formattedArea?: Maybe<Scalars['String']>;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The last name of the customer. */
   lastName?: Maybe<Scalars['String']>;
@@ -17850,7 +17850,7 @@ export type Market = HasMetafieldDefinitions & HasMetafields & Node & {
    *
    */
   enabled: Scalars['Boolean'];
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** Returns a metafield by namespace and key that belongs to the resource. */
   metafield?: Maybe<Metafield>;
@@ -18021,7 +18021,7 @@ export type MarketRegionsArgs = {
  */
 export type MarketCatalog = Catalog & Node & {
   __typename?: 'MarketCatalog';
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The markets associated with the catalog. */
   markets: MarketConnection;
@@ -18325,7 +18325,7 @@ export type MarketLocalizationsRemovePayload = {
 
 /** A geographic region which comprises a market. */
 export type MarketRegion = {
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The name of the region. */
   name: Scalars['String'];
@@ -18352,7 +18352,7 @@ export type MarketRegionCountry = MarketRegion & Node & {
   code: CountryCode;
   /** The currency which this country uses given its market settings. */
   currency: CurrencySetting;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The name of the region. */
   name: Scalars['String'];
@@ -18538,7 +18538,7 @@ export type MarketWebPresence = Node & {
    *
    */
   domain?: Maybe<Domain>;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The associated market. */
   market: Market;
@@ -18665,7 +18665,7 @@ export type MarketingActivity = Node & {
   createdAt: Scalars['DateTime'];
   /** The completed content in the marketing activity creation form. */
   formData?: Maybe<Scalars['String']>;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /**
    * Whether the marketing activity is in the main workflow version of
@@ -19174,7 +19174,7 @@ export type MarketingEvent = LegacyInteroperability & Node & {
   description?: Maybe<Scalars['String']>;
   /** The date and time when the marketing event ended. */
   endedAt?: Maybe<Scalars['DateTime']>;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The ID of the corresponding resource in the REST Admin API. */
   legacyResourceId: Scalars['UnsignedInt64'];
@@ -19466,7 +19466,7 @@ export type MediaImage = File & Media & Node & {
   fileErrors: Array<FileError>;
   /** The status of the file. */
   fileStatus: FileStatus;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The image for the media. Returns `null` until `status` is `READY`. */
   image?: Maybe<Image>;
@@ -19635,32 +19635,25 @@ export type Metafield = LegacyInteroperability & Node & {
   __typename?: 'Metafield';
   /** The date and time when the metafield was created. */
   createdAt: Scalars['DateTime'];
-  /**
-   * The optional, associated metafield definition that maps to this metafield's namespace and key pair.
-   *
-   */
+  /** The metafield definition that the metafield belongs to, if any. */
   definition?: Maybe<MetafieldDefinition>;
   /** The description of the metafield. */
   description?: Maybe<Scalars['String']>;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
-  /**
-   * The unique identifier for the metafield in its namespace.
-   *
-   */
+  /** The unique identifier for the metafield within its namespace. */
   key: Scalars['String'];
   /** The ID of the corresponding resource in the REST Admin API. */
   legacyResourceId: Scalars['UnsignedInt64'];
   /**
-   * A container for a group of metafields.
-   * Grouping metafields within a namespace prevents your metafields from conflicting with other metafields that have the same key name.
+   * The container for a group of metafields that the metafield is associated with.
    *
    */
   namespace: Scalars['String'];
   /** The resource that the metafield is attached to. */
   owner: HasMetafields;
   /**
-   * The resource that the metafield is attached to.
+   * The type of resource that the metafield is attached to.
    *
    */
   ownerType: MetafieldOwnerType;
@@ -19669,15 +19662,15 @@ export type Metafield = LegacyInteroperability & Node & {
   /** A list of reference objects if the metafield's type is a resource reference list. */
   references?: Maybe<MetafieldReferenceConnection>;
   /**
-   * The type of data that the metafield stores in the `value` field.
-   * See the list of [supported types](https://shopify.dev/apps/metafields/types).
+   * The type of data that is stored in the metafield.
+   * Refer to the list of [supported types](https://shopify.dev/apps/metafields/types).
    *
    */
   type: Scalars['String'];
   /** The date and time when the metafield was updated. */
   updatedAt: Scalars['DateTime'];
   /**
-   * The data to store in the metafield. The data is always stored as a string, regardless of the metafield's type.
+   * The data stored in the metafield. Always stored as a string, regardless of the metafield's type.
    *
    */
   value: Scalars['String'];
@@ -19745,45 +19738,50 @@ export type MetafieldConnection = {
  */
 export type MetafieldDefinition = Node & {
   __typename?: 'MetafieldDefinition';
-  /** The access settings associated with a metafield definition. */
+  /** The access settings associated with the metafield definition. */
   access: MetafieldAccess;
-  /** The description of a metafield definition. */
+  /** The description of the metafield definition. */
   description?: Maybe<Scalars['String']>;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
-  /** The key name used to identify a metafield definition within a namespace. */
+  /** The unique identifier for the metafield definition within its namespace. */
   key: Scalars['String'];
-  /** The list of metafields associated with a metafield definition. */
+  /** The metafields that belong to the metafield definition. */
   metafields: MetafieldConnection;
-  /** The count of metafields under a metafield definition. */
+  /** The count of the metafields that belong to the metafield definition. */
   metafieldsCount: Scalars['Int'];
-  /** The human-readable name for the metafield definition. */
+  /** The human-readable name of the metafield definition. */
   name: Scalars['String'];
-  /** The namespace of the metafield definition. You can use a namespace to group related metafields. */
+  /** The container for a group of metafields that the metafield definition is associated with. */
   namespace: Scalars['String'];
-  /**
-   * The resource type that the metafield definition is attached to. For example, `Product` or `Collection`.
-   *
-   */
+  /** The resource type that the metafield definition is attached to. */
   ownerType: MetafieldOwnerType;
   /** The position of the metafield definition in the pinned list. */
   pinnedPosition?: Maybe<Scalars['Int']>;
-  /** The standard metafield definition template associated with a metafield definition. */
+  /** The standard metafield definition template associated with the metafield definition. */
   standardTemplate?: Maybe<StandardMetafieldDefinitionTemplate>;
-  /** The type of data that the metafield will store. */
+  /**
+   * The type of data that each of the metafields that belong to the metafield definition will store.
+   * Refer to the list of [supported types](https://shopify.dev/apps/metafields/types).
+   *
+   */
   type: MetafieldDefinitionType;
   /** Whether the metafield definition can be used as a collection condition. */
   useAsCollectionCondition: Scalars['Boolean'];
-  /** The validation status for the existing metafields within a metafield definition. */
+  /** The validation status for the metafields that belong to the metafield definition. */
   validationStatus: MetafieldDefinitionValidationStatus;
   /**
    * A list of [validation options](https://shopify.dev/apps/metafields/definitions/validation) for
-   * the metafield. For example, for a metafield with the type `date`, you can set a minimum date validation, so
-   * that the metafield will only store dates after the specific minimum date.
+   * the metafields that belong to the metafield definition. For example, for a metafield definition with the
+   * type `date`, you can set a minimum date validation so that each of the metafields that belong to it can only
+   * store dates after the specified minimum.
    *
    */
   validations: Array<MetafieldDefinitionValidation>;
-  /** Whether metafields for the metafield definition are visible using the Storefront API. */
+  /**
+   * Whether each of the metafields that belong to the metafield definition are visible from the Storefront API.
+   *
+   */
   visibleToStorefrontApi: Scalars['Boolean'];
 };
 
@@ -19935,12 +19933,12 @@ export type MetafieldDefinitionEdge = {
  *
  */
 export type MetafieldDefinitionInput = {
-  /** The access settings that apply to all metafields under the definition. */
+  /** The access settings that apply to each of the metafields that belong to the metafield definition. */
   access?: InputMaybe<MetafieldAccessInput>;
   /** The description for the metafield definition. */
   description?: InputMaybe<Scalars['String']>;
   /**
-   * The key name used to identify a metafield definition within a namespace.
+   * The unique identifier for the metafield definition within its namespace.
    *
    * Must be 3-64 characters long and only contain alphanumeric, hyphen, and underscore characters.
    *
@@ -19949,7 +19947,7 @@ export type MetafieldDefinitionInput = {
   /** The human-readable name for the metafield definition. */
   name: Scalars['String'];
   /**
-   * The namespace to group a metafield definition.
+   * The container for a group of metafields that the metafield definition will be associated with.
    *
    * Must be 3-255 characters long and only contain alphanumeric, hyphen, and underscore characters.
    *
@@ -19963,18 +19961,23 @@ export type MetafieldDefinitionInput = {
    *
    */
   pin?: InputMaybe<Scalars['Boolean']>;
-  /** The type of data that the metafield will store. */
+  /**
+   * The type of data that each of the metafields that belong to the metafield definition will store.
+   * Refer to the list of [supported types](https://shopify.dev/apps/metafields/types).
+   *
+   */
   type: Scalars['String'];
   /** Whether the metafield definition can be used as a collection condition. */
   useAsCollectionCondition?: InputMaybe<Scalars['Boolean']>;
   /**
    * A list of [validation options](https://shopify.dev/apps/metafields/definitions/validation) for
-   * the metafield. For example, for a metafield with the type `date`, you can set a minimum date validation, so
-   * that the metafield will only store dates after the specific minimum date.
+   * the metafields that belong to the metafield definition. For example, for a metafield definition with the
+   * type `date`, you can set a minimum date validation so that each of the metafields that belong to it can only
+   * store dates after the specified minimum.
    *
    */
   validations?: InputMaybe<Array<MetafieldDefinitionValidationInput>>;
-  /** Whether metafields for the definition are visible using the Storefront API. */
+  /** Whether metafields for the metafield definition are visible using the Storefront API. */
   visibleToStorefrontApi?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -20115,17 +20118,29 @@ export enum MetafieldDefinitionUnpinUserErrorCode {
  *
  */
 export type MetafieldDefinitionUpdateInput = {
-  /** The access settings that apply to all metafields under the definition. */
+  /** The access settings that apply to each of the metafields that belong to the metafield definition. */
   access?: InputMaybe<MetafieldAccessInput>;
   /** The description for the metafield definition. */
   description?: InputMaybe<Scalars['String']>;
-  /** The key name used to identify a metafield definition within a namespace. */
+  /**
+   * The unique identifier for the metafield definition within its namespace. Used to help identify the metafield
+   * definition, but cannot be updated itself.
+   *
+   */
   key: Scalars['String'];
   /** The human-readable name for the metafield definition. */
   name?: InputMaybe<Scalars['String']>;
-  /** The namespace to group a metafield definition. */
+  /**
+   * The container for a group of metafields that the metafield definition is associated with. Used to help identify
+   * the metafield definition, but cannot be updated itself.
+   *
+   */
   namespace: Scalars['String'];
-  /** The resource type that the metafield definition is attached to. */
+  /**
+   * The resource type that the metafield definition is attached to. Used to help identify the metafield definition,
+   * but cannot be updated itself.
+   *
+   */
   ownerType: MetafieldOwnerType;
   /** Whether to pin the metafield definition. */
   pin?: InputMaybe<Scalars['Boolean']>;
@@ -20133,12 +20148,16 @@ export type MetafieldDefinitionUpdateInput = {
   useAsCollectionCondition?: InputMaybe<Scalars['Boolean']>;
   /**
    * A list of [validation options](https://shopify.dev/apps/metafields/definitions/validation) for
-   * the metafield. For example, for a metafield with the type `date`, you can set a minimum date validation, so
-   * that the metafield will only store dates after the specific minimum date.
+   * the metafields that belong to the metafield definition. For example, for a metafield definition with the
+   * type `date`, you can set a minimum date validation so that each of the metafields that belong to it can only
+   * store dates after the specified minimum.
    *
    */
   validations?: InputMaybe<Array<MetafieldDefinitionValidationInput>>;
-  /** Whether metafields for the definition are visible using the Storefront API. */
+  /**
+   * Whether each of the metafields that belong to the metafield definition are visible from the Storefront API.
+   *
+   */
   visibleToStorefrontApi?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -20266,33 +20285,45 @@ export type MetafieldEdge = {
  */
 export type MetafieldInput = {
   /**
-   * The unique ID of the metafield. You don't include an ID when you create a metafield because the metafield ID
-   * is created automatically. The ID is required when you update a metafield.
+   * The unique ID of the metafield.
+   *
+   * Required when updating a metafield, but should not be included when creating as it's created automatically.
    *
    */
   id?: InputMaybe<Scalars['ID']>;
   /**
-   * The key name of the metafield. Required when creating but optional when updating.
+   * The unique identifier for a metafield within its namespace.
+   *
+   * Required when creating a metafield, but optional when updating. Used to help identify the metafield when
+   * updating, but cannot be updated itself.
    *
    * Must be 3-64 characters long and can contain alphanumeric, hyphen, and underscore characters.
    *
    */
   key?: InputMaybe<Scalars['String']>;
   /**
-   * The namespace for a metafield. The namespace is required when you create a metafield and is optional when you
-   * update a metafield.
+   * The container for a group of metafields that the metafield is or will be associated with. Used in tandem with
+   * `key` to lookup a metafield on a resource, preventing conflicts with other metafields with the same `key`.
+   *
+   * Required when creating a metafield, but optional when updating. Used to help identify the metafield when
+   * updating, but cannot be updated itself.
    *
    * Must be 3-255 characters long and can contain alphanumeric, hyphen, and underscore characters.
    *
    */
   namespace?: InputMaybe<Scalars['String']>;
   /**
-   * The metafield's [type](https://shopify.dev/apps/metafields/types). The metafield type is required
-   * when you create a metafield and is optional when you update a metafield.
+   * The type of data that is stored in the metafield.
+   * Refer to the list of [supported types](https://shopify.dev/apps/metafields/types).
+   *
+   * Required when creating a metafield, but optional when updating.
    *
    */
   type?: InputMaybe<Scalars['String']>;
-  /** The value of a metafield. */
+  /**
+   * The data stored in the metafield. Always stored as a string, regardless of the metafield's type.
+   *
+   */
   value?: InputMaybe<Scalars['String']>;
 };
 
@@ -20439,7 +20470,7 @@ export type MetafieldStorefrontVisibility = LegacyInteroperability & Node & {
   __typename?: 'MetafieldStorefrontVisibility';
   /** The date and time when the metafield was set to visible in the Storefront API. */
   createdAt: Scalars['DateTime'];
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The key of a metafield to make visible in the Storefront API. */
   key: Scalars['String'];
@@ -20542,31 +20573,34 @@ export enum MetafieldValueType {
 /** The input fields for a metafield value to set. */
 export type MetafieldsSetInput = {
   /**
-   * The key name of the metafield.
+   * The unique identifier for a metafield within its namespace.
    *
    * Must be 3-64 characters long and can contain alphanumeric, hyphen, and underscore characters.
    *
    */
   key: Scalars['String'];
   /**
-   * A container for a group of metafields.
-   * Grouping metafields in a namespace prevents your metafields from conflicting with other metafields that have the same key name.
+   * The container for a group of metafields that the metafield is or will be associated with. Used in tandem
+   * with `key` to lookup a metafield on a resource, preventing conflicts with other metafields with the
+   * same `key`.
    *
    * Must be 3-255 characters long and can contain alphanumeric, hyphen, and underscore characters.
    *
    */
   namespace: Scalars['String'];
-  /** The ID of the owner resource. */
+  /** The unique ID of the resource that the metafield is attached to. */
   ownerId: Scalars['ID'];
   /**
-   * The type of data that the metafield stores.
+   * The type of data that is stored in the metafield.
    * The type must be one of the [supported types](https://shopify.dev/apps/metafields/types).
-   * The type is required when there is no corresponding definition for the given owner, namespace and key.
+   *
+   * Required when there is no corresponding definition for the given `namespace`, `key`, and
+   * owner resource type (derived from `ownerId`).
    *
    */
   type?: InputMaybe<Scalars['String']>;
   /**
-   * The data to store in the metafield. The data is always stored as a string, regardless of the metafield's type.
+   * The data stored in the metafield. Always stored as a string, regardless of the metafield's type.
    *
    */
   value: Scalars['String'];
@@ -20631,7 +20665,7 @@ export type Metaobject = Node & {
   fields: Array<MetaobjectField>;
   /** The unique handle of the object, useful as a custom ID. */
   handle: Scalars['String'];
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** List of back references metafields that belong to the resource. */
   referencedBy: MetafieldRelationConnection;
@@ -20866,7 +20900,7 @@ export type MetaobjectDefinition = Node & {
   displayNameKey?: Maybe<Scalars['String']>;
   /** The fields defined for this object type. */
   fieldDefinitions: Array<MetaobjectFieldDefinition>;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** A paginated connection to the metaobjects associated with the definition. */
   metaobjects: MetaobjectConnection;
@@ -21284,7 +21318,7 @@ export type Model3d = Media & Node & {
   boundingBox?: Maybe<Model3dBoundingBox>;
   /** The 3d model's filename. */
   filename: Scalars['String'];
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The media content type. */
   mediaContentType: MediaContentType;
@@ -21978,7 +22012,10 @@ export type Mutation = {
   /**
    * Sets metafield values. Metafield values will be set regardless if they were previously created or not.
    *
-   * Allows a maximum of 25 metafields to be set at a time.  Note that this operation is atomic as of 2023-01, meaning no changes are persisted if any error is encountered.
+   * Allows a maximum of 25 metafields to be set at a time.
+   *
+   * Note that this operation is atomic as of `2023-01`, meaning no changes are persisted if any error is
+   * encountered.
    *
    */
   metafieldsSet?: Maybe<MetafieldsSetPayload>;
@@ -25232,7 +25269,7 @@ export type NavigationItem = {
  *
  */
 export type Node = {
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
 };
 
@@ -25263,7 +25300,7 @@ export type OnlineStoreArticle = HasPublishedTranslations & Navigable & Node & {
    *
    */
   defaultCursor: Scalars['String'];
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The translations associated with the resource. */
   translations: Array<Translation>;
@@ -25290,7 +25327,7 @@ export type OnlineStoreArticleTranslationsArgs = {
  */
 export type OnlineStoreBlog = HasPublishedTranslations & Node & {
   __typename?: 'OnlineStoreBlog';
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The translations associated with the resource. */
   translations: Array<Translation>;
@@ -25315,7 +25352,7 @@ export type OnlineStorePage = HasPublishedTranslations & Navigable & Node & {
    *
    */
   defaultCursor: Scalars['String'];
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The translations associated with the resource. */
   translations: Array<Translation>;
@@ -25554,7 +25591,7 @@ export type Order = CommentEventSubject & HasEvents & HasLocalizationExtensions 
   fullyPaid: Scalars['Boolean'];
   /** Whether the merchant added a timeline comment to the order. */
   hasTimelineComment: Scalars['Boolean'];
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /**
    * The URL of the first page of the online store that the customer visited before they submitted the order.
@@ -26328,7 +26365,7 @@ export type OrderAgreement = SalesAgreement & {
   app?: Maybe<App>;
   /** The date and time at which the agreement occured. */
   happenedAt: Scalars['DateTime'];
-  /** The unique identifier for the agreement. */
+  /** The unique ID for the agreement. */
   id: Scalars['ID'];
   /** The order associated with the agreement. */
   order: Order;
@@ -26501,7 +26538,7 @@ export enum OrderDisplayFulfillmentStatus {
 /** A summary of the important details for a dispute on an order. */
 export type OrderDisputeSummary = Node & {
   __typename?: 'OrderDisputeSummary';
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The type that the dispute was initiated as. */
   initiatedAs: DisputeType;
@@ -26571,7 +26608,7 @@ export type OrderEditAgreement = SalesAgreement & {
   app?: Maybe<App>;
   /** The date and time at which the agreement occured. */
   happenedAt: Scalars['DateTime'];
-  /** The unique identifier for the agreement. */
+  /** The unique ID for the agreement. */
   id: Scalars['ID'];
   /** The reason the agremeent was created. */
   reason: OrderActionType;
@@ -26872,7 +26909,7 @@ export type OrderStagedChangeAddLineItemDiscount = {
   __typename?: 'OrderStagedChangeAddLineItemDiscount';
   /** The description of the discount. */
   description: Scalars['String'];
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The pricing value of the discount. */
   value: PricingValue;
@@ -27002,7 +27039,7 @@ export type OrderTransaction = Node & {
   formattedGateway?: Maybe<Scalars['String']>;
   /** The payment gateway used to process the transaction. */
   gateway?: Maybe<Scalars['String']>;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The kind of transaction. */
   kind: OrderTransactionKind;
@@ -27394,7 +27431,7 @@ export type PaymentCustomization = HasMetafieldDefinitions & HasMetafields & Nod
   errorHistory?: Maybe<FunctionsErrorHistory>;
   /** The ID of the Shopify Function implementing the payment customization. */
   functionId: Scalars['String'];
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** Returns a metafield by namespace and key that belongs to the resource. */
   metafield?: Maybe<Metafield>;
@@ -27587,7 +27624,7 @@ export type PaymentInstrument = VaultCreditCard | VaultPaypalBillingAgreement;
  */
 export type PaymentMandate = Node & {
   __typename?: 'PaymentMandate';
-  /** The unique identifier of a payment mandate. */
+  /** The unique ID of a payment mandate. */
   id: Scalars['ID'];
   /** The outputs details of the payment instrument. */
   paymentInstrument: PaymentInstrument;
@@ -27654,7 +27691,7 @@ export type PaymentSchedule = Node & {
   completedAt?: Maybe<Scalars['DateTime']>;
   /** Date and time when the payment schedule is due. */
   dueAt?: Maybe<Scalars['DateTime']>;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** Date and time when the invoice is sent. */
   issuedAt?: Maybe<Scalars['DateTime']>;
@@ -27713,7 +27750,7 @@ export type PaymentTerms = Node & {
    *
    */
   dueInDays?: Maybe<Scalars['Int']>;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The order associated with the payment terms. */
   order?: Maybe<Order>;
@@ -27820,7 +27857,7 @@ export type PaymentTermsTemplate = Node & {
   description: Scalars['String'];
   /** The number of days between the issued date and due date if this is the net type of payment terms. */
   dueInDays?: Maybe<Scalars['Int']>;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The name of the payment terms template. */
   name: Scalars['String'];
@@ -27951,7 +27988,7 @@ export type PriceList = Node & {
   currency: CurrencyCode;
   /** The number of fixed prices on the price list. */
   fixedPricesCount: Scalars['Int'];
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The unique name of the price list, used as a human-readable identifier. */
   name: Scalars['String'];
@@ -28420,7 +28457,7 @@ export type PriceRule = CommentEventSubject & HasEvents & LegacyInteroperability
   features: Array<PriceRuleFeature>;
   /** Indicates whether there are any timeline comments on the price rule. */
   hasTimelineComment: Scalars['Boolean'];
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The items to which the price rule applies. */
   itemEntitlements: PriceRuleItemEntitlements;
@@ -28634,7 +28671,7 @@ export type PriceRuleDiscountCode = Node & {
   app?: Maybe<App>;
   /** The code to apply the discount. */
   code: Scalars['String'];
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The number of times that the price rule has been used. This value is updated asynchronously and can be different than the actual usage count. */
   usageCount: Scalars['Int'];
@@ -29313,7 +29350,7 @@ export type PrivateMetafield = Node & {
   __typename?: 'PrivateMetafield';
   /** The date and time when the private metafield was created. */
   createdAt: Scalars['DateTime'];
-  /** The id of the private metafield. */
+  /** The ID of the private metafield. */
   id: Scalars['ID'];
   /** The key name of the private metafield. */
   key: Scalars['String'];
@@ -29474,7 +29511,7 @@ export type Product = HasMetafieldDefinitions & HasMetafields & HasPublishedTran
   hasOnlyDefaultVariant: Scalars['Boolean'];
   /** Whether the product has out of stock variants. */
   hasOutOfStockVariants: Scalars['Boolean'];
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The images associated with the product. */
   images: ImageConnection;
@@ -30259,7 +30296,7 @@ export enum ProductMediaSortKeys {
  */
 export type ProductOption = HasPublishedTranslations & Node & {
   __typename?: 'ProductOption';
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The product option’s name. */
   name: Scalars['String'];
@@ -30446,7 +30483,7 @@ export type ProductSale = Sale & {
   __typename?: 'ProductSale';
   /** The type of order action that the sale represents. */
   actionType: SaleActionType;
-  /** The unique identifier for the sale. */
+  /** The unique ID for the sale. */
   id: Scalars['ID'];
   /** The line item for the associated sale. */
   lineItem: LineItem;
@@ -30612,7 +30649,7 @@ export type ProductVariant = HasMetafieldDefinitions & HasMetafields & HasPublis
    * @deprecated Use `InventoryItem.harmonizedSystemCode` instead.
    */
   harmonizedSystemCode?: Maybe<Scalars['String']>;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The featured image for the variant. */
   image?: Maybe<Image>;
@@ -31429,7 +31466,7 @@ export type Publication = Node & {
   collections: CollectionConnection;
   /** Whether the collection is available to the publication. */
   hasCollection: Scalars['Boolean'];
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /**
    * Name of the publication.
@@ -31586,7 +31623,7 @@ export type PublicationOperation = AddAllProductsOperation | CatalogCsvOperation
 /** A bulk update operation on a publication. */
 export type PublicationResourceOperation = Node & ResourceOperation & {
   __typename?: 'PublicationResourceOperation';
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The count of processed rows, summing imported, failed, and skipped rows. */
   processedRowCount?: Maybe<Scalars['Int']>;
@@ -33724,7 +33761,7 @@ export type Refund = LegacyInteroperability & Node & {
   createdAt?: Maybe<Scalars['DateTime']>;
   /** A list of the refunded duties as part of this refund. */
   duties?: Maybe<Array<RefundDuty>>;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The ID of the corresponding resource in the REST Admin API. */
   legacyResourceId: Scalars['UnsignedInt64'];
@@ -33778,7 +33815,7 @@ export type RefundAgreement = SalesAgreement & {
   app?: Maybe<App>;
   /** The date and time at which the agreement occured. */
   happenedAt: Scalars['DateTime'];
-  /** The unique identifier for the agreement. */
+  /** The unique ID for the agreement. */
   id: Scalars['ID'];
   /** The reason the agremeent was created. */
   reason: OrderActionType;
@@ -34165,7 +34202,7 @@ export type ResourceLimit = {
 
 /** Represents a merchandising background operation interface. */
 export type ResourceOperation = {
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The count of processed rows, summing imported, failed, and skipped rows. */
   processedRowCount?: Maybe<Scalars['Int']>;
@@ -34297,7 +34334,7 @@ export type Return = Node & {
   __typename?: 'Return';
   /** Additional information about the declined return. */
   decline?: Maybe<ReturnDecline>;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The name of the return. */
   name: Scalars['String'];
@@ -34534,7 +34571,7 @@ export type ReturnLineItem = Node & {
   customerNote?: Maybe<Scalars['String']>;
   /** The fulfillment line item from which items are returned. */
   fulfillmentLineItem: FulfillmentLineItem;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The quantity being returned. */
   quantity: Scalars['Int'];
@@ -34745,7 +34782,7 @@ export type ReturnableFulfillment = Node & {
   __typename?: 'ReturnableFulfillment';
   /** The fulfillment that the returnable fulfillment refers to. */
   fulfillment: Fulfillment;
-  /** The unique identifier of the Returnable Fulfillment. */
+  /** The unique ID of the Returnable Fulfillment. */
   id: Scalars['ID'];
   /** The list of returnable fulfillment line items. */
   returnableFulfillmentLineItems: ReturnableFulfillmentLineItemConnection;
@@ -34945,7 +34982,7 @@ export type ReverseDeliveryLineItem = Node & {
   __typename?: 'ReverseDeliveryLineItem';
   /** The dispositions of the item. */
   dispositions: Array<ReverseFulfillmentOrderDisposition>;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The expected number of units. */
   quantity: Scalars['Int'];
@@ -35031,7 +35068,7 @@ export type ReverseDeliveryTrackingV2 = {
  */
 export type ReverseFulfillmentOrder = Node & {
   __typename?: 'ReverseFulfillmentOrder';
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The list of reverse fulfillment order line items for the reverse fulfillment order. */
   lineItems: ReverseFulfillmentOrderLineItemConnection;
@@ -35118,7 +35155,7 @@ export type ReverseFulfillmentOrderDisposePayload = {
 /** The details of the arrangement of an item. */
 export type ReverseFulfillmentOrderDisposition = Node & {
   __typename?: 'ReverseFulfillmentOrderDisposition';
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The location where the disposition occurred. */
   location?: Maybe<Location>;
@@ -35162,7 +35199,7 @@ export type ReverseFulfillmentOrderLineItem = Node & {
   dispositions: Array<ReverseFulfillmentOrderDisposition>;
   /** The corresponding fulfillment line item for a reverse fulfillment order line item. */
   fulfillmentLineItem: FulfillmentLineItem;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The total number of units to be processed. */
   totalQuantity: Scalars['Int'];
@@ -35257,7 +35294,7 @@ export type SeoInput = {
 export type Sale = {
   /** The type of order action that the sale represents. */
   actionType: SaleActionType;
-  /** The unique identifier for the sale. */
+  /** The unique ID for the sale. */
   id: Scalars['ID'];
   /** The line type assocated with the sale. */
   lineType: SaleLineType;
@@ -35336,7 +35373,7 @@ export type SaleTax = {
   __typename?: 'SaleTax';
   /** The portion of the total tax amount on the related sale that comes from the associated tax line. */
   amount: MoneyBag;
-  /** The unique identifier for the sale tax. */
+  /** The unique ID for the sale tax. */
   id: Scalars['ID'];
   /** The tax line associated with the sale. */
   taxLine: TaxLine;
@@ -35348,7 +35385,7 @@ export type SalesAgreement = {
   app?: Maybe<App>;
   /** The date and time at which the agreement occured. */
   happenedAt: Scalars['DateTime'];
-  /** The unique identifier for the agreement. */
+  /** The unique ID for the agreement. */
   id: Scalars['ID'];
   /** The reason the agremeent was created. */
   reason: OrderActionType;
@@ -35399,7 +35436,7 @@ export type SavedSearch = LegacyInteroperability & Node & {
   __typename?: 'SavedSearch';
   /** The filters of a saved search. */
   filters: Array<SearchFilter>;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The ID of the corresponding resource in the REST Admin API. */
   legacyResourceId: Scalars['UnsignedInt64'];
@@ -35548,7 +35585,7 @@ export type ScriptTag = LegacyInteroperability & Node & {
   createdAt: Scalars['DateTime'];
   /** The page or pages on the online store that the script should be included. */
   displayScope: ScriptTagDisplayScope;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The ID of the corresponding resource in the REST Admin API. */
   legacyResourceId: Scalars['UnsignedInt64'];
@@ -35729,7 +35766,7 @@ export type Segment = Node & {
   __typename?: 'Segment';
   /** The date and time when the segment was added to the store. */
   creationDate: Scalars['DateTime'];
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The date and time when the segment was last updated. */
   lastEditDate: Scalars['DateTime'];
@@ -35953,7 +35990,7 @@ export type SegmentMembershipResponse = {
  */
 export type SegmentMigration = {
   __typename?: 'SegmentMigration';
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The ID of the saved search. */
   savedSearchId: Scalars['ID'];
@@ -36115,7 +36152,7 @@ export type SellingPlan = Node & {
   deliveryPolicy: SellingPlanDeliveryPolicy;
   /** Buyer facing string which describes the selling plan commitment. */
   description?: Maybe<Scalars['String']>;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** When to reserve inventory for a selling plan. */
   inventoryPolicy?: Maybe<SellingPlanInventoryPolicy>;
@@ -36473,7 +36510,7 @@ export enum SellingPlanFulfillmentTrigger {
  */
 export type SellingPlanGroup = Node & {
   __typename?: 'SellingPlanGroup';
-  /** The identifier for app, exposed in Liquid and product JSON. */
+  /** The ID for app, exposed in Liquid and product JSON. */
   appId?: Maybe<Scalars['String']>;
   /** Whether the given product is directly associated to the selling plan group. */
   appliesToProduct: Scalars['Boolean'];
@@ -36488,7 +36525,7 @@ export type SellingPlanGroup = Node & {
   createdAt: Scalars['DateTime'];
   /** The merchant-facing description of the selling plan group. */
   description?: Maybe<Scalars['String']>;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The merchant-facing label of the selling plan group. */
   merchantCode: Scalars['String'];
@@ -36666,7 +36703,7 @@ export type SellingPlanGroupEdge = {
 
 /** The input fields required to create or update a selling plan group. */
 export type SellingPlanGroupInput = {
-  /** Identifier for app, exposed in Liquid and product JSON. */
+  /** ID for app, exposed in Liquid and product JSON. */
   appId?: InputMaybe<Scalars['String']>;
   /** Merchant facing description of the selling plan group. */
   description?: InputMaybe<Scalars['String']>;
@@ -37129,7 +37166,7 @@ export enum SellingPlanReserve {
 /** A server pixel stores configuration for streaming customer interactions to an EventBridge or PubSub endpoint. */
 export type ServerPixel = Node & {
   __typename?: 'ServerPixel';
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The current state of this server pixel. */
   status?: Maybe<ServerPixelStatus>;
@@ -37198,7 +37235,7 @@ export type ShippingLine = {
   discountedPrice: MoneyV2;
   /** The pre-tax shipping price with discounts applied. */
   discountedPriceSet: MoneyBag;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id?: Maybe<Scalars['ID']>;
   /**
    * The pre-tax shipping price without any discounts applied.
@@ -37271,7 +37308,7 @@ export type ShippingLineSale = Sale & {
   __typename?: 'ShippingLineSale';
   /** The type of order action that the sale represents. */
   actionType: SaleActionType;
-  /** The unique identifier for the sale. */
+  /** The unique ID for the sale. */
   id: Scalars['ID'];
   /** The line type assocated with the sale. */
   lineType: SaleLineType;
@@ -37524,7 +37561,7 @@ export type Shop = HasMetafields & HasPublishedTranslations & Node & {
   fulfillmentServices: Array<FulfillmentService>;
   /** The shop's time zone as defined by the IANA. */
   ianaTimezone: Scalars['String'];
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /**
    * List of the shop's inventory items.
@@ -38228,7 +38265,7 @@ export type ShopAddress = Node & {
   formatted: Array<Scalars['String']>;
   /** A comma-separated list of the values for city, province, and country. */
   formattedArea?: Maybe<Scalars['String']>;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /**
    * The last name.
@@ -38479,7 +38516,7 @@ export type ShopPolicy = HasPublishedTranslations & Node & {
   __typename?: 'ShopPolicy';
   /** The text of the policy. The maximum size is 512kb. */
   body: Scalars['HTML'];
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The translations associated with the resource. */
   translations: Array<Translation>;
@@ -38694,7 +38731,7 @@ export type ShopifyPaymentsAccount = Node & {
   disputes: ShopifyPaymentsDisputeConnection;
   /** The fraud settings of the Shopify Payments account. */
   fraudSettings: ShopifyPaymentsFraudSettings;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The notifications settings for the account. */
   notificationSettings: ShopifyPaymentsNotificationSettings;
@@ -38794,7 +38831,7 @@ export type ShopifyPaymentsBankAccount = Node & {
    *
    */
   currency: CurrencyCode;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** All current and previous payouts made between the account and the bank account. */
   payouts: ShopifyPaymentsPayoutConnection;
@@ -38887,7 +38924,7 @@ export type ShopifyPaymentsDispute = LegacyInteroperability & Node & {
   evidenceSentOn?: Maybe<Scalars['Date']>;
   /** The date when this dispute was resolved. Returns null if the dispute is not yet resolved. */
   finalizedOn?: Maybe<Scalars['Date']>;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The date when this dispute was initiated. */
   initiatedAt: Scalars['DateTime'];
@@ -38958,7 +38995,7 @@ export type ShopifyPaymentsDisputeEvidence = Node & {
   disputeFileUploads: Array<ShopifyPaymentsDisputeFileUpload>;
   /** The fulfillments associated with the dispute evidence. */
   fulfillments: Array<ShopifyPaymentsDisputeFulfillment>;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The product description for this dispute evidence. */
   productDescription?: Maybe<Scalars['String']>;
@@ -39045,7 +39082,7 @@ export type ShopifyPaymentsDisputeFileUpload = Node & {
   fileSize: Scalars['Int'];
   /** The file type. */
   fileType: Scalars['String'];
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The original file name. */
   originalFileName?: Maybe<Scalars['String']>;
@@ -39057,14 +39094,14 @@ export type ShopifyPaymentsDisputeFileUpload = Node & {
 export type ShopifyPaymentsDisputeFileUploadUpdateInput = {
   /** Whether to delete this file upload. */
   destroy?: InputMaybe<Scalars['Boolean']>;
-  /** The id of the file upload to be updated. */
+  /** The ID of the file upload to be updated. */
   id: Scalars['ID'];
 };
 
 /** The fulfillment associated with dispute evidence. */
 export type ShopifyPaymentsDisputeFulfillment = Node & {
   __typename?: 'ShopifyPaymentsDisputeFulfillment';
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The shipping carrier for this fulfillment. */
   shippingCarrier?: Maybe<Scalars['String']>;
@@ -39171,7 +39208,7 @@ export type ShopifyPaymentsPayout = LegacyInteroperability & Node & {
    * @deprecated Use `net` instead.
    */
   gross: MoneyV2;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /**
    * The exact time when the payout was issued. The payout only contains
@@ -39340,7 +39377,7 @@ export type ShopifyPaymentsTransactionSet = {
  */
 export type ShopifyPaymentsVerification = Node & {
   __typename?: 'ShopifyPaymentsVerification';
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The status of the verification. */
   status: ShopifyPaymentsVerificationStatus;
@@ -39416,7 +39453,7 @@ export type StaffMember = Node & {
   exists: Scalars['Boolean'];
   /** The staff member's first name. */
   firstName?: Maybe<Scalars['String']>;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The staff member's initials, if available. */
   initials?: Maybe<Array<Scalars['String']>>;
@@ -39860,7 +39897,7 @@ export type StandardMetafieldDefinitionTemplate = Node & {
   __typename?: 'StandardMetafieldDefinitionTemplate';
   /** The description of the standard metafield definition. */
   description?: Maybe<Scalars['String']>;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The key owned by the definition after the definition has been activated. */
   key: Scalars['String'];
@@ -39925,7 +39962,7 @@ export type StandardizedProductType = {
 
 /** Provides the fields and values to use when adding a standard product type to a product. The [Shopify product taxonomy](https://help.shopify.com/txt/product_taxonomy/en.txt) contains the full list of available values. */
 export type StandardizedProductTypeInput = {
-  /** The id of the node in the Shopify taxonomy that represents the product type. */
+  /** The ID of the node in the Shopify taxonomy that represents the product type. */
   productTaxonomyNodeId: Scalars['ID'];
 };
 
@@ -39943,7 +39980,7 @@ export type StorefrontAccessToken = Node & {
   accessToken: Scalars['String'];
   /** The date and time when the public access token was created. */
   createdAt: Scalars['DateTime'];
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** An arbitrary title for each token determined by the developer, used for reference         purposes. */
   title: Scalars['String'];
@@ -40036,7 +40073,7 @@ export type StringEdge = {
 /** Represents an applied code discount. */
 export type SubscriptionAppliedCodeDiscount = {
   __typename?: 'SubscriptionAppliedCodeDiscount';
-  /** The unique identifier. */
+  /** The unique ID. */
   id: Scalars['ID'];
   /** The redeem code of the discount that applies on the subscription. */
   redeemCode: Scalars['String'];
@@ -40078,7 +40115,7 @@ export type SubscriptionBillingAttempt = Node & {
   errorCode?: Maybe<SubscriptionBillingAttemptErrorCode>;
   /** A message describing a payment error during processing. */
   errorMessage?: Maybe<Scalars['String']>;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** A unique key generated by the client to avoid duplicate payments. */
   idempotencyKey: Scalars['String'];
@@ -40601,7 +40638,7 @@ export type SubscriptionContract = Node & SubscriptionContractBase & {
   deliveryPrice: MoneyV2;
   /** The list of subscription discounts associated with the subscription contract. */
   discounts: SubscriptionManualDiscountConnection;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The current status of the last payment. */
   lastPaymentStatus?: Maybe<SubscriptionContractLastPaymentStatus>;
@@ -41267,7 +41304,7 @@ export type SubscriptionDraft = Node & {
   discountsRemoved: SubscriptionDiscountConnection;
   /** The list of subscription discounts to be updated on the subscription contract. */
   discountsUpdated: SubscriptionDiscountConnection;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The list of subscription lines which will be associated with the subscription contract. */
   lines: SubscriptionLineConnection;
@@ -41643,13 +41680,13 @@ export type SubscriptionLine = {
   customAttributes: Array<Attribute>;
   /** Discount allocations. */
   discountAllocations: Array<SubscriptionDiscountAllocation>;
-  /** The unique identifier. */
+  /** The unique ID. */
   id: Scalars['ID'];
   /** Total line price including all discounts. */
   lineDiscountedPrice: MoneyV2;
   /** Describe the price changes of the line over time. */
   pricingPolicy?: Maybe<SubscriptionPricingPolicy>;
-  /** The product id associated with the subscription line. */
+  /** The product ID associated with the subscription line. */
   productId?: Maybe<Scalars['ID']>;
   /** The quantity of the unit selected for the subscription line. */
   quantity: Scalars['Int'];
@@ -41685,7 +41722,7 @@ export type SubscriptionLine = {
   taxable: Scalars['Boolean'];
   /** Product title of the item associated with the subscription line. */
   title: Scalars['String'];
-  /** The product variant id associated with the subscription line. */
+  /** The product variant ID associated with the subscription line. */
   variantId?: Maybe<Scalars['ID']>;
   /** The image associated with the line item's variant or product. */
   variantImage?: Maybe<Image>;
@@ -41823,7 +41860,7 @@ export type SubscriptionManualDiscount = {
   __typename?: 'SubscriptionManualDiscount';
   /** Entitled line items used to apply the subscription discount on. */
   entitledLines: SubscriptionDiscountEntitledLines;
-  /** The unique identifier. */
+  /** The unique ID. */
   id: Scalars['ID'];
   /** The maximum number of times the subscription discount will be applied on orders. */
   recurringCycleLimit?: Maybe<Scalars['Int']>;
@@ -42341,7 +42378,7 @@ export type TenderTransaction = Node & {
   __typename?: 'TenderTransaction';
   /** The amount and currency of the tender transaction. */
   amount: MoneyV2;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** Information about the payment method used for the transaction. */
   paymentMethod?: Maybe<Scalars['String']>;
@@ -42400,7 +42437,7 @@ export type TipSale = Sale & {
   __typename?: 'TipSale';
   /** The type of order action that the sale represents. */
   actionType: SaleActionType;
-  /** The unique identifier for the sale. */
+  /** The unique ID for the sale. */
   id: Scalars['ID'];
   /** The line item for the associated sale. */
   lineItem: LineItem;
@@ -42429,7 +42466,7 @@ export type TransactionFee = Node & {
   flatFee: MoneyV2;
   /** Name of the credit card flat fee. */
   flatFeeName?: Maybe<Scalars['String']>;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** Percentage charge. */
   rate: Scalars['Decimal'];
@@ -43066,7 +43103,7 @@ export type Video = File & Media & Node & {
   fileStatus: FileStatus;
   /** The video's filename. */
   filename: Scalars['String'];
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The media content type. */
   mediaContentType: MediaContentType;
@@ -43129,7 +43166,7 @@ export enum VisualizationType {
 /** A web pixel settings. */
 export type WebPixel = Node & {
   __typename?: 'WebPixel';
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** The settings JSON object for the web pixel. */
   settings: Scalars['JSON'];
@@ -43213,7 +43250,7 @@ export type WebhookSubscription = LegacyInteroperability & Node & {
   endpoint: WebhookSubscriptionEndpoint;
   /** The format in which the webhook subscription should send the data. */
   format: WebhookSubscriptionFormat;
-  /** A globally-unique identifier. */
+  /** A globally-unique ID. */
   id: Scalars['ID'];
   /** An optional array of top-level resource fields that should be serialized and sent in the webhook message. If null, then all fields will be sent. */
   includeFields: Array<Scalars['String']>;

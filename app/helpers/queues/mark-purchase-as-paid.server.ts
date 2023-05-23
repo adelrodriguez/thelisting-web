@@ -22,7 +22,7 @@ export const processor: Processor<QueueData> = async (job) => {
     })
 
     if (purchase.paid) {
-      job.log(`Purchase ${purchase.id} is already paid. Skipping...`)
+      await job.log(`Purchase ${purchase.id} is already paid. Skipping...`)
       return
     }
 
@@ -31,7 +31,7 @@ export const processor: Processor<QueueData> = async (job) => {
       where: { id: purchase.id },
     })
 
-    job.log(`Purchase ${purchase.id} marked as paid. Notifying user...`)
+    await job.log(`Purchase ${purchase.id} marked as paid. Notifying user...`)
 
     await NotifyPurchaseQueue.add(`Purchase ID: ${purchase.id}`, {
       orderId,

@@ -135,7 +135,7 @@ export default function DashboardListingRibbonsPage() {
                 ) : (
                   <DndProvider backend={HTML5Backend}>
                     {/* TODO: Fix this type error that's happening due to serialization from Remix */}
-                    {/* @ts-expect-error */}
+                    {/* @ts-expect-error Due to serialized type */}
                     <PageRibbons ribbons={ribbons} onMove={submitOrder} />
                   </DndProvider>
                 )}
@@ -213,7 +213,7 @@ export default function DashboardListingRibbonsPage() {
                 </Link>
               </div>
               {/* TODO: Fix this type error that's happening due to serialization from Remix */}
-              {/* @ts-expect-error */}
+              {/* @ts-expect-error Due to serialization */}
               <RibbonsPreview ribbons={ribbons} path={listing.path} />
             </div>
           </section>

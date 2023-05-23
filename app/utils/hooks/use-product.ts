@@ -27,10 +27,10 @@ export default function useProduct(id: string) {
 
         const variant = flattenConnection(data.product?.variants)[0]
         const imageUrl = variant?.image?.url
-        const price = variant?.price!.amount as number
-        const currencyCode = variant?.price!.currencyCode
-        const title = data.product?.title!
-        const variantId = variant?.id!
+        const price = variant?.price.amount as number
+        const currencyCode = variant?.price.currencyCode
+        const title = data.product?.title
+        const variantId = variant?.id
 
         return { currencyCode, imageUrl, price, title, variantId }
       },

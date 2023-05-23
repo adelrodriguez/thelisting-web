@@ -17,7 +17,7 @@ export default function Registry({
   const cart = useCart()
   const [scope, animate] = useAnimate()
   const shake = useCallback(() => {
-    animate(
+    void animate(
       scope.current,
       {
         rotate: [0, -12, 12, -12, 12, 0],

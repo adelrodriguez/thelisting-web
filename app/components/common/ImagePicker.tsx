@@ -46,7 +46,7 @@ export default function ImagePicker({
   }
 
   function onSubmit() {
-    refetch()
+    void refetch()
     setStep("choose")
   }
 

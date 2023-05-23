@@ -62,12 +62,12 @@ export const processor: Processor<QueueData> = async (job) => {
       )
       .digest("hex")
 
-    job.log(`Created tag ${tag}`)
+    await job.log(`Created tag ${tag}`)
 
     // Look for products with tag
     const shopifyProducts = await getProductsByTag(tag)
 
-    job.log(`Found ${shopifyProducts.length} product(s) with tag ${tag}`)
+    await job.log(`Found ${shopifyProducts.length} product(s) with tag ${tag}`)
 
     const exchangeRate =
       scrapedProduct.currency === "USD" ? job.data.exchangeRate : 1
@@ -100,11 +100,11 @@ export const processor: Processor<QueueData> = async (job) => {
         url: scrapedProduct.url,
       })
 
-      job.log(`Created product ${shopifyProduct.id}`)
+      await job.log(`Created product ${shopifyProduct.id}`)
 
       const published = await publishToCurrentChannel(shopifyProduct.id)
 
-      job.log(
+      await job.log(
         published
           ? `Published product ${shopifyProduct.id}`
           : `Failed to publish product ${shopifyProduct.id}`
@@ -118,7 +118,7 @@ export const processor: Processor<QueueData> = async (job) => {
       invariant(shopifyProduct, "Shopify product does not exist")
       commerceId = shopifyProduct.id
 
-      job.log(`Found product ${commerceId}`)
+      await job.log(`Found product ${commerceId}`)
 
       // Add the product to the listing collection
       await addProductsToCollection(listing.commerceId, [commerceId])
@@ -141,7 +141,7 @@ export const processor: Processor<QueueData> = async (job) => {
       where: { sku },
     })
 
-    job.log(`Upsert item ${item.id}`)
+    await job.log(`Upsert item ${item.id}`)
   } catch (error) {
     logger.error((error as Error).message, {
       error,

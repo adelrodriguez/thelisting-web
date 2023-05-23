@@ -24,7 +24,7 @@ import type {
 } from "~/utils/scraper"
 
 declare module "@tanstack/react-table" {
-  interface TableMeta<TData extends unknown> {
+  interface TableMeta<TData> {
     updateData: (value: TData) => void
   }
 }

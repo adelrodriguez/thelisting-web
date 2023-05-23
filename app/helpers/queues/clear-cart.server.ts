@@ -43,7 +43,7 @@ export const processor: Processor<QueueData> = async (job) => {
       generateKey(REDIS_KEYS.Cart, cartsKey, listingId)
     )
 
-    job.log(
+    await job.log(
       `Deleted cart ${generateKey(
         "cart",
         cartsKey,

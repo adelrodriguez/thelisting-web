@@ -32,7 +32,7 @@ export default function CountdownRibbonForm({
       // TODO(adelrodriguez): Fix this type error. The issue here is that an
       // input only takes strings, but our schema describes a Date object. Maybe
       // creating a custom component that can accept Date objects?
-      // @ts-expect-error
+      // @ts-expect-error Due to type mismatch
       defaultValues={defaultValues}
       action="?/properties"
     >

@@ -7,6 +7,7 @@ import { isProduction } from "~/config/vars"
 let redis: RedisType
 
 declare global {
+  // eslint-disable-next-line no-var
   var __redis: RedisType | undefined
 }
 

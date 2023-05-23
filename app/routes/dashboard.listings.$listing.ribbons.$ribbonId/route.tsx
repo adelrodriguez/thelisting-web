@@ -131,7 +131,7 @@ export async function action({ params, request, context }: ActionArgs) {
 
       const formData = await request.formData()
       // TODO(adelrodriguez): Fix this type error
-      // @ts-expect-error (due to union type)
+      // @ts-expect-error Due to union type
       const validator = withZod(schemas[ribbon.type])
       const result = await validator.validate(formData)
 

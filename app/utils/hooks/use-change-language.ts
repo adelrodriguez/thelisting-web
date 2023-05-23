@@ -7,6 +7,6 @@ export default function useChangeLanguage(locale: string) {
   const { i18n } = useTranslation()
 
   useEffect(() => {
-    i18n.changeLanguage(locale)
+    void i18n.changeLanguage(locale)
   }, [locale, i18n])
 }
