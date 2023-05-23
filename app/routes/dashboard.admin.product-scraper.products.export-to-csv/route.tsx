@@ -1,17 +1,16 @@
 import { Dialog, Transition } from "@headlessui/react"
 import { ArrowDownTrayIcon } from "@heroicons/react/24/outline"
+import { useOutletContext } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
 import { Fragment } from "react"
 import { ValidatedForm } from "remix-validated-form"
 import { z } from "zod"
 
 import { FormInput, FormSubmit } from "~/components/form"
-import {
-  useScrapedProducts,
-  Headers,
-} from "~/routes/dashboard.admin.product-scraper/route"
 import { downloadAsCSVFile } from "~/utils/csv"
 import { useDialogPage } from "~/utils/hooks"
+import { Headers } from "~/utils/scraper"
+import type { ScrapeProductsTableRow } from "~/utils/scraper"
 
 const ExportCSVSchema = z.object({
   filename: z.string().min(1),
@@ -21,7 +20,7 @@ const validator = withZod(ExportCSVSchema)
 
 export default function ExportCSVPage() {
   const { open, close, leave } = useDialogPage()
-  const { products } = useScrapedProducts()
+  const products = useOutletContext<ScrapeProductsTableRow[]>()
 
   return (
     <Transition.Root appear show={open} as={Fragment}>

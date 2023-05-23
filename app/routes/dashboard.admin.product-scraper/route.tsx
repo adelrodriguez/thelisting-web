@@ -1,15 +1,14 @@
 import { DocumentArrowDownIcon } from "@heroicons/react/24/outline"
-import { Outlet, useNavigate, useOutletContext } from "@remix-run/react"
+import { Outlet, useNavigate } from "@remix-run/react"
 import clsx from "clsx"
-import { enqueueSnackbar, useSnackbar } from "notistack"
-import { useEffect, useState } from "react"
+import { enqueueSnackbar } from "notistack"
+import { useEffect } from "react"
 import { useDropzone } from "react-dropzone"
 import invariant from "tiny-invariant"
 
 import { useCSVParser } from "~/utils/hooks"
 import type { ScrapeProductsTableRow } from "~/utils/scraper"
-
-import ScrapeProductsTable from "./ScrapeProductsTable"
+import { Headers } from "~/utils/scraper"
 
 export const handle = {
   crumb: () => ({
@@ -17,17 +16,6 @@ export const handle = {
     name: "Product Scraper",
   }),
 }
-
-export const Headers = [
-  "id",
-  "url",
-  "quantity",
-  "title",
-  "description",
-  "image",
-  "amount",
-  "currency",
-] as const
 
 function transformHeader(_: string, index: number): string {
   const header = Headers[index]
@@ -45,7 +33,6 @@ export default function AdminToolsProductScraperPage() {
     header: true,
     transformHeader,
   })
-  const [products, setProducts] = useState<ScrapeProductsTableRow[]>([])
   const navigate = useNavigate()
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: { "text/csv": [".csv"] },
@@ -56,51 +43,10 @@ export default function AdminToolsProductScraperPage() {
       parse(files[0])
     },
   })
-  const { enqueueSnackbar } = useSnackbar()
-
-  // TODO(adelrodriguez): Check the data returned from the parser and show
-  // errors if we find duplicated ids or urls
 
   useEffect(() => {
-    if (result && result.data) {
-      const ids = new Set()
-      const urls = new Map<string, string | number>()
-
-      result.data.forEach((row) => {
-        if (ids.has(row.id)) {
-          enqueueSnackbar("Duplicate ID", {
-            autoHideDuration: 15_000,
-            description: `Row ${row.id} has a duplicated ID`,
-            variant: "error",
-          })
-        } else {
-          ids.add(row.id)
-        }
-
-        const rowId = urls.get(row.url)
-
-        if (rowId) {
-          enqueueSnackbar("Duplicate URL", {
-            autoHideDuration: 15_000,
-            description: `Row ${row.id} has a duplicated URL with row ${rowId}`,
-            variant: "error",
-          })
-        } else {
-          urls.set(row.url, row.id)
-        }
-      })
-    }
-  }, [result, enqueueSnackbar])
-
-  function handleExport(data: ScrapeProductsTableRow[]) {
-    setProducts(data)
-    navigate("export-to-csv")
-  }
-
-  function handleAddToListing(data: ScrapeProductsTableRow[]) {
-    setProducts(data)
-    navigate("add-to-listing")
-  }
+    if (result) navigate("/dashboard/admin/product-scraper/products")
+  }, [result, navigate])
 
   return (
     <div className="mx-auto max-w-7xl py-12 px-4 sm:px-6 lg:px-8">
@@ -117,13 +63,7 @@ export default function AdminToolsProductScraperPage() {
         </p>
       </div>
       <div className="mt-8">
-        {result ? (
-          <ScrapeProductsTable
-            data={result.data}
-            onExport={handleExport}
-            onAddToListing={handleAddToListing}
-          />
-        ) : (
+        {!result && (
           <div className="mx-auto w-full max-w-7xl">
             <button
               {...getRootProps({
@@ -163,11 +103,7 @@ export default function AdminToolsProductScraperPage() {
           </div>
         )}
       </div>
-      <Outlet context={{ products }} />
+      <Outlet context={result?.data} />
     </div>
   )
-}
-
-export function useScrapedProducts() {
-  return useOutletContext<{ products: ScrapeProductsTableRow[] }>()
 }

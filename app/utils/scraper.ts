@@ -25,10 +25,6 @@ export type ScrapeProductsTableRow = z.infer<
   typeof ScrapeProductsTableRowSchema
 >
 
-export function parseScrapeProductsTableRow(data: unknown) {
-  return ScrapeProductsTableRowSchema.parse(data)
-}
-
 export const ScrapedProductPayloadSchema = z.object({
   /** The duration for the function execution (in milliseconds)  */
   duration: z.number(),
@@ -89,3 +85,14 @@ export async function scrapeImage(url: string): Promise<Blob> {
 
   return res.blob()
 }
+
+export const Headers = [
+  "id",
+  "url",
+  "quantity",
+  "title",
+  "description",
+  "image",
+  "amount",
+  "currency",
+] as const

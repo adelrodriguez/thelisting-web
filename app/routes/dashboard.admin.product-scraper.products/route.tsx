@@ -1,5 +1,5 @@
 import { CheckIcon } from "@heroicons/react/24/solid"
-import { Link } from "@remix-run/react"
+import { Link, Outlet, useNavigate, useOutletContext } from "@remix-run/react"
 import type { RowSelectionState } from "@tanstack/react-table"
 import {
   useReactTable,
@@ -65,9 +65,14 @@ const columns = [
     ),
     id: "selected",
   }),
+  columnHelper.display({
+    cell: ({ row }) => row.index + 1,
+    header: "No.",
+  }),
   columnHelper.accessor("id", {
     header: "ID",
   }),
+
   columnHelper.accessor("url", {
     cell: (props) => {
       const value = props.getValue()
@@ -130,16 +135,9 @@ const columns = [
   }),
 ]
 
-export default function ScrapeProductsTable({
-  data: initialData,
-  onExport,
-  onAddToListing,
-}: {
-  data: ScrapeProductsTableRow[]
-  onExport: (data: ScrapeProductsTableRow[]) => void
-  onAddToListing: (data: ScrapeProductsTableRow[]) => void
-}) {
-  const [data, setData] = useState<ScrapeProductsTableRow[]>(initialData)
+export default function Page() {
+  const initialData = useOutletContext<ScrapeProductsTableRow[] | undefined>()
+  const [data, setData] = useState<ScrapeProductsTableRow[]>(initialData || [])
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
   const table = useReactTable({
     columns,
@@ -174,8 +172,43 @@ export default function ScrapeProductsTable({
     (state) => state.context.completed
   )
   const { enqueueSnackbar } = useSnackbar()
+  const navigate = useNavigate()
 
   const selected = data.filter((_, index) => rowSelection[index])
+
+  useEffect(() => {
+    if (!initialData || !initialData.length) {
+      navigate("/dashboard/admin/product-scraper")
+      return
+    }
+
+    const ids = new Set()
+    const urls = new Map<string, string | number>()
+
+    initialData.forEach((row) => {
+      if (ids.has(row.id)) {
+        enqueueSnackbar("Duplicate ID", {
+          autoHideDuration: 15_000,
+          description: `Row ${row.id} has a duplicated ID`,
+          variant: "error",
+        })
+      } else {
+        ids.add(row.id)
+      }
+
+      const rowId = urls.get(row.url)
+
+      if (rowId) {
+        enqueueSnackbar("Duplicate URL", {
+          autoHideDuration: 15_000,
+          description: `Row ${row.id} has a duplicated URL with row ${rowId}`,
+          variant: "error",
+        })
+      } else {
+        urls.set(row.url, row.id)
+      }
+    })
+  }, [initialData, navigate])
 
   useEffect(() => {
     scraperService.onTransition((_, event) => {
@@ -242,6 +275,18 @@ export default function ScrapeProductsTable({
     scraperService.send({ payload: rowsToScrape, type: "START" })
   }
 
+  function handleExportToCSV() {
+    navigate("export-to-csv")
+  }
+
+  function handleAddToListing() {
+    navigate("add-to-listing")
+  }
+
+  if (!initialData || !initialData.length) {
+    return null
+  }
+
   return (
     <>
       <div className="px-4 sm:px-6 lg:px-8">
@@ -257,14 +302,14 @@ export default function ScrapeProductsTable({
               <>
                 <Button
                   type="button"
-                  onClick={() => onAddToListing(selected)}
+                  onClick={() => handleAddToListing()}
                   size="sm"
                 >
                   Add To Listing
                 </Button>
                 <Button
                   type="button"
-                  onClick={() => onExport(selected)}
+                  onClick={() => handleExportToCSV()}
                   size="sm"
                 >
                   Export to CSV
@@ -339,6 +384,7 @@ export default function ScrapeProductsTable({
           </div>
         </div>
       </div>
+      <Outlet context={selected} />
     </>
   )
 }

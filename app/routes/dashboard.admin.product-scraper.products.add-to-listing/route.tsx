@@ -3,7 +3,7 @@ import { XMarkIcon } from "@heroicons/react/24/outline"
 import type { ActionArgs, LoaderArgs } from "@remix-run/node"
 import { redirect } from "@remix-run/node"
 import { json } from "@remix-run/node"
-import { useLoaderData } from "@remix-run/react"
+import { useLoaderData, useOutletContext } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
 import { useSnackbar } from "notistack"
 import { Fragment, useEffect } from "react"
@@ -18,9 +18,9 @@ import { Alert, Button } from "~/components/common"
 import { FormInput, FormSelect, FormSubmit } from "~/components/form"
 import { CURRENCIES, DEFAULT_MARGIN } from "~/config/consts"
 import { AddItemToListingQueue } from "~/helpers/queues"
-import { useScrapedProducts } from "~/routes/dashboard.admin.product-scraper/route"
 import alegra from "~/services/alegra.server"
 import { useDialogPage } from "~/utils/hooks"
+import type { ScrapeProductsTableRow } from "~/utils/scraper"
 
 const AddToListingSchema = z.object({
   exchangeRate: z.coerce.number().min(1),
@@ -92,7 +92,7 @@ export async function action({ request, context }: ActionArgs) {
 
 export default function AddToListingPage() {
   const { enqueueSnackbar } = useSnackbar()
-  const { products } = useScrapedProducts()
+  const products = useOutletContext<ScrapeProductsTableRow[]>()
   const productFields = products.map(({ id, scrapedProductId, quantity }) => ({
     quantity,
     rowId: `${id}`,
