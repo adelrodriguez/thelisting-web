@@ -45,18 +45,18 @@ export default function Countdown({ eventDatetime }: CountdownProperties) {
         }
       >
         {() => (
-          <div className="flex h-full w-full items-center justify-around">
+          <div className="grid h-full w-full grid-cols-5 items-center justify-around">
             {Object.keys(remaining)
               .filter((key) => key !== "years")
               .map((key) => (
                 <div className="flex flex-col items-center" key={key}>
                   <div
-                    className="text-2xl font-bold lg:text-3xl xl:text-5xl"
+                    className="text-4xl lg:text-5xl"
                     style={{ fontFamily: theme.fonts?.heading }}
                   >
                     {remaining[key as keyof typeof remaining]}
                   </div>
-                  <div className="font-body text-sm font-bold">
+                  <div className="pt-1 font-body text-sm">
                     {capitalize(key)}
                   </div>
                 </div>

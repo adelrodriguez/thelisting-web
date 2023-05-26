@@ -72,6 +72,8 @@ export async function loader({ params, context }: LoaderArgs) {
 
 export const meta: V2_MetaFunction<typeof loader> = ({ data }) => {
   try {
+    if (!data) return []
+
     const result = ListingThemeSchema.safeParse(data.listing.theme)
     let fontURL = ""
 
