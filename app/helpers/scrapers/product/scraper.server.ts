@@ -29,6 +29,7 @@ import {
   TwinkleRDScraper,
   ZaraHomeScraper,
   WayfairScraper,
+  TargetScraper,
 } from "./stores"
 
 export default async function createScraper(
@@ -61,6 +62,7 @@ export default async function createScraper(
     [PotteryBarnKidsScraper.domain]: PotteryBarnKidsScraper,
     [PricesmartScraper.domain]: PricesmartScraper,
     [SirenaScraper.domain]: SirenaScraper,
+    [TargetScraper.domain]: TargetScraper,
     [TwinkleRDScraper.domain]: TwinkleRDScraper,
     [WayfairScraper.domain]: WayfairScraper,
     [ZaraHomeScraper.domain]: ZaraHomeScraper,
