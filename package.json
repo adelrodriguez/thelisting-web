@@ -101,7 +101,7 @@
     "react-i18next": "12.2.0",
     "react-number-format": "^5.1.4",
     "remix-auth": "^3.4.0",
-    "remix-auth-email-link": "^1.5.0",
+    "remix-auth-email-link": "2.0.2",
     "remix-i18next": "5.1.1",
     "remix-image": "^1.4.0",
     "remix-image-sharp": "^0.1.4",
