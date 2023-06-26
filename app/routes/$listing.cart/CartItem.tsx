@@ -1,6 +1,6 @@
 import type { Item } from "@prisma/client"
+import { Link } from "@remix-run/react"
 import { useTranslation } from "react-i18next"
-import { Link } from "react-router-dom"
 
 import { Alert } from "~/components/common"
 import { useCart, useProduct } from "~/utils/hooks"
