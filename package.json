@@ -117,9 +117,9 @@
     "whatsapp-cloud-api": "^0.2.6",
     "winston": "^3.8.2",
     "xstate": "4.37.0",
-    "zod": "3.20.6",
+    "zod": "3.21.4",
     "zod-form-data": "^2.0.1",
-    "zodix": "0.4.0"
+    "zodix": "0.4.1"
   },
   "devDependencies": {
     "@anatine/zod-mock": "3.9.0",
