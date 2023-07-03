@@ -1,4 +1,4 @@
-import type { EntryContext } from "@remix-run/node"
+import type { DataFunctionArgs, EntryContext } from "@remix-run/node"
 import { Response } from "@remix-run/node"
 import { RemixServer } from "@remix-run/react"
 import { createInstance } from "i18next"
@@ -74,4 +74,23 @@ export default async function handleRequest(
 
     setTimeout(abort, ABORT_DELAY)
   })
+}
+
+export function handleError(
+  error: unknown,
+  { request, params, context }: DataFunctionArgs
+) {
+  if (error instanceof Error) {
+    context.logger.error(error.message, {
+      error,
+      params,
+      request,
+    })
+  } else {
+    context.logger.error("Unknown error", {
+      error,
+      params,
+      request,
+    })
+  }
 }
