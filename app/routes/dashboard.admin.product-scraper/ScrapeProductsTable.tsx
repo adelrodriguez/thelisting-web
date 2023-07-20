@@ -1,4 +1,4 @@
-import { CheckIcon } from "@heroicons/react/24/solid"
+import { CheckIcon, XMarkIcon } from "@heroicons/react/24/solid"
 import { Link } from "@remix-run/react"
 import type { RowSelectionState } from "@tanstack/react-table"
 import {
@@ -34,15 +34,26 @@ const columnHelper = createColumnHelper<ScrapeProductsTableRow>()
 const columns = [
   columnHelper.display({
     cell: ({ row }) => {
-      const value = row.original.scrapedProductId
+      const { scrapedProductId, title, description, image, amount } =
+        row.original
 
-      if (!value) return null
+      if (!scrapedProductId) return null
+
+      if (!title || !description || !image || !amount) {
+        return (
+          <XMarkIcon
+            className="h-5 w-5 text-red-500"
+            aria-hidden="true"
+            title={scrapedProductId}
+          />
+        )
+      }
 
       return (
         <CheckIcon
           className="h-5 w-5 text-green-500"
           aria-hidden="true"
-          title={value}
+          title={scrapedProductId}
         />
       )
     },
@@ -252,7 +263,7 @@ export default function ScrapeProductsTable({
               <span className="font-bold">{selected.length}</span> selected
             </h3>
           </div>
-          <div className="mt-4 flex gap-4 sm:mt-0 sm:ml-16 sm:flex-none">
+          <div className="mt-4 flex gap-4 sm:ml-16 sm:mt-0 sm:flex-none">
             {selected.length > 0 && (
               <>
                 <Button
@@ -294,7 +305,7 @@ export default function ScrapeProductsTable({
           </div>
         </div>
         <div className="mt-8 flex flex-col">
-          <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+          <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
               <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
                 <table className="min-w-full divide-y divide-gray-300">
@@ -304,7 +315,7 @@ export default function ScrapeProductsTable({
                         {headerGroup.headers.map((header) => (
                           <th
                             scope="col"
-                            className="max-w-[500px] overflow-hidden text-ellipsis whitespace-nowrap py-3 px-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
+                            className="max-w-[500px] overflow-hidden text-ellipsis whitespace-nowrap px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
                             key={header.id}
                           >
                             {flexRender(
