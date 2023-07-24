@@ -81,7 +81,7 @@ export default function ListingCartPage() {
 
   return (
     <>
-      <Transition.Root appear show={open} as={Fragment} afterLeave={leave}>
+      <Transition.Root appear show={open} as={Fragment}>
         <Dialog as="div" className="relative z-20" onClose={close}>
           <Transition.Child
             as={Fragment}
@@ -91,6 +91,7 @@ export default function ListingCartPage() {
             leave="ease-in-out duration-500"
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
+            afterLeave={leave}
           >
             <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
           </Transition.Child>
@@ -108,7 +109,7 @@ export default function ListingCartPage() {
                 >
                   <Dialog.Panel className="pointer-events-auto w-screen max-w-md">
                     <div className="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
-                      <div className="flex-1 overflow-y-auto py-6 px-4 sm:px-6">
+                      <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
                         <div className="flex items-start justify-between">
                           <Dialog.Title className="font-heading text-2xl font-bold text-gray-900">
                             {t("cart")}
@@ -143,7 +144,7 @@ export default function ListingCartPage() {
                         </div>
                       </div>
 
-                      <div className="border-t border-gray-200 py-6 px-4  sm:px-6">
+                      <div className="border-t border-gray-200 px-4 py-6  sm:px-6">
                         <dl className="space-y-2 text-sm font-medium text-gray-500">
                           <div className="flex justify-between">
                             <dt>{t("common:subtotal")}</dt>

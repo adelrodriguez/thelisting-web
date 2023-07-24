@@ -106,6 +106,7 @@ export async function action({ request, params, context }: ActionArgs) {
 export default function ListingCartNotePage() {
   const { note } = useLoaderData<typeof loader>()
   const { open, close, leave } = useDialogPage()
+
   const { t } = useTranslation(handle.i18n)
   const cart = useCart()
   const actionData = useActionData<typeof action>()
@@ -153,7 +154,7 @@ export default function ListingCartNotePage() {
                     validator={clientValidator}
                   >
                     <div className="h-0 flex-1 overflow-y-auto">
-                      <div className="bg-gray-700 py-6 px-4 sm:px-6">
+                      <div className="bg-gray-700 px-4 py-6 sm:px-6">
                         <div className="flex items-center justify-between">
                           <Dialog.Title className="text-lg font-medium text-white">
                             {t("note.title")}
@@ -180,7 +181,7 @@ export default function ListingCartNotePage() {
                       </div>
                       <div className="flex flex-1 flex-col justify-between">
                         <div className="divide-y divide-gray-200 px-4 sm:px-6">
-                          <div className="space-y-6 pt-6 pb-5">
+                          <div className="space-y-6 pb-5 pt-6">
                             <TextArea
                               label="Nota"
                               name="text"
@@ -223,7 +224,7 @@ export function ErrorBoundary() {
   }, [])
 
   return (
-    <div className="mt-4 mb-2">
+    <div className="mb-2 mt-4">
       <Alert onClose={() => navigate("../")} type="error">
         There was an error saving your note. Please try again.
       </Alert>
