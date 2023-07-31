@@ -8,9 +8,9 @@ import {
   BabylistScraper,
   BebeMundoScraper,
   BuybuyBaby,
+  CabuyaScraper,
   CasaCoolScraper,
   CasaCuestaScraper,
-  CabuyaScraper,
   CorripioScraper,
   ElectrodomesticosComDo,
   ElEstudioStoreScraper,
@@ -21,15 +21,16 @@ import {
   JumboScraper,
   LaNoviaDeVillaScraper,
   LeTavoleScraper,
+  OverstockScraper,
   PandarettaScraper,
   PlazaLamaScraper,
   PotteryBarnKidsScraper,
   PricesmartScraper,
   SirenaScraper,
-  TwinkleRDScraper,
-  ZaraHomeScraper,
-  WayfairScraper,
   TargetScraper,
+  TwinkleRDScraper,
+  WayfairScraper,
+  ZaraHomeScraper,
 } from "./stores"
 
 export default async function createScraper(
@@ -57,6 +58,7 @@ export default async function createScraper(
     [JumboScraper.domain]: JumboScraper,
     [LaNoviaDeVillaScraper.domain]: LaNoviaDeVillaScraper,
     [LeTavoleScraper.domain]: LeTavoleScraper,
+    [OverstockScraper.domain]: OverstockScraper,
     [PandarettaScraper.domain]: PandarettaScraper,
     [PlazaLamaScraper.domain]: PlazaLamaScraper,
     [PotteryBarnKidsScraper.domain]: PotteryBarnKidsScraper,
@@ -74,7 +76,7 @@ export default async function createScraper(
 
   const storeScraper = store
     ? // If store is not found, use default scraper
-      AvailableStores[store] || BaseScraper
+    AvailableStores[store] || BaseScraper
     : BaseScraper
 
   return scraperFactory(storeScraper)
