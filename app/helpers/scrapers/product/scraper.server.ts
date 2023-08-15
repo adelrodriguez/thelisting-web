@@ -25,6 +25,7 @@ import {
   PandarettaScraper,
   PlazaLamaScraper,
   PotteryBarnKidsScraper,
+  PotteryBarnScraper,
   PricesmartScraper,
   SirenaScraper,
   TargetScraper,
@@ -62,6 +63,7 @@ export default async function createScraper(
     [PandarettaScraper.domain]: PandarettaScraper,
     [PlazaLamaScraper.domain]: PlazaLamaScraper,
     [PotteryBarnKidsScraper.domain]: PotteryBarnKidsScraper,
+    [PotteryBarnScraper.domain]: PotteryBarnScraper,
     [PricesmartScraper.domain]: PricesmartScraper,
     [SirenaScraper.domain]: SirenaScraper,
     [TargetScraper.domain]: TargetScraper,
@@ -76,7 +78,7 @@ export default async function createScraper(
 
   const storeScraper = store
     ? // If store is not found, use default scraper
-    AvailableStores[store] || BaseScraper
+      AvailableStores[store] || BaseScraper
     : BaseScraper
 
   return scraperFactory(storeScraper)
