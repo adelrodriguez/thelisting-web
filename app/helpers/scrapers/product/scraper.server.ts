@@ -1,38 +1,10 @@
 import { parse } from "tldts"
 
+import type { ArrayElement } from "~/utils/type"
+
 import type { ScraperInterface } from "./base.server"
 import createScraperFactory, { BaseScraper } from "./base.server"
-// Stores
-import {
-  AmazonScraper,
-  BabylistScraper,
-  BebeMundoScraper,
-  BuybuyBaby,
-  CabuyaScraper,
-  CasaCoolScraper,
-  CasaCuestaScraper,
-  CorripioScraper,
-  ElectrodomesticosComDo,
-  ElEstudioStoreScraper,
-  HifiScraper,
-  IkeaScraper,
-  IlumelOutletScraper,
-  IlumelScraper,
-  JumboScraper,
-  LaNoviaDeVillaScraper,
-  LeTavoleScraper,
-  OverstockScraper,
-  PandarettaScraper,
-  PlazaLamaScraper,
-  PotteryBarnKidsScraper,
-  PotteryBarnScraper,
-  PricesmartScraper,
-  SirenaScraper,
-  TargetScraper,
-  TwinkleRDScraper,
-  WayfairScraper,
-  ZaraHomeScraper,
-} from "./stores"
+import * as storeScrapers from "./stores"
 
 export default async function createScraper(
   url: URL
@@ -40,45 +12,23 @@ export default async function createScraper(
   const { domain } = parse(url.hostname)
 
   const scraperFactory = createScraperFactory(url)
+  const availableScrapers = Object.values(storeScrapers)
 
-  const AvailableStores = {
-    [AmazonScraper.domain]: AmazonScraper,
-    [BabylistScraper.domain]: BabylistScraper,
-    [BebeMundoScraper.domain]: BebeMundoScraper,
-    [BuybuyBaby.domain]: BuybuyBaby,
-    [CabuyaScraper.domain]: CabuyaScraper,
-    [CasaCoolScraper.domain]: CasaCoolScraper,
-    [CasaCuestaScraper.domain]: CasaCuestaScraper,
-    [CorripioScraper.domain]: CorripioScraper,
-    [ElectrodomesticosComDo.domain]: ElectrodomesticosComDo,
-    [ElEstudioStoreScraper.domain]: ElEstudioStoreScraper,
-    [HifiScraper.domain]: HifiScraper,
-    [IkeaScraper.domain]: IkeaScraper,
-    [IlumelOutletScraper.domain]: IlumelOutletScraper,
-    [IlumelScraper.domain]: IlumelScraper,
-    [JumboScraper.domain]: JumboScraper,
-    [LaNoviaDeVillaScraper.domain]: LaNoviaDeVillaScraper,
-    [LeTavoleScraper.domain]: LeTavoleScraper,
-    [OverstockScraper.domain]: OverstockScraper,
-    [PandarettaScraper.domain]: PandarettaScraper,
-    [PlazaLamaScraper.domain]: PlazaLamaScraper,
-    [PotteryBarnKidsScraper.domain]: PotteryBarnKidsScraper,
-    [PotteryBarnScraper.domain]: PotteryBarnScraper,
-    [PricesmartScraper.domain]: PricesmartScraper,
-    [SirenaScraper.domain]: SirenaScraper,
-    [TargetScraper.domain]: TargetScraper,
-    [TwinkleRDScraper.domain]: TwinkleRDScraper,
-    [WayfairScraper.domain]: WayfairScraper,
-    [ZaraHomeScraper.domain]: ZaraHomeScraper,
-  } as const
+  const scrapers = availableScrapers.reduce(
+    (acc: Record<string, ArrayElement<typeof availableScrapers>>, scraper) => {
+      acc[scraper.domain] = scraper
+      return acc
+    },
+    {}
+  )
 
-  const store = Object.keys(AvailableStores).find(
+  const scraper = Object.keys(scrapers).find(
     (storeDomain) => storeDomain === domain
   )
 
-  const storeScraper = store
+  const storeScraper = scraper
     ? // If store is not found, use default scraper
-      AvailableStores[store] || BaseScraper
+      scrapers[scraper] || BaseScraper
     : BaseScraper
 
   return scraperFactory(storeScraper)

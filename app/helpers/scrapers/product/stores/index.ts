@@ -1,3 +1,5 @@
+// TODO(adelrodriguez): Use codegen to generate the scrapers in this directory
+// and also add them to this file
 export { default as AmazonScraper } from "./amazon"
 export { default as BabylistScraper } from "./babylist"
 export { default as BebeMundoScraper } from "./bebe-mundo"
