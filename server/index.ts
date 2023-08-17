@@ -71,7 +71,7 @@ app.listen(port, () => {
 
   if (isDevelopment) {
     logger.info(`Local network IP: http://${getLocalNetworkIP()}:${port}}`)
-    broadcastDevReady(build)
+    void broadcastDevReady(build)
   }
 
   // Start cron jobs
