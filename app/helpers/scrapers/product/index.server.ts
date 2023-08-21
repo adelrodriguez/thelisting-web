@@ -20,12 +20,15 @@ export default async function scraper(
     await scraper.init()
 
     // Obtain scraped properties
-    const title = await scraper.title
-    const description = await scraper.description
-    const image = await scraper.image
-    const amount = await scraper.amount
-    const currency = await scraper.currency
-    const store = scraper.store
+    const [title, description, image, amount, currency, store] =
+      await Promise.all([
+        scraper.title,
+        scraper.description,
+        scraper.image,
+        scraper.amount,
+        scraper.currency,
+        scraper.store,
+      ])
 
     // Close the browser window
     await scraper.stop()
