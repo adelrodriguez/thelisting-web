@@ -139,6 +139,9 @@ const columns = [
   columnHelper.accessor("currency", {
     header: "Currency",
   }),
+  columnHelper.accessor("store", {
+    header: "Store",
+  }),
 ]
 
 export default function ScrapeProductsTable({
