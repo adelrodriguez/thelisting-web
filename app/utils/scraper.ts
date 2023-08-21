@@ -2,6 +2,7 @@ import currency from "currency.js"
 import invariant from "tiny-invariant"
 import { z } from "zod"
 
+import type { Currency } from "~/config/consts"
 import { CurrencySchema } from "~/utils/money"
 import { undefinedToNull } from "~/utils/undefined"
 
@@ -65,6 +66,12 @@ export function cleanText(text?: string | null): string {
   invariant(text, "There was no specified text for this property")
 
   return text.trim().replaceAll("\n", " ")
+}
+
+export function cleanCurrency(currency?: string | null): Currency {
+  invariant(currency, "There was no specified currency for this property")
+
+  return currency.trim().toUpperCase() as Currency
 }
 
 export async function scrapeProduct(
