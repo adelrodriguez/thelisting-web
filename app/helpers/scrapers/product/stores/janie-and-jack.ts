@@ -1,6 +1,6 @@
 import type { Currency } from "~/config/consts"
 import { BaseScraper } from "~/helpers/scrapers/product/base.server"
-import { cleanAmount, cleanCurrency } from "~/utils/scraper"
+import { cleanAmount, cleanCurrency, cleanText } from "~/utils/scraper"
 
 export default class JanieAndJack extends BaseScraper {
   static domain = "janieandjack.com"
@@ -12,6 +12,7 @@ export default class JanieAndJack extends BaseScraper {
   public get title(): Promise<string | null> {
     return this.page
       .$eval("h1", (element) => element.textContent)
+      .then(cleanText)
       .catch((err) => this.logError(err.message))
   }
 
