@@ -1,10 +1,18 @@
 export const WHATSAPP_MESSAGE_TEMPLATES = {
   BabyShowerGuestNotification: "baby_shower_guest_notification",
+  BabyShowerInvitationV1: "baby_shower_invitation_v1",
   ListingGiftPurchase: "listing_gift_purchase",
   WeddingGuestNotification: "wedding_guest_notification",
+  WeddingInvitationV1: "wedding_invitation_v1",
 } as const
 export type WhatsAppMessageTemplate =
   (typeof WHATSAPP_MESSAGE_TEMPLATES)[keyof typeof WHATSAPP_MESSAGE_TEMPLATES]
+export type WhatsAppGuestNotificationMessageTemplate =
+  | typeof WHATSAPP_MESSAGE_TEMPLATES.BabyShowerGuestNotification
+  | typeof WHATSAPP_MESSAGE_TEMPLATES.WeddingGuestNotification
+export type WhatsAppInvitationMessageTemplate =
+  | typeof WHATSAPP_MESSAGE_TEMPLATES.BabyShowerInvitationV1
+  | typeof WHATSAPP_MESSAGE_TEMPLATES.WeddingInvitationV1
 
 export const MIME_TYPES = {
   csv: "text/csv",
