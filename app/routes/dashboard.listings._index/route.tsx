@@ -50,6 +50,7 @@ export async function loader({ context, request }: LoaderArgs) {
       },
       purchases: {
         select: { cost: true, id: true, total: true },
+        where: { paid: true },
       },
     },
     orderBy: { eventDate: "asc" },
@@ -270,13 +271,13 @@ export default function DashboardListingPage() {
                   <div
                     className={clsx(
                       statuses[listing.status],
-                      "rounded-md py-1 px-2 text-xs font-medium ring-1 ring-inset"
+                      "rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset"
                     )}
                   >
                     {listing.status}
                   </div>
                   {listing.isInternal && (
-                    <div className="rounded-md bg-blue-50 py-1 px-2 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-600/10">
+                    <div className="rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-600/10">
                       Internal
                     </div>
                   )}
