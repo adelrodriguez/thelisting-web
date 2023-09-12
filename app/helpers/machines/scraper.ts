@@ -1,5 +1,5 @@
 import invariant from "tiny-invariant"
-import { assign, send } from "xstate"
+import { assign, send } from "xstate/lib/actions"
 import { createModel } from "xstate/lib/model"
 
 import type { ScrapedProductResult } from "~/utils/scraper"
@@ -8,6 +8,7 @@ import { scrapeProduct } from "~/utils/scraper"
 const scraperModel = createModel(
   {
     completed: [] as ScrapedProductResult[],
+    controller: null as AbortController | null,
     pending: [] as string[],
   },
   {
@@ -23,6 +24,7 @@ const scraperModel = createModel(
 
 const setPending = scraperModel.assign(
   {
+    controller: () => new AbortController(),
     pending: (_, event) => event.payload,
   },
   "START"
@@ -32,7 +34,7 @@ const reset = scraperModel.assign({ completed: [], pending: [] }, "RESET")
 
 const scraperMachine = scraperModel.createMachine(
   {
-    context: { completed: [], pending: [] },
+    context: { completed: [], controller: null, pending: [] },
     id: "scraper",
     initial: "idle",
     predictableActionArguments: true,
@@ -84,13 +86,18 @@ const scraperMachine = scraperModel.createMachine(
             const [url] = context.pending
             invariant(url, "URL is required")
 
-            const data = await scrapeProduct(url)
+            const data = await scrapeProduct(url, {
+              signal: context.controller?.signal,
+            })
 
             return data
           },
         },
         on: {
           CANCEL: {
+            actions: (context) => {
+              context.controller?.abort()
+            },
             target: "idle",
           },
           ERROR: {
