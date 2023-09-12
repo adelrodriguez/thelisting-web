@@ -1,4 +1,4 @@
-import { WinstonTransport as AxiomTransport } from "@axiomhq/axiom-node"
+import { WinstonTransport as AxiomTransport } from "@axiomhq/winston"
 import { createLogger, transports, addColors, format } from "winston"
 
 import { isDevelopment } from "~/config/vars"
