@@ -1,13 +1,13 @@
 bootstrap:
-	npm install
-	doppler run -- npm run clean
-	doppler run -- npm run bootstrap
+	pnpm install
+	doppler run -- pnpm run clean
+	doppler run -- pnpm run bootstrap
 
 dev:
-	doppler run -- npm run dev
+	doppler run -- pnpm run dev
 
 test:
-	doppler run -- npm run test
+	doppler run -- pnpm run test
 
 commit:
 	git add .
@@ -15,4 +15,4 @@ commit:
 	git push
 
 generate-shopify:
-	doppler run -- npm run generate:shopify
+	doppler run -- pnpm run generate:shopify
