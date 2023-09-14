@@ -75,7 +75,14 @@ export async function action({ request, context }: ActionArgs) {
         {
           orderId: order.id,
         },
-        { attempts: 20, backoff: { delay: ONE_MINUTE, type: "exponential" } }
+        {
+          attempts: 20,
+          backoff: {
+            // One second
+            delay: 1000,
+            type: "exponential",
+          },
+        }
       ),
     ])
 

@@ -49,7 +49,12 @@ export async function getGoogleWebFontsList() {
     .parse(data)
 
   // Expire in 1 week
-  await cache.set(REDIS_KEYS.GoogleFonts, fonts.join(","), "EX", ONE_WEEK)
+  await cache.set(
+    REDIS_KEYS.GoogleFonts,
+    fonts.join(","),
+    "EX",
+    ONE_WEEK.inSeconds
+  )
 
   return fonts
 }

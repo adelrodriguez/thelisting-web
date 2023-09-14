@@ -35,11 +35,26 @@ export const REDIS_KEYS = {
 export type RedisKey = (typeof REDIS_KEYS)[keyof typeof REDIS_KEYS]
 
 // Durations in seconds
-export const ONE_MINUTE = 60
-export const ONE_HOUR = ONE_MINUTE * 60
-export const ONE_DAY = ONE_HOUR * 24
-export const ONE_WEEK = ONE_DAY * 7
-export const ONE_MONTH = ONE_DAY * 30
+export const ONE_MINUTE = {
+  inMilliseconds: 60000,
+  inSeconds: 60,
+}
+export const ONE_HOUR = {
+  inMilliseconds: ONE_MINUTE.inMilliseconds * 60,
+  inSeconds: ONE_MINUTE.inSeconds * 60,
+}
+export const ONE_DAY = {
+  inMilliseconds: ONE_HOUR.inMilliseconds * 24,
+  inSeconds: ONE_HOUR.inSeconds * 24,
+}
+export const ONE_WEEK = {
+  inMilliseconds: ONE_DAY.inMilliseconds * 7,
+  inSeconds: ONE_DAY.inSeconds * 7,
+}
+export const ONE_MONTH = {
+  inMilliseconds: ONE_DAY.inMilliseconds * 30,
+  inSeconds: ONE_DAY.inSeconds * 30,
+}
 
 // Fees
 export const SHOPIFY_FEE = 1 // 1%
