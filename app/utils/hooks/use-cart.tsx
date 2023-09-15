@@ -1,12 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import currency from "currency.js"
-import type { ReactNode } from "react"
-import { createContext, useContext } from "react"
+import { type ReactNode, createContext, useContext } from "react"
 import SuperJSON from "superjson"
 
 import type { CartItem } from "~/utils/cart"
-import { calculateShipping } from "~/utils/cart"
-import { calculateSubtotal } from "~/utils/cart"
+import { calculateShipping, calculateSubtotal } from "~/utils/cart"
 import * as gtag from "~/utils/gtag.client"
 
 type CartItems = Map<string, CartItem>
@@ -172,7 +170,7 @@ export function CartProvider({
   )
 }
 
-export default function useCart(): Cart {
+export function useCart(): Cart {
   const context = useContext(Context)
 
   if (context === undefined) {

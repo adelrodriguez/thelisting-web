@@ -1,17 +1,26 @@
 import { useNavigate } from "@remix-run/react"
 import i18next from "i18next"
-import type { ChangeEvent } from "react"
+import { type ChangeEvent } from "react"
+
+import type { Currency } from "~/config/consts"
+import { useExchangeRate } from "~/utils/hooks"
 
 import { Select } from "../common"
 
 export default function LanguageCurrencySelector() {
   const navigate = useNavigate()
 
+  const { currency, setCurrency } = useExchangeRate()
+
   function handleLanguageChange(e: ChangeEvent<HTMLSelectElement>) {
     void i18next.changeLanguage(e.target.value, () => {
       const params = new URLSearchParams({ lng: i18next.language })
       navigate("?" + params, { preventScrollReset: true })
     })
+  }
+
+  function handleCurrencyChange(e: ChangeEvent<HTMLSelectElement>) {
+    setCurrency(e.target.value as Currency)
   }
 
   return (
@@ -41,10 +50,12 @@ export default function LanguageCurrencySelector() {
           <Select
             id="currency"
             name="currency"
+            value={currency}
             options={[
               { label: "🇩🇴 DOP", value: "DOP" },
-              { disabled: true, label: "🇺🇸 USD", value: "USD" },
+              { label: "🇺🇸 USD", value: "USD" },
             ]}
+            onChange={handleCurrencyChange}
           />
         </div>
       </fieldset>

@@ -1,6 +1,6 @@
 import { ExclamationCircleIcon } from "@heroicons/react/20/solid"
 import clsx from "clsx"
-import type { OptionHTMLAttributes, Ref, SelectHTMLAttributes } from "react"
+import type { ComponentProps, OptionHTMLAttributes, Ref } from "react"
 import { forwardRef } from "react"
 
 type SelectOption = {
@@ -31,7 +31,7 @@ function Select<T extends SelectOption>(
     options: T[]
     placeholder?: string
     required?: boolean
-  } & SelectHTMLAttributes<HTMLSelectElement>,
+  } & ComponentProps<"select">,
   ref: Ref<HTMLSelectElement>
 ) {
   return (

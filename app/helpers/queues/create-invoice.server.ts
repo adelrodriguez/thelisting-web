@@ -1,12 +1,12 @@
 import type { Processor } from "bullmq"
 
 import type { Currency } from "~/config/consts"
-import { QUEUE_NAMES } from "~/config/consts"
-import { SHIPPING_FEE } from "~/config/consts"
+import { QUEUE_NAMES, SHIPPING_FEE } from "~/config/consts"
 import {
   ALEGRA_INVOICE_BACKUP_EMAIL,
   ALEGRA_SERVICE_ITEM_ID,
 } from "~/config/env.server"
+import { isDevelopment } from "~/config/vars"
 import logger from "~/helpers/logger.server"
 import { createQueue } from "~/helpers/queue.server"
 import alegra from "~/services/alegra.server"
@@ -21,6 +21,11 @@ export type QueueData = {
 
 export const processor: Processor<QueueData> = async (job) => {
   try {
+    if (isDevelopment) {
+      await job.log("Development mode, skipping")
+      return
+    }
+
     const order = await getOrder(getShopifyId(job.data.orderId, "Order"))
     const contact = await alegra.contacts.get({ id: job.data.contactId })
 

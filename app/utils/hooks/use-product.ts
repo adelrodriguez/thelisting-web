@@ -2,6 +2,7 @@ import { flattenConnection } from "@shopify/hydrogen-react"
 import { useQuery } from "@tanstack/react-query"
 import request from "graphql-request"
 
+import { ONE_MINUTE } from "~/config/consts"
 import { getProductQuery } from "~/services/shopify/storefront"
 
 export default function useProduct(id: string) {
@@ -34,6 +35,7 @@ export default function useProduct(id: string) {
 
         return { currencyCode, imageUrl, price, title, variantId }
       },
+      staleTime: ONE_MINUTE.inMilliseconds,
     }
   )
 }

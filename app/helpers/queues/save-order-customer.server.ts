@@ -1,6 +1,7 @@
 import type { Processor } from "bullmq"
 
 import { QUEUE_NAMES } from "~/config/consts"
+import { isDevelopment } from "~/config/vars"
 import db from "~/helpers/db.server"
 import logger from "~/helpers/logger.server"
 import { createQueue } from "~/helpers/queue.server"
@@ -16,6 +17,11 @@ export type QueueData = {
 
 export const processor: Processor<QueueData> = async (job) => {
   try {
+    if (isDevelopment) {
+      await job.log("Development mode, skipping")
+      return
+    }
+
     const order = await getOrder(getShopifyId(job.data.orderId, "Order"))
 
     let contactId: string

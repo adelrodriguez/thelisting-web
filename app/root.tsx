@@ -5,8 +5,8 @@ import type {
 } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import type { ThrownResponse } from "@remix-run/react"
-import { useLoaderData } from "@remix-run/react"
 import {
+  useLoaderData,
   Links,
   LiveReload,
   Meta,
@@ -34,7 +34,7 @@ import {
 import { shopifyStorefrontAPIEndpoint } from "~/config/vars.server"
 import i18next from "~/helpers/i18next.server"
 import stylesheet from "~/styles/app.css"
-import { useChangeLanguage } from "~/utils/hooks"
+import { ExchangeRateProvider, useChangeLanguage } from "~/utils/hooks"
 import { i18nCookie } from "~/utils/i18next"
 
 import { isProduction } from "./config/vars"
@@ -128,8 +128,10 @@ export default function App() {
           </>
         )}
         <QueryClientProvider client={client}>
-          <Outlet />
-          <ReactQueryDevtools initialIsOpen={false} />
+          <ExchangeRateProvider>
+            <Outlet />
+            <ReactQueryDevtools initialIsOpen={false} />
+          </ExchangeRateProvider>
         </QueryClientProvider>
         <PublicEnv {...env} />
         <ScrollRestoration />

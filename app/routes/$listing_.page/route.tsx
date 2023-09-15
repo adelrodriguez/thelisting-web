@@ -1,7 +1,6 @@
 import { RibbonType } from "@prisma/client"
 import type { LoaderArgs, V2_MetaFunction } from "@remix-run/node"
-import { json } from "@remix-run/node"
-import { redirect } from "@remix-run/node"
+import { json, redirect } from "@remix-run/node"
 import { useLoaderData } from "@remix-run/react"
 import clsx from "clsx"
 import { AnimatePresence, motion } from "framer-motion"
@@ -136,7 +135,7 @@ export default function ListingPage() {
             aria-hidden="true"
           />
 
-          <div className="fixed left-10 bottom-[10%] text-white">
+          <div className="fixed bottom-[10%] left-10 text-white">
             <h1 className="mb-4 font-headline text-6xl font-bold tracking-tight">
               {listing.title}
             </h1>

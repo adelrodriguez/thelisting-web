@@ -29,15 +29,19 @@ export type Currency = (typeof CURRENCIES)[keyof typeof CURRENCIES]
 
 export const REDIS_KEYS = {
   Cart: "cart",
+  Currency: "currency",
   GoogleFonts: "google-fonts",
   ProductScraper: "scraper:product",
 } as const
 export type RedisKey = (typeof REDIS_KEYS)[keyof typeof REDIS_KEYS]
 
-// Durations in seconds
+export const ONE_SECOND = {
+  inMilliseconds: 1000,
+  inSeconds: 1,
+}
 export const ONE_MINUTE = {
-  inMilliseconds: 60000,
-  inSeconds: 60,
+  inMilliseconds: ONE_SECOND.inMilliseconds * 60,
+  inSeconds: ONE_SECOND.inSeconds * 60,
 }
 export const ONE_HOUR = {
   inMilliseconds: ONE_MINUTE.inMilliseconds * 60,
