@@ -51,7 +51,7 @@ export async function action({ request, context }: ActionArgs) {
     generateKey(REDIS_KEYS.Cart, cartId, listing),
     text,
     "EX",
-    ONE_DAY * 30
+    ONE_DAY.inSeconds * 30
   )
 
   return json(response)
