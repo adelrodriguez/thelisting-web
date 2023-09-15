@@ -62,7 +62,7 @@ export async function loader({ request, context }: LoaderArgs) {
       key,
       JSON.stringify({ id: scrapedProduct.id, payload }),
       "EX",
-      ONE_DAY
+      ONE_DAY.inSeconds
     )
   }
 
