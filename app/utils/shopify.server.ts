@@ -2,8 +2,7 @@ import type { Listing } from "@prisma/client"
 import request from "graphql-request"
 
 import type { CustomAttribute } from "~/config/consts"
-import { PRODUCT_METAFIELDS } from "~/config/consts"
-import { CUSTOM_ATTRIBUTES } from "~/config/consts"
+import { PRODUCT_METAFIELDS, CUSTOM_ATTRIBUTES } from "~/config/consts"
 import { SHOPIFY_SHIPPING_ITEM_1_ID } from "~/config/env.server"
 import {
   shopifyAdminAPIHeaders,
@@ -22,8 +21,10 @@ import {
   getProductQuery,
   addTagsMutation,
   removeProductsFromCollectionMutation,
+  getOrderQuery,
+  createProductMediaMutation,
+  MediaContentType,
 } from "~/services/shopify/admin"
-import { getOrderQuery } from "~/services/shopify/admin"
 import { createCheckoutMutation } from "~/services/shopify/storefront"
 import type { CartItem } from "~/utils/cart"
 import { ShopifyError } from "~/utils/error"
@@ -148,7 +149,7 @@ export async function createProduct({
   description?: string | null
   images: {
     src?: string | null
-    altText?: string | null
+    alt?: string | null
   }[]
   originalAmount?: number | null
   url?: string | null
@@ -162,9 +163,8 @@ export async function createProduct({
     createProductMutation,
     {
       input: {
-        collectionsToJoin: [collection!],
+        collectionsToJoin: collection ? [collection] : undefined,
         descriptionHtml: description,
-        images,
         metafields: [
           {
             key: PRODUCT_METAFIELDS.OriginalUrl,
@@ -221,6 +221,32 @@ export async function createProduct({
       userErrors: productCreate?.userErrors,
     })
     throw new ShopifyError("Unable to create product", "product_create_error")
+  }
+
+  if (images.length > 0) {
+    const { productCreateMedia } = await request(
+      shopifyAdminAPIEndpoint,
+      createProductMediaMutation,
+      {
+        media: images.map(({ alt, src }) => ({
+          alt: alt,
+          mediaContentType: MediaContentType.Image,
+          originalSource: src ?? "",
+        })),
+        productId: productCreate.product.id,
+      },
+      shopifyAdminAPIHeaders
+    )
+
+    if (!productCreateMedia?.media) {
+      logger.error("Unable to media for product", {
+        userErrors: productCreateMedia?.mediaUserErrors,
+      })
+      throw new ShopifyError(
+        "Unable to create product media",
+        "product_media_create_error"
+      )
+    }
   }
 
   return productCreate.product

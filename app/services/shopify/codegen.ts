@@ -1,11 +1,16 @@
 import type { CodegenConfig } from "@graphql-codegen/cli"
 
 const config: CodegenConfig = {
-  // documents: "app/services/shopify/**/*.ts",
   generates: {
     "app/services/shopify/admin/": {
       documents: "app/services/shopify/graphql/*.admin.ts",
-      plugins: [],
+      plugins: [
+        {
+          add: {
+            content: "/* eslint-disable */",
+          },
+        },
+      ],
       preset: "client",
       schema: [
         {
@@ -21,10 +26,14 @@ const config: CodegenConfig = {
       ],
     },
     "app/services/shopify/storefront/": {
-      // documents: "app/services/shopify/storefront/{queries|mutations}.ts",
       documents: "app/services/shopify/graphql/*.storefront.ts",
-
-      plugins: [],
+      plugins: [
+        {
+          add: {
+            content: "/* eslint-disable */",
+          },
+        },
+      ],
       preset: "client",
       schema: [
         {

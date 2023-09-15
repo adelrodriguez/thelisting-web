@@ -88,7 +88,7 @@ export const processor: Processor<QueueData> = async (job) => {
         description: scrapedProduct.description,
         images: [
           {
-            altText: scrapedProduct.title,
+            alt: scrapedProduct.title,
             src: scrapedProduct.image,
           },
         ],

@@ -14,6 +14,23 @@ export const createProductMutation = graphql(`
   }
 `)
 
+export const createProductMediaMutation = graphql(`
+  mutation productCreateMedia($media: [CreateMediaInput!]!, $productId: ID!) {
+    productCreateMedia(media: $media, productId: $productId) {
+      media {
+        id
+      }
+      mediaUserErrors {
+        field
+        message
+      }
+      product {
+        id
+      }
+    }
+  }
+`)
+
 export const publishToCurrentChannelMutation = graphql(`
   mutation publishablePublishToCurrentChannel($id: ID!) {
     publishablePublishToCurrentChannel(id: $id) {

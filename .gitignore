@@ -55,3 +55,6 @@ dump.rdb
 
 # dumps
 *.dump
+
+# Fragments
+fragment-masking.ts

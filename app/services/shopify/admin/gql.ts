@@ -14,6 +14,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  */
 const documents = {
     "\n  mutation createProduct($input: ProductInput!) {\n    productCreate(input: $input) {\n      product {\n        id\n      }\n      userErrors {\n        field\n        message\n      }\n    }\n  }\n": types.CreateProductDocument,
+    "\n  mutation productCreateMedia($media: [CreateMediaInput!]!, $productId: ID!) {\n    productCreateMedia(media: $media, productId: $productId) {\n      media {\n        id\n      }\n      mediaUserErrors {\n        field\n        message\n      }\n      product {\n        id\n      }\n    }\n  }\n": types.ProductCreateMediaDocument,
     "\n  mutation publishablePublishToCurrentChannel($id: ID!) {\n    publishablePublishToCurrentChannel(id: $id) {\n      publishable {\n        publishedOnCurrentPublication\n      }\n    }\n  }\n": types.PublishablePublishToCurrentChannelDocument,
     "\n  mutation createCollection($input: CollectionInput!) {\n    collectionCreate(input: $input) {\n      collection {\n        id\n      }\n    }\n  }\n": types.CreateCollectionDocument,
     "\n  mutation addProductsToCollection($id: ID!, $productIds: [ID!]!) {\n    collectionAddProducts(id: $id, productIds: $productIds) {\n      collection {\n        id\n      }\n      userErrors {\n        field\n        message\n      }\n    }\n  }\n": types.AddProductsToCollectionDocument,
@@ -43,6 +44,10 @@ export function graphql(source: string): unknown;
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  mutation createProduct($input: ProductInput!) {\n    productCreate(input: $input) {\n      product {\n        id\n      }\n      userErrors {\n        field\n        message\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation createProduct($input: ProductInput!) {\n    productCreate(input: $input) {\n      product {\n        id\n      }\n      userErrors {\n        field\n        message\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation productCreateMedia($media: [CreateMediaInput!]!, $productId: ID!) {\n    productCreateMedia(media: $media, productId: $productId) {\n      media {\n        id\n      }\n      mediaUserErrors {\n        field\n        message\n      }\n      product {\n        id\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation productCreateMedia($media: [CreateMediaInput!]!, $productId: ID!) {\n    productCreateMedia(media: $media, productId: $productId) {\n      media {\n        id\n      }\n      mediaUserErrors {\n        field\n        message\n      }\n      product {\n        id\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

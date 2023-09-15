@@ -131,6 +131,7 @@ export type ShopifyErrorCode =
   | "order_get_error"
   | "product_get_error"
   | "product_create_error"
+  | "product_media_create_error"
   | "product_publish_error"
   | "add_products_to_collection_error"
   | "remove_products_from_collection_error"
