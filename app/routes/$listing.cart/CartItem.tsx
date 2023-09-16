@@ -3,7 +3,7 @@ import { Link } from "@remix-run/react"
 import { useTranslation } from "react-i18next"
 
 import { Alert } from "~/components/common"
-import { useCart, useProduct } from "~/utils/hooks"
+import { useCart, useExchangeRate, useProduct } from "~/utils/hooks"
 import { formatPrice } from "~/utils/money"
 
 export default function CartItem({
@@ -15,6 +15,7 @@ export default function CartItem({
   const { data, isLoading, isError } = useProduct(commerceId!)
   const cart = useCart()
   const { t } = useTranslation("registry")
+  const { currency, exchangeRate } = useExchangeRate()
 
   // TODO(adelrodriguez): Handle loading and error states
   if (isLoading) return <div>Loading...</div>
@@ -28,7 +29,7 @@ export default function CartItem({
       </div>
     )
 
-  const { title, price, imageUrl, currencyCode } = data
+  const { title, price, imageUrl } = data
 
   return (
     <>
@@ -46,7 +47,9 @@ export default function CartItem({
             <h3>
               <Link to={`../${sku}`}>{title}</Link>
             </h3>
-            <p className="ml-4">{formatPrice(price, currencyCode)}</p>
+            <p className="ml-4">
+              {formatPrice(price / exchangeRate, currency)}
+            </p>
           </div>
         </div>
         <div className="flex flex-1 items-end justify-between text-sm">

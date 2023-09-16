@@ -96,7 +96,7 @@ const navigation = {
 export default function MarketingFooter() {
   return (
     <footer className="bg-gray-800">
-      <div className="mx-auto max-w-7xl py-12 px-4 sm:px-6 lg:py-16 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
         <h2 className="sr-only">Footer</h2>
         <div className="pb-8 xl:grid xl:grid-cols-5 xl:gap-8">
           <div className="grid grid-cols-2 gap-8 xl:col-span-4">
@@ -165,7 +165,7 @@ export default function MarketingFooter() {
               </div>
             </div>
           </div>
-          <div className="mt-12 xl:mt-0">
+          <div className="mt-12 sm:max-w-xs xl:mt-0">
             <h3 className="text-base font-medium text-white">
               Language &amp; Currency
             </h3>
@@ -192,13 +192,13 @@ export default function MarketingFooter() {
               id="email-address"
               autoComplete="email"
               required
-              className="w-full min-w-0 rounded-md border border-transparent bg-white py-2 px-4 placeholder-gray-500 focus:border-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 sm:max-w-xs"
+              className="w-full min-w-0 rounded-md border border-transparent bg-white px-4 py-2 placeholder-gray-500 focus:border-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 sm:max-w-xs"
               placeholder="Enter your email"
             />
-            <div className="mt-3 rounded-md sm:mt-0 sm:ml-3 sm:flex-shrink-0">
+            <div className="mt-3 rounded-md sm:ml-3 sm:mt-0 sm:flex-shrink-0">
               <button
                 type="submit"
-                className="flex w-full items-center justify-center rounded-md border border-transparent bg-gray-600 py-2 px-4 text-base font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-800"
+                className="flex w-full items-center justify-center rounded-md border border-transparent bg-gray-600 px-4 py-2 text-base font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-800"
               >
                 Subscribe
               </button>

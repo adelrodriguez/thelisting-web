@@ -3,7 +3,10 @@
   "cancel": "Cancel",
   "close": "Close",
   "closePanel": "Close panel",
+  "currency": "Currency",
   "date": "Date",
+  "error": "An error occurred. Please try again later.",
+  "language": "Language",
   "loggingIn": "Logging in...",
   "login": "Log in",
   "navigation": {
@@ -13,6 +16,7 @@
     "faq": "FAQ",
     "pricing": "Pricing"
   },
+  "options": "Options",
   "save": "Save",
   "saving": "Saving",
   "shipping": "Shipping",
@@ -20,6 +24,5 @@
   "submitting": "Submitting",
   "subtotal": "Subtotal",
   "total": "Total",
-  "viewDetails": "View details",
-  "error": "An error occurred. Please try again later."
+  "viewDetails": "View details"
 }

@@ -1,3 +1,4 @@
+import { useSearchParams } from "@remix-run/react"
 import { useQuery } from "@tanstack/react-query"
 import { type ReactNode, createContext, useState, useContext } from "react"
 
@@ -16,7 +17,10 @@ const Context = createContext<
 Context.displayName = "ExchangeRate"
 
 export function ExchangeRateProvider({ children }: { children: ReactNode }) {
-  const [currency, setCurrency] = useState<Currency>(CURRENCIES.DOP)
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [currency, setCurrency] = useState<Currency>(
+    (searchParams.get("currency") as Currency) ?? CURRENCIES.DOP
+  )
   const { data } = useQuery(
     ["exchange-rates", currency],
     async () => {
@@ -34,9 +38,18 @@ export function ExchangeRateProvider({ children }: { children: ReactNode }) {
     }
   )
 
+  function handleSetCurrency(currency: Currency) {
+    setSearchParams({ currency }, { preventScrollReset: true })
+    setCurrency(currency)
+  }
+
   return (
     <Context.Provider
-      value={{ currency, exchangeRate: data ?? 1, setCurrency }}
+      value={{
+        currency,
+        exchangeRate: data ?? 1,
+        setCurrency: handleSetCurrency,
+      }}
     >
       {children}
     </Context.Provider>

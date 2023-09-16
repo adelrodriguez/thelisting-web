@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next"
 
 import { Image } from "~/components/common"
 import * as gtag from "~/utils/gtag.client"
-import { useProduct } from "~/utils/hooks"
+import { useExchangeRate, useProduct } from "~/utils/hooks"
 import { formatPrice } from "~/utils/money"
 
 export default function RegistryItem({
@@ -20,6 +20,7 @@ export default function RegistryItem({
 }) {
   const { data, isLoading, isError, error } = useProduct(commerceId)
   const { t } = useTranslation("registry")
+  const { currency, exchangeRate } = useExchangeRate()
 
   useEffect(() => {
     if (isError) {
@@ -34,7 +35,7 @@ export default function RegistryItem({
   if (isLoading) {
     return (
       <div className="animate-pulse">
-        <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden xl:aspect-w-7 xl:aspect-h-8 sm:rounded-lg">
+        <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden xl:aspect-h-8 xl:aspect-w-7 sm:rounded-lg">
           <div className="h-full w-full bg-gray-200" />
         </div>
         <div className="mt-4 space-y-4">
@@ -51,12 +52,12 @@ export default function RegistryItem({
     return null
   }
 
-  const { title, imageUrl, currencyCode, price } = data
+  const { title, imageUrl, price } = data
 
   return (
     <Link className="group text-center font-body" to={sku} preventScrollReset>
       <div className="relative">
-        <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-sm xl:aspect-w-7 xl:aspect-h-8 sm:rounded-md">
+        <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-sm xl:aspect-h-8 xl:aspect-w-7 sm:rounded-md">
           <Image
             src={imageUrl}
             alt={title}
@@ -75,7 +76,7 @@ export default function RegistryItem({
 
       <h3 className="mt-4 text-base text-gray-700">{title}</h3>
       <p className="mt-1 text-lg font-medium text-gray-700">
-        {formatPrice(price, currencyCode)}
+        {formatPrice(price / exchangeRate, currency)}
       </p>
     </Link>
   )

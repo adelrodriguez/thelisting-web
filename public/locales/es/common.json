@@ -3,7 +3,10 @@
   "cancel": "Cancelar",
   "close": "Cerrar",
   "closePanel": "Cerrar panel",
+  "currency": "Moneda",
   "date": "Fecha",
+  "error": "Ocurrió un error. Favor de intentar más tarde.",
+  "language": "Idioma",
   "loggingIn": "Iniciando sesión...",
   "login": "Iniciar sesión",
   "navigation": {
@@ -13,6 +16,7 @@
     "faq": "Preguntas",
     "pricing": "Planes"
   },
+  "options": "Opciones",
   "save": "Guardar",
   "saving": "Guardando",
   "shipping": "Envío",
@@ -20,6 +24,5 @@
   "submitting": "Enviando",
   "subtotal": "Subtotal",
   "total": "Total",
-  "viewDetails": "Ver detalles",
-  "error": "Ocurrió un error. Favor de intentar más tarde."
+  "viewDetails": "Ver detalles"
 }

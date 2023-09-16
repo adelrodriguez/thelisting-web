@@ -1,16 +1,16 @@
 import { useNavigate } from "@remix-run/react"
 import i18next from "i18next"
 import { type ChangeEvent } from "react"
+import { useTranslation } from "react-i18next"
 
+import { Select } from "~/components/common"
 import type { Currency } from "~/config/consts"
 import { useExchangeRate } from "~/utils/hooks"
 
-import { Select } from "../common"
-
-export default function LanguageCurrencySelector() {
+export default function LanguageCurrencySelector({ showLabels = false }) {
   const navigate = useNavigate()
-
   const { currency, setCurrency } = useExchangeRate()
+  const { t } = useTranslation("common")
 
   function handleLanguageChange(e: ChangeEvent<HTMLSelectElement>) {
     void i18next.changeLanguage(e.target.value, () => {
@@ -24,9 +24,9 @@ export default function LanguageCurrencySelector() {
   }
 
   return (
-    <form className="mt-4 space-y-4 sm:max-w-xs">
+    <form className="mt-4 w-full space-y-4">
       <fieldset className="w-full">
-        <label htmlFor="language" className="sr-only">
+        <label className="sr-only" htmlFor="language">
           Language
         </label>
         <div className="relative">
@@ -34,28 +34,30 @@ export default function LanguageCurrencySelector() {
             id="language"
             name="language"
             onChange={handleLanguageChange}
-            value={i18next.language}
             options={[
-              { label: "Spanish", value: "es" },
+              { label: "Español", value: "es" },
               { label: "English", value: "en" },
             ]}
+            value={i18next.language}
+            {...(showLabels ? { label: t("language") } : {})}
           />
         </div>
       </fieldset>
       <fieldset className="w-full">
-        <label htmlFor="currency" className="sr-only">
+        <label className="sr-only" htmlFor="currency">
           Currency
         </label>
         <div className="relative mt-1.5">
           <Select
             id="currency"
             name="currency"
-            value={currency}
+            onChange={handleCurrencyChange}
             options={[
               { label: "🇩🇴 DOP", value: "DOP" },
               { label: "🇺🇸 USD", value: "USD" },
             ]}
-            onChange={handleCurrencyChange}
+            value={currency}
+            {...(showLabels ? { label: t("currency") } : {})}
           />
         </div>
       </fieldset>

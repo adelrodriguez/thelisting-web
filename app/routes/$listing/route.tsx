@@ -1,8 +1,10 @@
+import { Bars3Icon } from "@heroicons/react/24/solid"
 import type { LoaderArgs, V2_MetaFunction } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { Outlet, useLoaderData } from "@remix-run/react"
 import clsx from "clsx"
 import { ReasonPhrases, StatusCodes } from "http-status-codes"
+import { useState } from "react"
 import { z } from "zod"
 import { zx } from "zodix"
 
@@ -11,6 +13,7 @@ import { THE_LISTING_LOGO_BLACK } from "~/config/consts"
 import { generateCloudflareImageUrl } from "~/utils/cloudflare"
 import { CartProvider } from "~/utils/hooks"
 
+import Menu from "./Menu"
 import Registry from "./Registry"
 
 export async function loader({ params, context }: LoaderArgs) {
@@ -65,39 +68,51 @@ export const meta: V2_MetaFunction<typeof loader> = ({ data }) => {
 
 export default function ListingPage() {
   const { listing } = useLoaderData<typeof loader>()
+  const [menuOpen, setMenuOpen] = useState(false)
 
   return (
     <CartProvider listing={listing.id}>
       <main className="relative">
         <div className="sticky top-0 z-20 h-16 w-full bg-white p-3 drop-shadow-md lg:h-20 lg:p-4">
           <img
-            src={THE_LISTING_LOGO_BLACK}
             alt="The Listing"
             className="mx-auto h-full"
+            src={THE_LISTING_LOGO_BLACK}
           />
+          <div className="absolute right-0 top-0 flex h-16 w-16 items-center justify-center p-3 lg:h-20 lg:p-4">
+            <button
+              className=""
+              onClick={() => setMenuOpen(true)}
+              type="button"
+            >
+              <span className="sr-only">Open main menu</span>
+              <Bars3Icon aria-hidden="true" className="h-6 w-6" />
+            </button>
+          </div>
         </div>
+        <Menu close={() => setMenuOpen(false)} open={menuOpen} />
         <section>
           <div className="relative bg-gray-800">
             <div className="absolute inset-0">
               {listing.coverImage && (
                 <Image
+                  alt=""
                   className="h-full w-full object-cover object-center"
                   src={generateCloudflareImageUrl(
                     listing.coverImage,
                     "display"
                   )}
-                  alt=""
                 />
               )}
 
               <div
+                aria-hidden="true"
                 className={clsx("absolute inset-0 bg-gray-500", {
                   "mix-blend-multiply": !!listing.coverImage,
                 })}
-                aria-hidden="true"
               />
             </div>
-            <div className="relative mx-auto max-w-7xl py-16 px-6 md:py-24 lg:py-32 lg:px-8">
+            <div className="relative mx-auto max-w-7xl px-6 py-16 md:py-24 lg:px-8 lg:py-32">
               <h1 className="font-headline text-4xl font-bold text-white sm:text-5xl md:text-center lg:text-6xl">
                 {listing.title}
               </h1>

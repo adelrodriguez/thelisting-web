@@ -20,7 +20,12 @@ import { zx } from "zodix"
 import { Button } from "~/components/common"
 import Tooltip from "~/components/common/Tooltip"
 import { Spinner } from "~/components/loading"
-import { useCart, useDialogPage, useTrackPageview } from "~/utils/hooks"
+import {
+  useCart,
+  useDialogPage,
+  useExchangeRate,
+  useTrackPageview,
+} from "~/utils/hooks"
 import { formatPrice } from "~/utils/money"
 
 import AddNoteReminderDialog from "./AddNoteReminderDialog"
@@ -50,6 +55,7 @@ export default function ListingCartPage() {
   const submit = useSubmit()
   const navigation = useNavigation()
   const { t } = useTranslation(handle.i18n)
+  const { currency, exchangeRate } = useExchangeRate()
 
   useTrackPageview({ listingId: listing.id })
 
@@ -148,7 +154,12 @@ export default function ListingCartPage() {
                         <dl className="space-y-2 text-sm font-medium text-gray-500">
                           <div className="flex justify-between">
                             <dt>{t("common:subtotal")}</dt>
-                            <dd>{formatPrice(cart.subtotal, "DOP")}</dd>
+                            <dd>
+                              {formatPrice(
+                                cart.subtotal / exchangeRate,
+                                currency
+                              )}
+                            </dd>
                           </div>
 
                           <div className="flex justify-between">
@@ -158,12 +169,19 @@ export default function ListingCartPage() {
                                 <InformationCircleIcon className="ml-0.5 h-4 w-4" />
                               </Tooltip>
                             </dt>
-                            <dd>{formatPrice(cart.shipping, "DOP")}</dd>
+                            <dd>
+                              {formatPrice(
+                                cart.shipping / exchangeRate,
+                                currency
+                              )}
+                            </dd>
                           </div>
 
                           <div className="flex items-center justify-between  text-gray-900">
                             <dt>{t("common:total")}</dt>
-                            <dd>{formatPrice(cart.total, "DOP")}</dd>
+                            <dd>
+                              {formatPrice(cart.total / exchangeRate, currency)}
+                            </dd>
                           </div>
                         </dl>
 
