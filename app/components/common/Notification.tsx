@@ -6,8 +6,7 @@ import {
   InformationCircleIcon,
 } from "@heroicons/react/24/outline"
 import type { CustomContentProps } from "notistack"
-import { useSnackbar } from "notistack"
-import { SnackbarContent } from "notistack"
+import { useSnackbar, SnackbarContent } from "notistack"
 import type { Ref } from "react"
 import { forwardRef } from "react"
 
@@ -41,7 +40,7 @@ function Notification(
 
   return (
     <SnackbarContent key={id} ref={ref}>
-      <div className="pointer-events-auto w-full sm:w-96 overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+      <div className="pointer-events-auto w-full overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5 sm:w-96">
         <div className="p-4">
           <div className="flex items-start">
             <div className="flex-shrink-0">

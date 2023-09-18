@@ -12,7 +12,7 @@ export default function Location({ caption, address }: LocationProperties) {
           allowFullScreen
           referrerPolicy="no-referrer-when-downgrade"
           src={`https://www.google.com/maps/embed/v1/place?key=${"AIzaSyAl-2Y0iQhC9oY3d-csjh2SOM-cJurXcg0"}
-    &q=${encodeURIComponent(address!)}`}
+    &q=${encodeURIComponent(address)}`}
           title={caption || "Map"}
         />
         {caption && <p className="mt-4 text-center text-lg">{caption}</p>}

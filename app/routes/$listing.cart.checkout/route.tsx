@@ -1,6 +1,5 @@
 import type { ActionArgs } from "@remix-run/node"
-import { redirect } from "@remix-run/node"
-import { json } from "@remix-run/node"
+import { redirect, json } from "@remix-run/node"
 import { useCatch, useNavigate } from "@remix-run/react"
 import { z } from "zod"
 
@@ -75,7 +74,7 @@ export function CatchBoundary() {
   const error = useCatch()
 
   return (
-    <div className="mt-4 mb-2">
+    <div className="mb-2 mt-4">
       <Alert onClose={() => navigate("../")} type="error">
         {error.data}
       </Alert>

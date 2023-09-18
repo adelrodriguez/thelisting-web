@@ -1,6 +1,6 @@
 import { ExclamationCircleIcon } from "@heroicons/react/24/solid"
 import clsx from "clsx"
-import type { InputHTMLAttributes, Ref } from "react"
+import type { ComponentProps, Ref } from "react"
 import { forwardRef } from "react"
 
 function Input(
@@ -27,7 +27,7 @@ function Input(
     label?: string
     name?: string
     trailing?: string
-  } & InputHTMLAttributes<HTMLInputElement>,
+  } & ComponentProps<"input">,
   ref: Ref<HTMLInputElement>
 ) {
   return (

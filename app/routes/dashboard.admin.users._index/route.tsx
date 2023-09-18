@@ -1,8 +1,7 @@
 import type { User } from "@prisma/client"
 import { UserRole } from "@prisma/client"
 import type { LoaderArgs, SerializeFrom } from "@remix-run/node"
-import { redirect } from "@remix-run/node"
-import { json } from "@remix-run/node"
+import { redirect , json } from "@remix-run/node"
 import { Link, useLoaderData, useNavigate } from "@remix-run/react"
 import {
   createColumnHelper,

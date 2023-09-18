@@ -1,11 +1,11 @@
 import { ExclamationCircleIcon } from "@heroicons/react/20/solid"
 import clsx from "clsx"
-import type { ComponentProps, OptionHTMLAttributes, Ref } from "react"
+import type { ComponentProps, Ref } from "react"
 import { forwardRef } from "react"
 
 type SelectOption = {
   label: string
-  value: OptionHTMLAttributes<HTMLOptionElement>["value"]
+  value: ComponentProps<"option">["value"]
   disabled?: boolean
 }
 

@@ -1,5 +1,5 @@
 import clsx from "clsx"
-import type { Ref, TextareaHTMLAttributes } from "react"
+import type { ComponentProps, Ref } from "react"
 import { forwardRef } from "react"
 
 function TextArea(
@@ -17,7 +17,7 @@ function TextArea(
     description?: string
     label?: string
     error?: boolean
-  } & TextareaHTMLAttributes<HTMLTextAreaElement>,
+  } & ComponentProps<"textarea">,
   ref: Ref<HTMLTextAreaElement>
 ) {
   return (

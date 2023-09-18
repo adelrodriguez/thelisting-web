@@ -115,7 +115,7 @@ function VirtualizedOptions({ options }: { options: AutocompleteOption[] }) {
         {virtualizer.getVirtualItems().map((virtualItem) => (
           <Combobox.Option
             key={virtualItem.key}
-            value={options[virtualItem.index]!.value}
+            value={options[virtualItem.index]?.value}
             className={({ active }) =>
               clsx(
                 "absolute left-0 top-0 w-full cursor-default select-none py-2 pl-8 pr-4",
@@ -135,7 +135,7 @@ function VirtualizedOptions({ options }: { options: AutocompleteOption[] }) {
                     "font-semibold": selected,
                   })}
                 >
-                  {options[virtualItem.index]!.label}
+                  {options[virtualItem.index]?.label}
                 </span>
 
                 {selected && (

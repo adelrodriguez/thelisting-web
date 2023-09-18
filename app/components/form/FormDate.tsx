@@ -4,7 +4,7 @@ import { useField } from "remix-validated-form"
 
 import { Input } from "~/components/common"
 
-function parseDate(date?: any): string {
+function parseDate(date?: string | Date): string {
   if (typeof date === "string") {
     return format(parseISO(date), "yyyy-MM-dd")
   }

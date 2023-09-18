@@ -4,7 +4,7 @@ import { ReasonPhrases, StatusCodes } from "http-status-codes"
 import { badRequest, serverError, unauthorized } from "remix-utils"
 import { z } from "zod"
 
-import { ONE_MINUTE } from "~/config/consts"
+import { ONE_SECOND } from "~/config/consts"
 import {
   MarkPurchaseAsPaidQueue,
   SaveOrderCustomerQueue,
@@ -78,8 +78,7 @@ export async function action({ request, context }: ActionArgs) {
         {
           attempts: 20,
           backoff: {
-            // One second
-            delay: 1000,
+            delay: ONE_SECOND.inMilliseconds,
             type: "exponential",
           },
         }

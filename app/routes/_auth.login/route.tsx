@@ -1,7 +1,6 @@
 import { Transition } from "@headlessui/react"
 import type { ActionArgs, LoaderArgs } from "@remix-run/node"
-import { redirect } from "@remix-run/node"
-import { json } from "@remix-run/node"
+import { redirect , json } from "@remix-run/node"
 import {
   Form,
   useLoaderData,

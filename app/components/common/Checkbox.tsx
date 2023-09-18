@@ -5,10 +5,10 @@ export default function Checkbox({
   indeterminate,
   ...props
 }: { indeterminate?: boolean } & ComponentPropsWithoutRef<"input">) {
-  const ref = useRef<HTMLInputElement>(null!)
+  const ref = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-    if (typeof indeterminate === "boolean") {
+    if (typeof indeterminate === "boolean" && ref.current) {
       ref.current.indeterminate = !props.checked && indeterminate
     }
   }, [ref, indeterminate, props.checked])
