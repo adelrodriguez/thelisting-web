@@ -66,8 +66,8 @@ export default function PricingPage() {
       <div className="mt-12 space-y-4 sm:mt-16 sm:grid sm:grid-cols-2 sm:gap-6 sm:space-y-0 lg:mx-auto lg:max-w-4xl xl:mx-0 xl:max-w-none xl:grid-cols-4">
         {tiers.map((tier) => (
           <div
-            key={tier.name}
             className="divide-y divide-gray-200 rounded-lg border border-gray-200 shadow-sm"
+            key={tier.name}
           >
             <div className="p-6">
               <h2 className="text-lg font-medium leading-6 text-gray-900">
@@ -81,8 +81,8 @@ export default function PricingPage() {
                 <span className="text-base font-medium text-gray-500">/mo</span>
               </p>
               <a
-                href={tier.href}
                 className="mt-8 block w-full rounded-md border border-gray-800 bg-gray-800 py-2 text-center text-sm font-semibold text-white hover:bg-gray-900"
+                href={tier.href}
               >
                 Buy {tier.name}
               </a>
@@ -93,10 +93,10 @@ export default function PricingPage() {
               </h3>
               <ul className="mt-6 space-y-4">
                 {tier.includedFeatures.map((feature) => (
-                  <li key={feature} className="flex space-x-3">
+                  <li className="flex space-x-3" key={feature}>
                     <CheckIcon
-                      className="h-5 w-5 flex-shrink-0 text-green-500"
                       aria-hidden="true"
+                      className="h-5 w-5 flex-shrink-0 text-green-500"
                     />
                     <span className="text-sm text-gray-500">{feature}</span>
                   </li>

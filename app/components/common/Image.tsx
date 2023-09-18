@@ -13,13 +13,13 @@ export default function Image({
 } & ComponentPropsWithoutRef<"img">) {
   return (
     <RemixImage
-      className={className}
-      loaderUrl="/api/image"
-      src={src}
       alt={alt}
-      responsive={responsive}
+      className={className}
       dprVariants={[1, 3]}
+      loaderUrl="/api/image"
       placeholder="blur"
+      responsive={responsive}
+      src={src}
       style={style}
     />
   )

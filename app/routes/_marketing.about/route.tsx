@@ -20,34 +20,34 @@ export default function AboutPage() {
               <div className="absolute inset-y-0 right-1/2 w-full rounded-r-3xl bg-gray-50 lg:right-72" />
               <svg
                 className="absolute top-8 left-1/2 -ml-3 lg:-right-8 lg:left-auto lg:top-12"
-                width={404}
-                height={392}
                 fill="none"
+                height={392}
                 viewBox="0 0 404 392"
+                width={404}
               >
                 <defs>
                   <pattern
+                    height={20}
                     id="02f20b47-fd69-4224-a62a-4c9de5c763f7"
+                    patternUnits="userSpaceOnUse"
+                    width={20}
                     x={0}
                     y={0}
-                    width={20}
-                    height={20}
-                    patternUnits="userSpaceOnUse"
                   >
                     <rect
-                      x={0}
-                      y={0}
-                      width={4}
-                      height={4}
                       className="text-gray-200"
                       fill="currentColor"
+                      height={4}
+                      width={4}
+                      x={0}
+                      y={0}
                     />
                   </pattern>
                 </defs>
                 <rect
-                  width={404}
-                  height={392}
                   fill="url(#02f20b47-fd69-4224-a62a-4c9de5c763f7)"
+                  height={392}
+                  width={404}
                 />
               </svg>
             </div>
@@ -55,27 +55,27 @@ export default function AboutPage() {
               {/* Testimonial card*/}
               <div className="relative overflow-hidden rounded-2xl pt-64 pb-10 shadow-xl">
                 <img
+                  alt=""
                   className="absolute inset-0 h-full w-full object-cover"
                   src="https://images.unsplash.com/photo-1521510895919-46920266ddb3?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&fp-x=0.5&fp-y=0.6&fp-z=3&width=1440&height=1440&sat=-100"
-                  alt=""
                 />
                 <div className="absolute inset-0 bg-gray-500 mix-blend-multiply" />
                 <div className="absolute inset-0 bg-gradient-to-t from-gray-600 via-gray-600 opacity-90" />
                 <div className="relative px-8">
                   <div>
                     <img
+                      alt="Workcation"
                       className="h-12"
                       src="https://tailwindui.com/img/logos/workcation.svg?color=white"
-                      alt="Workcation"
                     />
                   </div>
                   <blockquote className="mt-8">
                     <div className="relative text-lg font-medium text-white md:flex-grow">
                       <svg
+                        aria-hidden="true"
                         className="absolute top-0 left-0 h-8 w-8 -translate-x-3 -translate-y-2 transform text-gray-400"
                         fill="currentColor"
                         viewBox="0 0 32 32"
-                        aria-hidden="true"
                       >
                         <path d="M9.352 4C4.456 7.456 1 13.12 1 19.36c0 5.088 3.072 8.064 6.624 8.064 3.36 0 5.856-2.688 5.856-5.856 0-3.168-2.208-5.472-5.088-5.472-.576 0-1.344.096-1.536.192.48-3.264 3.552-7.104 6.624-9.024L9.352 4zm16.512 0c-4.8 3.456-8.256 9.12-8.256 15.36 0 5.088 3.072 8.064 6.624 8.064 3.264 0 5.856-2.688 5.856-5.856 0-3.168-2.304-5.472-5.184-5.472-.576 0-1.248.096-1.44.192.48-3.264 3.456-7.104 6.528-9.024L25.864 4z" />
                       </svg>
@@ -134,8 +134,8 @@ export default function AboutPage() {
               <dl className="grid grid-cols-2 gap-x-4 gap-y-8">
                 {stats.map((stat) => (
                   <div
-                    key={stat.label}
                     className="border-t-2 border-gray-100 pt-6"
+                    key={stat.label}
                   >
                     <dt className="text-base font-medium text-gray-500">
                       {stat.label}
@@ -147,7 +147,7 @@ export default function AboutPage() {
                 ))}
               </dl>
               <div className="mt-10">
-                <Link to="#" className="text-base font-medium text-gray-600">
+                <Link className="text-base font-medium text-gray-600" to="#">
                   Learn more about how we're changing the world
                   <span aria-hidden="true"> &rarr;</span>
                 </Link>
@@ -160,9 +160,9 @@ export default function AboutPage() {
         <div className="lg:absolute lg:inset-0">
           <div className="lg:absolute lg:inset-y-0 lg:left-0 lg:w-1/2">
             <img
+              alt=""
               className="h-56 w-full object-cover lg:absolute lg:h-full sm:rounded-r-3xl"
               src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1567&q=80"
-              alt=""
             />
           </div>
         </div>

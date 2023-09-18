@@ -18,7 +18,6 @@ export default function QuantityInput({
   return (
     <div className="isolate inline-flex rounded-md shadow-sm">
       <button
-        type="button"
         className={clsx(
           "relative inline-flex items-center rounded-l-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50",
           "focus:z-10 focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500",
@@ -26,15 +25,15 @@ export default function QuantityInput({
         )}
         disabled={value <= min}
         onClick={() => onChange(value - 1)}
+        type="button"
       >
         <span className="sr-only">{t("quantity.add")}</span>
-        <MinusIcon className="h-5 w-5" aria-hidden="true" />
+        <MinusIcon aria-hidden="true" className="h-5 w-5" />
       </button>
       <div className="relative inline-flex items-center border border-x-0 border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700">
         {value}
       </div>
       <button
-        type="button"
         className={clsx(
           "relative -ml-px inline-flex items-center rounded-r-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50",
           "focus:z-10 focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500",
@@ -42,9 +41,10 @@ export default function QuantityInput({
         )}
         disabled={value >= max}
         onClick={() => onChange(value + 1)}
+        type="button"
       >
         <span className="sr-only">{t("quantity.remove")}</span>
-        <PlusIcon className="h-5 w-5" aria-hidden="true" />
+        <PlusIcon aria-hidden="true" className="h-5 w-5" />
       </button>
     </div>
   )

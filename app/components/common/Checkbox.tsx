@@ -15,9 +15,9 @@ export default function Checkbox({
 
   return (
     <input
-      type="checkbox"
-      ref={ref}
       className="h-4 w-4 cursor-pointer rounded border-slate-300 text-gray-600 focus:ring-slate-600"
+      ref={ref}
+      type="checkbox"
       {...props}
     />
   )

@@ -226,33 +226,33 @@ export default function DashboardListingPage() {
 
   return (
     <Form
-      id="edit-listing"
       className="m-auto mt-8 flex w-full max-w-xl flex-col gap-y-6"
+      id="edit-listing"
       method="POST"
       validator={clientValidator}
     >
       <Input
+        description="This is what we'll call your listing and show to others"
         label="Title"
         name="title"
-        description="This is what we'll call your listing and show to others"
         required
       />
       <Input
+        description="This will appear under the title and in the description when sharing your listing"
         label="Subtitle"
         name="subtitle"
-        description="This will appear under the title and in the description when sharing your listing"
       />
       <Input
+        description="This is the unique identifier for your listing"
+        disabled
         label="SKU"
         name="sku"
-        disabled
-        description="This is the unique identifier for your listing"
       />
       <InputWithAddOn
+        addOn={"https://giftthelisting.com/"}
+        description="This is the URL for your listing"
         label="Path"
         name="path"
-        description="This is the URL for your listing"
-        addOn={"https://giftthelisting.com/"}
         required
       />
       <Input
@@ -263,11 +263,14 @@ export default function DashboardListingPage() {
         type="date"
       />
       <input
-        type="hidden"
         name="timezone"
+        type="hidden"
         value={Intl.DateTimeFormat().resolvedOptions().timeZone}
       />
       <Select
+        description="The type of event you're hosting"
+        label="Event Type"
+        name="type"
         options={[
           {
             label: "Select an option",
@@ -290,12 +293,12 @@ export default function DashboardListingPage() {
             value: ListingType.Other,
           },
         ]}
-        label="Event Type"
-        name="type"
-        description="The type of event you're hosting"
         required
       />
       <Autocomplete
+        description="The user owner of this listing"
+        label="Owner"
+        name="ownerId"
         options={[
           { label: "Select an option", value: "" },
           ...users.map((user) => ({
@@ -303,14 +306,11 @@ export default function DashboardListingPage() {
             value: user.id,
           })),
         ]}
-        label="Owner"
-        name="ownerId"
-        description="The user owner of this listing"
         required
       />
       <ListRadioGroup
-        name="status"
         label="Status"
+        name="status"
         options={[
           {
             description:
@@ -333,27 +333,27 @@ export default function DashboardListingPage() {
         required
       />
       <ImageInput
+        description="The image that will be shown on the registry page"
         label="Registry Cover Image"
         name="coverImage"
-        description="The image that will be shown on the registry page"
         placeholder="cover.png"
       />
       <ImageInput
+        description="The image that will be shown after someone purchases an item from your listing"
         label={'"Thank You" Image'}
         name="thankYouImage"
-        description="The image that will be shown after someone purchases an item from your listing"
         placeholder="thank-you.png"
       />
       <Input
         description="The Shopify collection ID. You need to have this in order to be able to add items to your listing. If this is empty and you recently created the listing, please wait a few seconds."
+        disabled
         label="Commerce ID"
         name="commerceId"
-        disabled
       />
       <Checkbox
+        description="Internal listings are used for showcase purposes. Purchases are disabled."
         label="Internal"
         name="isInternal"
-        description="Internal listings are used for showcase purposes. Purchases are disabled."
         value="internal"
       />
       <SubmitButton loadingText="Updating...">Update</SubmitButton>

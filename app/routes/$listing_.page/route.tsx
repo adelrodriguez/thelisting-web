@@ -118,21 +118,21 @@ export default function ListingPage() {
         <div className="relative hidden w-0 flex-1 lg:block">
           <AnimatePresence>
             <motion.img
+              alt={`Image ${currentImage}`}
+              animate={{ opacity: 1 }}
+              className="sticky inset-0 h-screen w-full object-cover object-center"
+              exit={{ opacity: 0 }}
+              initial={{ opacity: 0 }}
               key={currentImage!}
               src={generateCloudflareImageUrl(currentImage!, "display")}
-              alt={`Image ${currentImage}`}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
               transition={{ duration: 0.5 }}
-              className="sticky inset-0 h-screen w-full object-cover object-center"
             />
           </AnimatePresence>
           <div
+            aria-hidden="true"
             className={clsx("absolute inset-0 bg-gray-300", {
               "mix-blend-multiply": !!currentImage,
             })}
-            aria-hidden="true"
           />
 
           <div className="fixed bottom-[10%] left-10 text-white">

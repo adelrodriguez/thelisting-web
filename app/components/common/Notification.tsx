@@ -46,26 +46,26 @@ function Notification(
             <div className="flex-shrink-0">
               {variant === "success" && (
                 <CheckCircleIcon
-                  className="h-6 w-6 text-green-400"
                   aria-hidden="true"
+                  className="h-6 w-6 text-green-400"
                 />
               )}
               {variant === "warning" && (
                 <ExclamationCircleIcon
-                  className="h-6 w-6 text-yellow-400"
                   aria-hidden="true"
+                  className="h-6 w-6 text-yellow-400"
                 />
               )}
               {variant === "error" && (
                 <ExclamationTriangleIcon
-                  className="h-6 w-6 text-red-400"
                   aria-hidden="true"
+                  className="h-6 w-6 text-red-400"
                 />
               )}
               {variant === "info" && (
                 <InformationCircleIcon
-                  className="h-6 w-6 text-blue-400"
                   aria-hidden="true"
+                  className="h-6 w-6 text-blue-400"
                 />
               )}
             </div>
@@ -75,12 +75,12 @@ function Notification(
             </div>
             <div className="ml-4 flex flex-shrink-0">
               <button
-                type="button"
                 className="inline-flex rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
                 onClick={() => closeSnackbar(id)}
+                type="button"
               >
                 <span className="sr-only">Close</span>
-                <XMarkIcon className="h-5 w-5" aria-hidden="true" />
+                <XMarkIcon aria-hidden="true" className="h-5 w-5" />
               </button>
             </div>
           </div>

@@ -99,9 +99,9 @@ export default function ListingReviewPage() {
     <main className="relative lg:min-h-full">
       <div className="h-48 overflow-hidden lg:fixed lg:h-full lg:w-1/3 lg:pr-4 xl:pr-12">
         <img
-          src="https://imagedelivery.net/wHwwAqNxbuESOwdHNE6NsQ/beaf377b-e29a-41b7-0c21-220601d67c00/display"
           alt=""
           className="h-full w-full object-cover object-center"
+          src="https://imagedelivery.net/wHwwAqNxbuESOwdHNE6NsQ/beaf377b-e29a-41b7-0c21-220601d67c00/display"
         />
       </div>
       <div>
@@ -121,20 +121,20 @@ export default function ListingReviewPage() {
                 <dl className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                   {stats.map((item) => (
                     <div
-                      key={item.name}
                       className="flex items-center overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6"
+                      key={item.name}
                     >
                       <div className="h-fit w-fit rounded-md bg-slate-500 p-3">
                         {item.icon === "currency" && (
                           <CurrencyDollarIcon
-                            className="h-6 w-6 text-white"
                             aria-hidden="true"
+                            className="h-6 w-6 text-white"
                           />
                         )}
                         {item.icon === "gift" && (
                           <GiftIcon
-                            className="h-6 w-6 text-white"
                             aria-hidden="true"
+                            className="h-6 w-6 text-white"
                           />
                         )}
                       </div>
@@ -159,7 +159,7 @@ export default function ListingReviewPage() {
                     </h2>
                   )}
                   {listing.purchases.map((purchase, index) => (
-                    <Disclosure key={purchase.id} defaultOpen={index === 0}>
+                    <Disclosure defaultOpen={index === 0} key={purchase.id}>
                       {({ open }) => (
                         <div className="border-t border-b border-gray-200 bg-white shadow-sm sm:rounded-lg sm:border">
                           <div className="flex flex-col items-center justify-between border-b border-gray-200 p-4 sm:flex-row">
@@ -205,8 +205,8 @@ export default function ListingReviewPage() {
                               className="mt-4 w-full sm:mt-0 sm:w-auto"
                             >
                               <Button
-                                variant="secondary"
                                 className="w-full sm:w-auto"
+                                variant="secondary"
                               >
                                 {open
                                   ? t("common:close")
@@ -221,13 +221,13 @@ export default function ListingReviewPage() {
                             <ul className="ui-open:divide-y ui-open:divide-gray-200">
                               {purchase.itemPurchases.map((itemPurchase) => (
                                 <li
-                                  key={itemPurchase.itemId}
                                   className="text-medium p-4 sm:p-6"
+                                  key={itemPurchase.itemId}
                                 >
                                   <OrderItem
                                     commerceId={itemPurchase.item.commerceId}
-                                    quantity={itemPurchase.quantity}
                                     cost={itemPurchase.cost}
+                                    quantity={itemPurchase.quantity}
                                   />
                                 </li>
                               ))}

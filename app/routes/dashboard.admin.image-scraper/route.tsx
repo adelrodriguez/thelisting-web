@@ -86,7 +86,7 @@ export default function AdminToolsScrapeImagesPage() {
               <span className="font-bold text-black">{result.data.length}</span>{" "}
               images available to download
             </p>
-            <Button size="xl" onClick={handleDownloadImages} className="mt-4">
+            <Button className="mt-4" onClick={handleDownloadImages} size="xl">
               Download
             </Button>
           </>
@@ -108,8 +108,8 @@ export default function AdminToolsScrapeImagesPage() {
                 <DocumentArrowDownIcon className="mx-auto h-12 w-12 text-gray-400" />
                 <div className="mx-auto flex">
                   <label
-                    htmlFor="file-upload"
                     className="relative cursor-pointer rounded-md  font-medium text-gray-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-gray-500 focus-within:ring-offset-2 hover:text-gray-500"
+                    htmlFor="file-upload"
                   >
                     Upload a file
                   </label>

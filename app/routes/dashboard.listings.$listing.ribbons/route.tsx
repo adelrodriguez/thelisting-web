@@ -128,7 +128,7 @@ export default function DashboardListingRibbonsPage() {
                     <p className="text-sm text-gray-500">
                       No ribbons have been added to this page yet.
                     </p>
-                    <Link to="new" relative="route" preventScrollReset>
+                    <Link preventScrollReset relative="route" to="new">
                       <Button>Create a ribbon</Button>
                     </Link>
                   </div>
@@ -136,7 +136,7 @@ export default function DashboardListingRibbonsPage() {
                   <DndProvider backend={HTML5Backend}>
                     {/* TODO: Fix this type error that's happening due to serialization from Remix */}
                     {/* @ts-expect-error Due to serialized type */}
-                    <PageRibbons ribbons={ribbons} onMove={submitOrder} />
+                    <PageRibbons onMove={submitOrder} ribbons={ribbons} />
                   </DndProvider>
                 )}
               </div>
@@ -157,42 +157,42 @@ export default function DashboardListingRibbonsPage() {
                   className="flex flex-col gap-2 py-3"
                   id="edit-theme"
                   method="POST"
-                  validator={themeValidator}
                   subaction="theme"
+                  validator={themeValidator}
                 >
                   <Input
-                    type="color"
-                    name="colors.background"
                     label="Background Color"
+                    name="colors.background"
+                    type="color"
                   />
                   <Input
-                    type="color"
-                    name="colors.primary"
                     label="Primary Color"
+                    name="colors.primary"
+                    type="color"
                   />
                   <Input
-                    type="color"
-                    name="colors.secondary"
                     label="Secondary Color"
+                    name="colors.secondary"
+                    type="color"
                   />
-                  <Input type="color" name="colors.text" label="Text Color" />
+                  <Input label="Text Color" name="colors.text" type="color" />
                   <Autocomplete
-                    name="fonts.heading"
                     label="Heading Font"
+                    name="fonts.heading"
                     options={fonts.map((font) => ({
                       label: font,
                       value: font,
                     }))}
                   />
                   <Autocomplete
-                    name="fonts.body"
                     label="Body Font"
+                    name="fonts.body"
                     options={fonts.map((font) => ({
                       label: font,
                       value: font,
                     }))}
                   />
-                  <SubmitButton loadingText="Saving..." className="mt-2">
+                  <SubmitButton className="mt-2" loadingText="Saving...">
                     Save
                   </SubmitButton>
                 </Form>
@@ -208,13 +208,13 @@ export default function DashboardListingRibbonsPage() {
                 <h2 className="text-base font-semibold leading-6 text-gray-700">
                   Preview
                 </h2>
-                <Link to={`/${listing.path}/page`} target="_blank">
+                <Link target="_blank" to={`/${listing.path}/page`}>
                   <ArrowTopRightOnSquareIcon className="inline-block h-4 w-4" />
                 </Link>
               </div>
               {/* TODO: Fix this type error that's happening due to serialization from Remix */}
               {/* @ts-expect-error Due to serialization */}
-              <RibbonsPreview ribbons={ribbons} path={listing.path} />
+              <RibbonsPreview path={listing.path} ribbons={ribbons} />
             </div>
           </section>
         </div>

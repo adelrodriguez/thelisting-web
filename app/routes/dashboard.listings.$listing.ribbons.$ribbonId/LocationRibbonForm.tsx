@@ -22,12 +22,12 @@ export default function LocationRibbonForm({
 
   return (
     <Form
-      id={formId}
+      action="?/properties"
       className="flex flex-col gap-2"
+      defaultValues={defaultValues}
+      id={formId}
       method="POST"
       validator={validator}
-      defaultValues={defaultValues}
-      action="?/properties"
     >
       <Input label="Caption" name="caption" />
       <TextArea label="Address" name="address" rows={2} />

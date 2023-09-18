@@ -34,10 +34,10 @@ export default function Email({
         <Section className="bg-white">
           <Container className="mx-auto px-6 pt-5 pb-12">
             <Img
-              src={baseUrl + THE_LISTING_LOGO_BLACK}
-              height={48}
               alt="The Listing"
               className="mx-auto"
+              height={48}
+              src={baseUrl + THE_LISTING_LOGO_BLACK}
             />
             <Text className="mt-12 mb-6 text-center text-xl font-bold">
               🪄 {user.firstName}, here's your magic link
@@ -62,14 +62,14 @@ export default function Email({
             </Text>
             <Hr className="mt-12 border-gray-500" />
             <Img
-              src={`${baseUrl}/assets/images/ribbon.svg`}
-              width={32}
               height={32}
+              src={`${baseUrl}/assets/images/ribbon.svg`}
               style={{
                 WebkitFilter: "grayscale(100%)",
                 filter: "grayscale(100%)",
                 margin: "20px 0",
               }}
+              width={32}
             />
             <Text className="ml-1 text-sm text-gray-600">The Listing SRL</Text>
           </Container>

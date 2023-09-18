@@ -116,20 +116,20 @@ export default function LoginPage() {
           </Transition>
 
           <div className="mt-4">
-            <Form method="POST" className="space-y-3">
+            <Form className="space-y-3" method="POST">
               <div>
-                <label htmlFor="email" className="sr-only">
+                <label className="sr-only" htmlFor="email">
                   Email
                 </label>
                 <input
-                  type="email"
-                  name="email"
-                  id="email"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
+                  id="email"
+                  name="email"
                   placeholder={t("enterYourEmail") ?? ""}
+                  type="email"
                 />
               </div>
-              <Button type="submit" disabled={isSubmitting} className="w-full">
+              <Button className="w-full" disabled={isSubmitting} type="submit">
                 {isSubmitting ? (
                   <>
                     <Spinner />
@@ -145,9 +145,9 @@ export default function LoginPage() {
       </div>
       <div className="relative hidden w-0 flex-1 lg:block">
         <Image
+          alt=""
           className="absolute inset-0 h-full w-full object-cover"
           src="https://images.unsplash.com/photo-1532712938310-34cb3982ef74?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80"
-          alt=""
         />
       </div>
     </div>

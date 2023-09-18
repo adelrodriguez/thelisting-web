@@ -31,11 +31,11 @@ export default function Checkbox({
           />
         </div>
         <div className="ml-3 text-sm leading-6">
-          <label htmlFor={name} className="font-medium text-gray-900">
+          <label className="font-medium text-gray-900" htmlFor={name}>
             {label}
           </label>
           {description && (
-            <p id={`${name}-description`} className="text-gray-500">
+            <p className="text-gray-500" id={`${name}-description`}>
               {description}
             </p>
           )}

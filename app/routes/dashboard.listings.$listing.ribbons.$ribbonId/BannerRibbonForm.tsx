@@ -22,21 +22,22 @@ export default function BannerRibbonFields({
 
   return (
     <Form
-      id={formId}
+      action="?/properties"
       className="flex flex-col gap-2"
+      defaultValues={defaultValues}
+      id={formId}
       method="POST"
       validator={validator}
-      defaultValues={defaultValues}
-      action="?/properties"
     >
-      <ImageInput name="decorationImage" label="Decoration Image" />
-      <Input label="Title" type="text" name="title" required />
-      <Input label="Subtitle" type="text" name="subtitle" />
-      <ImageInput name="backgroundImage" label="Background Image" />
+      <ImageInput label="Decoration Image" name="decorationImage" />
+      <Input label="Title" name="title" required type="text" />
+      <Input label="Subtitle" name="subtitle" type="text" />
+      <ImageInput label="Background Image" name="backgroundImage" />
       <div className="flex gap-2">
         <Select
-          name="imageFit"
+          className="flex-1"
           label="Image Fit"
+          name="imageFit"
           options={[
             { label: "Select an option", value: "" },
             { label: "Contain", value: "object-contain" },
@@ -45,11 +46,11 @@ export default function BannerRibbonFields({
             { label: "None", value: "object-none" },
             { label: "Scale Down", value: "object-scale-down" },
           ]}
-          className="flex-1"
         />
         <Select
-          name="imagePosition"
+          className="flex-1"
           label="Image Position"
+          name="imagePosition"
           options={[
             { label: "Select an option", value: "" },
             { label: "Bottom", value: "object-bottom" },
@@ -62,7 +63,6 @@ export default function BannerRibbonFields({
             { label: "Right Top", value: "object-right-top" },
             { label: "Top", value: "object-top" },
           ]}
-          className="flex-1"
         />
       </div>
     </Form>

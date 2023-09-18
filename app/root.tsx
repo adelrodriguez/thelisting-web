@@ -64,7 +64,7 @@ export const meta: V2_MetaFunction = () => [
 export function CatchBoundary() {
   const caught = useCatch<ThrownResponse<number, NotFoundBoundaryData>>()
 
-  return <NotFound status={caught.status} data={caught.data} />
+  return <NotFound data={caught.data} status={caught.status} />
 }
 
 export async function loader({ request }: LoaderArgs) {
@@ -99,7 +99,7 @@ export default function App() {
   useChangeLanguage(locale)
 
   return (
-    <html className="h-full" lang={locale} dir={i18n.dir()}>
+    <html className="h-full" dir={i18n.dir()} lang={locale}>
       <head>
         <Meta />
         <Links />
@@ -113,7 +113,6 @@ export default function App() {
             />
             <script
               async
-              id="gtag-init"
               dangerouslySetInnerHTML={{
                 __html: `
                 window.dataLayer = window.dataLayer || [];
@@ -124,6 +123,7 @@ export default function App() {
                 });
               `,
               }}
+              id="gtag-init"
             />
           </>
         )}

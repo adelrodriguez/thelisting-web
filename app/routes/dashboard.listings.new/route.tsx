@@ -155,38 +155,41 @@ export default function CreateListingsPage() {
         </p>
       </div>
       <Form
-        id="create-listing"
-        validator={clientValidator}
-        method="POST"
         className="m-auto mt-8 flex flex-col gap-y-6 sm:w-[500px]"
+        id="create-listing"
+        method="POST"
+        validator={clientValidator}
       >
         <Input
+          description="This is what we'll call your listing and show to others"
           label="Title"
           name="title"
-          description="This is what we'll call your listing and show to others"
           required
         />
         <InputWithAddOn
-          name="path"
-          label="Path"
           addOn={"https://www.giftthelisting.com/"}
           description="The unique path for your listing"
+          label="Path"
+          name="path"
           required
         />
         <Input
-          type="date"
-          label="Event Date"
-          name="eventDate"
-          min={format(startOfTomorrow(), "yyyy-MM-dd")}
           description="The date of your event"
+          label="Event Date"
+          min={format(startOfTomorrow(), "yyyy-MM-dd")}
+          name="eventDate"
           required
+          type="date"
         />
         <input
-          type="hidden"
           name="timezone"
+          type="hidden"
           value={Intl.DateTimeFormat().resolvedOptions().timeZone}
         />
         <Select
+          description="The type of event you're hosting"
+          label="Event Type"
+          name="type"
           options={[
             {
               label: "Select an option",
@@ -209,12 +212,12 @@ export default function CreateListingsPage() {
               value: ListingType.Other,
             },
           ]}
-          label="Event Type"
-          name="type"
-          description="The type of event you're hosting"
           required
         />
         <Autocomplete
+          description="The owner of this listing"
+          label="Owner"
+          name="ownerId"
           options={[
             { label: "Select an option", value: "" },
             ...users.map((user) => ({
@@ -222,9 +225,6 @@ export default function CreateListingsPage() {
               value: user.id,
             })),
           ]}
-          label="Owner"
-          name="ownerId"
-          description="The owner of this listing"
           required
         />
         <SubmitButton loadingText="Creating...">Create</SubmitButton>

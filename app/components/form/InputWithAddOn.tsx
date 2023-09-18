@@ -74,18 +74,18 @@ export default function InputWithAddOn({
           />
           <div className="pointer-events-none invisible absolute right-0 top-0 flex h-9 items-center pr-3 peer-invalid:visible">
             <ExclamationCircleIcon
-              className="h-5 w-5 text-red-500"
               aria-hidden="true"
+              className="h-5 w-5 text-red-500"
             />
           </div>
         </div>
         {description && (
           <p
-            id={`${name}-description`}
             className={clsx("text-sm text-gray-500", {
               block: !error,
               hidden: error,
             })}
+            id={`${name}-description`}
           >
             {description}
           </p>

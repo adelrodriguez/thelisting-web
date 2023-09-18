@@ -12,9 +12,9 @@ export default function Hero() {
       <div className="position absolute -z-10 h-[calc(100%+1px)] w-full bg-[url('/assets/images/bottom-curve.svg')] bg-contain bg-bottom bg-no-repeat" />
 
       <Image
-        src="https://images.unsplash.com/photo-1520854221256-17451cc331bf?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80"
         alt=""
         className="absolute inset-0 -z-20 h-full w-full object-cover"
+        src="https://images.unsplash.com/photo-1520854221256-17451cc331bf?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80"
       />
       <div className="absolute inset-0 -z-20 h-full w-full bg-gray-600 object-cover mix-blend-multiply" />
 
@@ -31,8 +31,8 @@ export default function Hero() {
               <Button size="xl">{t("hero.cta")}</Button>
 
               <Link
-                to="#"
                 className="text-base font-semibold leading-7 text-white "
+                to="#"
               >
                 {t("hero.findARegistry")} <span aria-hidden="true">→</span>
               </Link>

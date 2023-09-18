@@ -13,11 +13,11 @@ export default function SectionWrapper({
     <section>
       <div className={clsx("relative", className)}>
         <motion.div
+          className="h-full"
           initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
           transition={{ duration: 1 }}
           viewport={{ amount: 0.5, once: true }}
-          className="h-full"
+          whileInView={{ opacity: 1 }}
         >
           {children}
         </motion.div>

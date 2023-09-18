@@ -23,7 +23,7 @@ export default function CartItem({
   if (isError)
     return (
       <div className="w-full">
-        <Alert type="error" onClose={() => cart.remove(id)}>
+        <Alert onClose={() => cart.remove(id)} type="error">
           Error loading product
         </Alert>
       </div>
@@ -35,9 +35,9 @@ export default function CartItem({
     <>
       <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
         <img
-          src={imageUrl}
           alt={title}
           className="h-full w-full object-cover object-center"
+          src={imageUrl}
         />
       </div>
 
@@ -59,9 +59,9 @@ export default function CartItem({
 
           <div className="flex">
             <button
-              type="button"
               className="font-medium text-gray-600 hover:text-gray-500"
               onClick={() => cart.remove(id)}
+              type="button"
             >
               {t("quantity.remove")}
             </button>

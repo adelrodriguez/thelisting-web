@@ -12,19 +12,19 @@ type AlertType = "error" | "success" | "info"
 function getIcon(type: AlertType) {
   switch (type) {
     case "error":
-      return <XCircleIcon className="h-5 w-5 text-red-400" aria-hidden="true" />
+      return <XCircleIcon aria-hidden="true" className="h-5 w-5 text-red-400" />
     case "success":
       return (
         <CheckCircleIcon
-          className="h-5 w-5 text-green-400"
           aria-hidden="true"
+          className="h-5 w-5 text-green-400"
         />
       )
     case "info":
       return (
         <InformationCircleIcon
-          className="h-5 w-5 text-blue-400"
           aria-hidden="true"
+          className="h-5 w-5 text-blue-400"
         />
       )
     default:
@@ -66,7 +66,6 @@ export default function Alert({
           <div className="ml-auto pl-3">
             <div className="-mx-1.5 -my-1.5">
               <button
-                type="button"
                 className={clsx(
                   "inline-flex rounded-md p-1.5  focus:outline-none focus:ring-2  focus:ring-offset-2",
                   {
@@ -79,9 +78,10 @@ export default function Alert({
                   }
                 )}
                 onClick={onClose}
+                type="button"
               >
                 <span className="sr-only">Dismiss</span>
-                <XMarkIcon className="h-5 w-5" aria-hidden="true" />
+                <XMarkIcon aria-hidden="true" className="h-5 w-5" />
               </button>
             </div>
           </div>

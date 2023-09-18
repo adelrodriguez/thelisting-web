@@ -95,9 +95,10 @@ export default function DashboardListingRibbonsEditPage() {
   const { close, leave, open } = useDialogPage()
 
   return (
-    <Transition.Root appear show={open} as={Fragment}>
+    <Transition.Root appear as={Fragment} show={open}>
       <Dialog as="div" className="relative z-10" onClose={close}>
         <Transition.Child
+          afterLeave={leave}
           as={Fragment}
           enter="ease-out duration-300"
           enterFrom="opacity-0"
@@ -105,7 +106,6 @@ export default function DashboardListingRibbonsEditPage() {
           leave="ease-in duration-200"
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
-          afterLeave={leave}
         >
           <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
         </Transition.Child>
@@ -131,15 +131,15 @@ export default function DashboardListingRibbonsEditPage() {
 
                 <Form
                   className="mx-auto mt-4 flex flex-col gap-y-3"
+                  defaultValues={{ type: RibbonType.Banner }}
                   method="POST"
                   validator={clientValidator}
-                  defaultValues={{ type: RibbonType.Banner }}
                 >
                   <input
-                    type="hidden"
-                    name="position"
                     className="hidden"
                     defaultValue={position}
+                    name="position"
+                    type="hidden"
                   />
 
                   <Input

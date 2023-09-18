@@ -22,21 +22,21 @@ export default function CoverImageRibbonForm({
 
   return (
     <Form
-      id={formId}
+      action="?/properties"
       className="flex flex-col gap-2"
+      defaultValues={defaultValues}
+      id={formId}
       method="POST"
       validator={validator}
-      defaultValues={defaultValues}
-      action="?/properties"
     >
-      <ImageInput name="image" label="Cover Image" />
+      <ImageInput label="Cover Image" name="image" />
       <Input
-        name="height"
-        label="Height"
-        type="number"
-        min={0}
-        step={1}
         description="The height of the cover image (in mobile view). Provide 0 to cover the whole screen"
+        label="Height"
+        min={0}
+        name="height"
+        step={1}
+        type="number"
       />
     </Form>
   )

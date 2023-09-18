@@ -23,13 +23,13 @@ export default function ImageGallery({
       <div className="px-4 py-20">
         <div className="grid grid-cols-2 gap-2">
           {groupedImages.map((images, index) => (
-            <div key={`group${index}`} className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2" key={`group${index}`}>
               {images.map((image, index) => (
                 <div key={`image${index}`}>
                   <Image
+                    alt=""
                     className="h-auto max-w-full rounded-md shadow-inner"
                     src={generateCloudflareImageUrl(image, "public")}
-                    alt=""
                   />
                 </div>
               ))}

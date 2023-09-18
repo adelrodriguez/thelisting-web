@@ -111,7 +111,7 @@ export default function AddToListingPage() {
   }, [products.length, leave])
 
   return (
-    <Transition.Root appear show={open} as={Fragment}>
+    <Transition.Root appear as={Fragment} show={open}>
       <Dialog as="div" className="relative z-10" onClose={close}>
         <div className="fixed inset-0" />
 
@@ -119,6 +119,7 @@ export default function AddToListingPage() {
           <div className="absolute inset-0 overflow-hidden">
             <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
               <Transition.Child
+                afterLeave={leave}
                 as={Fragment}
                 enter="transform transition ease-in-out duration-500 sm:duration-700"
                 enterFrom="translate-x-full"
@@ -126,19 +127,17 @@ export default function AddToListingPage() {
                 leave="transform transition ease-in-out duration-500 sm:duration-700"
                 leaveFrom="translate-x-0"
                 leaveTo="translate-x-full"
-                afterLeave={leave}
               >
                 <Dialog.Panel className="pointer-events-auto w-screen max-w-md">
                   <ValidatedForm
-                    validator={validator}
                     className="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl"
-                    id="addToListing"
                     defaultValues={{
                       exchangeRate,
                       listingId: undefined,
                       margin: DEFAULT_MARGIN,
                       products: productFields,
                     }}
+                    id="addToListing"
                     method="POST"
                     onSubmit={() => {
                       enqueueSnackbar("Items are being added to the listing", {
@@ -147,6 +146,7 @@ export default function AddToListingPage() {
                         variant: "success",
                       })
                     }}
+                    validator={validator}
                   >
                     <div className="flex min-h-0 flex-1 flex-col overflow-y-scroll py-6">
                       <div className="px-4 sm:px-6">
@@ -156,14 +156,14 @@ export default function AddToListingPage() {
                           </Dialog.Title>
                           <div className="ml-3 flex h-7 items-center">
                             <button
-                              type="button"
                               className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                               onClick={close}
+                              type="button"
                             >
                               <span className="sr-only">Close panel</span>
                               <XMarkIcon
-                                className="h-6 w-6"
                                 aria-hidden="true"
+                                className="h-6 w-6"
                               />
                             </button>
                           </div>
@@ -171,8 +171,9 @@ export default function AddToListingPage() {
                       </div>
                       <div className="mt-6 flex flex-1 flex-col gap-y-6 px-4 sm:px-6">
                         <FormSelect
-                          name="listingId"
+                          description="Select a listing to add the products to."
                           label="Listing"
+                          name="listingId"
                           options={[
                             {
                               label: "Select a listing",
@@ -183,32 +184,31 @@ export default function AddToListingPage() {
                               value: listing.id,
                             })),
                           ]}
-                          description="Select a listing to add the products to."
                         />
                         <FormInput
-                          name="margin"
-                          label="Gross Profit Margin"
-                          type="number"
-                          step={0.1}
-                          min={0}
-                          max={100}
-                          trailing="%"
                           description="The margin to add to the product price, from 0% to a 100%."
+                          label="Gross Profit Margin"
+                          max={100}
+                          min={0}
+                          name="margin"
+                          step={0.1}
+                          trailing="%"
+                          type="number"
                         />
                         <FormInput
-                          name="exchangeRate"
-                          label="Exchange Rate"
-                          type="number"
-                          step={0.01}
-                          min={1}
                           description="The exchange rate from USD to DOP, for products with USD prices."
+                          label="Exchange Rate"
+                          min={1}
+                          name="exchangeRate"
+                          step={0.01}
+                          type="number"
                         />
 
                         {productFields.map(
                           ({ scrapedProductId, rowId }, index) => (
                             <div
-                              key={`${rowId}-${scrapedProductId}`}
                               className="hidden"
+                              key={`${rowId}-${scrapedProductId}`}
                             >
                               <FormInput
                                 name={`products[${index}].rowId`}
@@ -242,7 +242,7 @@ export default function AddToListingPage() {
                       </div>
                     </div>
                     <div className="flex flex-shrink-0 justify-end gap-x-4 px-4 py-4">
-                      <Button variant="secondary" onClick={close}>
+                      <Button onClick={close} variant="secondary">
                         Cancel
                       </Button>
                       <FormSubmit />

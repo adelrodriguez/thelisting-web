@@ -57,15 +57,15 @@ export default function Autocomplete<T extends AutocompleteOption>({
                 ? "text-red-900 ring-red-300 focus:ring-red-500"
                 : "text-gray-900 ring-gray-300 focus:ring-slate-600"
             )}
-            onChange={(event) => setQuery(event.target.value)}
             displayValue={(value) =>
               options.find((o) => o.value === value)?.label || ""
             }
+            onChange={(event) => setQuery(event.target.value)}
           />
           <Combobox.Button className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none">
             <ChevronUpDownIcon
-              className="h-5 w-5 text-gray-400"
               aria-hidden="true"
+              className="h-5 w-5 text-gray-400"
             />
           </Combobox.Button>
           {filteredOptions.length > 0 && (
@@ -114,19 +114,19 @@ function VirtualizedOptions({ options }: { options: AutocompleteOption[] }) {
       >
         {virtualizer.getVirtualItems().map((virtualItem) => (
           <Combobox.Option
-            key={virtualItem.key}
-            value={options[virtualItem.index]?.value}
             className={({ active }) =>
               clsx(
                 "absolute left-0 top-0 w-full cursor-default select-none py-2 pl-8 pr-4",
                 active ? "bg-slate-600 text-white" : "text-gray-900"
               )
             }
+            key={virtualItem.key}
             style={{
               height: `${virtualItem.size}px`,
 
               transform: `translateY(${virtualItem.start}px)`,
             }}
+            value={options[virtualItem.index]?.value}
           >
             {({ active, selected }) => (
               <>
@@ -145,7 +145,7 @@ function VirtualizedOptions({ options }: { options: AutocompleteOption[] }) {
                       active ? "text-white" : "text-slate-600"
                     )}
                   >
-                    <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                    <CheckIcon aria-hidden="true" className="h-5 w-5" />
                   </span>
                 )}
               </>

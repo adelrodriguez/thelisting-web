@@ -38,11 +38,11 @@ export default function FormDate({
       {...inputProps}
       {...props}
       defaultValue={parseDate(inputProps.defaultValue)}
-      type="date"
-      min={min && format(min, "yyyy-MM-dd")}
-      max={max && format(max, "yyyy-MM-dd")}
-      error={!!error}
       description={error || description}
+      error={!!error}
+      max={max && format(max, "yyyy-MM-dd")}
+      min={min && format(min, "yyyy-MM-dd")}
+      type="date"
     />
   )
 }

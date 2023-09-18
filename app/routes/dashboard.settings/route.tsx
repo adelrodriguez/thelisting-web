@@ -67,23 +67,23 @@ export default function DashboardSettingsPage() {
   const { enqueueSnackbar } = useSnackbar()
   return (
     <ValidatedForm
-      validator={validator}
-      method="POST"
       className="m-auto mt-8 flex flex-col gap-y-6 sm:w-[500px]"
       id="editUser"
+      method="POST"
       onSubmit={() => {
         enqueueSnackbar("User updated 🎉", {
           description: "The user was successfully updated",
           variant: "success",
         })
       }}
+      validator={validator}
     >
       <FormInput label="First Name" name="firstName" required />
       <FormInput label="Last Name" name="lastName" required />
       <FormInput label="Email" name="email" required />
       <FormInput label="Phone" name="phone" required />
 
-      <FormSubmit text="Update" loadingText="Updating..." />
+      <FormSubmit loadingText="Updating..." text="Update" />
     </ValidatedForm>
   )
 }

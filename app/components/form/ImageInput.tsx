@@ -43,12 +43,12 @@ export default function ImageInput({
   return (
     <>
       <ImagePicker
-        open={open}
         onClose={() => setOpen(false)}
         onSelect={(file) => {
           setValue(file.id)
           setOpen(false)
         }}
+        open={open}
       />
       <div className={className}>
         <div className="flex justify-between">
@@ -66,16 +66,14 @@ export default function ImageInput({
           <div className="relative flex flex-grow items-stretch focus-within:z-10">
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
               <PhotoIcon
+                aria-hidden="true"
                 className={clsx(
                   "h-5 w-5",
                   error ? "text-red-400" : "text-gray-400"
                 )}
-                aria-hidden="true"
               />
             </div>
             <input
-              value={data?.filename || ""}
-              type={props.type || "text"}
               className={clsx(
                 "block w-full select-none rounded-none rounded-l-md border-0 py-1.5 pl-10 text-gray-900 ring-1 ring-inset ",
                 "focus:ring-2 focus:ring-inset",
@@ -87,8 +85,10 @@ export default function ImageInput({
                     error,
                 }
               )}
-              readOnly
               placeholder={placeholder}
+              readOnly
+              type={props.type || "text"}
+              value={data?.filename || ""}
             />
             <input
               {...getInputProps({
@@ -100,22 +100,22 @@ export default function ImageInput({
           </div>
           {value ? (
             <button
-              type="button"
               className="relative -ml-px inline-flex items-center gap-x-1.5 rounded-r-md px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
               onClick={() => setValue(null)}
+              type="button"
             >
-              <XMarkIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+              <XMarkIcon aria-hidden="true" className="h-5 w-5 text-gray-400" />
               Remove
             </button>
           ) : (
             <button
-              type="button"
               className="relative -ml-px inline-flex items-center gap-x-1.5 rounded-r-md px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
               onClick={() => setOpen(true)}
+              type="button"
             >
               <FolderOpenIcon
-                className="h-5 w-5 text-gray-400"
                 aria-hidden="true"
+                className="h-5 w-5 text-gray-400"
               />
               Select
             </button>

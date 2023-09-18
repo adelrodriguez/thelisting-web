@@ -71,13 +71,13 @@ export default function ListingThankYouPage() {
     <main className="relative lg:min-h-full">
       <div className="h-80 overflow-hidden lg:fixed lg:h-full lg:w-1/2 lg:pr-4 xl:pr-12">
         <Image
+          alt=""
+          className="h-full w-full object-cover object-center"
           src={
             listing.thankYouImage
               ? generateCloudflareImageUrl(listing.thankYouImage, "display")
               : "https://imagedelivery.net/wHwwAqNxbuESOwdHNE6NsQ/2975847d-0983-43ab-7e0e-fb492e932700/display"
           }
-          alt=""
-          className="h-full w-full object-cover object-center"
         />
       </div>
 
@@ -96,7 +96,7 @@ export default function ListingThankYouPage() {
 
             <ul className="mt-6 divide-y divide-gray-200 border-t border-gray-200 text-sm font-medium text-gray-500">
               {order.lineItems?.nodes.map((lineItem) => (
-                <li key={lineItem.product?.id} className="py-6">
+                <li className="py-6" key={lineItem.product?.id}>
                   <OrderItem
                     commerceId={lineItem.product?.id || null}
                     quantity={lineItem.quantity}
@@ -132,8 +132,8 @@ export default function ListingThankYouPage() {
 
             <div className="mt-16 border-t border-gray-200 py-6 text-right">
               <Link
-                to={"/" + listing.path}
                 className="text-sm font-medium text-gray-600 hover:text-gray-500"
+                to={"/" + listing.path}
               >
                 {t("goBack")}
                 <span aria-hidden="true"> &rarr;</span>

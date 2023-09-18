@@ -113,9 +113,9 @@ export default function DashboardListingItemDetailPage() {
               <div className="mt-4 flex flex-col md:flex-row">
                 <div className="mr-4 flex-shrink-0">
                   <Image
-                    src={data.imageUrl}
                     alt={data.title}
                     className="h-full w-64 rounded-sm"
+                    src={data.imageUrl}
                   />
                 </div>
                 <div className="mt-2 md:mt-0">
@@ -141,8 +141,8 @@ export default function DashboardListingItemDetailPage() {
           <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
             {stats.map((item) => (
               <div
-                key={item.name}
                 className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6"
+                key={item.name}
               >
                 <dt className="truncate text-sm font-medium text-gray-500">
                   {item.name}
@@ -161,43 +161,43 @@ export default function DashboardListingItemDetailPage() {
           Item Information
         </h3>
         <ValidatedForm
-          validator={validator}
+          className="flex flex-col gap-y-6 pt-4"
           id="edit-item"
           method="POST"
-          className="flex flex-col gap-y-6 pt-4"
           onSubmit={() => {
             enqueueSnackbar("Item updated 🎉", {
               description: "The item was successfully updated",
               variant: "success",
             })
           }}
+          validator={validator}
         >
           <TextArea
+            description="Custom description that the client wants to show on the product"
             label="Description"
             name="description"
-            description="Custom description that the client wants to show on the product"
           />
           <FormInput
             label="Quantity"
-            name="quantity"
-            type="number"
-            step="1"
             min={0}
+            name="quantity"
+            step="1"
+            type="number"
           />
           <FormInput
             label="Stock"
-            name="stock"
-            type="number"
-            step="1"
             min={0}
+            name="stock"
+            step="1"
+            type="number"
           />
           <div className="flex justify-end">
             {itemPurchaseCount === 0 && (
               <Link to="delete">
                 <button
-                  type="button"
                   className="mr-4 rounded-md bg-red-50 px-3 py-2 text-sm font-semibold text-red-600 shadow-sm  ring-0 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
                   disabled={itemPurchaseCount > 0}
+                  type="button"
                 >
                   Delete
                 </button>

@@ -32,32 +32,32 @@ export default function DashboardListingPage() {
   return (
     <>
       <div className="sm:hidden">
-        <label htmlFor="tabs" className="sr-only">
+        <label className="sr-only" htmlFor="tabs">
           Select a tab
         </label>
         <Select
-          id="tabs"
-          name="tabs"
           className="block w-full rounded-md border-gray-300 focus:border-gray-500 focus:ring-gray-500"
           defaultValue={currentTab?.value}
+          id="tabs"
+          name="tabs"
           onChange={(event) => navigate(event.target.value)}
           options={tabs}
         />
       </div>
       <div className="hidden sm:block">
-        <nav className="flex space-x-4" aria-label="Tabs">
+        <nav aria-label="Tabs" className="flex space-x-4">
           {tabs.map((tab) => (
             <NavLink
-              key={tab.label}
-              to={tab.value}
-              relative="route"
+              aria-current={tab.id === currentTab?.id ? "page" : undefined}
               className={({ isActive }) =>
                 clsx("rounded-md px-3 py-2 text-sm font-medium", {
                   "bg-gray-200 text-gray-800": isActive,
                   "text-gray-500 hover:text-gray-800": !isActive,
                 })
               }
-              aria-current={tab.id === currentTab?.id ? "page" : undefined}
+              key={tab.label}
+              relative="route"
+              to={tab.value}
             >
               {tab.label}
             </NavLink>

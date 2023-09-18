@@ -120,10 +120,10 @@ export default function WhatsAppBroadcastPage() {
         </p>
       </div>
       <ValidatedForm
-        validator={validator}
         className="m-auto mt-8 flex flex-col gap-y-6 sm:w-[500px]"
-        method="POST"
         id="whatsapp-broadcast"
+        method="POST"
+        validator={validator}
       >
         <Select
           label="Template"
@@ -146,24 +146,24 @@ export default function WhatsAppBroadcastPage() {
           required
         />
         <InputWithAddOn
-          name="path"
-          label="Path"
           addOn="https://thelisting.do/"
+          label="Path"
+          name="path"
         />
         <Input
-          name="customer"
-          label="Customer"
           description="The name of the customer(s) (e.g. José y María)"
+          label="Customer"
+          name="customer"
         />
         <ImageInput
-          name="image"
-          label="Message Image"
           description="The image to attach to the message"
+          label="Message Image"
+          name="image"
         />
         <TextArea
-          name="phoneNumbers"
-          label="Phone Numbers"
           description="Comma-separated list of phone numbers with country codes (e.g. 18091234567,18097654321)"
+          label="Phone Numbers"
+          name="phoneNumbers"
           rows={4}
         />
         <SubmitButton loadingText="Sending...">Send</SubmitButton>

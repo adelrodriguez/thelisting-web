@@ -53,12 +53,12 @@ export default function RibbonsPreview({
           style={{ height: PREVIEW_HEIGHT, width: containerWidth }}
         >
           <iframe
-            src={`/${path}/page`}
-            title="preview"
             className={clsx({
               "h-full w-full": previewSize === "mobile",
               "origin-[0_0] scale-[25%]": previewSize === "desktop",
             })}
+            src={`/${path}/page`}
+            title="preview"
             {...(previewSize === "desktop" && {
               style: {
                 height: PREVIEW_HEIGHT * SCALE,
@@ -72,7 +72,6 @@ export default function RibbonsPreview({
       <div className="flex justify-center py-2">
         <span className="isolate inline-flex rounded-md shadow-sm">
           <button
-            type="button"
             className={clsx(
               "relative inline-flex items-center rounded-l-md px-3 py-2 text-sm font-semibold ring-1 ring-inset ring-gray-300",
               "focus:z-10",
@@ -80,8 +79,9 @@ export default function RibbonsPreview({
                 ? "bg-gray-600"
                 : "bg-white hover:bg-gray-50"
             )}
-            onClick={() => setPreviewSize("mobile")}
             disabled={previewSize === "mobile"}
+            onClick={() => setPreviewSize("mobile")}
+            type="button"
           >
             <DevicePhoneMobileIcon
               className={clsx(
@@ -92,7 +92,6 @@ export default function RibbonsPreview({
           </button>
 
           <button
-            type="button"
             className={clsx(
               "relative -ml-px inline-flex items-center rounded-r-md  px-3 py-2 text-sm font-semibold ring-1 ring-inset ring-gray-300",
               "hover:bg-gray-50",
@@ -101,8 +100,9 @@ export default function RibbonsPreview({
                 ? "bg-gray-600"
                 : "bg-white hover:bg-gray-50"
             )}
-            onClick={() => setPreviewSize("desktop")}
             disabled={previewSize === "desktop"}
+            onClick={() => setPreviewSize("desktop")}
+            type="button"
           >
             <ComputerDesktopIcon
               className={clsx(

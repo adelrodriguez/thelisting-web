@@ -20,7 +20,7 @@ export default function MarketingHeader({
 
   return (
     <header className="absolute top-0 z-10 w-full px-6 pt-6 lg:px-12">
-      <nav className="flex items-center justify-between" aria-label="Global">
+      <nav aria-label="Global" className="flex items-center justify-between">
         <div className="flex lg:flex-1">
           <div className="hidden items-center lg:flex">
             <div
@@ -31,12 +31,12 @@ export default function MarketingHeader({
             >
               {navigationItems.map((item) => (
                 <Link
-                  key={item.key}
-                  to={item.href}
                   className={clsx(
                     "rounded-lg py-2 px-3 text-sm font-medium xl:text-base",
                     isIndex ? "hover:bg-gray-700/70" : "hover:bg-gray-200"
                   )}
+                  key={item.key}
+                  to={item.href}
                 >
                   {item.key}
                 </Link>
@@ -46,57 +46,57 @@ export default function MarketingHeader({
         </div>
         <div className="flex lg:hidden">
           <button
-            type="button"
             className={clsx(
               "-m-2.5 inline-flex items-center justify-center rounded-md p-2.5",
               isIndex ? "text-white" : "text-gray-700"
             )}
             onClick={() => setMobileMenuOpen(true)}
+            type="button"
           >
             <span className="sr-only">Open main menu</span>
-            <Bars3Icon className="h-6 w-6" aria-hidden="true" />
+            <Bars3Icon aria-hidden="true" className="h-6 w-6" />
           </button>
         </div>
         <Link
-          to="/"
           className="absolute top-4 left-1/2 z-10 -translate-x-1/2 transform"
+          to="/"
         >
           <img
-            src={isIndex ? THE_LISTING_LOGO_WHITE : THE_LISTING_LOGO_BLACK}
             alt="The Listing"
             className="h-10 xl:h-12"
+            src={isIndex ? THE_LISTING_LOGO_WHITE : THE_LISTING_LOGO_BLACK}
           />
         </Link>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
           <Link
-            to="/login"
             className="bg-transparent text-base font-semibold leading-6 text-white"
+            to="/login"
           >
             {loginText} <span aria-hidden="true">&rarr;</span>
           </Link>
         </div>
       </nav>
-      <Dialog as="div" open={mobileMenuOpen} onClose={setMobileMenuOpen}>
+      <Dialog as="div" onClose={setMobileMenuOpen} open={mobileMenuOpen}>
         <Dialog.Panel className="fixed inset-0 z-10 overflow-y-auto bg-white px-6 py-6 lg:hidden">
           <div className="flex items-center justify-end">
             <Link
-              to="/"
               className="absolute top-4 left-1/2 z-10 -translate-x-1/2 transform"
+              to="/"
             >
               <img
-                src={THE_LISTING_LOGO_BLACK}
                 alt="The Listing"
                 className="h-10"
+                src={THE_LISTING_LOGO_BLACK}
               />
             </Link>
 
             <button
-              type="button"
               className="-m-2.5 rounded-md p-2.5 text-gray-700"
               onClick={() => setMobileMenuOpen(false)}
+              type="button"
             >
               <span className="sr-only">Close menu</span>
-              <XMarkIcon className="h-6 w-6" aria-hidden="true" />
+              <XMarkIcon aria-hidden="true" className="h-6 w-6" />
             </button>
           </div>
           <div className="mt-6 flow-root">
@@ -104,9 +104,9 @@ export default function MarketingHeader({
               <div className="space-y-2 py-6">
                 {navigationItems.map((item) => (
                   <a
-                    key={item.key}
-                    href={item.href}
                     className="-mx-3 block rounded-lg py-2 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-400/10"
+                    href={item.href}
+                    key={item.key}
                   >
                     {item.key}
                   </a>
@@ -114,8 +114,8 @@ export default function MarketingHeader({
               </div>
               <div className="py-6">
                 <Link
-                  to="/login"
                   className="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-6 text-gray-900 hover:bg-gray-400/10"
+                  to="/login"
                 >
                   {loginText} <span aria-hidden="true">&rarr;</span>
                 </Link>

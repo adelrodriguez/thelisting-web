@@ -28,40 +28,40 @@ export default function ImageCarouselRibbonForm({
 
   return (
     <Form
-      id={formId}
+      action="?/properties"
       className="flex flex-col gap-2"
+      defaultValues={defaultValues}
+      id={formId}
       method="POST"
       validator={validator}
-      defaultValues={defaultValues}
-      action="?/properties"
     >
       <div className="flex gap-2">
         <Input
-          name="height"
-          label="Height"
-          type="number"
           className="w-1/2"
-          min={0}
-          step={1}
           description="The height of the carousel"
+          label="Height"
+          min={0}
+          name="height"
+          step={1}
+          type="number"
         />
         <Input
-          type="number"
-          name="duration"
-          label="Duration"
           className="w-1/2"
           description="The duration to show each image for (in seconds)"
+          label="Duration"
           min={1}
+          name="duration"
           step={1}
+          type="number"
         />
       </div>
       <div className="flex items-center justify-between">
         <h3 className="font-semibold">Images</h3>
         <Button
-          onClick={() => push(undefined)}
-          type="button"
-          size="xs"
           disabled={inputs.length >= 10}
+          onClick={() => push(undefined)}
+          size="xs"
+          type="button"
           variant="secondary"
         >
           Add an image
@@ -70,17 +70,17 @@ export default function ImageCarouselRibbonForm({
 
       <div className="flex flex-col-reverse">
         {inputs.map((_, index) => (
-          <div key={`inputs${index}`} className="flex w-full items-end">
+          <div className="flex w-full items-end" key={`inputs${index}`}>
             <ImageInput
-              name={`images[${index}]`}
-              label={`Image ${index + 1}`}
               className="mr-2 w-full"
+              label={`Image ${index + 1}`}
+              name={`images[${index}]`}
             />
             <Button
-              onClick={() => remove(index)}
               className="my-1"
-              variant="secondary"
+              onClick={() => remove(index)}
               type="button"
+              variant="secondary"
             >
               <MinusIcon className="h-5 w-5" />
             </Button>

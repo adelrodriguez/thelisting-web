@@ -37,10 +37,10 @@ function Select<T extends SelectOption>(
   return (
     <div className={className}>
       {label && (
-        <label htmlFor={id} className="block text-sm font-medium text-gray-700">
+        <label className="block text-sm font-medium text-gray-700" htmlFor={id}>
           {label}
           {required && (
-            <span className="text-xs text-red-500" aria-hidden="true">
+            <span aria-hidden="true" className="text-xs text-red-500">
               {" "}
               *
             </span>
@@ -55,9 +55,6 @@ function Select<T extends SelectOption>(
       >
         <select
           {...props}
-          name={name}
-          id={id}
-          ref={ref}
           className={clsx(
             "block",
             "w-full",
@@ -76,12 +73,15 @@ function Select<T extends SelectOption>(
               "text-red-900 placeholder-red-300": error,
             }
           )}
+          id={id}
+          name={name}
+          ref={ref}
         >
           {options.map((option) => (
             <option
+              disabled={option.disabled}
               key={`${option.value}`}
               value={option.value}
-              disabled={option.disabled}
             >
               {option.label}
             </option>
@@ -90,8 +90,8 @@ function Select<T extends SelectOption>(
         {error && (
           <div className="pointer-events-none absolute inset-y-0 right-4 flex items-center pr-3">
             <ExclamationCircleIcon
-              className="h-5 w-5 text-red-500"
               aria-hidden="true"
+              className="h-5 w-5 text-red-500"
             />
           </div>
         )}

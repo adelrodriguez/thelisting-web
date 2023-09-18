@@ -75,49 +75,49 @@ export default function CreateListingsPage() {
 
   return (
     <ValidatedForm
-      id="createItem"
-      validator={validator}
-      method="POST"
       className="m-auto mt-8 flex w-full max-w-xl flex-col gap-y-6"
-      resetAfterSubmit
+      defaultValues={{
+        quantity: 1,
+      }}
+      id="createItem"
+      method="POST"
       onSubmit={() => {
         enqueueSnackbar("Item created 🎉", {
           description: "The item was successfully created.",
           variant: "success",
         })
       }}
-      defaultValues={{
-        quantity: 1,
-      }}
+      resetAfterSubmit
+      validator={validator}
     >
       <FormInput
+        description="This is a custom description for the item, provided by the client (optional)"
         label="Description"
         name="description"
-        description="This is a custom description for the item, provided by the client (optional)"
       />
       <FormInput
-        name="sku"
-        label="SKU"
         addOn={`${listingSku}-`}
         description="The items unique SKU"
+        label="SKU"
+        name="sku"
         required
       />
       <FormInput
-        label="Commerce ID"
-        name="commerceId"
         addOn="gid://shopify/Product/"
         description="The Shopify numeric ID for the product"
+        label="Commerce ID"
+        name="commerceId"
         required
       />
       <FormInput
+        description="The quantity of the item"
         label="Quantity"
         name="quantity"
-        type="number"
-        description="The quantity of the item"
         required
+        type="number"
       />
 
-      <FormSubmit text="Create" loadingText="Creating..." />
+      <FormSubmit loadingText="Creating..." text="Create" />
     </ValidatedForm>
   )
 }

@@ -288,8 +288,8 @@ export default function DashboardIndexPage() {
           <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
             {item.data.map((stat) => (
               <div
-                key={stat.label}
                 className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6"
+                key={stat.label}
               >
                 <dt className="truncate text-sm font-medium text-gray-500">
                   {stat.label}

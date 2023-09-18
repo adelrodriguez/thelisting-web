@@ -40,8 +40,6 @@ export default function ListRadioGroup<T extends ListRadioOption>({
       <div className="mt-1 -space-y-px rounded-md bg-white">
         {options.map((option, index) => (
           <RadioGroup.Option
-            key={option.value}
-            value={option.value}
             className={clsx(
               "relative flex cursor-pointer border border-gray-300 p-4 focus:outline-none ui-checked:border-gray-300 ui-checked:bg-gray-50",
               {
@@ -49,13 +47,15 @@ export default function ListRadioGroup<T extends ListRadioOption>({
                 "rounded-tl-md rounded-tr-md": index === 0,
               }
             )}
+            key={option.value}
+            value={option.value}
           >
             <span
+              aria-hidden="true"
               className={clsx(
                 "mt-0.5 flex h-4 w-4 shrink-0 cursor-pointer items-center justify-center rounded-full border border-gray-300 bg-white",
                 "ui-checked:border-transparent ui-checked:bg-gray-600 ui-active:ring-2 ui-active:ring-gray-500 ui-active:ring-offset-2"
               )}
-              aria-hidden="true"
             >
               <span className="h-1.5 w-1.5 rounded-full bg-white" />
             </span>

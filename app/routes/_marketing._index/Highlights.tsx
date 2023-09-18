@@ -12,8 +12,8 @@ export default function Features() {
               <div>
                 <span className="flex h-12 w-12 items-center justify-center rounded-md bg-gray-600">
                   <InboxIcon
-                    className="h-6 w-6 text-white"
                     aria-hidden="true"
+                    className="h-6 w-6 text-white"
                   />
                 </span>
               </div>
@@ -29,8 +29,8 @@ export default function Features() {
                 </p>
                 <div className="mt-6">
                   <a
-                    href="/login"
                     className="inline-flex rounded-md border border-transparent bg-gray-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-gray-700"
+                    href="/login"
                   >
                     Get started
                   </a>
@@ -50,10 +50,10 @@ export default function Features() {
                   <div className="flex items-center space-x-3">
                     <div className="flex-shrink-0">
                       <Image
-                        className="rounded-full"
-                        src="https://images.unsplash.com/photo-1509783236416-c9ad59bae472?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=1024&h=1024&q=80"
                         alt=""
+                        className="rounded-full"
                         responsive={[{ size: { height: 24, width: 24 } }]}
+                        src="https://images.unsplash.com/photo-1509783236416-c9ad59bae472?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=1024&h=1024&q=80"
                       />
                     </div>
                     <div className="text-base font-medium text-gray-700">
@@ -67,9 +67,9 @@ export default function Features() {
           <div className="mt-12 sm:mt-16 lg:mt-0">
             <div className="-mr-48 pl-4 sm:pl-6 md:-mr-16 lg:relative lg:m-0 lg:h-full lg:px-0">
               <img
+                alt="Inbox user interface"
                 className="w-full rounded-xl shadow-xl ring-1 ring-black ring-opacity-5 lg:absolute lg:left-0 lg:h-full lg:w-auto lg:max-w-none"
                 src="https://tailwindui.com/img/component-images/inbox-app-screenshot-1.jpg"
-                alt="Inbox user interface"
               />
             </div>
           </div>
@@ -82,8 +82,8 @@ export default function Features() {
               <div>
                 <span className="flex h-12 w-12 items-center justify-center rounded-md bg-gray-600">
                   <SparklesIcon
-                    className="h-6 w-6 text-white"
                     aria-hidden="true"
+                    className="h-6 w-6 text-white"
                   />
                 </span>
               </div>
@@ -99,8 +99,8 @@ export default function Features() {
                 </p>
                 <div className="mt-6">
                   <a
-                    href="/login"
                     className="inline-flex rounded-md border border-transparent bg-gray-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-gray-700"
+                    href="/login"
                   >
                     Get started
                   </a>
@@ -111,9 +111,9 @@ export default function Features() {
           <div className="mt-12 sm:mt-16 lg:col-start-1 lg:mt-0">
             <div className="-ml-48 pr-4 sm:pr-6 md:-ml-16 lg:relative lg:m-0 lg:h-full lg:px-0">
               <img
+                alt="Customer profile user interface"
                 className="w-full rounded-xl shadow-xl ring-1 ring-black ring-opacity-5 lg:absolute lg:right-0 lg:h-full lg:w-auto lg:max-w-none"
                 src="https://tailwindui.com/img/component-images/inbox-app-screenshot-2.jpg"
-                alt="Customer profile user interface"
               />
             </div>
           </div>

@@ -7,9 +7,9 @@ export default function Location({ caption, address }: LocationProperties) {
     <SectionWrapper>
       <div className="pb-10">
         <iframe
+          allowFullScreen
           className="h-screen w-full border-0 shadow-lg"
           loading="lazy"
-          allowFullScreen
           referrerPolicy="no-referrer-when-downgrade"
           src={`https://www.google.com/maps/embed/v1/place?key=${"AIzaSyAl-2Y0iQhC9oY3d-csjh2SOM-cJurXcg0"}
     &q=${encodeURIComponent(address)}`}

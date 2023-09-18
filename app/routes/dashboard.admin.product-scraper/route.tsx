@@ -120,8 +120,8 @@ export default function AdminToolsProductScraperPage() {
         {result ? (
           <ScrapeProductsTable
             data={result.data}
-            onExport={handleExport}
             onAddToListing={handleAddToListing}
+            onExport={handleExport}
           />
         ) : (
           <div className="mx-auto w-full max-w-7xl">
@@ -141,8 +141,8 @@ export default function AdminToolsProductScraperPage() {
                 <DocumentArrowDownIcon className="mx-auto h-12 w-12 text-gray-400" />
                 <div className="mx-auto flex">
                   <label
-                    htmlFor="file-upload"
                     className="relative cursor-pointer rounded-md  font-medium text-gray-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-gray-500 focus-within:ring-offset-2 hover:text-gray-500"
+                    htmlFor="file-upload"
                   >
                     Upload a file
                   </label>

@@ -18,7 +18,7 @@ export default function AddNoteReminderDialog({
   const confirmButtonRef = useRef(null)
 
   return (
-    <Transition.Root show={open} as={Fragment}>
+    <Transition.Root as={Fragment} show={open}>
       <Dialog
         as="div"
         className="relative z-30"
@@ -52,8 +52,8 @@ export default function AddNoteReminderDialog({
                 <div>
                   <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-rose-100">
                     <TagIcon
-                      className="h-6 w-6 text-rose-600"
                       aria-hidden="true"
+                      className="h-6 w-6 text-rose-600"
                     />
                   </div>
                   <div className="mt-3 text-center sm:mt-5">
@@ -72,17 +72,17 @@ export default function AddNoteReminderDialog({
                 </div>
                 <div className="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
                   <button
-                    type="button"
                     className="inline-flex w-full justify-center rounded-md bg-slate-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-slate-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-600 sm:col-start-2"
                     onClick={onConfirm}
                     ref={confirmButtonRef}
+                    type="button"
                   >
                     {t("addNoteReminder.confirm")}
                   </button>
                   <button
-                    type="button"
                     className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:col-start-1 sm:mt-0"
                     onClick={onCancel}
+                    type="button"
                   >
                     {t("addNoteReminder.cancel")}
                   </button>

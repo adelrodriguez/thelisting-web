@@ -87,9 +87,10 @@ export default function ListingCartPage() {
 
   return (
     <>
-      <Transition.Root appear show={open} as={Fragment}>
+      <Transition.Root appear as={Fragment} show={open}>
         <Dialog as="div" className="relative z-20" onClose={close}>
           <Transition.Child
+            afterLeave={leave}
             as={Fragment}
             enter="ease-in-out duration-500"
             enterFrom="opacity-0"
@@ -97,7 +98,6 @@ export default function ListingCartPage() {
             leave="ease-in-out duration-500"
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
-            afterLeave={leave}
           >
             <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
           </Transition.Child>
@@ -122,14 +122,14 @@ export default function ListingCartPage() {
                           </Dialog.Title>
                           <div className="ml-3 flex h-7 items-center">
                             <button
-                              type="button"
                               className="-m-2 p-2 text-gray-400 hover:text-gray-500"
                               onClick={close}
+                              type="button"
                             >
                               <span className="sr-only">Close panel</span>
                               <XMarkIcon
-                                className="h-6 w-6"
                                 aria-hidden="true"
+                                className="h-6 w-6"
                               />
                             </button>
                           </div>
@@ -141,7 +141,7 @@ export default function ListingCartPage() {
                           <div className="flow-root">
                             <ul className="-my-6 divide-y divide-gray-200">
                               {[...cart.items.values()].map((item) => (
-                                <li key={item.id} className="flex py-6">
+                                <li className="flex py-6" key={item.id}>
                                   <CartItem {...item} />
                                 </li>
                               ))}
@@ -187,26 +187,26 @@ export default function ListingCartPage() {
 
                         <div className="mt-4 flex justify-center text-center text-sm text-gray-500">
                           <Link
+                            className="font-medium text-gray-600 hover:text-gray-500"
+                            preventScrollReset
+                            relative="route"
                             to={
                               "note" +
                               (cart.noteId ? "?note_id=" + cart.noteId : "")
                             }
-                            relative="route"
-                            className="font-medium text-gray-600 hover:text-gray-500"
-                            preventScrollReset
                           >
                             {cart.noteId ? t("messageAdded") : t("addAMessage")}
                           </Link>
                         </div>
                         <div className="mt-6">
                           <Button
-                            size="xl"
                             className="w-full"
-                            onClick={handleCheckoutClick}
                             disabled={
                               cart.items.size === 0 ||
                               navigation.state === "submitting"
                             }
+                            onClick={handleCheckoutClick}
+                            size="xl"
                           >
                             {cart.items.size === 0 ? (
                               t("checkout.empty")
@@ -230,10 +230,10 @@ export default function ListingCartPage() {
         </Dialog>
       </Transition.Root>
       <AddNoteReminderDialog
-        open={!!alertNote}
-        onClose={() => navigate("./")}
         onCancel={() => handleSubmit()}
+        onClose={() => navigate("./")}
         onConfirm={() => navigate("./note")}
+        open={!!alertNote}
       />
     </>
   )

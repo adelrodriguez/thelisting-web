@@ -61,9 +61,9 @@ export default function Select<T extends SelectOption>({
         >
           {options.map((option) => (
             <option
+              disabled={option.disabled}
               key={`${option.value}`}
               value={option.value}
-              disabled={option.disabled}
             >
               {option.label}
             </option>
@@ -71,8 +71,8 @@ export default function Select<T extends SelectOption>({
         </select>
         <div className="pointer-events-none invisible absolute right-7 top-0 flex h-9 items-center peer-invalid:visible">
           <ExclamationCircleIcon
-            className="h-5 w-5 text-red-500"
             aria-hidden="true"
+            className="h-5 w-5 text-red-500"
           />
         </div>
         {description && (

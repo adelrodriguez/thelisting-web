@@ -26,9 +26,9 @@ export default function Banner({
           {decorationImage && (
             <div className="absolute inset-0 -top-10 h-32 -translate-y-full lg:h-40">
               <img
+                alt=""
                 className="h-full w-full object-contain"
                 src={generateCloudflareImageUrl(decorationImage, "display")}
-                alt=""
               />
             </div>
           )}
@@ -46,13 +46,13 @@ export default function Banner({
         </div>
 
         <Link
-          to="../"
-          relative="path"
           className={clsx(
             "right-1/2 z-10 mt-10 rounded-lg border-2 bg-transparent px-6 py-2.5 font-semibold tracking-wide shadow-sm outline-white transition-all ",
             "hover:scale-125 hover:shadow-2xl"
           )}
+          relative="path"
           style={{ borderColor: theme.colors?.secondary }}
+          to="../"
         >
           {t("goToRegistry")}
         </Link>
@@ -60,9 +60,9 @@ export default function Banner({
       {backgroundImage && (
         <div className="absolute inset-0">
           <img
+            alt=""
             className={clsx("h-full w-full", imageFit, imagePosition)}
             src={generateCloudflareImageUrl(backgroundImage, "display")}
-            alt=""
           />
         </div>
       )}

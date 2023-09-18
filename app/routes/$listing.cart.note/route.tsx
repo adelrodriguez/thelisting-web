@@ -131,12 +131,13 @@ export default function ListingCartNotePage() {
   useTrackPageview()
 
   return (
-    <Transition.Root appear show={open} as={Fragment}>
+    <Transition.Root appear as={Fragment} show={open}>
       <Dialog as="div" className="relative z-30" onClose={close}>
         <div className="fixed inset-0 overflow-hidden">
           <div className="absolute inset-0 overflow-hidden">
             <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10 sm:pl-16">
               <Transition.Child
+                afterLeave={leave}
                 as={Fragment}
                 enter="transform transition ease-in-out duration-500 sm:duration-700"
                 enterFrom="translate-x-full"
@@ -144,12 +145,11 @@ export default function ListingCartNotePage() {
                 leave="transform transition ease-in-out duration-500 sm:duration-700"
                 leaveFrom="translate-x-0"
                 leaveTo="translate-x-full"
-                afterLeave={leave}
               >
                 <Dialog.Panel className="pointer-events-auto w-screen max-w-md">
                   <Form
-                    id="add-note"
                     className="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl"
+                    id="add-note"
                     method="POST"
                     validator={clientValidator}
                   >
@@ -161,14 +161,14 @@ export default function ListingCartNotePage() {
                           </Dialog.Title>
                           <div className="ml-3 flex h-7 items-center">
                             <button
-                              type="button"
                               className="rounded-md bg-gray-700 text-gray-200 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
                               onClick={close}
+                              type="button"
                             >
                               <span className="sr-only">{t("close")}</span>
                               <XMarkIcon
-                                className="h-6 w-6"
                                 aria-hidden="true"
+                                className="h-6 w-6"
                               />
                             </button>
                           </div>
@@ -183,18 +183,18 @@ export default function ListingCartNotePage() {
                         <div className="divide-y divide-gray-200 px-4 sm:px-6">
                           <div className="space-y-6 pb-5 pt-6">
                             <TextArea
+                              defaultValue={note?.text || ""}
                               label="Nota"
                               name="text"
-                              rows={20}
                               placeholder={`${t("note.placeholder")}`}
-                              defaultValue={note?.text || ""}
+                              rows={20}
                             />
                           </div>
                         </div>
                       </div>
                     </div>
                     <div className="flex flex-shrink-0 justify-end gap-4 px-4 py-4">
-                      <Button variant="secondary" onClick={close} type="button">
+                      <Button onClick={close} type="button" variant="secondary">
                         {t("common:cancel")}
                       </Button>
                       <SubmitButton loadingText={`${t("common:saving")}`}>{`${t(

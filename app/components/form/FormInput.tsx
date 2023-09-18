@@ -19,8 +19,8 @@ export default function FormInput({
     <Input
       {...getInputProps({ id: name })}
       {...props}
-      error={!!error}
       description={error || description}
+      error={!!error}
     />
   )
 }

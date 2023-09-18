@@ -114,9 +114,9 @@ export default function AdminToolsUserManagementPage() {
                     <tr key={headerGroup.id}>
                       {headerGroup.headers.map((header) => (
                         <th
-                          scope="col"
                           className="max-w-[500px] overflow-hidden text-ellipsis whitespace-nowrap py-3 px-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
                           key={header.id}
+                          scope="col"
                         >
                           {flexRender(
                             header.column.columnDef.header,

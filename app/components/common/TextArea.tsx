@@ -23,10 +23,10 @@ function TextArea(
   return (
     <div>
       {label && (
-        <label htmlFor={id} className="block text-sm font-medium text-gray-700">
+        <label className="block text-sm font-medium text-gray-700" htmlFor={id}>
           {label}
           {required && (
-            <span className="text-xs text-red-500" aria-hidden="true">
+            <span aria-hidden="true" className="text-xs text-red-500">
               {" "}
               *
             </span>

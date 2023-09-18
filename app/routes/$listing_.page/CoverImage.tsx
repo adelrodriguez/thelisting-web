@@ -30,9 +30,9 @@ export default function CoverImage({
           <div style={{ height: height ? height : "100vh" }}>
             {image && (
               <Image
+                alt=""
                 className="h-full w-full border-y-8  object-cover object-center"
                 src={generateCloudflareImageUrl(image, "display")}
-                alt=""
                 style={{ borderColor: theme.colors?.secondary }}
               />
             )}

@@ -165,9 +165,10 @@ export default function DashboardListingRibbonsEditPage() {
   const formId = `form-${ribbon.id}`
 
   return (
-    <Transition.Root appear show={open} as={Fragment}>
+    <Transition.Root appear as={Fragment} show={open}>
       <Dialog as="div" className="relative z-10" onClose={close}>
         <Transition.Child
+          afterLeave={leave}
           as={Fragment}
           enter="ease-out duration-300"
           enterFrom="opacity-0"
@@ -175,7 +176,6 @@ export default function DashboardListingRibbonsEditPage() {
           leave="ease-in duration-200"
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
-          afterLeave={leave}
         >
           <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
         </Transition.Child>
@@ -198,18 +198,18 @@ export default function DashboardListingRibbonsEditPage() {
                   </h3>
                   <div className="flex items-center gap-x-4">
                     <Form
-                      method="POST"
                       action="?/delete"
                       className="flex items-center"
+                      method="POST"
                     >
                       <button title="Delete the ribbon">
                         <TrashIcon className="h-5 w-5 text-red-500" />
                       </button>
                     </Form>
                     <Form
-                      method="POST"
                       action="?/duplicate"
                       className="flex items-center"
+                      method="POST"
                     >
                       <button>
                         <Square2StackIcon className="h-5 w-5 text-gray-500" />
@@ -234,22 +234,22 @@ export default function DashboardListingRibbonsEditPage() {
 
                     <div className="col-span-1 md:col-span-3">
                       <ValidatedForm
-                        validator={detailsValidator}
-                        defaultValues={{ name: ribbon.name }}
-                        method="POST"
                         action="?/details"
                         className="grid"
+                        defaultValues={{ name: ribbon.name }}
                         id="details-form"
+                        method="POST"
+                        validator={detailsValidator}
                       >
                         <Input
-                          name="name"
-                          label="Name"
                           description="The name of the ribbon, as it will appear on the menu"
                           id="details-form"
+                          label="Name"
+                          name="name"
                         />
                         <SubmitButton
-                          loadingText="Updating..."
                           className="mt-4 justify-self-end"
+                          loadingText="Updating..."
                         >
                           Update
                         </SubmitButton>
@@ -270,50 +270,50 @@ export default function DashboardListingRibbonsEditPage() {
                     <div className="col-span-1 grid md:col-span-3">
                       {ribbon.type === RibbonType.Banner && (
                         <BannerRibbonForm
-                          properties={ribbon.properties}
                           formId={formId}
+                          properties={ribbon.properties}
                         />
                       )}
                       {ribbon.type === RibbonType.Countdown && (
                         <CountdownRibbonForm
-                          properties={ribbon.properties}
                           formId={formId}
+                          properties={ribbon.properties}
                         />
                       )}
                       {ribbon.type === RibbonType.CoverImage && (
                         <CoverImageRibbonForm
-                          properties={ribbon.properties}
                           formId={formId}
+                          properties={ribbon.properties}
                         />
                       )}
                       {ribbon.type === RibbonType.ImageCarousel && (
                         <ImageCarouselRibbonForm
-                          properties={ribbon.properties}
                           formId={formId}
+                          properties={ribbon.properties}
                         />
                       )}
                       {ribbon.type === RibbonType.ImageGallery && (
                         <ImageGalleryRibbonForm
-                          properties={ribbon.properties}
                           formId={formId}
+                          properties={ribbon.properties}
                         />
                       )}
                       {ribbon.type === RibbonType.Location && (
                         <LocationRibbonForm
-                          properties={ribbon.properties}
                           formId={formId}
+                          properties={ribbon.properties}
                         />
                       )}
                       {ribbon.type === RibbonType.Text && (
                         <TextRibbonForm
-                          properties={ribbon.properties}
                           formId={formId}
+                          properties={ribbon.properties}
                         />
                       )}
                       <SubmitButton
+                        className="mt-4 justify-self-end"
                         formId={formId}
                         loadingText="Updating..."
-                        className="mt-4 justify-self-end"
                       >
                         Update
                       </SubmitButton>

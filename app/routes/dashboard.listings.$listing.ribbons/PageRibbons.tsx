@@ -64,12 +64,12 @@ export default function PageRibbons({
     <div className="h-auto">
       <ul ref={drop}>
         {ribbons.map((ribbon) => (
-          <li key={ribbon.id} className="py-2">
+          <li className="py-2" key={ribbon.id}>
             <RibbonCard
-              ribbon={ribbon}
-              move={moveCard}
               find={findCard}
+              move={moveCard}
               onFinish={handleFinish}
+              ribbon={ribbon}
             />
           </li>
         ))}

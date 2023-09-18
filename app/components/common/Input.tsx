@@ -33,10 +33,10 @@ function Input(
   return (
     <div className={className}>
       {label && (
-        <label htmlFor={id} className="block text-sm font-medium text-gray-700">
+        <label className="block text-sm font-medium text-gray-700" htmlFor={id}>
           {label}
           {required && (
-            <span className="text-xs text-red-500" aria-hidden="true">
+            <span aria-hidden="true" className="text-xs text-red-500">
               {" "}
               *
             </span>
@@ -57,10 +57,8 @@ function Input(
         )}
 
         <input
-          type={type}
-          name={name}
-          id={id}
-          ref={ref}
+          aria-describedby={error ? `${id}-error` : undefined}
+          aria-invalid={error}
           className={clsx("block", "w-full", "shadow-sm", "sm:text-sm", {
             "border-gray-300": !error,
             "border-gray-300 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500":
@@ -74,10 +72,12 @@ function Input(
             "rounded-r-md": addOn,
             "text-red-900 placeholder-red-300": error,
           })}
-          placeholder={placeholder}
-          aria-invalid={error}
-          aria-describedby={error ? `${id}-error` : undefined}
           disabled={disabled}
+          id={id}
+          name={name}
+          placeholder={placeholder}
+          ref={ref}
+          type={type}
           {...props}
         />
         {trailing && (
@@ -97,8 +97,8 @@ function Input(
         {error && (
           <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
             <ExclamationCircleIcon
-              className="h-5 w-5 text-red-500"
               aria-hidden="true"
+              className="h-5 w-5 text-red-500"
             />
           </div>
         )}

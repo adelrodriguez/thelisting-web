@@ -35,11 +35,11 @@ export default function MarketingLayout() {
   return (
     <>
       <MarketingHeader
+        loginText={t("login")}
         navigationItems={headerNavigation.map((item) => ({
           ...item,
           key: t(item.key),
         }))}
-        loginText={t("login")}
       />
       <main className="flex-1">
         <Outlet />

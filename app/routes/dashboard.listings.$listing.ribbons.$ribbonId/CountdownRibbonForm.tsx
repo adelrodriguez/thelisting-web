@@ -25,23 +25,23 @@ export default function CountdownRibbonForm({
 
   return (
     <Form
-      id={formId}
+      action="?/properties"
       className="flex flex-col gap-2"
-      method="POST"
+      defaultValues={defaultValues}
       validator={validator}
       // TODO(adelrodriguez): Fix this type error. The issue here is that an
       // input only takes strings, but our schema describes a Date object. Maybe
       // creating a custom component that can accept Date objects?
       // @ts-expect-error Due to type mismatch
-      defaultValues={defaultValues}
-      action="?/properties"
+      id={formId}
+      method="POST"
     >
       <Input
         label="Event Date & Time"
-        type="datetime-local"
+        min={format(startOfToday(), "yyyy-MM-dd HH:mm")}
         name="eventDatetime"
         required
-        min={format(startOfToday(), "yyyy-MM-dd HH:mm")}
+        type="datetime-local"
       />
     </Form>
   )

@@ -69,14 +69,14 @@ export default function DashboardListingPage() {
     <>
       <div className="flex justify-between sm:hidden">
         <div>
-          <label htmlFor="tabs" className="sr-only">
+          <label className="sr-only" htmlFor="tabs">
             Select a tab
           </label>
           <select
-            id="tabs"
-            name="tabs"
             className="block w-full rounded-md border-gray-300 focus:border-gray-500 focus:ring-gray-500"
             defaultValue={status}
+            id="tabs"
+            name="tabs"
             onChange={(event) => {
               navigate(event.target.value)
             }}
@@ -97,17 +97,17 @@ export default function DashboardListingPage() {
         </Link>
       </div>
       <div className="hidden sm:flex sm:justify-between">
-        <nav className="flex space-x-4" aria-label="Tabs">
+        <nav aria-label="Tabs" className="flex space-x-4">
           {tabs.map((tab) => (
             <Link
-              key={tab.label}
-              to={tab.value ? `?status=${tab.value}` : "#"}
-              relative="route"
+              aria-current={false}
               className={clsx("rounded-md px-3 py-2 text-sm font-medium", {
                 "bg-gray-200 text-gray-800": tab.value === status,
                 "text-gray-500 hover:text-gray-800": tab.value !== status,
               })}
-              aria-current={false}
+              key={tab.label}
+              relative="route"
+              to={tab.value ? `?status=${tab.value}` : "#"}
             >
               {tab.label}
             </Link>
@@ -120,18 +120,18 @@ export default function DashboardListingPage() {
       <ul className="mt-8 grid grid-cols-1 gap-x-6 gap-y-8 lg:grid-cols-3 xl:gap-x-8">
         {listings.map((listing) => (
           <li
-            key={listing.id}
             className="overflow-hidden rounded-xl border border-gray-200"
+            key={listing.id}
           >
             <div className="flex items-center gap-x-4 border-b border-gray-900/5 bg-gray-50 p-6">
               {listing.coverImage ? (
                 <img
+                  alt={listing.title}
+                  className="h-12 w-12 flex-none rounded-lg bg-white object-cover ring-1 ring-gray-900/10"
                   src={generateCloudflareImageUrl(
                     listing.coverImage,
                     "thumbnail"
                   )}
-                  alt={listing.title}
-                  className="h-12 w-12 flex-none rounded-lg bg-white object-cover ring-1 ring-gray-900/10"
                 />
               ) : (
                 <span className="inline-flex h-12 w-12 items-center justify-center rounded-lg bg-gray-500 ring-1 ring-gray-900/10">
@@ -151,8 +151,8 @@ export default function DashboardListingPage() {
                 <Menu.Button className="-m-2.5 block p-2.5 text-gray-400 hover:text-gray-500">
                   <span className="sr-only">Open options</span>
                   <EllipsisHorizontalIcon
-                    className="h-5 w-5"
                     aria-hidden="true"
+                    className="h-5 w-5"
                   />
                 </Menu.Button>
                 <Transition
@@ -168,11 +168,11 @@ export default function DashboardListingPage() {
                     <Menu.Item>
                       {({ active }) => (
                         <Link
-                          to={`${listing.sku}/edit`}
                           className={clsx(
                             active ? "bg-gray-50" : "",
                             "block px-3 py-1 text-sm leading-6 text-gray-900"
                           )}
+                          to={`${listing.sku}/edit`}
                         >
                           Edit<span className="sr-only">, {listing.title}</span>
                         </Link>
@@ -181,12 +181,12 @@ export default function DashboardListingPage() {
                     <Menu.Item>
                       {({ active }) => (
                         <Link
-                          to={`/${listing.path}`}
-                          target="_blank"
                           className={clsx(
                             active ? "bg-gray-50" : "",
                             "block px-3 py-1 text-sm leading-6 text-gray-900"
                           )}
+                          target="_blank"
+                          to={`/${listing.path}`}
                         >
                           View<span className="sr-only">, {listing.title}</span>
                         </Link>
@@ -195,12 +195,12 @@ export default function DashboardListingPage() {
                     <Menu.Item>
                       {({ active }) => (
                         <Link
-                          to={`/${listing.path}/review`}
-                          target="_blank"
                           className={clsx(
                             active ? "bg-gray-50" : "",
                             "block px-3 py-1 text-sm leading-6 text-gray-900"
                           )}
+                          target="_blank"
+                          to={`/${listing.path}/review`}
                         >
                           Review
                           <span className="sr-only">, {listing.title}</span>
@@ -211,11 +211,11 @@ export default function DashboardListingPage() {
                     <Menu.Item>
                       {({ active }) => (
                         <a
-                          href={`/api/admin/listings/${listing.id}/report.csv`}
                           className={clsx(
                             active ? "bg-gray-50" : "",
                             "block px-3 py-1 text-sm leading-6 text-gray-900"
                           )}
+                          href={`/api/admin/listings/${listing.id}/report.csv`}
                         >
                           Download report
                         </a>
@@ -224,6 +224,11 @@ export default function DashboardListingPage() {
                     <Menu.Item>
                       {({ active }) => (
                         <Link
+                          className={clsx(
+                            active ? "bg-gray-50" : "",
+                            "flex items-center px-3 py-1 text-sm leading-6 text-gray-900"
+                          )}
+                          target="_blank"
                           to={
                             listing.commerceId
                               ? `https://admin.shopify.com/store/${
@@ -233,11 +238,6 @@ export default function DashboardListingPage() {
                                 )}`
                               : "#"
                           }
-                          className={clsx(
-                            active ? "bg-gray-50" : "",
-                            "flex items-center px-3 py-1 text-sm leading-6 text-gray-900"
-                          )}
-                          target="_blank"
                         >
                           View on Shopify
                           <ArrowTopRightOnSquareIcon className="ml-1 inline-block h-4 w-4" />

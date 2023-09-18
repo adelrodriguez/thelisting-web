@@ -69,9 +69,10 @@ export default function ListingItemDetailPage() {
   const { title, price, variantId, imageUrl } = data
 
   return (
-    <Transition.Root appear show={open} as={Fragment}>
+    <Transition.Root appear as={Fragment} show={open}>
       <Dialog as="div" className="relative z-20" onClose={close}>
         <Transition.Child
+          afterLeave={leave}
           as={Fragment}
           enter="ease-out duration-300"
           enterFrom="opacity-0"
@@ -79,7 +80,6 @@ export default function ListingItemDetailPage() {
           leave="ease-in duration-200"
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
-          afterLeave={leave}
         >
           <div className="fixed inset-0 hidden bg-gray-500 bg-opacity-75 transition-opacity md:block" />
         </Transition.Child>
@@ -87,6 +87,7 @@ export default function ListingItemDetailPage() {
         <div className="fixed inset-0 z-10 overflow-y-auto">
           <div className="flex min-h-full items-stretch justify-center text-center md:items-center md:px-2 lg:px-4">
             <Transition.Child
+              afterLeave={leave}
               as={Fragment}
               enter="ease-out duration-300"
               enterFrom="opacity-0 translate-y-4 md:translate-y-0 md:scale-95"
@@ -94,26 +95,25 @@ export default function ListingItemDetailPage() {
               leave="ease-in duration-200"
               leaveFrom="opacity-100 translate-y-0 md:scale-100"
               leaveTo="opacity-0 translate-y-4 md:translate-y-0 md:scale-95"
-              afterLeave={leave}
             >
               <Dialog.Panel className="flex w-full transform text-left text-base transition md:my-8 md:max-w-2xl md:px-4 lg:max-w-4xl">
                 <div className="relative flex w-full items-center overflow-hidden rounded-md bg-white px-4 pb-8 pt-14 shadow-2xl sm:px-6 sm:pt-8 md:p-6 lg:p-8">
                   <button
-                    type="button"
                     className="absolute right-4 top-4 text-gray-400 hover:text-gray-500 sm:right-6 sm:top-8 md:right-6 md:top-6 lg:right-8 lg:top-8"
                     onClick={close}
+                    type="button"
                   >
                     <span className="sr-only">Close</span>
-                    <XMarkIcon className="h-6 w-6" aria-hidden="true" />
+                    <XMarkIcon aria-hidden="true" className="h-6 w-6" />
                   </button>
 
                   <div className="grid w-full grid-cols-1 items-start gap-x-6 gap-y-8 sm:grid-cols-12 lg:gap-x-8">
                     <div className="sm:col-span-4 lg:col-span-5 ">
                       <div className="aspect-h-1 aspect-w-1 overflow-hidden rounded-sm bg-gray-100 sm:rounded-md">
                         <Image
-                          src={imageUrl}
                           alt={title}
                           className="object-cover object-center"
+                          src={imageUrl}
                         />
                       </div>
                     </div>
@@ -126,7 +126,7 @@ export default function ListingItemDetailPage() {
                         aria-labelledby="information-heading"
                         className="mt-3"
                       >
-                        <h3 id="information-heading" className="sr-only">
+                        <h3 className="sr-only" id="information-heading">
                           {t("itemInformation")}
                         </h3>
 
@@ -146,8 +146,8 @@ export default function ListingItemDetailPage() {
                               {t("quantity.label")}
                             </label>
                             <QuantityInput
-                              onChange={setQuantity}
                               max={item.stock}
+                              onChange={setQuantity}
                               value={quantity}
                             />
                           </div>
@@ -155,10 +155,10 @@ export default function ListingItemDetailPage() {
                       </section>
 
                       <Button
-                        size="lg"
                         className="mt-6 w-full"
-                        onClick={handleAddToCart}
                         disabled={item.stock === 0}
+                        onClick={handleAddToCart}
+                        size="lg"
                       >
                         {item.stock === 0 ? t("outOfStock") : t("addToCart")}
                       </Button>

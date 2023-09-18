@@ -20,8 +20,8 @@ export default function FormSelect({
     <Select
       {...getInputProps({ id: name, options })}
       {...props}
-      error={!!error}
       description={error || description}
+      error={!!error}
     />
   )
 }

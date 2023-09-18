@@ -22,31 +22,31 @@ export const ItemTypes = {
 const RIBBON_CARD = {
   [RibbonType.Banner]: {
     bgColor: "bg-amber-500",
-    icon: <ComputerDesktopIcon className="h-6 w-6" aria-hidden="true" />,
+    icon: <ComputerDesktopIcon aria-hidden="true" className="h-6 w-6" />,
   },
   [RibbonType.Countdown]: {
     bgColor: "bg-sky-500",
-    icon: <ClockIcon className="h-6 w-6" aria-hidden="true" />,
+    icon: <ClockIcon aria-hidden="true" className="h-6 w-6" />,
   },
   [RibbonType.CoverImage]: {
     bgColor: "bg-purple-500",
-    icon: <PhotoIcon className="h-6 w-6" aria-hidden="true" />,
+    icon: <PhotoIcon aria-hidden="true" className="h-6 w-6" />,
   },
   [RibbonType.ImageCarousel]: {
     bgColor: "bg-green-500",
-    icon: <RectangleStackIcon className="h-6 w-6" aria-hidden="true" />,
+    icon: <RectangleStackIcon aria-hidden="true" className="h-6 w-6" />,
   },
   [RibbonType.ImageGallery]: {
     bgColor: "bg-blue-500",
-    icon: <RectangleGroupIcon className="h-6 w-6" aria-hidden="true" />,
+    icon: <RectangleGroupIcon aria-hidden="true" className="h-6 w-6" />,
   },
   [RibbonType.Location]: {
     bgColor: "bg-red-500",
-    icon: <MapIcon className="h-6 w-6" aria-hidden="true" />,
+    icon: <MapIcon aria-hidden="true" className="h-6 w-6" />,
   },
   [RibbonType.Text]: {
     bgColor: "bg-gray-500",
-    icon: <Bars3CenterLeftIcon className="h-6 w-6" aria-hidden="true" />,
+    icon: <Bars3CenterLeftIcon aria-hidden="true" className="h-6 w-6" />,
   },
 }
 
@@ -125,10 +125,10 @@ export default function RibbonCard({
               ref={drag}
             >
               <EllipsisVerticalIcon
-                className="-mr-3 h-5 w-auto"
                 aria-hidden="true"
+                className="-mr-3 h-5 w-auto"
               />
-              <EllipsisVerticalIcon className="h-5 w-auto" aria-hidden="true" />
+              <EllipsisVerticalIcon aria-hidden="true" className="h-5 w-auto" />
             </div>
           </div>
         </div>
@@ -138,19 +138,19 @@ export default function RibbonCard({
           "group-hover:block": !isDragging,
         })}
       >
-        <div className="absolute inset-0 flex items-center" aria-hidden="true">
+        <div aria-hidden="true" className="absolute inset-0 flex items-center">
           <div className="w-full border-t border-gray-300" />
         </div>
         <div className="relative flex justify-center">
           <Link
-            to={`new?position=${ribbon.position + 1}`}
-            relative="route"
             preventScrollReset
+            relative="route"
+            to={`new?position=${ribbon.position + 1}`}
           >
             <button className="inline-flex items-center gap-x-1.5 rounded-full bg-white px-3 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
               <PlusIcon
-                className="-ml-1 -mr-0.5 h-5 w-5 text-gray-400"
                 aria-hidden="true"
+                className="-ml-1 -mr-0.5 h-5 w-5 text-gray-400"
               />
               Add new ribbon
             </button>

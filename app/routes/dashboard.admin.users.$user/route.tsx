@@ -86,34 +86,34 @@ export default function AdminToolsUserEditPage() {
 
   return (
     <ValidatedForm
-      validator={validator}
-      method="POST"
       className="m-auto mt-8 flex w-full max-w-xl flex-col gap-y-6"
       id="edit-user"
+      method="POST"
       onSubmit={() => {
         enqueueSnackbar("User updated 🎉", {
           description: "The user was successfully updated",
           variant: "success",
         })
       }}
+      validator={validator}
     >
       <FormInput label="First Name" name="firstName" required />
       <FormInput label="Last Name" name="lastName" required />
       <FormInput
-        name="email"
-        label="Email"
         description="The user's email address to receive email notifications"
+        label="Email"
+        name="email"
         required
       />
       <FormInput
-        name="phone"
-        label="Phone"
         description="The user's phone number to receive WhatsApp notifications"
+        label="Phone"
+        name="phone"
       />
 
       <FormListRadioGroup
-        name="role"
         label="Role"
+        name="role"
         options={[
           {
             description: "A regular user without admin privileges",
@@ -129,7 +129,7 @@ export default function AdminToolsUserEditPage() {
         required
       />
 
-      <FormSubmit text="Update" loadingText="Updating..." />
+      <FormSubmit loadingText="Updating..." text="Update" />
     </ValidatedForm>
   )
 }

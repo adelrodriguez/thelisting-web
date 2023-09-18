@@ -21,9 +21,9 @@ export default function SubmitButton({
   return (
     <Button
       {...props}
-      type="submit"
       disabled={isSubmitting || disabled}
       form={formId}
+      type="submit"
     >
       {isSubmitting ? (
         <>

@@ -45,14 +45,14 @@ export default function TextRibbonForm({
 
   return (
     <Form
-      id={formId}
+      action="?/properties"
       className="flex flex-col gap-2"
+      defaultValues={defaultValues}
+      id={formId}
       method="POST"
       validator={validator}
-      defaultValues={defaultValues}
-      action="?/properties"
     >
-      <ImageInput name="decorationImage" label="Decoration Image" />
+      <ImageInput label="Decoration Image" name="decorationImage" />
       <Input label="Title" name="title" />
       <TextArea label="Body" name="body" required rows={10} />
       <Select
@@ -67,9 +67,9 @@ export default function TextRibbonForm({
         ]}
       />
       <Checkbox
+        description="Show a clickable button with a link"
         label="Has URL"
         name="hasUrl"
-        description="Show a clickable button with a link"
         onChange={(e) => setHasUrl(e.target.checked)}
         value="true"
       />

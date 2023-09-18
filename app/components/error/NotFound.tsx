@@ -28,7 +28,7 @@ export default function NotFound({
             <main className="flex flex-grow flex-col bg-white">
               <div className="mx-auto flex w-full max-w-7xl flex-grow flex-col px-4 sm:px-6 lg:px-8">
                 <div className="absolute pt-10 sm:pt-16">
-                  <a href="/" className="inline-flex">
+                  <a className="inline-flex" href="/">
                     <span className="sr-only">The Listing</span>
                     <Logo />
                   </a>
@@ -45,8 +45,8 @@ export default function NotFound({
                   </p>
                   <div className="mt-6">
                     <Link
-                      to="/"
                       className="text-base font-medium text-gray-600 hover:text-gray-500"
+                      to="/"
                     >
                       Go back home
                       <span aria-hidden="true"> &rarr;</span>
@@ -58,9 +58,9 @@ export default function NotFound({
           </div>
           <div className="hidden lg:absolute lg:inset-y-0 lg:right-0 lg:block lg:w-1/2">
             <Image
+              alt=""
               className="absolute inset-0 h-full w-full object-cover"
               src="https://images.unsplash.com/photo-1470847355775-e0e3c35a9a2c?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1825&q=80"
-              alt=""
             />
           </div>
         </div>

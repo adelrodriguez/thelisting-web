@@ -51,7 +51,7 @@ export default function ImagePicker({
   }
 
   return (
-    <Transition.Root show={open} as={Fragment}>
+    <Transition.Root as={Fragment} show={open}>
       <Dialog as="div" className="relative z-10" onClose={onClose}>
         <Transition.Child
           as={Fragment}
@@ -82,8 +82,8 @@ export default function ImagePicker({
                 {data && step === "choose" && (
                   <ImageGallery
                     images={data}
-                    onUpload={handleUpload}
                     onSelect={onSelect}
+                    onUpload={handleUpload}
                   />
                 )}
                 {step === "upload" && file && (
@@ -152,8 +152,8 @@ function ImageGallery({
                   <PhotoIcon className="mx-auto h-12 w-12 text-gray-400" />
                   <div className="mx-auto flex flex-col">
                     <label
-                      htmlFor="file-upload"
                       className="relative cursor-pointer rounded-md  font-medium text-gray-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-gray-500 focus-within:ring-offset-2 hover:text-gray-500"
+                      htmlFor="file-upload"
                     >
                       Upload a file
                     </label>
@@ -175,17 +175,17 @@ function ImageGallery({
               </button>
             </li>
             {images.map((image) => (
-              <li key={image.id} className="relative">
+              <li className="relative" key={image.id}>
                 <div className="group aspect-w-10 aspect-h-7 block w-full overflow-hidden rounded-lg bg-gray-100 focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 focus-within:ring-offset-gray-100">
                   <Image
-                    src={generateCloudflareImageUrl(image.id, "thumbnail")}
                     alt=""
                     className="pointer-events-none object-cover group-hover:opacity-75"
+                    src={generateCloudflareImageUrl(image.id, "thumbnail")}
                   />
                   <button
-                    type="button"
                     className="absolute inset-0 focus:outline-none"
                     onClick={() => setSelected(image)}
+                    type="button"
                   >
                     <span className="sr-only">
                       View details for {image.filename}
@@ -201,11 +201,11 @@ function ImageGallery({
         </div>
         <div className="flex justify-end gap-x-2">
           <Button
+            disabled={!selected}
             onClick={() => {
               invariant(selected, "No image was selected")
               onSelect(selected)
             }}
-            disabled={!selected}
           >
             Select
           </Button>
@@ -261,26 +261,26 @@ function ImageSubmit({
           <div className="flex flex-1 items-center justify-center">
             <img
               alt=""
-              src={URL.createObjectURL(file)}
               className="max-h-96 w-auto"
+              src={URL.createObjectURL(file)}
             />
           </div>
           <Input
-            name="filename"
-            placeholder={file.name}
             defaultValue={file.name}
             minLength={3}
+            name="filename"
+            placeholder={file.name}
           />
 
           <div className="flex justify-end gap-x-2">
             <Button
-              variant="secondary"
-              onClick={onCancel}
               disabled={fetcher.state === "submitting"}
+              onClick={onCancel}
+              variant="secondary"
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={fetcher.state === "submitting"}>
+            <Button disabled={fetcher.state === "submitting"} type="submit">
               {fetcher.state === "submitting" && (
                 <Spinner className="mr-3 h-5 w-5" />
               )}

@@ -23,7 +23,7 @@ export async function action({ request }: ActionArgs) {
 export default function DashboardAdminWebhooksPage() {
   return (
     <Form method="POST">
-      <Input name="order-created" label="Order Created ID" />
+      <Input label="Order Created ID" name="order-created" />
       <SubmitButton>Run</SubmitButton>
     </Form>
   )

@@ -11,15 +11,15 @@ export default function Breadcrumbs() {
     .map((match) => match.handle?.crumb(match))
 
   return (
-    <nav className="flex" aria-label="Breadcrumb">
+    <nav aria-label="Breadcrumb" className="flex">
       <ol className="flex items-center space-x-4">
         <li>
           <div>
             <NavLink
-              to={matches[1]!.pathname}
               className="text-gray-400 hover:text-gray-500"
+              to={matches[1]!.pathname}
             >
-              <HomeIcon className="h-5 w-5 flex-shrink-0" aria-hidden="true" />
+              <HomeIcon aria-hidden="true" className="h-5 w-5 flex-shrink-0" />
               <span className="sr-only">Home</span>
             </NavLink>
           </div>
@@ -28,12 +28,12 @@ export default function Breadcrumbs() {
           <li key={crumb.name}>
             <div className="flex items-center">
               <ChevronRightIcon
-                className="h-5 w-5 flex-shrink-0 text-gray-400"
                 aria-hidden="true"
+                className="h-5 w-5 flex-shrink-0 text-gray-400"
               />
               <NavLink
-                to={crumb.href}
                 className="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700"
+                to={crumb.href}
               >
                 {crumb.name}
               </NavLink>

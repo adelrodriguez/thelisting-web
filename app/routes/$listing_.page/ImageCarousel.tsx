@@ -53,19 +53,19 @@ export default function ImageCarousel({
         >
           {images.map((image, index) => (
             <Transition
-              key={index}
-              show={currentIndex === index}
               enter="transition-opacity duration-1000"
               enterFrom="opacity-0"
               enterTo="opacity-100"
+              key={index}
               leave="transition-opacity duration-1000"
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
+              show={currentIndex === index}
             >
               <Image
-                src={generateCloudflareImageUrl(image, "public")}
                 alt=""
                 className="absolute h-full w-full rounded-md object-cover"
+                src={generateCloudflareImageUrl(image, "public")}
               />
             </Transition>
           ))}
@@ -84,11 +84,11 @@ export default function ImageCarousel({
           <div className="absolute bottom-0 flex w-full justify-center space-x-2 p-2">
             {images.map((_, index) => (
               <span
-                key={index}
                 className={clsx(
                   "inline-block h-2 w-2 cursor-pointer rounded-full",
                   currentIndex === index ? "bg-white" : "bg-slate-300"
                 )}
+                key={index}
                 onClick={() => setCurrentIndex(index)}
               />
             ))}

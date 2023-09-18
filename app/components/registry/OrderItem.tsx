@@ -39,9 +39,9 @@ export default function OrderItem({
   return (
     <div className="flex w-full gap-x-6">
       <Image
-        src={imageUrl}
         alt={title}
         className="h-24 w-24 flex-none rounded-md bg-gray-100 object-cover object-center lg:h-32 lg:w-32"
+        src={imageUrl}
       />
       <div className="flex-auto space-y-1">
         <h3 className="font-medium text-gray-900">{title}</h3>

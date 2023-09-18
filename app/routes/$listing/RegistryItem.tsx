@@ -55,16 +55,16 @@ export default function RegistryItem({
   const { title, imageUrl, price } = data
 
   return (
-    <Link className="group text-center font-body" to={sku} preventScrollReset>
+    <Link className="group text-center font-body" preventScrollReset to={sku}>
       <div className="relative">
         <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-sm xl:aspect-h-8 xl:aspect-w-7 sm:rounded-md">
           <Image
-            src={imageUrl}
             alt={title}
             className={clsx("h-full w-full object-cover object-center", {
               "group-hover:opacity-75": available,
               "opacity-50": !available,
             })}
+            src={imageUrl}
           />
         </div>
         {!available && (

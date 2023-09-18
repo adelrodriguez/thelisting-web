@@ -14,15 +14,14 @@ export default function Tooltip({
 
   return (
     <Popover
-      ref={ref}
+      className="relative inline-flex items-center"
       onMouseEnter={() => setIsHover(true)}
       onMouseLeave={() => setIsHover(false)}
-      className="relative inline-flex items-center"
+      ref={ref}
     >
       <Popover.Button>{children}</Popover.Button>
 
       <Transition
-        show={isHover}
         as={Fragment}
         enter="transition-opacity duration-75"
         enterFrom="opacity-0"
@@ -30,6 +29,7 @@ export default function Tooltip({
         leave="transition-opacity duration-150"
         leaveFrom="opacity-100"
         leaveTo="opacity-0"
+        show={isHover}
       >
         <Popover.Panel className="absolute top-6 z-10 w-48 rounded-md bg-gray-700 p-2 font-light text-white">
           {text}

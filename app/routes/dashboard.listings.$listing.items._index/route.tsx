@@ -43,7 +43,7 @@ const columns = [
     cell: (props) => {
       const item = props.row.original
 
-      return <TitleCell sku={item.sku} commerceId={item.commerceId} />
+      return <TitleCell commerceId={item.commerceId} sku={item.sku} />
     },
     header: "Title",
   }),
@@ -116,9 +116,9 @@ export default function DashboardListingItemsPage() {
                     <tr key={headerGroup.id}>
                       {headerGroup.headers.map((header) => (
                         <th
-                          scope="col"
                           className="max-w-sm overflow-hidden text-ellipsis whitespace-nowrap py-3 px-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
                           key={header.id}
+                          scope="col"
                         >
                           {flexRender(
                             header.column.columnDef.header,
@@ -131,7 +131,7 @@ export default function DashboardListingItemsPage() {
                 </thead>
                 <tbody className="divide-y divide-gray-200 bg-white">
                   {table.getRowModel().rows.map((row) => (
-                    <tr key={row.id} className=" hover:bg-gray-50">
+                    <tr className=" hover:bg-gray-50" key={row.id}>
                       {row.getVisibleCells().map((cell) => (
                         <td
                           className="max-w-sm overflow-hidden text-ellipsis whitespace-nowrap px-3 py-4 text-sm text-gray-500"
@@ -170,8 +170,8 @@ function TitleCell({
 
   return (
     <Link
-      to={`./${sku}`}
       className="text-gray-600 hover:text-gray-900 hover:underline"
+      to={`./${sku}`}
     >
       {data.title}
     </Link>

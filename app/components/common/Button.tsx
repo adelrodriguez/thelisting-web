@@ -22,8 +22,6 @@ function Button(
   return (
     <button
       {...props}
-      ref={ref}
-      type={type}
       className={clsx(
         "inline-flex items-center justify-center font-semibold shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-600",
         {
@@ -45,6 +43,8 @@ function Button(
         className
       )}
       disabled={disabled}
+      ref={ref}
+      type={type}
     >
       {children}
     </button>

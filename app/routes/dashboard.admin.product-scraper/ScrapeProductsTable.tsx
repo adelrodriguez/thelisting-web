@@ -42,8 +42,8 @@ const columns = [
       if (!title || !description || !image || !amount) {
         return (
           <XMarkIcon
-            className="h-5 w-5 text-red-500"
             aria-hidden="true"
+            className="h-5 w-5 text-red-500"
             title={scrapedProductId}
           />
         )
@@ -51,8 +51,8 @@ const columns = [
 
       return (
         <CheckIcon
-          className="h-5 w-5 text-green-500"
           aria-hidden="true"
+          className="h-5 w-5 text-green-500"
           title={scrapedProductId}
         />
       )
@@ -63,15 +63,15 @@ const columns = [
     cell: ({ row }) => (
       <Checkbox
         checked={row.getIsSelected()}
-        onChange={row.getToggleSelectedHandler()}
         indeterminate={row.getIsSomeSelected()}
+        onChange={row.getToggleSelectedHandler()}
       />
     ),
     header: ({ table }) => (
       <Checkbox
         checked={table.getIsAllRowsSelected()}
-        onChange={table.getToggleAllRowsSelectedHandler()}
         indeterminate={table.getIsSomeRowsSelected()}
+        onChange={table.getToggleAllRowsSelectedHandler()}
       />
     ),
     id: "selected",
@@ -87,10 +87,10 @@ const columns = [
 
       return (
         <Link
-          to={value}
-          target="_blank"
-          rel="noreferrer"
           className="hover:underline"
+          rel="noreferrer"
+          target="_blank"
+          to={value}
         >
           {value}
         </Link>
@@ -115,10 +115,10 @@ const columns = [
 
       return (
         <Link
-          to={value}
-          target="_blank"
-          rel="noreferrer"
           className="hover:underline"
+          rel="noreferrer"
+          target="_blank"
+          to={value}
         >
           {value}
         </Link>
@@ -270,23 +270,23 @@ export default function ScrapeProductsTable({
             {selected.length > 0 && (
               <>
                 <Button
-                  type="button"
                   onClick={() => onAddToListing(selected)}
                   size="sm"
+                  type="button"
                 >
                   Add To Listing
                 </Button>
                 <Button
-                  type="button"
                   onClick={() => onExport(selected)}
                   size="sm"
+                  type="button"
                 >
                   Export to CSV
                 </Button>
               </>
             )}
 
-            <Button type="button" onClick={handleScrape} disabled={!isIdle}>
+            <Button disabled={!isIdle} onClick={handleScrape} type="button">
               {isIdle ? (
                 "Start Scraping"
               ) : (
@@ -299,8 +299,8 @@ export default function ScrapeProductsTable({
 
             {!isIdle && (
               <Button
-                variant="secondary"
                 onClick={() => scraperService.send("CANCEL")}
+                variant="secondary"
               >
                 Stop
               </Button>
@@ -317,9 +317,9 @@ export default function ScrapeProductsTable({
                       <tr key={headerGroup.id}>
                         {headerGroup.headers.map((header) => (
                           <th
-                            scope="col"
                             className="max-w-[500px] overflow-hidden text-ellipsis whitespace-nowrap px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
                             key={header.id}
+                            scope="col"
                           >
                             {flexRender(
                               header.column.columnDef.header,

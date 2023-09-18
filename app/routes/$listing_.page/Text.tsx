@@ -25,9 +25,9 @@ export default function Text({
           {decorationImage && (
             <div className="h-32 lg:h-40">
               <img
+                alt=""
                 className="h-full w-full object-contain"
                 src={generateCloudflareImageUrl(decorationImage, "display")}
-                alt=""
               />
             </div>
           )}
@@ -42,11 +42,11 @@ export default function Text({
             {hasUrl && (
               <div className="mt-8">
                 <Link
-                  to={url!}
                   className={clsx(
                     "mt-4 rounded-full border-2 border-white bg-transparent px-6 py-2.5 font-semibold tracking-wide text-white transition-all",
                     "hover:bg-white hover:text-black hover:mix-blend-screen"
                   )}
+                  to={url!}
                 >
                   {urlLabel}
                 </Link>

@@ -29,14 +29,14 @@ export default function FormInput<T extends FormListRadioGroupOption>({
     <>
       <input {...getInputProps({ required, value })} type="hidden" />
       <ListRadioGroup<T>
-        label={label}
-        options={options}
-        value={options.find((option) => option.value === value)!}
-        onChange={(option) => setValue(option.value)}
-        required={required}
-        name={name}
         description={error || description}
         error={!!error}
+        label={label}
+        name={name}
+        onChange={(option) => setValue(option.value)}
+        options={options}
+        required={required}
+        value={options.find((option) => option.value === value)!}
       />
     </>
   )
