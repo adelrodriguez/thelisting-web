@@ -10,6 +10,9 @@ type AutocompleteOption = {
   value: string | undefined
 }
 
+/**
+ * This component should only be used within a Form component.
+ */
 export default function Autocomplete<T extends AutocompleteOption>({
   name,
   label,

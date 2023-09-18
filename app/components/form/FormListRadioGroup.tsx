@@ -9,8 +9,9 @@ type FormListRadioGroupOption = ComponentProps<
 
 /**
  * This component should only be used within a Form component.
+ * @deprecated Use ListRadioGroup instead.
  */
-export default function FormInput<T extends FormListRadioGroupOption>({
+export default function FormListRadioGroup<T extends FormListRadioGroupOption>({
   name,
   options,
   label,

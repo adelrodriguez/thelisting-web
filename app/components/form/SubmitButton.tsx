@@ -5,6 +5,9 @@ import { useIsSubmitting } from "remix-validated-form"
 import { Button } from "~/components/common"
 import { Spinner } from "~/components/loading"
 
+/**
+ * This component should only be used within a Form component.
+ */
 export default function SubmitButton({
   children = `${i18next.t("common:submit")}`,
   loadingText = `${i18next.t("common:submitting")}...`,

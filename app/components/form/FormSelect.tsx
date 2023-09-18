@@ -5,6 +5,7 @@ import { Select } from "~/components/common"
 
 /**
  * This component should only be used within a Form component.
+ * @deprecated Use Select instead.
  */
 export default function FormSelect({
   name,

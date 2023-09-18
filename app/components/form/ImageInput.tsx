@@ -8,6 +8,9 @@ import { useControlField, useField } from "remix-validated-form"
 import { ImagePicker } from "~/components/common"
 import type { Input } from "~/components/form"
 
+/**
+ * This component should only be used within a Form component.
+ */
 export default function ImageInput({
   className,
   name,

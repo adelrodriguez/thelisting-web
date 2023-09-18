@@ -5,6 +5,7 @@ import { Input } from "~/components/common"
 
 /**
  * This component should only be used within a Form component.
+ * @deprecated Use Input instead.
  */
 export default function FormInput({
   name,

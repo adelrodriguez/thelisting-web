@@ -6,6 +6,9 @@ import { useField } from "remix-validated-form"
 
 import type { Input } from "~/components/form"
 
+/**
+ * This component should only be used within a Form component.
+ */
 export default function InputWithAddOn({
   name,
   label,

@@ -10,6 +10,9 @@ type SelectOption = {
   disabled?: boolean
 }
 
+/**
+ * This component should only be used within a Form component.
+ */
 export default function Select<T extends SelectOption>({
   name,
   className,

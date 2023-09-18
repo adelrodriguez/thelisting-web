@@ -8,6 +8,9 @@ type ListRadioOption = {
   value: string
 }
 
+/**
+ * This component should only be used within a Form component.
+ */
 export default function ListRadioGroup<T extends ListRadioOption>({
   options,
   label,

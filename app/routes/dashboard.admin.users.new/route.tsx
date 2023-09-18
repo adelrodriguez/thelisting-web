@@ -43,7 +43,7 @@ export default function CreateListingsPage() {
   const { enqueueSnackbar } = useSnackbar()
 
   return (
-    <div className="mx-auto max-w-7xl py-12 px-4 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
       <div className="sm:text-center">
         <p className="text-base font-semibold uppercase tracking-wide text-gray-600">
           Users

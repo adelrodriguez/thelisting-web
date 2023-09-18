@@ -4,6 +4,9 @@ import { useEffect, useRef } from "react"
 import type { ComponentPropsWithoutRef } from "react"
 import { useField } from "remix-validated-form"
 
+/**
+ * This component should only be used within a Form component.
+ */
 export default function TextArea({
   name,
   label,
