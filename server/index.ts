@@ -14,6 +14,7 @@ import * as path from "node:path"
 import * as url from "node:url"
 import sourceMapSupport from "source-map-support"
 
+import env from "~/config/env.server"
 import { isDevelopment } from "~/config/vars"
 import cache from "~/helpers/cache.server"
 import db from "~/helpers/db.server"
@@ -66,7 +67,7 @@ async function run() {
       ? createDevRequestHandler(initialBuild)
       : createRequestHandler({
           build: initialBuild,
-          getLoadContext: () => ({ cache, db, logger }),
+          getLoadContext: () => ({ cache, db, env, logger }),
           mode: process.env.NODE_ENV,
         })
   )
@@ -123,7 +124,7 @@ async function run() {
       try {
         return createRequestHandler({
           build,
-          getLoadContext: () => ({ cache, db, logger }),
+          getLoadContext: () => ({ cache, db, env, logger }),
           mode: "development",
         })(req, res, next)
       } catch (error) {
