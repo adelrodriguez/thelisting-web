@@ -37,7 +37,7 @@ createBullBoard({
   queues: Object.values(QUEUE_NAMES)
     .map((queueName) => new Queue(queueName, { connection }))
     .map((queue) => new BullMQAdapter(queue)),
-  serverAdapter: serverAdapter,
+  serverAdapter,
 })
 
 const router = serverAdapter.getRouter()

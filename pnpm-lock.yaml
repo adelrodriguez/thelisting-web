@@ -8,9 +8,6 @@ dependencies:
   '@axiomhq/winston':
     specifier: 0.1.3
     version: 0.1.3
-  '@bull-board/express':
-    specifier: 5.6.0
-    version: 5.6.0
   '@headlessui/react':
     specifier: 1.7.13
     version: 1.7.13(react-dom@18.2.0)(react@18.2.0)
@@ -253,6 +250,12 @@ devDependencies:
   '@anatine/zod-mock':
     specifier: 3.13.1
     version: 3.13.1(@faker-js/faker@8.0.2)
+  '@bull-board/api':
+    specifier: 5.8.4
+    version: 5.8.4(@bull-board/ui@5.8.4)
+  '@bull-board/express':
+    specifier: 5.8.4
+    version: 5.8.4
   '@faker-js/faker':
     specifier: 8.0.2
     version: 8.0.2
@@ -1825,31 +1828,31 @@ packages:
       to-fast-properties: 2.0.0
     dev: true
 
-  /@bull-board/api@5.6.0(@bull-board/ui@5.6.0):
-    resolution: {integrity: sha512-a2O15p5oEm+/E/0I2l2nE2NKK0dkgNNTaamu+0gGyfUxWoCS3fCGX6LLEyl3jgOz0IC3GKRnwtVgbZFzk42sGQ==}
+  /@bull-board/api@5.8.4(@bull-board/ui@5.8.4):
+    resolution: {integrity: sha512-uuB2ziEpMc6FrkqqRAqyqSh+yKx1ukTvxlgDenOimuLAiHlcPfhNLgYuYv3qzqWVaZdvUCLhiNqAvOdURoKT5A==}
     peerDependencies:
-      '@bull-board/ui': 5.6.0
+      '@bull-board/ui': 5.8.4
     dependencies:
-      '@bull-board/ui': 5.6.0
+      '@bull-board/ui': 5.8.4
       redis-info: 3.1.0
-    dev: false
+    dev: true
 
-  /@bull-board/express@5.6.0:
-    resolution: {integrity: sha512-dJ5mT05vyEmQbR0nlicNJX02eyWFihaI93kXgSPM8x+u++hl6Ugj9mDisqL1w1Q0AL5mkVmwC7GEXPTLHD//BA==}
+  /@bull-board/express@5.8.4:
+    resolution: {integrity: sha512-eYmgC/u/zYs8Uhr3MFRsxWLH7f89ext5c6J/73GIQaEo+/j3j3cFngvXn+SR+7yB1/j+waOt/4mjlnLUWg9uZQ==}
     dependencies:
-      '@bull-board/api': 5.6.0(@bull-board/ui@5.6.0)
-      '@bull-board/ui': 5.6.0
+      '@bull-board/api': 5.8.4(@bull-board/ui@5.8.4)
+      '@bull-board/ui': 5.8.4
       ejs: 3.1.7
       express: 4.17.3
     transitivePeerDependencies:
       - supports-color
-    dev: false
+    dev: true
 
-  /@bull-board/ui@5.6.0:
-    resolution: {integrity: sha512-mc9T+kijDX5ZJMJCzeKPk9uLfOtcuefdDLPqWi961EiiNKfkDex+Gh41DAfcyrNjYsAkBsphvgBgcvundHPGIw==}
+  /@bull-board/ui@5.8.4:
+    resolution: {integrity: sha512-OBCwelyO5aptZUanZOSiHCK46Y3dNsCXMj4XXF8rNKx0sg/BMZMZzINjlpsCkgNNM5Lxl51OM1eYLjzZREvaAQ==}
     dependencies:
-      '@bull-board/api': 5.6.0(@bull-board/ui@5.6.0)
-    dev: false
+      '@bull-board/api': 5.8.4(@bull-board/ui@5.8.4)
+    dev: true
 
   /@cloudflare/kv-asset-handler@0.2.0:
     resolution: {integrity: sha512-MVbXLbTcAotOPUj0pAMhVtJ+3/kFkwJqc5qNOleOZTv6QkZZABDMS21dSrSlVswEHwrpWC03e4fWytjqKvuE2A==}
@@ -5497,7 +5500,7 @@ packages:
       type-is: 1.6.18
     transitivePeerDependencies:
       - supports-color
-    dev: false
+    dev: true
 
   /body-parser@1.20.1:
     resolution: {integrity: sha512-jWi7abTbYwajOytWCQc37VulmWiRae5RyTpaCyDcS5/lMdtwSz5lOpDE67srw/HYe35f1z3fDQw+3txg7gNtWw==}
@@ -6421,7 +6424,7 @@ packages:
   /depd@1.1.2:
     resolution: {integrity: sha512-7emPTl6Dpo6JRXOXjLRxck+FlLRX5847cLKEn00PLAgc3g2hTZZgr+e4c2v6QpSmLeFP3n5yUo7ft6avBK/5jQ==}
     engines: {node: '>= 0.6'}
-    dev: false
+    dev: true
 
   /depd@2.0.0:
     resolution: {integrity: sha512-g7nH6P6dyDioJogAAGprGpCtVImJhpPk/roCzdb3fIh61/s/nPsfR6onyMwkCAR/OlC3yBC0lESvUoQEAssIrw==}
@@ -6443,7 +6446,7 @@ packages:
 
   /destroy@1.0.4:
     resolution: {integrity: sha512-3NdhDuEXnfun/z7x9GOElY49LoqVHoGScmOKwmxhsS8N5Y+Z8KyPPDnaSzqWgYt/ji4mqwfTS34Htrk0zPIXVg==}
-    dev: false
+    dev: true
 
   /destroy@1.2.0:
     resolution: {integrity: sha512-2sJGJTaXIIaR1w4iJSNoN0hnMY7Gpc/n8D4qSCJw8QqFWXf7cuAgnEHxBpweaVcPevC2l3KpjYCx3NypQQgaJg==}
@@ -6646,6 +6649,7 @@ packages:
     hasBin: true
     dependencies:
       jake: 10.8.5
+    dev: true
 
   /electron-to-chromium@1.4.286:
     resolution: {integrity: sha512-Vp3CVhmYpgf4iXNKAucoQUDcCrBQX3XLBtwgFqP9BUXuucgvAV9zWp1kYU7LL9j4++s9O+12cb3wMtN4SJy6UQ==}
@@ -7459,7 +7463,7 @@ packages:
       vary: 1.1.2
     transitivePeerDependencies:
       - supports-color
-    dev: false
+    dev: true
 
   /express@4.18.2:
     resolution: {integrity: sha512-5/PsL6iGPdfQ/lKM1UuielYgv3BUoJfz1aUwU9vHZ+J7gyvwdQXFEBIEIaxeGf0GIcreATNyBExtalisDbuMqQ==}
@@ -7670,6 +7674,7 @@ packages:
     resolution: {integrity: sha512-w1cEuf3S+DrLCQL7ET6kz+gmlJdbq9J7yXCSjK/OZCPA+qEN1WyF4ZAf0YYJa4/shHJra2t/d/r8SV4Ji+x+8Q==}
     dependencies:
       minimatch: 5.1.6
+    dev: true
 
   /fill-range@7.0.1:
     resolution: {integrity: sha512-qOo9F+dMUmC2Lcb4BbVvnKJxTPjCm+RRpe4gDuGrzkL7mEVl/djYSu2OdQ2Pa302N4oqkSg9ir6jaLWJ2USVpQ==}
@@ -7695,7 +7700,7 @@ packages:
       unpipe: 1.0.0
     transitivePeerDependencies:
       - supports-color
-    dev: false
+    dev: true
 
   /finalhandler@1.2.0:
     resolution: {integrity: sha512-5uXcUVftlQMFnWC9qu/svkWv3GTd2PfUhK/3PLkYNAe7FbqJMt3515HaxE6eRL74GdsriiwujiawdaB1BpEISg==}
@@ -8363,7 +8368,7 @@ packages:
       setprototypeof: 1.2.0
       statuses: 1.5.0
       toidentifier: 1.0.1
-    dev: false
+    dev: true
 
   /http-errors@2.0.0:
     resolution: {integrity: sha512-FtwrG/euBzaEjYeRqOgly7G0qviiXoJWnvEH2Z1plBdXgbyjv34pHTSb9zoeHMyDy33+DWy5Wt9Wo+TURtOYSQ==}
@@ -9033,6 +9038,7 @@ packages:
       chalk: 4.1.2
       filelist: 1.0.4
       minimatch: 3.1.2
+    dev: true
 
   /javascript-natural-sort@0.7.1:
     resolution: {integrity: sha512-nO6jcEfZWQXDhOiBtG2KvKyEptz7RVbpGP4vTD2hLBdmNQSsCiicO2Ioinv6UI4y9ukqnBpy+XZ9H6uLNgJTlw==}
@@ -11361,7 +11367,7 @@ packages:
   /qs@6.9.7:
     resolution: {integrity: sha512-IhMFgUmuNpyRfxA90umL7ByLlgRXu6tIfKPpF5TmcfRLlLCckfP/g3IQmju6jjpu+Hh8rA+2p6A27ZSPOOHdKw==}
     engines: {node: '>=0.6'}
-    dev: false
+    dev: true
 
   /quantize@1.0.2:
     resolution: {integrity: sha512-25P7wI2UoDbIQsQp50ARkt+5pwPsOq7G/BqvT5xAbapnRoNWMN8/p55H9TXd5MuENiJnm5XICB2H2aDZGwts7w==}
@@ -11409,7 +11415,7 @@ packages:
       http-errors: 1.8.1
       iconv-lite: 0.4.24
       unpipe: 1.0.0
-    dev: false
+    dev: true
 
   /raw-body@2.5.1:
     resolution: {integrity: sha512-qqJBtEyVgS0ZmPGdCFPWJ3FreoqvG4MVQln/kCgF7Olq95IbOp0/BWyMwbdtn4VTvkM8Y7khCQ2Xgk/tcrCXig==}
@@ -11662,7 +11668,7 @@ packages:
     resolution: {integrity: sha512-ER4L9Sh/vm63DkIE0bkSjxluQlioBiBgf5w1UuldaW/3vPcecdljVDisZhmnCMvsxHNiARTTDDHGg9cGwTfrKg==}
     dependencies:
       lodash: 4.17.21
-    dev: false
+    dev: true
 
   /redis-parser@3.0.0:
     resolution: {integrity: sha512-DJnGAeenTdpMEH6uAJRK/uiyEIH9WVsUmoLwzudwGJUwZPp80PDBWPHXSAGNPwNvIXAbe7MSUB1zQFugFml66A==}
@@ -12161,7 +12167,7 @@ packages:
       statuses: 1.5.0
     transitivePeerDependencies:
       - supports-color
-    dev: false
+    dev: true
 
   /send@0.18.0:
     resolution: {integrity: sha512-qqWzuOjSFOuqPjFe4NOsMLafToQQwBSOEpS+FwEt3A2V3vKubTquT3vmLTQpFgMXp8AlFWFuP1qKaJZOtPpVXg==}
@@ -12208,7 +12214,7 @@ packages:
       send: 0.17.2
     transitivePeerDependencies:
       - supports-color
-    dev: false
+    dev: true
 
   /serve-static@1.15.0:
     resolution: {integrity: sha512-XGuRDNjXUijsUL0vl6nSD7cwURuzEgglbOaFuZM9g3kwDXOWVTck0jLzjPzGD+TazWbboZYu52/9/XPdUgne9g==}
@@ -12491,7 +12497,7 @@ packages:
   /statuses@1.5.0:
     resolution: {integrity: sha512-OpZ3zP+jT1PI7I8nemJX4AKmAX070ZkYPVWV/AaKTJl+tXCTGyVdC1a4SL8RUQYEwk/f34ZX8UTykN68FwrqAA==}
     engines: {node: '>= 0.6'}
-    dev: false
+    dev: true
 
   /statuses@2.0.1:
     resolution: {integrity: sha512-RwNA9Z/7PrK06rYLIzFMlaF+l73iwpzsqRIFgbMLbTcLD6cOao82TaWefPXQvB2fOC4AjuYSEndS7N/mTCbkdQ==}
