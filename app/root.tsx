@@ -4,7 +4,6 @@ import type {
   V2_MetaFunction,
 } from "@remix-run/node"
 import { json } from "@remix-run/node"
-import type { ThrownResponse } from "@remix-run/react"
 import {
   useLoaderData,
   Links,
@@ -13,7 +12,8 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-  useCatch,
+  useRouteError,
+  isRouteErrorResponse,
 } from "@remix-run/react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
@@ -21,16 +21,8 @@ import type { ComponentProps } from "react"
 import { useTranslation } from "react-i18next"
 import remixImageStyles from "remix-image/remix-image.css"
 
-import type { NotFoundBoundaryData } from "~/components/error"
 import { NotFound } from "~/components/error"
 import { PublicEnv } from "~/components/utils"
-import {
-  GA_TRACKING_ID,
-  RAILWAY_GIT_COMMIT_SHA,
-  SENTRY_DSN,
-  SHOPIFY_STORE,
-  SHOPIFY_STOREFRONT_ACCESS_TOKEN,
-} from "~/config/env.server"
 import { shopifyStorefrontAPIEndpoint } from "~/config/vars.server"
 import i18next from "~/helpers/i18next.server"
 import stylesheet from "~/styles/app.css"
@@ -61,27 +53,49 @@ export const meta: V2_MetaFunction = () => [
   { content: "width=device-width, initial-scale=1", name: "viewport" },
 ]
 
-export function CatchBoundary() {
-  const caught = useCatch<ThrownResponse<number, NotFoundBoundaryData>>()
+// TODO(adelrodriguez): Improve this error page
+export function ErrorBoundary() {
+  const error = useRouteError()
 
-  return <NotFound data={caught.data} status={caught.status} />
+  if (!isRouteErrorResponse(error)) {
+    let errorMessage = "Unknown error"
+
+    if (error instanceof Error) {
+      errorMessage = error.message
+    }
+
+    if (isProduction) {
+      return null
+    }
+
+    return (
+      <div>
+        <h1>Uh oh ...</h1>
+        <p>Something went wrong.</p>
+        <pre>{errorMessage}</pre>
+      </div>
+    )
+  }
+
+  return <NotFound data={error.data} status={error.status} />
 }
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request, context }: LoaderArgs) {
   const locale = await i18next.getLocale(request)
+  const env = context.env
 
-  const env: ComponentProps<typeof PublicEnv> = {
-    gaTrackingId: GA_TRACKING_ID,
-    release: RAILWAY_GIT_COMMIT_SHA,
-    sentryDsn: SENTRY_DSN,
-    shopifyStore: SHOPIFY_STORE,
+  const publicEnv: ComponentProps<typeof PublicEnv> = {
+    gaTrackingId: env.GA_TRACKING_ID,
+    release: env.RAILWAY_GIT_COMMIT_SHA,
+    sentryDsn: env.SENTRY_DSN,
+    shopifyStore: env.SHOPIFY_STORE,
     shopifyStorefrontAPIEndpoint,
-    shopifyStorefrontAccessToken: SHOPIFY_STOREFRONT_ACCESS_TOKEN,
+    shopifyStorefrontAccessToken: env.SHOPIFY_STOREFRONT_ACCESS_TOKEN,
   }
 
   return json(
     {
-      env,
+      env: publicEnv,
       locale,
     },
     {

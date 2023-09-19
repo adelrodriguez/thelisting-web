@@ -21,7 +21,7 @@
     "database:migration": "prisma migrate dev",
     "database:prototype": "prisma db push",
     "deploy": "railway up",
-    "dev:app": "remix dev -c \"node ./build/server.js\"",
+    "dev:app": "remix dev -c 'node ./build/server.js'",
     "dev:build": "cross-env NODE_ENV=development npm run build:server -- --watch",
     "dev": "run-p dev:*",
     "docker:start": "docker compose up -d",

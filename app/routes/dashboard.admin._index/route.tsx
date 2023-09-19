@@ -103,7 +103,7 @@ export default function AdminToolsPage() {
           </div>
           <span
             aria-hidden="true"
-            className="pointer-events-none absolute top-6 right-6 text-gray-300 group-hover:text-gray-400"
+            className="pointer-events-none absolute right-6 top-6 text-gray-300 group-hover:text-gray-400"
           >
             <svg
               className="h-6 w-6"

@@ -1,6 +1,10 @@
 import type { ActionArgs } from "@remix-run/node"
 import { redirect, json } from "@remix-run/node"
-import { useCatch, useNavigate } from "@remix-run/react"
+import {
+  isRouteErrorResponse,
+  useNavigate,
+  useRouteError,
+} from "@remix-run/react"
 import { z } from "zod"
 
 import { Alert } from "~/components/common"
@@ -69,9 +73,15 @@ export async function action({
   }
 }
 
-export function CatchBoundary() {
+export function ErrorBoundary() {
   const navigate = useNavigate()
-  const error = useCatch()
+  const error = useRouteError()
+
+  if (!isRouteErrorResponse(error)) {
+    // TODO(adelrodriguez): Report this error to Sentry
+
+    return null
+  }
 
   return (
     <div className="mb-2 mt-4">
