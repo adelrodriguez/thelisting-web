@@ -1,118 +1,134 @@
 import { createRequestHandler } from "@remix-run/express"
-import { broadcastDevReady } from "@remix-run/node"
+import type { ServerBuild } from "@remix-run/node"
+import { broadcastDevReady, installGlobals } from "@remix-run/node"
+import chokidar from "chokidar"
 import compression from "compression"
-import express from "express"
+import express, {
+  type NextFunction,
+  type Request,
+  type Response,
+} from "express"
 import morgan from "morgan"
-import { networkInterfaces } from "node:os"
-import path from "node:path"
+import * as fs from "node:fs"
+import * as path from "node:path"
+import * as url from "node:url"
+import sourceMapSupport from "source-map-support"
 
 import { isDevelopment } from "~/config/vars"
 import cache from "~/helpers/cache.server"
 import db from "~/helpers/db.server"
 import logger from "~/helpers/logger.server"
+import { getLocalNetworkIP } from "~/utils/network"
 
 import bullboard from "./bullboard"
 import cron from "./cron"
 
-const port = process.env.PORT || 3000
+sourceMapSupport.install()
+installGlobals()
 
-const BUILD_DIR = path.join(process.cwd(), "build")
+void run()
 
-const app = express()
+async function run() {
+  const BUILD_PATH = path.resolve("build/index.js")
+  const initialBuild = await reimportServer()
 
-app.use(compression())
+  const app = express()
 
-// http://expressjs.com/en/advanced/best-practice-security.html#at-a-minimum-disable-x-powered-by-header
-app.disable("x-powered-by")
+  app.use(compression())
 
-app.use(...bullboard)
+  // http://expressjs.com/en/advanced/best-practice-security.html#at-a-minimum-disable-x-powered-by-header
+  app.disable("x-powered-by")
 
-// Remix fingerprints its assets so we can cache forever.
-app.use(
-  "/build",
-  express.static("public/build", { immutable: true, maxAge: "1y" })
-)
+  // Set up BullBoard
+  app.use(...bullboard)
 
-// Everything else (like favicon.ico) is cached for an hour. You may want to be
-// more aggressive with this caching.
-app.use(express.static("public", { maxAge: "1h" }))
+  // Remix fingerprints its assets so we can cache forever
+  app.use(
+    "/build",
+    express.static("public/build", { immutable: true, maxAge: "1y" })
+  )
 
-app.use(
-  morgan("tiny", {
-    stream: {
-      write: (message) => logger.http(message),
-    },
-  })
-)
+  // Everything else (like favicon.ico) is cached for an hour. You may want to be
+  // more aggressive with this caching.
+  app.use(express.static("public", { maxAge: "1h" }))
 
-app.all(
-  "*",
-  process.env.NODE_ENV === "development"
-    ? (req, res, next) => {
-        purgeRequireCache()
+  app.use(
+    morgan("tiny", {
+      stream: {
+        write: (message) => logger.http(message),
+      },
+    })
+  )
 
-        return createRequestHandler({
-          build: require(BUILD_DIR),
+  app.all(
+    "*",
+    process.env.NODE_ENV === "development"
+      ? createDevRequestHandler(initialBuild)
+      : createRequestHandler({
+          build: initialBuild,
           getLoadContext: () => ({ cache, db, logger }),
           mode: process.env.NODE_ENV,
+        })
+  )
+
+  const port = process.env.PORT || 3000
+
+  app.listen(port, () => {
+    logger.info("⚡️ Ready: http://localhost:" + port)
+
+    if (isDevelopment) {
+      logger.info(`Local network IP: http://${getLocalNetworkIP()}:${port}}`)
+      void broadcastDevReady(initialBuild)
+    }
+
+    // Start cron jobs
+    logger.info("Starting cron jobs")
+    void cron()
+  })
+
+  async function reimportServer(): Promise<ServerBuild> {
+    // cjs: manually remove the server build from the require cache
+    Object.keys(require.cache).forEach((key) => {
+      if (key.startsWith(BUILD_PATH)) {
+        delete require.cache[key]
+      }
+    })
+
+    const stat = fs.statSync(BUILD_PATH)
+
+    // convert build path to URL for Windows compatibility with dynamic `import`
+    const BUILD_URL = url.pathToFileURL(BUILD_PATH).href
+
+    // use a timestamp query parameter to bust the import cache
+    return import(BUILD_URL + "?t=" + stat.mtimeMs)
+  }
+
+  function createDevRequestHandler(initialBuild: ServerBuild) {
+    let build = initialBuild
+    async function handleServerUpdate() {
+      // 1. re-import the server build
+      build = await reimportServer()
+      // 2. tell Remix that this app server is now up-to-date and ready
+      void broadcastDevReady(build)
+    }
+
+    chokidar
+      .watch(BUILD_PATH, { ignoreInitial: true })
+      .on("add", handleServerUpdate)
+      .on("change", handleServerUpdate)
+
+    // wrap request handler to make sure its recreated with the latest build for
+    // every request
+    return async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        return createRequestHandler({
+          build,
+          getLoadContext: () => ({ cache, db, logger }),
+          mode: "development",
         })(req, res, next)
-      }
-    : createRequestHandler({
-        build: require(BUILD_DIR),
-        getLoadContext: () => ({ cache, db, logger }),
-        mode: process.env.NODE_ENV,
-      })
-)
-
-app.listen(port, () => {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const build = require(BUILD_DIR)
-  logger.info("Ready: http://localhost:" + port)
-
-  if (isDevelopment) {
-    logger.info(`Local network IP: http://${getLocalNetworkIP()}:${port}}`)
-    void broadcastDevReady(build)
-  }
-
-  // Start cron jobs
-  logger.info("Starting cron jobs")
-  void cron()
-})
-
-function purgeRequireCache() {
-  // purge require cache on requests for "server side HMR" this won't let
-  // you have in-memory objects between requests in development,
-  // alternatively you can set up nodemon/pm2-dev to restart the server on
-  // file changes, but then you'll have to reconnect to databases/etc on each
-  // change. We prefer the DX of this, so we've included it for you by default
-  for (const key in require.cache) {
-    if (key.startsWith(BUILD_DIR)) {
-      delete require.cache[key]
-    }
-  }
-}
-
-function getLocalNetworkIP(): string {
-  const nets = networkInterfaces()
-  const results = Object.create(null) // Or just '{}', an empty object
-
-  for (const name of Object.keys(nets)) {
-    const _nets = nets[name]
-
-    if (!_nets) continue
-
-    for (const net of _nets) {
-      // Skip over non-IPv4 and internal (i.e. 127.0.0.1) addresses
-      // 'IPv4' is in Node <= 17, from 18 it's a number 4 or 6
-      const familyV4Value = typeof net.family === "string" ? "IPv4" : 4
-      if (net.family === familyV4Value && !net.internal) {
-        if (!results[name]) {
-          results[name] = []
-        }
-        results[name].push(net.address)
+      } catch (error) {
+        next(error)
       }
     }
   }
-
-  return results["en0"][0]
 }

@@ -25,5 +25,9 @@ module.exports = {
     "react-dnd-html5-backend",
     "react-dnd",
   ],
+  serverModuleFormat: "cjs",
+  serverNodeBuiltinsPolyfill: {
+    modules: {},
+  },
   tailwind: true,
 }

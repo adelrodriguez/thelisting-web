@@ -316,6 +316,9 @@ devDependencies:
   '@types/react-dom':
     specifier: 18.2.6
     version: 18.2.6
+  '@types/source-map-support':
+    specifier: 0.5.7
+    version: 0.5.7
   '@types/user-agents':
     specifier: ^1.0.2
     version: 1.0.2
@@ -328,6 +331,9 @@ devDependencies:
   autoprefixer:
     specifier: 10.4.14
     version: 10.4.14(postcss@8.4.24)
+  chokidar:
+    specifier: ^3.5.3
+    version: 3.5.3
   cross-env:
     specifier: ^7.0.3
     version: 7.0.3
@@ -367,6 +373,9 @@ devDependencies:
   rimraf:
     specifier: 5.0.1
     version: 5.0.1
+  source-map-support:
+    specifier: ^0.5.21
+    version: 0.5.21
   tailwindcss:
     specifier: 3.3.2
     version: 3.3.2
@@ -4634,6 +4643,12 @@ packages:
     resolution: {integrity: sha512-fBZgytwhYAUkj/jC/FAV4RQ5EerRup1YQsXQCh8rZfiHkc4UahC192oH0smGwsXol3cL3A5oETuAHeQHmhXM4w==}
     dependencies:
       '@types/node': 18.11.19
+    dev: true
+
+  /@types/source-map-support@0.5.7:
+    resolution: {integrity: sha512-rJqBfLel8jPuL5MwXxMH2Cdb6D80Snu3YJxDE+VJAmtT04l7j3OA7h+FYXlYDys0WeBVH/MPbExj3B8NCaDw9g==}
+    dependencies:
+      source-map: 0.6.1
     dev: true
 
   /@types/triple-beam@1.3.2:

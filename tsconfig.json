@@ -10,6 +10,7 @@
       "DOM.Iterable",
       "ESNext"
     ],
+    "module": "CommonJS",
     "isolatedModules": true,
     "esModuleInterop": true,
     "jsx": "react-jsx",
