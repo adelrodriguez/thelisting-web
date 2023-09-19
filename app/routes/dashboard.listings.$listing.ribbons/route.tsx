@@ -25,6 +25,8 @@ export const themeValidator = withZod(ListingThemeSchema)
 
 export async function loader({ params, context }: LoaderArgs) {
   const db = context.db
+  const cache = context.cache
+
   const { listing: sku } = zx.parseParams(
     params,
     z.object({ listing: z.coerce.number() })
@@ -39,7 +41,7 @@ export async function loader({ params, context }: LoaderArgs) {
       orderBy: { position: "asc" },
       where: { listing: { sku } },
     }),
-    getGoogleWebFontsList(),
+    getGoogleWebFontsList(cache),
   ])
 
   const theme = ListingThemeSchema.parse(listing.theme)

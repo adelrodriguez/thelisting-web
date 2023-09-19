@@ -1,3 +1,4 @@
+import type { Redis } from "ioredis"
 import { z } from "zod"
 
 import { GOOGLE_FONTS_CSS_API_URL, ONE_WEEK, REDIS_KEYS } from "~/config/consts"
@@ -5,7 +6,6 @@ import {
   GOOGLE_WEB_FONTS_DEVELOPER_API_KEY,
   GOOGLE_WEB_FONTS_URL,
 } from "~/config/env.server"
-import cache from "~/helpers/cache.server"
 
 export function generateGoogleFontsUrl(fonts: (string | null | undefined)[]) {
   const values = fonts
@@ -19,7 +19,7 @@ export function generateGoogleFontsUrl(fonts: (string | null | undefined)[]) {
   return `${GOOGLE_FONTS_CSS_API_URL}?${families.join("&")}`
 }
 
-export async function getGoogleWebFontsList() {
+export async function getGoogleWebFontsList(cache: Redis) {
   const cachedFonts = await cache.get(REDIS_KEYS.GoogleFonts)
 
   if (cachedFonts) {
