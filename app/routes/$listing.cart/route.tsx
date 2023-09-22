@@ -1,7 +1,7 @@
 import { Dialog, Transition } from "@headlessui/react"
 import { InformationCircleIcon, XMarkIcon } from "@heroicons/react/24/outline"
 import type { Listing } from "@prisma/client"
-import type { LoaderArgs } from "@remix-run/node"
+import type { LoaderFunctionArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import {
   Link,
@@ -35,7 +35,7 @@ export const handle = {
   i18n: ["registry", "common"],
 }
 
-export function loader({ request }: LoaderArgs) {
+export function loader({ request }: LoaderFunctionArgs) {
   const { alert_note: alertNote } = zx.parseQuery(
     request,
     z.object({

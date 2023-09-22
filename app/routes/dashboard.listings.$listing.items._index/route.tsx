@@ -1,7 +1,7 @@
 import { Menu, Transition } from "@headlessui/react"
 import { EllipsisVerticalIcon } from "@heroicons/react/20/solid"
 import type { Item } from "@prisma/client"
-import type { LoaderArgs } from "@remix-run/node"
+import type { LoaderFunctionArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { Link, useLoaderData } from "@remix-run/react"
 import {
@@ -18,7 +18,7 @@ import { ViewOnShopify } from "~/components/admin"
 import { Button } from "~/components/common"
 import { useProduct } from "~/utils/hooks"
 
-export async function loader({ params, context }: LoaderArgs) {
+export async function loader({ params, context }: LoaderFunctionArgs) {
   const { db } = context
   const { listing: sku } = zx.parseParams(params, {
     listing: z.coerce.number(),
@@ -74,11 +74,11 @@ const columns = [
             leaveFrom="transform opacity-100 scale-100"
             leaveTo="transform opacity-0 scale-95"
           >
-            <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white py-1 px-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+            <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white px-1 py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
               {item.commerceId && (
                 <Menu.Item>
                   <div className="px-2 py-2 ">
-                    <ViewOnShopify id={item.commerceId} />
+                    <ViewOnShopify gid={item.commerceId} />
                   </div>
                 </Menu.Item>
               )}
@@ -107,7 +107,7 @@ export default function DashboardListingItemsPage() {
         </Link>
       </div>
       <div className="relative mt-8 flex flex-col">
-        <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+        <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
             <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
               <table className=" min-w-full divide-y divide-gray-300">
@@ -116,7 +116,7 @@ export default function DashboardListingItemsPage() {
                     <tr key={headerGroup.id}>
                       {headerGroup.headers.map((header) => (
                         <th
-                          className="max-w-sm overflow-hidden text-ellipsis whitespace-nowrap py-3 px-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
+                          className="max-w-sm overflow-hidden text-ellipsis whitespace-nowrap px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
                           key={header.id}
                           scope="col"
                         >

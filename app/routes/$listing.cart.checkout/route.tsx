@@ -1,5 +1,5 @@
-import type { ActionArgs } from "@remix-run/node"
 import { redirect, json } from "@remix-run/node"
+import type { ActionFunctionArgs } from "@remix-run/node"
 import {
   isRouteErrorResponse,
   useNavigate,
@@ -30,7 +30,7 @@ const CheckoutDataSchema = z.object({
 export async function action({
   request,
   context,
-}: ActionArgs): Promise<Response> {
+}: ActionFunctionArgs): Promise<Response> {
   const { db, logger } = context
   try {
     const headers = request.headers

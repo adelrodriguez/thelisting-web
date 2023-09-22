@@ -1,7 +1,7 @@
 import { Dialog, Transition } from "@headlessui/react"
 import { XMarkIcon } from "@heroicons/react/24/outline"
 import { NoteType } from "@prisma/client"
-import type { ActionArgs, LoaderArgs } from "@remix-run/node"
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { useActionData, useLoaderData, useNavigate } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
@@ -16,12 +16,14 @@ import { zx } from "zodix"
 import { Alert, Button } from "~/components/common"
 import { Form, SubmitButton, TextArea } from "~/components/form"
 import { useCart, useDialogPage, useTrackPageview } from "~/utils/hooks"
+import type { RouteHandle } from "~/utils/remix"
 
-export const handle = {
+export const handle: RouteHandle = {
   i18n: ["registry", "common"],
+  id: "listing-cart-note",
 }
 
-export async function loader({ request, context }: LoaderArgs) {
+export async function loader({ request, context }: LoaderFunctionArgs) {
   const db = context.db
   const query = zx.parseQuerySafe(request, z.object({ note_id: z.string() }))
 
@@ -42,7 +44,7 @@ export async function loader({ request, context }: LoaderArgs) {
   })
 }
 
-export async function action({ request, params, context }: ActionArgs) {
+export async function action({ request, params, context }: ActionFunctionArgs) {
   const db = context.db
   const parsedQuery = zx.parseQuerySafe(
     request,

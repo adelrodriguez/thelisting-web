@@ -1,11 +1,11 @@
 import { intervalToDuration, isPast } from "date-fns"
 import { useEffect, useState } from "react"
-import { ClientOnly } from "remix-utils"
 
 import { Spinner } from "~/components/loading"
 import { useInterval } from "~/utils/hooks"
 import type { CountdownProperties } from "~/utils/ribbons"
 import { capitalize } from "~/utils/string"
+import { isWindowDefined } from "~/utils/window"
 
 import SectionWrapper from "./SectionWrapper"
 import useTheme from "./ThemeProvider"
@@ -34,36 +34,32 @@ export default function Countdown({ eventDatetime }: CountdownProperties) {
     }
   }, [clearInterval, eventDatetime])
 
+  // TODO(adelrodriguez): Set a loading component
+  if (!isWindowDefined()) {
+    return (
+      <div className="flex w-full justify-center">
+        <Spinner className="h-10 w-10" />
+      </div>
+    )
+  }
+
   return (
     <SectionWrapper className="h-screen">
-      {/* // TODO(adelrodriguez): Set a loading component */}
-      <ClientOnly
-        fallback={
-          <div className="flex w-full justify-center">
-            <Spinner className="h-10 w-10" />
-          </div>
-        }
-      >
-        {() => (
-          <div className="grid h-full w-full grid-cols-5 items-center justify-around">
-            {Object.keys(remaining)
-              .filter((key) => key !== "years")
-              .map((key) => (
-                <div className="flex flex-col items-center" key={key}>
-                  <div
-                    className="text-4xl lg:text-5xl"
-                    style={{ fontFamily: theme.fonts?.heading }}
-                  >
-                    {remaining[key as keyof typeof remaining]}
-                  </div>
-                  <div className="pt-1 font-body text-sm">
-                    {capitalize(key)}
-                  </div>
-                </div>
-              ))}
-          </div>
-        )}
-      </ClientOnly>
+      <div className="grid h-full w-full grid-cols-5 items-center justify-around">
+        {Object.keys(remaining)
+          .filter((key) => key !== "years")
+          .map((key) => (
+            <div className="flex flex-col items-center" key={key}>
+              <div
+                className="text-4xl lg:text-5xl"
+                style={{ fontFamily: theme.fonts?.heading }}
+              >
+                {remaining[key as keyof typeof remaining]}
+              </div>
+              <div className="pt-1 font-body text-sm">{capitalize(key)}</div>
+            </div>
+          ))}
+      </div>
     </SectionWrapper>
   )
 }

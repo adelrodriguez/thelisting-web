@@ -1,9 +1,8 @@
 import { Bars3Icon } from "@heroicons/react/24/solid"
-import type { LoaderArgs, V2_MetaFunction } from "@remix-run/node"
+import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { Outlet, useLoaderData } from "@remix-run/react"
 import clsx from "clsx"
-import { ReasonPhrases, StatusCodes } from "http-status-codes"
 import { useState } from "react"
 import { z } from "zod"
 import { zx } from "zodix"
@@ -12,11 +11,12 @@ import { Image } from "~/components/common"
 import { THE_LISTING_LOGO_BLACK } from "~/config/consts"
 import { generateCloudflareImageUrl } from "~/utils/cloudflare"
 import { CartProvider } from "~/utils/hooks"
+import { notFound } from "~/utils/remix"
 
 import Menu from "./Menu"
 import Registry from "./Registry"
 
-export async function loader({ params, context }: LoaderArgs) {
+export async function loader({ params, context }: LoaderFunctionArgs) {
   const db = context.db
   const { listing: path } = zx.parseParams(params, { listing: z.string() })
 
@@ -30,40 +30,31 @@ export async function loader({ params, context }: LoaderArgs) {
   })
 
   if (!listing) {
-    throw json(
-      {
-        message: "Sorry, we couldn’t find the page you’re looking for.",
-        title: "Not Found",
-      },
-      {
-        status: StatusCodes.NOT_FOUND,
-        statusText: ReasonPhrases.NOT_FOUND,
-      }
-    )
+    throw notFound({
+      message: "Sorry, we couldn’t find the page you’re looking for.",
+    })
   }
 
   return json({ listing })
 }
 
-export const meta: V2_MetaFunction<typeof loader> = ({ data }) => {
-  try {
-    return [
-      { title: `${data.listing.title} | The Listing` },
-      { content: data.listing.subtitle, name: "description" },
-      { content: data.listing.subtitle, name: "og:description" },
-      { charSet: "utf-8" },
-      {
-        content: data.listing.coverImage
-          ? generateCloudflareImageUrl(data.listing.coverImage)
-          : "", // TODO(adelrodriguez): Add default image
-        name: "og:image",
-      },
-      { content: `${data.listing.title} | The Listing`, name: "og:title" },
-      { content: "width=device-width, initial-scale=1", name: "viewport" },
-    ]
-  } catch (error) {
-    return []
-  }
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
+  if (!data) return [{ title: "The Listing" }]
+
+  return [
+    { title: `${data.listing.title} | The Listing` },
+    { content: data.listing.subtitle, name: "description" },
+    { content: data.listing.subtitle, name: "og:description" },
+    { charSet: "utf-8" },
+    {
+      content: data.listing.coverImage
+        ? generateCloudflareImageUrl(data.listing.coverImage)
+        : "", // TODO(adelrodriguez): Add default image
+      name: "og:image",
+    },
+    { content: `${data.listing.title} | The Listing`, name: "og:title" },
+    { content: "width=device-width, initial-scale=1", name: "viewport" },
+  ]
 }
 
 export default function ListingPage() {

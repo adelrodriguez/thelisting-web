@@ -1,13 +1,13 @@
 import { UserRole } from "@prisma/client"
-import type { ActionArgs } from "@remix-run/node"
+import type { ActionFunctionArgs } from "@remix-run/node"
 import { redirect } from "@remix-run/node"
 import { withZod } from "@remix-validated-form/with-zod"
 import { useSnackbar } from "notistack"
-import { unauthorized } from "remix-utils"
 import { ValidatedForm, validationError } from "remix-validated-form"
 
 import { FormInput, FormListRadioGroup, FormSubmit } from "~/components/form"
 import auth from "~/helpers/auth.server"
+import { unauthorized } from "~/utils/remix"
 import { UserSchema } from "~/utils/user"
 
 const validator = withZod(UserSchema)
@@ -19,15 +19,16 @@ export const handle = {
   }),
 }
 
-export async function action({ request, context }: ActionArgs) {
+export async function action({ request, context }: ActionFunctionArgs) {
   const { db } = context
 
   const user = await auth.isAuthenticated(request)
 
-  if (!user) throw unauthorized("You must be logged in to create a listing")
+  if (!user) {
+    throw unauthorized({ message: "You must be logged in to create a listing" })
+  }
 
   const formData = await request.formData()
-
   const result = await validator.validate(formData)
 
   if (result.error) return validationError(result.error)
@@ -84,6 +85,8 @@ export default function CreateListingsPage() {
         <FormListRadioGroup
           label="Role"
           name="role"
+          // @ts-expect-error this hopefully is fixed when the component is
+          // updated
           options={[
             {
               description: "A regular user without admin privileges",

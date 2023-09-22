@@ -16861,7 +16861,11 @@ export type InventoryAdjustItemInput = {
 export type InventoryAdjustQuantitiesInput = {
   /** The quantity changes of items at locations to be made. */
   changes: Array<InventoryChangeInput>;
-  /** The quantity name to be adjusted. */
+  /**
+   * The quantity [name](https://shopify.dev/docs/apps/fulfillment/inventory-management-apps#inventory-states)
+   * to be adjusted.
+   *
+   */
   name: Scalars['String']['input'];
   /**
    * The reason for the quantity changes. The value must be one of the [possible
@@ -17066,7 +17070,11 @@ export type InventoryChange = {
   ledgerDocumentUri?: Maybe<Scalars['String']['output']>;
   /** The location associated with this inventory change. */
   location?: Maybe<Location>;
-  /** The name of the inventory quantity that was changed. */
+  /**
+   * The [name](https://shopify.dev/docs/apps/fulfillment/inventory-management-apps#inventory-states)
+   * of the inventory quantity that was changed.
+   *
+   */
   name: Scalars['String']['output'];
   /** The quantity of named inventory after the change. */
   quantityAfterChange?: Maybe<Scalars['Int']['output']>;
@@ -17400,13 +17408,13 @@ export enum InventoryMoveQuantitiesUserErrorCode {
  *
  */
 export type InventoryMoveQuantityChange = {
-  /** The location, quantity name, and ledger document from where the move will be made. */
+  /** Details about where the move will be made from. */
   from: InventoryMoveQuantityTerminalInput;
   /** Specifies the inventory item to which the change will be applied. */
   inventoryItemId: Scalars['ID']['input'];
   /** The amount by which the inventory quantity will be changed. */
   quantity: Scalars['Int']['input'];
-  /** The location, quantity name, and ledger document to where the move will be made. */
+  /** Details about where the move will be made to. */
   to: InventoryMoveQuantityTerminalInput;
 };
 
@@ -17419,7 +17427,12 @@ export type InventoryMoveQuantityTerminalInput = {
   ledgerDocumentUri?: InputMaybe<Scalars['String']['input']>;
   /** Specifies the location at which the change will be applied. */
   locationId: Scalars['ID']['input'];
-  /** The quantity name to be moved. */
+  /**
+   * The quantity
+   * [name](https://shopify.dev/docs/apps/fulfillment/inventory-management-apps#inventory-states) to be
+   * moved.
+   *
+   */
   name: Scalars['String']['input'];
 };
 
@@ -17436,7 +17449,11 @@ export type InventoryProperties = {
  */
 export type InventoryQuantity = {
   __typename?: 'InventoryQuantity';
-  /** The name that identifies the inventory quantity. */
+  /**
+   * The [name](https://shopify.dev/docs/apps/fulfillment/inventory-management-apps#inventory-states)
+   * that identifies the inventory quantity.
+   *
+   */
   name: Scalars['String']['output'];
   /** The quantity for the quantity name. */
   quantity: Scalars['Int']['output'];
@@ -17451,11 +17468,16 @@ export type InventoryQuantityName = {
   belongsTo: Array<Scalars['String']['output']>;
   /** List of quantity names that comprise this quantity name. */
   comprises: Array<Scalars['String']['output']>;
-  /** The i18n-friendly display name of the quantity. */
+  /** The display name for quantity names translated into applicable language. */
   displayName?: Maybe<Scalars['String']['output']>;
   /** Whether the quantity name has been used by the merchant. */
   isInUse: Scalars['Boolean']['output'];
-  /** The quantity name as used by the API. */
+  /**
+   * The [name](https://shopify.dev/docs/apps/fulfillment/inventory-management-apps#inventory-states) of
+   * the inventory quantity. Used by
+   * [inventory queries and mutations](https://shopify.dev/docs/apps/fulfillment/inventory-management-apps#graphql-queries-and-mutations).
+   *
+   */
   name: Scalars['String']['output'];
 };
 
@@ -34383,11 +34405,21 @@ export type QueryRoot = {
   giftCards: GiftCardConnection;
   /** The total number of gift cards issued for the shop. */
   giftCardsCount: Scalars['UnsignedInt64']['output'];
-  /** Returns an `InventoryItem` object by ID. */
+  /**
+   * Returns an
+   * `[InventoryItem](https://shopify.dev/docs/api/admin-graphql/latest/objects/InventoryItem)`
+   * object by ID.
+   *
+   */
   inventoryItem?: Maybe<InventoryItem>;
   /** Returns a list of inventory items. */
   inventoryItems: InventoryItemConnection;
-  /** Returns an `InventoryLevel` object by ID. */
+  /**
+   * Returns an
+   * `[InventoryLevel](https://shopify.dev/docs/api/admin-graphql/latest/objects/InventoryLevel)`
+   * object by ID.
+   *
+   */
   inventoryLevel?: Maybe<InventoryLevel>;
   /** General inventory properties for the shop. */
   inventoryProperties: InventoryProperties;

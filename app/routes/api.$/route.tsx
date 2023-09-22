@@ -1,11 +1,8 @@
-import { ReasonPhrases } from "http-status-codes"
-import { notFound } from "remix-utils"
+import { notFound } from "~/utils/remix"
 
 export function loader() {
-  return notFound(
-    { message: "Route not found" },
-    {
-      statusText: ReasonPhrases.NOT_FOUND,
-    }
-  )
+  return notFound({
+    message: "The resource you're looking for does not exist.",
+    title: "Route not found",
+  })
 }

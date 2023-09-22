@@ -1,25 +1,25 @@
-import type { LoaderArgs } from "@remix-run/node"
+import type { LoaderFunctionArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
-import type { RouteMatch } from "@remix-run/react"
 import { useLoaderData } from "@remix-run/react"
 import currency from "currency.js"
 import { format } from "date-fns"
-import { ReasonPhrases, StatusCodes } from "http-status-codes"
 import { z } from "zod"
 import { zx } from "zodix"
 
 import { CREDIT_CARD_FEE, SHIPPING_FEE, SHOPIFY_FEE } from "~/config/consts"
 import { getPriceSymbol } from "~/utils/money"
+import { notFound } from "~/utils/remix"
 
 export const handle = {
-  crumb: ({ params }: RouteMatch) => ({
+  // @ts-expect-error fix the typing for this
+  crumb: ({ params }) => ({
     href: `/dashboard/listings/${params.listing}/stats`,
     name: "Stats",
   }),
   id: "dashboard-listings-stats",
 }
 
-export async function loader({ params, context }: LoaderArgs) {
+export async function loader({ params, context }: LoaderFunctionArgs) {
   const db = context.db
   const { listing: sku } = zx.parseParams(params, {
     listing: z.coerce.number(),
@@ -28,11 +28,9 @@ export async function loader({ params, context }: LoaderArgs) {
   const listing = await db.listing.findUnique({ where: { sku } })
 
   if (!listing) {
-    throw json(
-      { message: "Listing not found" },
-      { status: StatusCodes.NOT_FOUND, statusText: ReasonPhrases.NOT_FOUND }
-    )
+    throw notFound({ message: "Listing not found" })
   }
+
   const [purchaseAggregates, largestPurchase, lastPurchase, itemAggregates] =
     await Promise.all([
       db.purchase.aggregate({

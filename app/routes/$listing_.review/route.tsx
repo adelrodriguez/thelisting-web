@@ -1,7 +1,7 @@
 import { Disclosure } from "@headlessui/react"
 import { GiftIcon, CurrencyDollarIcon } from "@heroicons/react/24/solid"
 import { ListingStatus } from "@prisma/client"
-import type { LoaderArgs } from "@remix-run/node"
+import type { LoaderFunctionArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { useLoaderData } from "@remix-run/react"
 import currency from "currency.js"
@@ -21,7 +21,7 @@ export const handle = {
   i18n: ["common", "registry"],
 }
 
-export async function loader({ request, params, context }: LoaderArgs) {
+export async function loader({ request, params, context }: LoaderFunctionArgs) {
   const db = context.db
   const { listing: path } = zx.parseParams(params, { listing: z.string() })
   const t = await i18next.getFixedT(request, "registry")
@@ -161,9 +161,9 @@ export default function ListingReviewPage() {
                   {listing.purchases.map((purchase, index) => (
                     <Disclosure defaultOpen={index === 0} key={purchase.id}>
                       {({ open }) => (
-                        <div className="border-t border-b border-gray-200 bg-white shadow-sm sm:rounded-lg sm:border">
+                        <div className="border-b border-t border-gray-200 bg-white shadow-sm sm:rounded-lg sm:border">
                           <div className="flex flex-col items-center justify-between border-b border-gray-200 p-4 sm:flex-row">
-                            <dl className="grid w-full grid-cols-3 gap-y-2 gap-x-6 text-sm sm:w-3/4">
+                            <dl className="grid w-full grid-cols-3 gap-x-6 gap-y-2 text-sm sm:w-3/4">
                               <div>
                                 <dt className="font-medium text-gray-900">
                                   {t("registry:giftedBy")}

@@ -1,6 +1,5 @@
 import { createCookieSessionStorage } from "@remix-run/node"
 import { add } from "date-fns"
-import { createTypedSessionStorage } from "remix-utils"
 import { z } from "zod"
 
 import { REMIX_AUTH_SECRET } from "~/config/env.server"
@@ -28,13 +27,8 @@ const SessionSchema = z
   })
   .passthrough()
 
-const typedSessionStorage = createTypedSessionStorage({
-  schema: SessionSchema,
-  sessionStorage,
-})
-
 // you can also export the methods individually for your own usage
-export const { getSession, commitSession, destroySession } = typedSessionStorage
+export const { getSession, commitSession, destroySession } = sessionStorage
 
-export { sessionStorage as untypedSessionStorage }
-export default typedSessionStorage
+export { SessionSchema }
+export default sessionStorage

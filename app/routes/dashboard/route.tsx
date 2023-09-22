@@ -7,7 +7,7 @@ import {
   WrenchIcon,
   BellIcon,
 } from "@heroicons/react/24/outline"
-import type { LoaderArgs, V2_MetaFunction } from "@remix-run/node"
+import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { Link, NavLink, Outlet, useLoaderData } from "@remix-run/react"
 import clsx from "clsx"
@@ -46,7 +46,7 @@ const userNavigation = [
   { href: "/logout", name: "Logout" },
 ]
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   const user = await auth.isAuthenticated(request, {
     failureRedirect: "/login",
   })
@@ -54,7 +54,7 @@ export async function loader({ request }: LoaderArgs) {
   return json({ user })
 }
 
-export const meta: V2_MetaFunction = () => [
+export const meta: MetaFunction = () => [
   { title: "Dashboard | The Listing" },
   { content: "width=device-width, initial-scale=1", name: "viewport" },
 ]
@@ -176,7 +176,7 @@ export default function DashboardLayout() {
               </div>
 
               <Disclosure.Panel className="md:hidden">
-                <div className="px-2 pt-2 pb-3 sm:px-3">
+                <div className="px-2 pb-3 pt-2 sm:px-3">
                   {navigation.map((item) => (
                     <NavLink
                       end={item.href === "/dashboard"}
@@ -201,7 +201,7 @@ export default function DashboardLayout() {
                     </NavLink>
                   ))}
                 </div>
-                <div className="border-t border-gray-700 pt-4 pb-3">
+                <div className="border-t border-gray-700 pb-3 pt-4">
                   <div className="flex items-center px-5">
                     <div className="flex-shrink-0">
                       <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gray-500">
@@ -245,7 +245,7 @@ export default function DashboardLayout() {
           )}
         </Disclosure>
         <div className="bg-white shadow-sm">
-          <div className="mx-auto max-w-7xl py-3 px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6 lg:px-8">
             <Breadcrumbs />
           </div>
         </div>
@@ -265,7 +265,7 @@ export default function DashboardLayout() {
           autoHideDuration={5 * 1000}
           maxSnack={7}
         >
-          <div className="mx-auto h-auto max-w-7xl py-6 px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto h-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
             <Outlet />
           </div>
         </SnackbarProvider>

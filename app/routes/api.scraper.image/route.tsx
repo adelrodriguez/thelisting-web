@@ -1,25 +1,21 @@
-import type { LoaderArgs } from "@remix-run/node"
-import { json } from "@remix-run/node"
-import { ReasonPhrases, StatusCodes } from "http-status-codes"
-import { badRequest } from "remix-utils"
+import type { LoaderFunctionArgs } from "@remix-run/node"
+import { z } from "zod"
+import { zx } from "zodix"
 
 import auth from "~/helpers/auth.server"
+import { badRequest, unauthorized } from "~/utils/remix"
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   const user = await auth.isAuthenticated(request)
 
   if (!user) {
-    throw json("Must be logged in to access this resource", {
-      status: StatusCodes.UNAUTHORIZED,
-      statusText: ReasonPhrases.UNAUTHORIZED,
-    })
+    throw unauthorized()
   }
 
-  const url = new URL(request.url)
-  const imageUrl = url.searchParams.get("url")
+  const { url: imageUrl } = zx.parseQuery(request, { url: z.string() })
 
   if (!imageUrl) {
-    throw badRequest("Missing url parameter")
+    throw badRequest({ message: "Missing url parameter" })
   }
 
   const res = await fetch(imageUrl)

@@ -1,9 +1,14 @@
-import type { ActionArgs } from "@remix-run/node"
+import type { ActionFunctionArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { ReasonPhrases, StatusCodes } from "http-status-codes"
-import { badRequest, serverError, unauthorized } from "remix-utils"
 import { z } from "zod"
 
+import {
+  badRequest,
+  internalServerError,
+  notAllowed,
+  unauthorized,
+} from "~/utils/remix"
 import {
   getShopifyId,
   getShopifyWebhookHeaders,
@@ -12,16 +17,10 @@ import {
 import { checkWebhookLog, verifyWebhook } from "~/utils/webhook.server"
 
 export function loader() {
-  throw json(
-    { message: "This method is not allowed" },
-    {
-      status: StatusCodes.METHOD_NOT_ALLOWED,
-      statusText: ReasonPhrases.METHOD_NOT_ALLOWED,
-    }
-  )
+  throw notAllowed()
 }
 
-export async function action({ request, context }: ActionArgs) {
+export async function action({ request, context }: ActionFunctionArgs) {
   const { logger, db } = context
 
   const clone = request.clone()
@@ -90,16 +89,11 @@ export async function action({ request, context }: ActionArgs) {
       logger.error("Error parsing request body")
       logger.error(error.message)
 
-      return badRequest(error.message, {
-        statusText: ReasonPhrases.BAD_REQUEST,
-      })
+      return badRequest({ message: error.message })
     }
 
     logger.error("Error processing webhook", { error: error as Error })
 
-    return serverError(
-      { message: (error as Error).message },
-      { statusText: ReasonPhrases.INTERNAL_SERVER_ERROR }
-    )
+    return internalServerError({ message: (error as Error).message })
   }
 }

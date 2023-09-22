@@ -1,4 +1,4 @@
-import type { LoaderArgs } from "@remix-run/node"
+import type { LoaderFunctionArgs } from "@remix-run/node"
 import { flattenConnection } from "@shopify/hydrogen-react"
 import Papa from "papaparse"
 import { z } from "zod"
@@ -8,7 +8,7 @@ import { PRODUCT_METAFIELDS } from "~/config/consts"
 import { round } from "~/utils/number"
 import { getProduct } from "~/utils/shopify.server"
 
-export async function loader({ params, context }: LoaderArgs) {
+export async function loader({ params, context }: LoaderFunctionArgs) {
   const db = context.db
   const { listing: listingId } = zx.parseParams(params, { listing: z.string() })
 

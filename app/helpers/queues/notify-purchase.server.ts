@@ -5,6 +5,7 @@ import invariant from "tiny-invariant"
 
 import { QUEUE_NAMES } from "~/config/consts"
 import { SHOPIFY_SHIPPING_ITEM_1_ID } from "~/config/env.server"
+import { isDevelopment } from "~/config/vars"
 import db from "~/helpers/db.server"
 import logger from "~/helpers/logger.server"
 import { createQueue } from "~/helpers/queue.server"
@@ -19,6 +20,11 @@ export type QueueData = {
 
 export const processor: Processor<QueueData> = async (job) => {
   try {
+    if (isDevelopment) {
+      await job.log("Development mode, skipping")
+      return
+    }
+
     const order = await getOrder(getShopifyId(job.data.orderId, "Order"))
     const purchase = await db.purchase.findFirstOrThrow({
       include: { customer: true },
@@ -29,7 +35,7 @@ export const processor: Processor<QueueData> = async (job) => {
       order.customAttributes
     )
 
-    invariant(listingId, "Listing ID is missing")
+    invariant(listingId, "'listingId' is missing")
 
     const listing = await db.listing.findUniqueOrThrow({
       include: { owner: true },

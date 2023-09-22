@@ -1,4 +1,4 @@
-import type { LoaderArgs } from "@remix-run/node"
+import type { LoaderFunctionArgs } from "@remix-run/node"
 import { redirect } from "@remix-run/node"
 import invariant from "tiny-invariant"
 
@@ -6,7 +6,7 @@ import { CUSTOM_ATTRIBUTES } from "~/config/consts"
 import { getShopifyId } from "~/utils/shopify"
 import { getOrderCustomAttributes } from "~/utils/shopify.server"
 
-export async function loader({ request, context }: LoaderArgs) {
+export async function loader({ request, context }: LoaderFunctionArgs) {
   const db = context.db
   const logger = context.logger
   const requestUrl = new URL(request.url)

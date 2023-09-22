@@ -1,7 +1,6 @@
 import type { User } from "@prisma/client"
-import { UserRole } from "@prisma/client"
-import type { LoaderArgs, SerializeFrom } from "@remix-run/node"
-import { redirect , json } from "@remix-run/node"
+import type { LoaderFunctionArgs, SerializeFrom } from "@remix-run/node"
+import { json } from "@remix-run/node"
 import { Link, useLoaderData, useNavigate } from "@remix-run/react"
 import {
   createColumnHelper,
@@ -10,22 +9,13 @@ import {
   useReactTable,
 } from "@tanstack/react-table"
 import { format, parseISO } from "date-fns"
-import { forbidden } from "remix-utils"
 
 import { Button } from "~/components/common"
-import auth from "~/helpers/auth.server"
+import { isUserAdmin } from "~/utils/auth.server"
 
-export async function loader({ request, context }: LoaderArgs) {
+export async function loader({ request, context }: LoaderFunctionArgs) {
   const { db } = context
-  const user = await auth.isAuthenticated(request)
-
-  if (!user) {
-    throw redirect("/login")
-  }
-
-  if (user.role !== UserRole.Admin) {
-    throw forbidden("You do not have permission to access this page.")
-  }
+  await isUserAdmin(request)
 
   const users = await db.user.findMany({
     orderBy: {
@@ -78,7 +68,7 @@ export default function AdminToolsUserManagementPage() {
   const navigate = useNavigate()
 
   return (
-    <div className="mx-auto max-w-7xl py-12 px-4 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
       <div className="sm:text-center">
         <p className="text-base font-semibold uppercase tracking-wide text-teal-600">
           Admin Tools
@@ -97,7 +87,7 @@ export default function AdminToolsUserManagementPage() {
             A list of all users. Click on a user to edit it.
           </p>
         </div>
-        <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
+        <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
           <Link to="/dashboard/admin/users/new">
             <Button>Create User</Button>
           </Link>
@@ -105,7 +95,7 @@ export default function AdminToolsUserManagementPage() {
       </div>
 
       <div className="mt-8 flex flex-col">
-        <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+        <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
             <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
               <table className="min-w-full divide-y divide-gray-300">
@@ -114,7 +104,7 @@ export default function AdminToolsUserManagementPage() {
                     <tr key={headerGroup.id}>
                       {headerGroup.headers.map((header) => (
                         <th
-                          className="max-w-[500px] overflow-hidden text-ellipsis whitespace-nowrap py-3 px-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
+                          className="max-w-[500px] overflow-hidden text-ellipsis whitespace-nowrap px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
                           key={header.id}
                           scope="col"
                         >

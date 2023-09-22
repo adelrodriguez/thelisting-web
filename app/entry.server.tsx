@@ -1,5 +1,5 @@
 import type { DataFunctionArgs, EntryContext } from "@remix-run/node"
-import { Response } from "@remix-run/node"
+import { createReadableStreamFromReadable } from "@remix-run/node"
 import { RemixServer } from "@remix-run/react"
 import { createInstance } from "i18next"
 import Backend from "i18next-fs-backend"
@@ -26,6 +26,7 @@ export default async function handleRequest(
 
   const instance = createInstance()
   const lng = await i18next.getLocale(request)
+  // @ts-expect-error find out why the typing of this fails
   const ns = i18next.getRouteNamespaces(remixContext)
 
   await instance
@@ -52,7 +53,7 @@ export default async function handleRequest(
           responseHeaders.set("Content-Type", "text/html")
 
           resolve(
-            new Response(body, {
+            new Response(createReadableStreamFromReadable(body), {
               headers: responseHeaders,
               status: didError ? 500 : responseStatusCode,
             })

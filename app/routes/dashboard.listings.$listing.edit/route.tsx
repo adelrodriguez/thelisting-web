@@ -1,7 +1,6 @@
 import { ListingStatus, ListingType, UserRole } from "@prisma/client"
-import type { ActionArgs, LoaderArgs } from "@remix-run/node"
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
-import type { RouteMatch } from "@remix-run/react"
 import { useActionData, useLoaderData } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
 import { format, subMilliseconds } from "date-fns"
@@ -9,7 +8,6 @@ import { getTimezoneOffset } from "date-fns-tz"
 import { StatusCodes } from "http-status-codes"
 import { useSnackbar } from "notistack"
 import { useEffect } from "react"
-import { notFound } from "remix-utils"
 import { setFormDefaults } from "remix-validated-form"
 import { z } from "zod"
 import { zfd } from "zod-form-data"
@@ -37,11 +35,12 @@ import {
   ListingTitleSchema,
   ListingTypeSchema,
 } from "~/utils/listing"
-import { forbidden, unauthorized } from "~/utils/remix"
+import { forbidden, notFound, unauthorized } from "~/utils/remix"
 import { getUserFullName } from "~/utils/user"
 
 export const handle = {
-  crumb: ({ params }: RouteMatch) => ({
+  // @ts-expect-error find the recommended typing for matches
+  crumb: ({ params }) => ({
     href: `/dashboard/listings/${params.listing}/details/edit`,
     name: "Edit Listing",
   }),
@@ -64,7 +63,7 @@ const clientValidator = withZod(
   })
 )
 
-export async function loader({ params, context }: LoaderArgs) {
+export async function loader({ params, context }: LoaderFunctionArgs) {
   const db = context.db
   const { listing: sku } = zx.parseParams(params, {
     listing: z.coerce.number(),
@@ -91,7 +90,7 @@ export async function loader({ params, context }: LoaderArgs) {
   })
 }
 
-export async function action({ request, params, context }: ActionArgs) {
+export async function action({ request, params, context }: ActionFunctionArgs) {
   const db = context.db
   const user = await auth.isAuthenticated(request)
 

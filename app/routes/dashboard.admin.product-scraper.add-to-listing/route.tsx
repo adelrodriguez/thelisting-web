@@ -1,6 +1,6 @@
 import { Dialog, Transition } from "@headlessui/react"
 import { XMarkIcon } from "@heroicons/react/24/outline"
-import type { ActionArgs, LoaderArgs } from "@remix-run/node"
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node"
 import { redirect, json } from "@remix-run/node"
 import { useLoaderData } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
@@ -38,7 +38,7 @@ const AddToListingSchema = z.object({
 
 const validator = withZod(AddToListingSchema)
 
-export async function loader({ context }: LoaderArgs) {
+export async function loader({ context }: LoaderFunctionArgs) {
   const db = context.db
 
   const listings = await db.listing.findMany({
@@ -57,7 +57,7 @@ export async function loader({ context }: LoaderArgs) {
   return json({ exchangeRate, listings })
 }
 
-export async function action({ request, context }: ActionArgs) {
+export async function action({ request, context }: ActionFunctionArgs) {
   const db = context.db
 
   const formData = await request.formData()

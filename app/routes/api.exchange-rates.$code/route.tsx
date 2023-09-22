@@ -1,4 +1,4 @@
-import { json, type LoaderArgs } from "@remix-run/node"
+import { json, type LoaderFunctionArgs } from "@remix-run/node"
 import { z } from "zod"
 import { zx } from "zodix"
 
@@ -7,7 +7,7 @@ import alegra from "~/services/alegra.server"
 import { CurrencySchema } from "~/utils/money"
 import { generateKey } from "~/utils/redis"
 
-export async function loader({ params, context }: LoaderArgs) {
+export async function loader({ params, context }: LoaderFunctionArgs) {
   const cache = context.cache
   const logger = context.logger
 

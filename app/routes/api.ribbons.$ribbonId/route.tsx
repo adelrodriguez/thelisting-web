@@ -1,31 +1,33 @@
 import { UserRole } from "@prisma/client"
-import type { ActionArgs } from "@remix-run/node"
+import type { ActionFunctionArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
-import { namedAction, unauthorized } from "remix-utils"
 import { z } from "zod"
 import { zx } from "zodix"
 
 import auth from "~/helpers/auth.server"
+import { notAllowed, unauthorized } from "~/utils/remix"
 
-export async function action({ params, request, context }: ActionArgs) {
+export async function action({ params, request, context }: ActionFunctionArgs) {
   const { db } = context
   const { ribbonId } = zx.parseParams(params, { ribbonId: z.string() })
   const user = await auth.isAuthenticated(request)
 
   if (!user) {
-    return unauthorized("You must be logged in to edit a ribbon")
+    return unauthorized({ message: "You must be logged in to edit a ribbon" })
   }
 
   if (user.role !== UserRole.Admin) {
-    return unauthorized("You must be an admin to edit a ribbon")
+    return unauthorized({ message: "You must be an admin to edit a ribbon" })
   }
 
-  return namedAction(request, {
-    async delete() {
+  switch (request.method) {
+    case "DELETE": {
       const ribbon = await db.ribbon.delete({
         where: { id: ribbonId },
       })
       return json({ ribbon })
-    },
-  })
+    }
+    default:
+      throw notAllowed()
+  }
 }

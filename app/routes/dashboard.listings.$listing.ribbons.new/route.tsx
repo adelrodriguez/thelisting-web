@@ -1,7 +1,7 @@
 import { Dialog, Transition } from "@headlessui/react"
 import { RibbonType } from "@prisma/client"
-import type { ActionArgs, LoaderArgs } from "@remix-run/node"
-import { redirect , json } from "@remix-run/node"
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node"
+import { redirect, json } from "@remix-run/node"
 import { useLoaderData } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
 import { Fragment } from "react"
@@ -32,7 +32,7 @@ const serverValidator = withZod(
   })
 )
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   const { position } = zx.parseQuery(request, {
     position: z.coerce.number().default(0),
   })
@@ -40,7 +40,7 @@ export async function loader({ request }: LoaderArgs) {
   return json({ position })
 }
 
-export async function action({ params, context, request }: ActionArgs) {
+export async function action({ params, context, request }: ActionFunctionArgs) {
   const { db, logger } = context
   const { listing: sku } = zx.parseParams(params, {
     listing: z.coerce.number(),
@@ -121,7 +121,7 @@ export default function DashboardListingRibbonsEditPage() {
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              <Dialog.Panel className="relative w-full transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:max-w-lg sm:p-6">
+              <Dialog.Panel className="relative w-full transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:max-w-lg sm:p-6">
                 <Dialog.Title
                   as="h3"
                   className="text-lg font-medium leading-6 text-gray-900"

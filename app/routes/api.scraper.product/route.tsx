@@ -1,33 +1,24 @@
-import type { LoaderArgs } from "@remix-run/node"
+import type { LoaderFunctionArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
-import { ReasonPhrases, StatusCodes } from "http-status-codes"
+import { z } from "zod"
+import { zx } from "zodix"
 
 import { ONE_DAY, REDIS_KEYS } from "~/config/consts"
 import auth from "~/helpers/auth.server"
 import { productScraper } from "~/helpers/scraper.server"
 import { generateKey } from "~/utils/redis"
+import { unauthorized } from "~/utils/remix"
 import { parseScrapedProductResult } from "~/utils/scraper"
 
-export async function loader({ request, context }: LoaderArgs) {
-  const user = await auth.isAuthenticated(request)
+export async function loader({ request, context }: LoaderFunctionArgs) {
   const { logger, cache, db } = context
+  const user = await auth.isAuthenticated(request)
 
   if (!user) {
-    throw json("You must be logged in to access this resource", {
-      status: StatusCodes.UNAUTHORIZED,
-      statusText: ReasonPhrases.UNAUTHORIZED,
-    })
+    throw unauthorized()
   }
 
-  const requestUrl = new URL(request.url)
-  const url = requestUrl.searchParams.get("url")
-
-  if (!url) {
-    throw json("Missing url parameter", {
-      status: StatusCodes.BAD_REQUEST,
-      statusText: ReasonPhrases.BAD_REQUEST,
-    })
-  }
+  const { url } = zx.parseQuery(request, { url: z.string() })
 
   const key = generateKey(REDIS_KEYS.ProductScraper, url)
 

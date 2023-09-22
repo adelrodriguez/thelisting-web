@@ -1,7 +1,7 @@
 import type {
   LinksFunction,
-  LoaderArgs,
-  V2_MetaFunction,
+  LoaderFunctionArgs,
+  MetaFunction,
 } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import {
@@ -27,7 +27,7 @@ import { shopifyStorefrontAPIEndpoint } from "~/config/vars.server"
 import i18next from "~/helpers/i18next.server"
 import stylesheet from "~/styles/app.css"
 import { ExchangeRateProvider, useChangeLanguage } from "~/utils/hooks"
-import { i18nCookie } from "~/utils/i18next"
+import { i18nCookie } from "~/utils/i18n"
 
 import { isProduction } from "./config/vars"
 
@@ -42,45 +42,36 @@ export const links: LinksFunction = () => [
   },
 ]
 
-export const meta: V2_MetaFunction = () => [
-  { title: "The Listing" },
-  {
-    content:
-      "Listas de regalo personalizadas para todo tipo de eventos. Te permitimos elegir artículos de cualquier tienda que desees; logistica de compra y entrega incluida.",
-    name: "description",
-  },
-  { charSet: "utf-8" },
-  { content: "width=device-width, initial-scale=1", name: "viewport" },
-]
-
 // TODO(adelrodriguez): Improve this error page
 export function ErrorBoundary() {
   const error = useRouteError()
 
   if (!isRouteErrorResponse(error)) {
-    let errorMessage = "Unknown error"
-
-    if (error instanceof Error) {
-      errorMessage = error.message
-    }
-
     if (isProduction) {
-      return null
+      return (
+        <NotFound
+          data={{ message: "Not found", title: "Not found" }}
+          status={500}
+        />
+      )
     }
 
     return (
-      <div>
-        <h1>Uh oh ...</h1>
-        <p>Something went wrong.</p>
-        <pre>{errorMessage}</pre>
-      </div>
+      <html lang="en">
+        <head>
+          <title>Error</title>
+        </head>
+        <body>
+          <pre>{JSON.stringify(error, null, 2)}</pre>
+        </body>
+      </html>
     )
   }
 
   return <NotFound data={error.data} status={error.status} />
 }
 
-export async function loader({ request, context }: LoaderArgs) {
+export async function loader({ request, context }: LoaderFunctionArgs) {
   const locale = await i18next.getLocale(request)
   const env = context.env
 
@@ -105,6 +96,17 @@ export async function loader({ request, context }: LoaderArgs) {
     }
   )
 }
+
+export const meta: MetaFunction<typeof loader> = ({ data }) => [
+  { title: "The Listing" },
+  {
+    content:
+      "Listas de regalo personalizadas para todo tipo de eventos. Te permitimos elegir artículos de cualquier tienda que desees; logistica de compra y entrega incluida.",
+    name: "description",
+  },
+  { charSet: "utf-8" },
+  { content: "width=device-width, initial-scale=1", name: "viewport" },
+]
 
 export default function App() {
   const { env, locale } = useLoaderData<typeof loader>()

@@ -5,18 +5,18 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline"
 import { UserRole, RibbonType } from "@prisma/client"
-import type { ActionArgs, LoaderArgs } from "@remix-run/node"
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { Form, useActionData, useLoaderData } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
 import { Fragment, useEffect } from "react"
-import { namedAction } from "remix-utils"
 import { ValidatedForm } from "remix-validated-form"
 import { z } from "zod"
 import { zx } from "zodix"
 
 import { Input, SubmitButton } from "~/components/form"
 import auth from "~/helpers/auth.server"
+import { isUserAdmin } from "~/utils/auth.server"
 import { useDialogPage } from "~/utils/hooks"
 import { notFound, unauthorized } from "~/utils/remix"
 import {
@@ -44,7 +44,7 @@ const detailsValidator = withZod(
   })
 )
 
-export async function loader({ params, context }: LoaderArgs) {
+export async function loader({ params, context }: LoaderFunctionArgs) {
   const db = context.db
   const { ribbonId } = zx.parseParams(params, {
     ribbonId: z.string(),
@@ -57,19 +57,13 @@ export async function loader({ params, context }: LoaderArgs) {
   return json({ ribbon })
 }
 
-export async function action({ params, request, context }: ActionArgs) {
+export async function action({ params, context, request }: ActionFunctionArgs) {
+  await isUserAdmin(request)
+
   const { db } = context
 
   const { ribbonId } = zx.parseParams(params, { ribbonId: z.string() })
-  const user = await auth.isAuthenticated(request)
-
-  if (!user) {
-    throw unauthorized({ message: "You must be logged in to edit a ribbon" })
-  }
-
-  if (user.role !== UserRole.Admin) {
-    throw unauthorized({ message: "You must be an admin to edit a ribbon" })
-  }
+  const { action } = zx.parseQuery(request, { action: z.string() })
 
   const ribbon = await db.ribbon.findUnique({ where: { id: ribbonId } })
 
@@ -77,14 +71,18 @@ export async function action({ params, request, context }: ActionArgs) {
     throw notFound({ message: "Ribbon not found" })
   }
 
-  return namedAction(request, {
-    async delete() {
+  // TODO(adelrodriguez): This might be totally broken since we removed
+  // remix-utils. Eventually the Form component should be replaced with a
+  // ValidatedForm component that includes a subaction and we can be sure that's
+  // solved.
+  switch (action) {
+    case "delete": {
       const deletedRibbon = await db.ribbon.delete({
         where: { id: ribbonId },
       })
       return json({ ribbon: deletedRibbon, success: true })
-    },
-    async details() {
+    }
+    case "details": {
       const formData = await request.formData()
       const result = await detailsValidator.validate(formData)
 
@@ -100,8 +98,8 @@ export async function action({ params, request, context }: ActionArgs) {
       })
 
       return json({ ribbon: updatedRibbon, success: true })
-    },
-    async duplicate() {
+    }
+    case "duplicate": {
       const ribbonCount = await db.ribbon.count({
         where: { listingId: ribbon.listingId },
       })
@@ -117,8 +115,8 @@ export async function action({ params, request, context }: ActionArgs) {
       })
 
       return json({ ribbon: duplicatedRibbon, success: true })
-    },
-    async properties() {
+    }
+    case "properties": {
       const schemas = {
         [RibbonType.Banner]: BannerPropertiesSchema,
         [RibbonType.Countdown]: CountdownPropertiesSchema,
@@ -145,8 +143,10 @@ export async function action({ params, request, context }: ActionArgs) {
       })
 
       return json({ ribbon: updatedRibbon, success: true })
-    },
-  })
+    }
+    default:
+      throw notFound({ message: "Action not found" })
+  }
 }
 
 export default function DashboardListingRibbonsEditPage() {
@@ -191,7 +191,7 @@ export default function DashboardListingRibbonsEditPage() {
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              <Dialog.Panel className="relative w-full transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:max-w-5xl sm:p-6">
+              <Dialog.Panel className="relative w-full transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:max-w-5xl sm:p-6">
                 <Dialog.Title as="div" className="flex justify-between">
                   <h3 className="text-lg font-medium leading-6 text-gray-900">
                     Edit Ribbon

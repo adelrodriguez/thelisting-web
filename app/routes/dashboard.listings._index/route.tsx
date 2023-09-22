@@ -4,7 +4,7 @@ import {
   EllipsisHorizontalIcon,
 } from "@heroicons/react/20/solid"
 import { ListingStatus } from "@prisma/client"
-import type { LoaderArgs } from "@remix-run/node"
+import type { LoaderFunctionArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { Link, useLoaderData, useNavigate } from "@remix-run/react"
 import clsx from "clsx"
@@ -34,7 +34,7 @@ const statuses = {
   [ListingStatus.Closed]: "text-gray-600 bg-gray-50 ring-gray-500/10",
 }
 
-export async function loader({ context, request }: LoaderArgs) {
+export async function loader({ context, request }: LoaderFunctionArgs) {
   const { db } = context
   const { status } = zx.parseQuery(request, {
     status: ListingStatusSchema.optional(),

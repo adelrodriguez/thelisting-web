@@ -1,5 +1,5 @@
 import { ListingType } from "@prisma/client"
-import type { ActionArgs, LoaderArgs } from "@remix-run/node"
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node"
 import { json, redirect } from "@remix-run/node"
 import { useActionData, useLoaderData } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
@@ -8,7 +8,6 @@ import { getTimezoneOffset } from "date-fns-tz"
 import { StatusCodes } from "http-status-codes"
 import { useSnackbar } from "notistack"
 import { useEffect } from "react"
-import { unauthorized } from "remix-utils"
 import { z } from "zod"
 
 import {
@@ -28,6 +27,7 @@ import {
   ListingTitleSchema,
   ListingTypeSchema,
 } from "~/utils/listing"
+import { unauthorized } from "~/utils/remix"
 import { getUserFullName } from "~/utils/user"
 
 export const handle = {
@@ -50,11 +50,12 @@ const clientValidator = withZod(
   })
 )
 
-export async function loader({ request, context }: LoaderArgs) {
+export async function loader({ request, context }: LoaderFunctionArgs) {
   const { db } = context
   const user = await auth.isAuthenticated(request)
 
-  if (!user) throw unauthorized("You must be logged in to create a listing")
+  if (!user)
+    throw unauthorized({ message: "You must be logged in to create a listing" })
 
   const users = await db.user.findMany({
     orderBy: { firstName: "asc" },
@@ -64,12 +65,12 @@ export async function loader({ request, context }: LoaderArgs) {
   return json({ users })
 }
 
-export async function action({ request, context }: ActionArgs) {
+export async function action({ request, context }: ActionFunctionArgs) {
   const { db } = context
   const user = await auth.isAuthenticated(request)
 
   if (!user) {
-    throw unauthorized("You must be logged in to create a listing")
+    throw unauthorized({ message: "You must be logged in to create a listing" })
   }
 
   const formData = await request.formData()
@@ -142,7 +143,7 @@ export default function CreateListingsPage() {
   }, [actionData, enqueueSnackbar])
 
   return (
-    <div className="mx-auto max-w-7xl py-12 px-4 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
       <div className="sm:text-center">
         <p className="text-base font-semibold uppercase tracking-wide text-gray-600">
           Listings

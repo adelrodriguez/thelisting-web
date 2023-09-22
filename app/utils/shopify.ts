@@ -1,9 +1,9 @@
-import { json } from "@remix-run/node"
-import { ReasonPhrases, StatusCodes } from "http-status-codes"
+import { parseGid } from "@shopify/hydrogen-react"
 import { z } from "zod"
 
 import type { CustomAttribute } from "~/config/consts"
 import { CUSTOM_ATTRIBUTES } from "~/config/consts"
+import { badRequest } from "~/utils/remix"
 import { undefinedToNull } from "~/utils/undefined"
 
 export const OrderPaymentWebhookPayloadSchema = z.object({
@@ -51,10 +51,7 @@ export function getShopifyWebhookHeaders(headers: Headers) {
   const event = headers.get("X-Shopify-Topic")
 
   if (!webhookId || !event) {
-    throw json(
-      { message: "Missing webhook headers" },
-      { status: StatusCodes.BAD_REQUEST, statusText: ReasonPhrases.BAD_REQUEST }
-    )
+    throw badRequest({ message: "Missing webhook headers" })
   }
 
   return { event, webhookId }
@@ -62,13 +59,13 @@ export function getShopifyWebhookHeaders(headers: Headers) {
 
 export function getShopifyId(
   id: string | number,
-  type: "Order" | "Product" | "Collection" | "Checkout"
-) {
-  return `gid://shopify/${type}/${id}`
+  resource: "Order" | "Product" | "Collection" | "Checkout"
+): string {
+  return `gid://shopify/${resource}/${id}`
 }
 
-export function getShopifyIdNumber(id: string) {
-  return Number(id.split("/").pop())
+export function getShopifyIdNumber(id: string): string {
+  return parseGid(id).id
 }
 
 export function transformCustomAttributes(

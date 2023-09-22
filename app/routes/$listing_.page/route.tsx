@@ -1,19 +1,18 @@
 import { RibbonType } from "@prisma/client"
-import type { LoaderArgs, V2_MetaFunction } from "@remix-run/node"
+import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node"
 import { json, redirect } from "@remix-run/node"
 import { useLoaderData } from "@remix-run/react"
 import clsx from "clsx"
 import { AnimatePresence, motion } from "framer-motion"
 import { useCallback, useState } from "react"
-import { notFound } from "remix-utils"
 import { z } from "zod"
 import { zx } from "zodix"
 
-import type { NotFoundBoundaryData } from "~/components/error"
 import { isProduction } from "~/config/vars"
 import { generateCloudflareImageUrl } from "~/utils/cloudflare"
 import { generateGoogleFontsUrl } from "~/utils/font"
 import { ListingThemeSchema } from "~/utils/listing"
+import { notFound } from "~/utils/remix"
 import { CoverImagePropertiesSchema, RibbonSchema } from "~/utils/ribbons"
 
 import Banner from "./Banner"
@@ -25,7 +24,7 @@ import Location from "./Location"
 import Text from "./Text"
 import { ThemeProvider } from "./ThemeProvider"
 
-export async function loader({ params, context }: LoaderArgs) {
+export async function loader({ params, context }: LoaderFunctionArgs) {
   const db = context.db
   const { listing: path } = zx.parseParams(params, { listing: z.string() })
 
@@ -42,7 +41,7 @@ export async function loader({ params, context }: LoaderArgs) {
   })
 
   if (!listing) {
-    throw notFound<NotFoundBoundaryData>({
+    throw notFound({
       message: "Sorry, we couldn’t find the page you’re looking for.",
       title: "Not Found",
     })
@@ -69,7 +68,7 @@ export async function loader({ params, context }: LoaderArgs) {
   return json({ coverImages, listing })
 }
 
-export const meta: V2_MetaFunction<typeof loader> = ({ data }) => {
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
   try {
     if (!data) return []
 
@@ -89,6 +88,8 @@ export const meta: V2_MetaFunction<typeof loader> = ({ data }) => {
       { content: data.listing.subtitle, name: "og:description" },
       { charSet: "utf-8" },
       {
+        // TODO(adelrodriguez): Generate OG images with
+        // https://www.jacobparis.com/content/remix-og
         content: data.listing.coverImage
           ? generateCloudflareImageUrl(data.listing.coverImage)
           : "", // TODO(adelrodriguez): Add default image

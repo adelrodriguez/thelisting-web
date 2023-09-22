@@ -1,5 +1,5 @@
 import { ArrowTopRightOnSquareIcon } from "@heroicons/react/20/solid"
-import type { ActionArgs, LoaderArgs } from "@remix-run/node"
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { Link, Outlet, useFetcher, useLoaderData } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
@@ -23,7 +23,7 @@ export const handle = {
 
 export const themeValidator = withZod(ListingThemeSchema)
 
-export async function loader({ params, context }: LoaderArgs) {
+export async function loader({ params, context }: LoaderFunctionArgs) {
   const db = context.db
   const cache = context.cache
 
@@ -54,7 +54,7 @@ export async function loader({ params, context }: LoaderArgs) {
   })
 }
 
-export async function action({ request, context, params }: ActionArgs) {
+export async function action({ request, context, params }: ActionFunctionArgs) {
   const db = context.db
   const { listing: sku } = zx.parseParams(
     params,

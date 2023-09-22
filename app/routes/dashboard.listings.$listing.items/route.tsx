@@ -1,8 +1,9 @@
-import type { RouteMatch } from "@remix-run/react"
 import { Outlet } from "@remix-run/react"
 
-export const handle = {
-  crumb: ({ params }: RouteMatch) => ({
+import type { RouteHandle } from "~/utils/remix"
+
+export const handle: RouteHandle<{ listing: string }> = {
+  crumb: ({ params }) => ({
     href: `/dashboard/listings/${params.listing}/items`,
     name: "Items",
   }),

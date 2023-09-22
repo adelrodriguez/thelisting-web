@@ -1,6 +1,6 @@
 import { Dialog, Transition } from "@headlessui/react"
 import { XMarkIcon } from "@heroicons/react/24/outline"
-import type { LoaderArgs } from "@remix-run/node"
+import type { LoaderFunctionArgs } from "@remix-run/node"
 import { redirect, json } from "@remix-run/node"
 import { useLoaderData } from "@remix-run/react"
 import { Fragment, useState } from "react"
@@ -21,7 +21,7 @@ export const handle = {
   i18n: "registry",
 }
 
-export async function loader({ params, context }: LoaderArgs) {
+export async function loader({ params, context }: LoaderFunctionArgs) {
   const db = context.db
   const sku = params.item
 

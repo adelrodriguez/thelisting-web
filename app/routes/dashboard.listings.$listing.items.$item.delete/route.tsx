@@ -1,6 +1,6 @@
 import { Dialog, Transition } from "@headlessui/react"
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline"
-import type { ActionArgs, LoaderArgs } from "@remix-run/node"
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node"
 import { redirect } from "@remix-run/node"
 import { Form } from "@remix-run/react"
 import { Fragment, useRef } from "react"
@@ -11,7 +11,7 @@ import { Button } from "~/components/common"
 import { useDialogPage } from "~/utils/hooks"
 import { removeProductsFromCollection } from "~/utils/shopify.server"
 
-export async function loader({ params, context, request }: LoaderArgs) {
+export async function loader({ params, context, request }: LoaderFunctionArgs) {
   const { db } = context
   const { item: itemSku, listing: listingSku } = zx.parseParams(
     params,
@@ -28,7 +28,7 @@ export async function loader({ params, context, request }: LoaderArgs) {
   return null
 }
 
-export async function action({ context, params }: ActionArgs) {
+export async function action({ context, params }: ActionFunctionArgs) {
   const { db } = context
   const { item: itemSku, listing: listingSku } = zx.parseParams(
     params,

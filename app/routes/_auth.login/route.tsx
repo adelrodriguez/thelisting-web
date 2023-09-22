@@ -1,6 +1,6 @@
 import { Transition } from "@headlessui/react"
-import type { ActionArgs, LoaderArgs } from "@remix-run/node"
-import { redirect , json } from "@remix-run/node"
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node"
+import { redirect, json } from "@remix-run/node"
 import {
   Form,
   useLoaderData,
@@ -22,7 +22,7 @@ export const handle = {
   i18n: ["login", "common"],
 }
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url)
 
   await auth.isAuthenticated(request, { successRedirect: "/dashboard" })
@@ -38,7 +38,7 @@ export async function loader({ request }: LoaderArgs) {
   })
 }
 
-export async function action({ request }: ActionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   const result = await parseFormSafe(
     request,
     z.object({ email: z.string().email() })
@@ -75,7 +75,7 @@ export default function LoginPage() {
 
   return (
     <div className="flex h-screen min-h-full bg-white">
-      <div className="flex flex-1 flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
+      <div className="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
         <main className="mx-auto w-full max-w-sm lg:w-96">
           <Logo />
           <h2 className="my-6 font-heading text-3xl font-bold tracking-tight text-gray-900">

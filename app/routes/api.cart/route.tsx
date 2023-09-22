@@ -1,4 +1,4 @@
-import type { ActionArgs, LoaderArgs } from "@remix-run/node"
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { nanoid } from "nanoid"
 
@@ -6,7 +6,7 @@ import { ONE_DAY, REDIS_KEYS } from "~/config/consts"
 import { commitSession, getSession } from "~/helpers/session.server"
 import { generateKey } from "~/utils/redis"
 
-export async function loader({ request, context }: LoaderArgs) {
+export async function loader({ request, context }: LoaderFunctionArgs) {
   const cache = context.cache
   const session = await getSession(request.headers.get("cookie"))
   const url = new URL(request.url)
@@ -35,7 +35,7 @@ export async function loader({ request, context }: LoaderArgs) {
   })
 }
 
-export async function action({ request, context }: ActionArgs) {
+export async function action({ request, context }: ActionFunctionArgs) {
   const cache = context.cache
   const session = await getSession(request.headers.get("cookie"))
   const url = new URL(request.url)

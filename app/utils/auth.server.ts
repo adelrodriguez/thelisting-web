@@ -1,17 +1,19 @@
+import type { User } from "@prisma/client"
 import { UserRole } from "@prisma/client"
-import { unauthorized } from "remix-utils"
+import { redirect } from "@remix-run/node"
 
 import auth from "~/helpers/auth.server"
+import { forbidden } from "~/utils/remix"
 
-export async function isUserAdmin(request: Request) {
+export async function isUserAdmin(request: Request): Promise<User> {
   const user = await auth.isAuthenticated(request)
 
   if (!user) {
-    throw unauthorized("You must be logged in to access this page")
+    throw redirect("/login")
   }
 
   if (user.role !== UserRole.Admin) {
-    throw unauthorized("You must be an admin to access this page")
+    throw forbidden()
   }
 
   return user

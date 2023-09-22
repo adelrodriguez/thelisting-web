@@ -4,7 +4,7 @@ import { RemixI18Next } from "remix-i18next"
 
 import { isDevelopment } from "~/config/vars"
 import i18n from "~/i18n"
-import { i18nCookie } from "~/utils/i18next"
+import { i18nCookie } from "~/utils/i18n"
 
 const i18next = new RemixI18Next({
   // The backend you want to use to load the translations Tip: You could pass

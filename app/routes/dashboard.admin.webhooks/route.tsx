@@ -1,10 +1,10 @@
-import type { ActionArgs } from "@remix-run/node"
+import type { ActionFunctionArgs } from "@remix-run/node"
 import { Form } from "@remix-run/react"
 
 import { Input, SubmitButton } from "~/components/form"
 import { ClearCartQueue, CreatePurchaseQueue } from "~/helpers/queues"
 
-export async function action({ request }: ActionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData()
   const orderCreatedId = formData.get("order-created") as string
 

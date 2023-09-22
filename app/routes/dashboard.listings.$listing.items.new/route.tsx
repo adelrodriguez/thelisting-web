@@ -1,5 +1,5 @@
-import type { ActionArgs, LoaderArgs } from "@remix-run/node"
-import { redirect , json } from "@remix-run/node"
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node"
+import { redirect, json } from "@remix-run/node"
 import { useLoaderData } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
 import { useSnackbar } from "notistack"
@@ -27,7 +27,7 @@ const CreateItemSchema = z.object({
 
 const validator = withZod(CreateItemSchema)
 
-export async function loader({ request, params }: LoaderArgs) {
+export async function loader({ request, params }: LoaderFunctionArgs) {
   await isUserAdmin(request)
 
   const { listing: sku } = zx.parseParams(params, {
@@ -37,7 +37,7 @@ export async function loader({ request, params }: LoaderArgs) {
   return json({ listingSku: sku })
 }
 
-export async function action({ request, params, context }: ActionArgs) {
+export async function action({ request, params, context }: ActionFunctionArgs) {
   const { db } = context
 
   await isUserAdmin(request)

@@ -1,11 +1,22 @@
 import { ChevronRightIcon, HomeIcon } from "@heroicons/react/20/solid"
+import type { UIMatch } from "@remix-run/react"
 import { NavLink, useMatches } from "@remix-run/react"
 
+import type { RouteHandle } from "~/utils/remix"
+
+type Match = UIMatch & { handle?: RouteHandle }
+
+function hasCrumb(match: Match): match is Match & {
+  handle: { crumb: (match: Match) => { name: string; href: string } }
+} {
+  return Boolean(match.handle?.crumb)
+}
+
 export default function Breadcrumbs() {
-  const matches = useMatches()
+  const matches = useMatches() as Match[]
   const crumbs = matches
     // First get rid of any matches that don't have handle and crumb
-    .filter((match) => Boolean(match.handle?.crumb))
+    .filter(hasCrumb)
     // Now map them into an array of elements, passing the route match to the
     // crumb function
     .map((match) => match.handle?.crumb(match))
@@ -17,7 +28,7 @@ export default function Breadcrumbs() {
           <div>
             <NavLink
               className="text-gray-400 hover:text-gray-500"
-              to={matches[1]!.pathname}
+              to={matches[1]?.pathname || ("." as const)}
             >
               <HomeIcon aria-hidden="true" className="h-5 w-5 flex-shrink-0" />
               <span className="sr-only">Home</span>

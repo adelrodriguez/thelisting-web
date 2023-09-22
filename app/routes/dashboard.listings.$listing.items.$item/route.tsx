@@ -1,10 +1,8 @@
-import type { ActionArgs, LoaderArgs } from "@remix-run/node"
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
-import type { RouteMatch } from "@remix-run/react"
-import { useLoaderData , Outlet , Link } from "@remix-run/react"
+import { useLoaderData, Outlet, Link } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
 import { useSnackbar } from "notistack"
-import { notFound } from "remix-utils"
 import {
   setFormDefaults,
   ValidatedForm,
@@ -15,13 +13,14 @@ import { zx } from "zodix"
 
 import { ViewOnShopify } from "~/components/admin"
 import { Image } from "~/components/common"
-import type { NotFoundBoundaryData } from "~/components/error"
 import { FormInput, SubmitButton, TextArea } from "~/components/form"
 import { useProduct } from "~/utils/hooks"
 import { formatPrice } from "~/utils/money"
+import { notFound } from "~/utils/remix"
 
 export const handle = {
-  crumb: ({ params }: RouteMatch) => ({
+  // @ts-expect-error find the recommended typing for matches
+  crumb: ({ params }) => ({
     href: `/dashboard/listings/${params.listing}/items/${params.item}`,
     name: params.item,
   }),
@@ -40,8 +39,8 @@ const EditItemSchema = z
 
 const validator = withZod(EditItemSchema)
 
-export async function loader({ params, context }: LoaderArgs) {
-  const { db } = context
+export async function loader({ params, context }: LoaderFunctionArgs) {
+  const db = context.db
   const { item: sku } = zx.parseParams(params, {
     item: z.string(),
   })
@@ -49,7 +48,7 @@ export async function loader({ params, context }: LoaderArgs) {
   const item = await db.item.findUnique({ where: { sku } })
 
   if (!item) {
-    throw notFound<NotFoundBoundaryData>({
+    throw notFound({
       message: "The item you are looking for does not exist.",
       title: "Item not found",
     })
@@ -75,7 +74,7 @@ export async function loader({ params, context }: LoaderArgs) {
   })
 }
 
-export async function action({ request, params, context }: ActionArgs) {
+export async function action({ request, params, context }: ActionFunctionArgs) {
   const { db } = context
   const formData = await request.formData()
   const result = await validator.validate(formData)
@@ -131,7 +130,7 @@ export default function DashboardListingItemDetailPage() {
           </div>
 
           <div className="bg-gray-50 px-4 py-4 sm:px-6">
-            {item.commerceId && <ViewOnShopify id={item.commerceId} />}
+            {item.commerceId && <ViewOnShopify gid={item.commerceId} />}
           </div>
         </div>
         <div className="mt-4">

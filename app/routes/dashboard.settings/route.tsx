@@ -1,8 +1,7 @@
-import type { LoaderArgs } from "@remix-run/node"
+import type { LoaderFunctionArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { withZod } from "@remix-validated-form/with-zod"
 import { useSnackbar } from "notistack"
-import { unauthorized } from "remix-utils"
 import {
   setFormDefaults,
   ValidatedForm,
@@ -12,6 +11,7 @@ import { z } from "zod"
 
 import { FormInput, FormSubmit } from "~/components/form"
 import auth from "~/helpers/auth.server"
+import { unauthorized } from "~/utils/remix"
 
 export const handle = {
   crumb: () => ({
@@ -29,7 +29,7 @@ const EditUserSchema = z.object({
 
 const validator = withZod(EditUserSchema)
 
-export async function loader({ request, context }: LoaderArgs) {
+export async function loader({ request, context }: LoaderFunctionArgs) {
   const { db } = context
 
   const { id } = await auth.isAuthenticated(request, {
@@ -43,12 +43,15 @@ export async function loader({ request, context }: LoaderArgs) {
   return json(setFormDefaults("editUser", user))
 }
 
-export async function action({ request, context }: LoaderArgs) {
+export async function action({ request, context }: LoaderFunctionArgs) {
   const { db } = context
   const user = await auth.isAuthenticated(request)
 
-  if (!user)
-    throw unauthorized("You must be logged in to edit your user settings")
+  if (!user) {
+    throw unauthorized({
+      message: "You must be logged in to edit your user settings",
+    })
+  }
 
   const formData = await request.formData()
   const result = await validator.validate(formData)

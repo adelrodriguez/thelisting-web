@@ -1,4 +1,4 @@
-import type { ActionArgs, LoaderArgs } from "@remix-run/node"
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node"
 import {
   json,
   unstable_composeUploadHandlers as composeUploadHandlers,
@@ -10,7 +10,7 @@ import { ReasonPhrases, StatusCodes } from "http-status-codes"
 import auth from "~/helpers/auth.server"
 import { uploadImageToCloudflare } from "~/utils/cloudflare.server"
 
-export async function loader({ request, context }: LoaderArgs) {
+export async function loader({ request, context }: LoaderFunctionArgs) {
   const db = context.db
   const user = await auth.isAuthenticated(request)
 
@@ -33,7 +33,7 @@ export async function loader({ request, context }: LoaderArgs) {
   return json(images)
 }
 
-export async function action({ request, context }: ActionArgs) {
+export async function action({ request, context }: ActionFunctionArgs) {
   const db = context.db
   const user = await auth.isAuthenticated(request)
 

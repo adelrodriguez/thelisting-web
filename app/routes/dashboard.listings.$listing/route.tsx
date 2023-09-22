@@ -1,4 +1,4 @@
-import type { RouteMatch } from "@remix-run/react"
+import type { UIMatch } from "@remix-run/react"
 import { NavLink, Outlet, useMatches, useNavigate } from "@remix-run/react"
 import clsx from "clsx"
 
@@ -7,12 +7,14 @@ import { handle as indexHandle } from "~/routes/dashboard.listings.$listing._ind
 import { handle as itemsHandle } from "~/routes/dashboard.listings.$listing.items/route"
 import { handle as ribbonsHandle } from "~/routes/dashboard.listings.$listing.ribbons/route"
 import { handle as statsHandle } from "~/routes/dashboard.listings.$listing.stats/route"
+import type { RouteHandle } from "~/utils/remix"
 
-export const handle = {
-  crumb: ({ params }: RouteMatch) => ({
+export const handle: RouteHandle<{ listing: string }> = {
+  crumb: ({ params }) => ({
     href: `/dashboard/listings/${params.listing}/`,
     name: params.listing,
   }),
+  id: "dashboard-listings-listing",
 }
 
 const tabs = [
@@ -24,10 +26,10 @@ const tabs = [
 
 export default function DashboardListingPage() {
   const navigate = useNavigate()
-  const matches = useMatches()
+  const matches = useMatches() as ({ handle?: RouteHandle } & UIMatch)[]
   const currentTab = tabs.find(
     (tab) => matches[matches.length - 1]?.handle?.id === tab.id
-  )!
+  )
 
   return (
     <>

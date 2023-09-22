@@ -1,4 +1,4 @@
-import type { ActionArgs } from "@remix-run/node"
+import type { ActionFunctionArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { useActionData } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
@@ -48,7 +48,7 @@ const validator = withZod(
   })
 )
 
-export async function action({ request }: ActionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData()
   const result = await validator.validate(formData)
 
@@ -107,7 +107,7 @@ export default function WhatsAppBroadcastPage() {
   }, [actionData, enqueueSnackbar])
 
   return (
-    <div className="mx-auto max-w-7xl py-12 px-4 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
       <div className="sm:text-center">
         <p className="text-base font-semibold uppercase tracking-wide text-teal-600">
           Admin Tools

@@ -1,4 +1,4 @@
-import type { LoaderArgs } from "@remix-run/node"
+import type { LoaderFunctionArgs } from "@remix-run/node"
 import { json, redirect } from "@remix-run/node"
 import { Link, useLoaderData } from "@remix-run/react"
 import { ReasonPhrases, StatusCodes } from "http-status-codes"
@@ -19,7 +19,7 @@ export const handle = {
   i18n: ["registry", "common"],
 }
 
-export async function loader({ params, request, context }: LoaderArgs) {
+export async function loader({ params, request, context }: LoaderFunctionArgs) {
   const db = context.db
   const logger = context.logger
   const requestUrl = new URL(request.url)
