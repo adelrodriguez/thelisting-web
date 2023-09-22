@@ -4,7 +4,7 @@ import { NavLink, useMatches } from "@remix-run/react"
 
 import type { RouteHandle } from "~/utils/remix"
 
-type Match = UIMatch & { handle?: RouteHandle }
+type Match = UIMatch<unknown, RouteHandle | undefined>
 
 function hasCrumb(match: Match): match is Match & {
   handle: { crumb: (match: Match) => { name: string; href: string } }
