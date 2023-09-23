@@ -16,7 +16,9 @@ export default function ViewOnShopify({ gid }: { gid: string }) {
     <Link
       className="flex items-center gap-2 font-medium hover:underline"
       target="_blank"
-      to={`https://admin.shopify.com/store/${window.env.shopifyStore}/${resource}s/${id}`}
+      to={`https://admin.shopify.com/store/${
+        window.env.shopifyStore
+      }/${resource?.toLowerCase()}s/${id}`}
     >
       View on Shopify{" "}
       <ArrowTopRightOnSquareIcon className="inline-block h-4 w-4" />
