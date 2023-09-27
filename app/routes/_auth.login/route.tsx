@@ -9,6 +9,7 @@ import {
 } from "@remix-run/react"
 import { ReasonPhrases, StatusCodes } from "http-status-codes"
 import { useTranslation } from "react-i18next"
+import { route } from "routes-gen"
 import { z } from "zod"
 import { parseFormSafe } from "zodix"
 
@@ -25,7 +26,7 @@ export const handle = {
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url)
 
-  await auth.isAuthenticated(request, { successRedirect: "/dashboard" })
+  await auth.isAuthenticated(request, { successRedirect: route("/dashboard") })
   const session = await sessionStorage.getSession(request.headers.get("Cookie"))
   // This session key `auth:magiclink` is the default one used by the EmailLinkStrategy
   // you can customize it passing a `sessionMagicLinkKey` when creating an

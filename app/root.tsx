@@ -23,13 +23,12 @@ import remixImageStyles from "remix-image/remix-image.css"
 
 import { NotFound } from "~/components/error"
 import { PublicEnv } from "~/components/utils"
+import { isProduction } from "~/config/vars"
 import { shopifyStorefrontAPIEndpoint } from "~/config/vars.server"
 import i18next from "~/helpers/i18next.server"
 import stylesheet from "~/styles/app.css"
 import { ExchangeRateProvider, useChangeLanguage } from "~/utils/hooks"
 import { i18nCookie } from "~/utils/i18n"
-
-import { isProduction } from "./config/vars"
 
 const client = new QueryClient()
 

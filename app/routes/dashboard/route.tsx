@@ -13,6 +13,7 @@ import { Link, NavLink, Outlet, useLoaderData } from "@remix-run/react"
 import clsx from "clsx"
 import { SnackbarProvider } from "notistack"
 import { Fragment } from "react"
+import { route } from "routes-gen"
 
 import { Logo } from "~/components/branding"
 import { Notification } from "~/components/common"
@@ -22,19 +23,19 @@ import Breadcrumbs from "./Breadcrumbs"
 
 const navigation = [
   {
-    href: "/dashboard",
+    href: route("/dashboard"),
     icon: HomeIcon,
     name: "Dashboard",
     segment: "dashboard",
   },
   {
-    href: "/dashboard/listings",
+    href: route("/dashboard/listings"),
     icon: UsersIcon,
     name: "Listings",
     segment: "listings",
   },
   {
-    href: "/dashboard/admin",
+    href: route("/dashboard/admin"),
     icon: WrenchIcon,
     name: "Admin Tools",
     segment: "admin",
@@ -42,13 +43,13 @@ const navigation = [
 ]
 
 const userNavigation = [
-  { href: "/dashboard/settings", name: "Settings" },
-  { href: "/logout", name: "Logout" },
+  { href: route("/dashboard/settings"), name: "Settings" },
+  { href: route("/logout"), name: "Logout" },
 ]
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await auth.isAuthenticated(request, {
-    failureRedirect: "/login",
+    failureRedirect: route("/login"),
   })
 
   return json({ user })
@@ -92,7 +93,7 @@ export default function DashboardLayout() {
                                 "rounded-md px-3 py-2 text-sm font-medium"
                               )
                             }
-                            end={item.href === "/dashboard"}
+                            end={item.href === route("/dashboard")}
                             key={item.name}
                             to={item.href}
                           >
@@ -179,7 +180,7 @@ export default function DashboardLayout() {
                 <div className="px-2 pb-3 pt-2 sm:px-3">
                   {navigation.map((item) => (
                     <NavLink
-                      end={item.href === "/dashboard"}
+                      end={item.href === route("/dashboard")}
                       key={item.name}
                       to={item.href}
                     >

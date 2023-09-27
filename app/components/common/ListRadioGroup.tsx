@@ -28,7 +28,7 @@ export default function ListRadioGroup<T extends ListRadioOption>({
   id?: string
 }) {
   return (
-    <RadioGroup onChange={onChange} value={value}>
+    <RadioGroup name={name} onChange={onChange} value={value}>
       {label && (
         <RadioGroup.Label className="block text-sm font-medium text-gray-700">
           {label}

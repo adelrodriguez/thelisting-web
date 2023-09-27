@@ -6,6 +6,7 @@ import { useLoaderData } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
 import { Fragment } from "react"
 import { ValidatedForm as Form, validationError } from "remix-validated-form"
+import { route } from "routes-gen"
 import { z } from "zod"
 import { zx } from "zodix"
 
@@ -42,8 +43,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export async function action({ params, context, request }: ActionFunctionArgs) {
   const { db, logger } = context
-  const { listing: sku } = zx.parseParams(params, {
-    listing: z.coerce.number(),
+  const { listingSku } = zx.parseParams(params, {
+    listingSku: z.coerce.number(),
   })
   const formData = await request.formData()
   const result = await serverValidator.validate(formData)
@@ -55,14 +56,14 @@ export async function action({ params, context, request }: ActionFunctionArgs) {
   const ribbons = await db.ribbon.findMany({
     orderBy: { position: "asc" },
     select: { id: true, position: true },
-    where: { listing: { sku: Number(sku) } },
+    where: { listing: { sku: listingSku } },
   })
 
   const ribbon = await db.ribbon.create({
     data: {
       listing: {
         connect: {
-          sku: Number(sku),
+          sku: listingSku,
         },
       },
       name: result.data.name,
@@ -87,7 +88,11 @@ export async function action({ params, context, request }: ActionFunctionArgs) {
     )
   }
 
-  return redirect(`/dashboard/listings/${sku}/ribbons`)
+  return redirect(
+    route("/dashboard/listings/:listingSku/ribbons", {
+      listingSku: `${listingSku}`,
+    })
+  )
 }
 
 export default function DashboardListingRibbonsEditPage() {

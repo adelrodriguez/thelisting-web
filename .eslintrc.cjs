@@ -1,12 +1,15 @@
 /** @type {import('eslint').Linter.Config} */
 module.exports = {
+  env: {
+    browser: true,
+    node: true,
+  },
   extends: [
     "eslint:recommended",
-    "@remix-run/eslint-config",
-    "@remix-run/eslint-config/node",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
     "prettier",
   ],
-
   overrides: [
     {
       extends: ["plugin:@typescript-eslint/recommended"],
@@ -18,8 +21,21 @@ module.exports = {
       },
       plugins: ["@typescript-eslint"],
       rules: {
+        "@typescript-eslint/ban-ts-comment": "error",
+        "@typescript-eslint/ban-types": "error",
+        "@typescript-eslint/no-empty-function": "error",
+        "@typescript-eslint/no-empty-interface": "error",
+        "@typescript-eslint/no-explicit-any": "error",
         "@typescript-eslint/no-floating-promises": "error",
-        "@typescript-eslint/no-unused-vars": "warn",
+        "@typescript-eslint/no-inferrable-types": "error",
+        "@typescript-eslint/no-namespace": "error",
+        "@typescript-eslint/no-non-null-assertion": "error",
+        "@typescript-eslint/no-unused-vars": "error",
+        "@typescript-eslint/no-use-before-define": [
+          "error",
+          { classes: false, functions: false },
+        ],
+        "@typescript-eslint/no-var-requires": "error",
       },
     },
   ],
@@ -29,6 +45,7 @@ module.exports = {
     "no-console": "warn",
     "no-unused-vars": "off",
     "react/jsx-sort-props": "error",
+    "react/react-in-jsx-scope": "off",
     "sort-keys/sort-keys-fix": "warn",
     "spaced-comment": [
       "error",
@@ -39,5 +56,10 @@ module.exports = {
         },
       },
     ],
+  },
+  settings: {
+    react: {
+      version: "detect",
+    },
   },
 }

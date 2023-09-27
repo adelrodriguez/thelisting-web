@@ -4,7 +4,7 @@ import {
   TrashIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline"
-import { UserRole, RibbonType } from "@prisma/client"
+import { RibbonType } from "@prisma/client"
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { Form, useActionData, useLoaderData } from "@remix-run/react"
@@ -15,10 +15,9 @@ import { z } from "zod"
 import { zx } from "zodix"
 
 import { Input, SubmitButton } from "~/components/form"
-import auth from "~/helpers/auth.server"
 import { isUserAdmin } from "~/utils/auth.server"
 import { useDialogPage } from "~/utils/hooks"
-import { notFound, unauthorized } from "~/utils/remix"
+import { notFound } from "~/utils/remix"
 import {
   RibbonNameSchema,
   BannerPropertiesSchema,

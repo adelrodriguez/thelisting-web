@@ -227,6 +227,7 @@ export function ErrorBoundary() {
 
   return (
     <div className="mb-2 mt-4">
+      {/* TODO(adelrodriguez): Replace with route() */}
       <Alert onClose={() => navigate("../")} type="error">
         There was an error saving your note. Please try again.
       </Alert>

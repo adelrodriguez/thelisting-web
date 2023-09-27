@@ -3,7 +3,7 @@ import {
   SHOPIFY_API_VERSION,
   SHOPIFY_STOREFRONT_ACCESS_TOKEN,
   SHOPIFY_STORE_DOMAIN,
-} from "./env.server"
+} from "~/config/env.server"
 
 export const shopifyStorefrontAPIEndpoint = `https://${SHOPIFY_STORE_DOMAIN}/api/${SHOPIFY_API_VERSION}/graphql.json`
 export const shopifyStorefrontAPIHeaders = {

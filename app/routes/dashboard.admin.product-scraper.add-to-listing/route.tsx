@@ -228,9 +228,9 @@ export default function AddToListingPage() {
                         <Alert type="info">
                           You will be adding{" "}
                           <span className="font-bold">{products.length}</span>{" "}
-                          items to the listing "
-                          <span className="font-bold">{listing?.title}</span>"
-                          with a margin of{" "}
+                          items to the listing &ldquo;
+                          <span className="font-bold">{listing?.title}</span>
+                          &rdquo; with a margin of{" "}
                           <span className="font-bold">{`${margin}%`}</span>.
                         </Alert>
                         {Object.keys(fieldErrors).length > 0 && (

@@ -8,6 +8,7 @@ import {
   ValidatedForm,
   validationError,
 } from "remix-validated-form"
+import { route } from "routes-gen"
 import { z } from "zod"
 import { zx } from "zodix"
 
@@ -16,36 +17,39 @@ import { Image } from "~/components/common"
 import { FormInput, SubmitButton, TextArea } from "~/components/form"
 import { useProduct } from "~/utils/hooks"
 import { formatPrice } from "~/utils/money"
-import { notFound } from "~/utils/remix"
+import { RouteHandle, notFound } from "~/utils/remix"
 
-export const handle = {
-  // @ts-expect-error find the recommended typing for matches
+export const handle: RouteHandle<{ listingSku: string; itemSku: string }> = {
   crumb: ({ params }) => ({
-    href: `/dashboard/listings/${params.listing}/items/${params.item}`,
-    name: params.item,
+    href: route("/dashboard/listings/:listingSku/items/:itemSku", {
+      itemSku: params.itemSku,
+      listingSku: params.listingSku,
+    }),
+    name: params.itemSku,
   }),
+  id: "dashboard-listings-listing-items-item",
 }
 
-const EditItemSchema = z
-  .object({
-    description: z.string().optional(),
-    quantity: z.coerce.number().min(0),
-    stock: z.coerce.number().min(0),
-  })
-  .refine((data) => data.quantity >= data.stock, {
-    message: "Stock cannot be greater than quantity",
-    path: ["stock"],
-  })
-
-const validator = withZod(EditItemSchema)
+const validator = withZod(
+  z
+    .object({
+      description: z.string().optional(),
+      quantity: z.coerce.number().min(0),
+      stock: z.coerce.number().min(0),
+    })
+    .refine((data) => data.quantity >= data.stock, {
+      message: "Stock cannot be greater than quantity",
+      path: ["stock"],
+    })
+)
 
 export async function loader({ params, context }: LoaderFunctionArgs) {
   const db = context.db
-  const { item: sku } = zx.parseParams(params, {
-    item: z.string(),
+  const { itemSku } = zx.parseParams(params, {
+    itemSku: z.string(),
   })
 
-  const item = await db.item.findUnique({ where: { sku } })
+  const item = await db.item.findUnique({ where: { sku: itemSku } })
 
   if (!item) {
     throw notFound({
@@ -94,7 +98,7 @@ export async function action({ request, params, context }: ActionFunctionArgs) {
 
 export default function DashboardListingItemDetailPage() {
   const { item, stats, itemPurchaseCount } = useLoaderData<typeof loader>()
-  const { data, isLoading, isError } = useProduct(item.commerceId!)
+  const { data, isLoading, isError } = useProduct(item.commerceId || "")
   const { enqueueSnackbar } = useSnackbar()
 
   return (

@@ -10,6 +10,7 @@ import { Link, useLoaderData, useNavigate } from "@remix-run/react"
 import clsx from "clsx"
 import { format, parseISO } from "date-fns"
 import { Fragment } from "react"
+import { route } from "routes-gen"
 import { zx } from "zodix"
 
 import { Button } from "~/components/common"
@@ -92,7 +93,7 @@ export default function DashboardListingPage() {
           </select>
         </div>
 
-        <Link to="/dashboard/listings/new">
+        <Link to={route("/dashboard/listings/new")}>
           <Button>Create Listing</Button>
         </Link>
       </div>
@@ -113,7 +114,7 @@ export default function DashboardListingPage() {
             </Link>
           ))}
         </nav>
-        <Link to="/dashboard/listings/new">
+        <Link to={route("/dashboard/listings/new")}>
           <Button>Create Listing</Button>
         </Link>
       </div>

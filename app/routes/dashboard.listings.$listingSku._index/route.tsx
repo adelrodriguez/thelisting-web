@@ -5,10 +5,10 @@ import { useActionData, useLoaderData } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
 import { format, subMilliseconds } from "date-fns"
 import { getTimezoneOffset } from "date-fns-tz"
-import { StatusCodes } from "http-status-codes"
 import { useSnackbar } from "notistack"
 import { useEffect } from "react"
 import { setFormDefaults } from "remix-validated-form"
+import { route } from "routes-gen"
 import { z } from "zod"
 import { zfd } from "zod-form-data"
 import { zx } from "zodix"
@@ -36,16 +36,23 @@ import {
   ListingTitleSchema,
   ListingTypeSchema,
 } from "~/utils/listing"
-import { forbidden, notFound, unauthorized } from "~/utils/remix"
+import {
+  type RouteHandle,
+  forbidden,
+  notFound,
+  unauthorized,
+  unprocessableEntity,
+} from "~/utils/remix"
 import { getUserFullName } from "~/utils/user"
 
-export const handle = {
-  // @ts-expect-error find the recommended typing for matches
+export const handle: RouteHandle<{ listingSku: string }> = {
   crumb: ({ params }) => ({
-    href: `/dashboard/listings/${params.listing}/`,
+    href: route("/dashboard/listings/:listingSku", {
+      listingSku: params.listingSku,
+    }),
     name: "Details",
   }),
-  id: "dashboard-listings-details",
+  id: "dashboard-listings-listing",
 }
 
 const clientValidator = withZod(
@@ -66,12 +73,12 @@ const clientValidator = withZod(
 
 export async function loader({ params, context }: LoaderFunctionArgs) {
   const db = context.db
-  const { listing: sku } = zx.parseParams(params, {
-    listing: z.coerce.number(),
+  const { listingSku } = zx.parseParams(params, {
+    listingSku: z.coerce.number(),
   })
 
   const [listing, users] = await Promise.all([
-    db.listing.findUnique({ where: { sku } }),
+    db.listing.findUnique({ where: { sku: listingSku } }),
     db.user.findMany({
       orderBy: { firstName: "asc" },
       select: { firstName: true, id: true, lastName: true },
@@ -102,13 +109,13 @@ export async function action({ request, params, context }: ActionFunctionArgs) {
     })
   }
 
-  const { listing: sku } = zx.parseParams(
+  const { listingSku } = zx.parseParams(
     params,
-    z.object({ listing: z.coerce.number() })
+    z.object({ listingSku: z.coerce.number() })
   )
 
   const listing = await db.listing.findUniqueOrThrow({
-    where: { sku: Number(sku) },
+    where: { sku: listingSku },
   })
 
   if (listing.ownerId !== user.id && user.role !== UserRole.Admin) {
@@ -157,10 +164,11 @@ export async function action({ request, params, context }: ActionFunctionArgs) {
   const result = await serverValidator.validate(formData)
 
   if (result.error) {
-    return json(
-      { ...result.error, listing: null, success: false },
-      { status: StatusCodes.UNPROCESSABLE_ENTITY }
-    )
+    return unprocessableEntity({
+      ...result.error,
+      listing: null,
+      success: false,
+    })
   }
 
   const updatedListing = await db.listing.update({

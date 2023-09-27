@@ -4,25 +4,27 @@ import { redirect } from "@remix-run/node"
 import { withZod } from "@remix-validated-form/with-zod"
 import { useSnackbar } from "notistack"
 import { ValidatedForm, validationError } from "remix-validated-form"
+import { route } from "routes-gen"
 
 import { FormInput, FormListRadioGroup, FormSubmit } from "~/components/form"
-import auth from "~/helpers/auth.server"
-import { unauthorized } from "~/utils/remix"
+import { isUserAdmin } from "~/utils/auth.server"
+import { RouteHandle, unauthorized } from "~/utils/remix"
 import { UserSchema } from "~/utils/user"
 
 const validator = withZod(UserSchema)
 
-export const handle = {
+export const handle: RouteHandle = {
   crumb: () => ({
-    href: `/dashboard/admin/users/new/`,
+    href: route("/dashboard/admin/users/new"),
     name: "New User",
   }),
+  id: "dashboard-admin-users-new",
 }
 
 export async function action({ request, context }: ActionFunctionArgs) {
   const { db } = context
 
-  const user = await auth.isAuthenticated(request)
+  const user = await isUserAdmin(request)
 
   if (!user) {
     throw unauthorized({ message: "You must be logged in to create a listing" })

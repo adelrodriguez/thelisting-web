@@ -3,12 +3,11 @@ import type { Processor } from "bullmq"
 import { QUEUE_NAMES, REDIS_KEYS } from "~/config/consts"
 import redis from "~/helpers/cache.server"
 import logger from "~/helpers/logger.server"
+import { createQueue } from "~/helpers/queue.server"
 import { GenericError } from "~/utils/error"
 import { generateKey } from "~/utils/redis"
 import { getShopifyId } from "~/utils/shopify"
 import { getOrderCustomAttributes } from "~/utils/shopify.server"
-
-import { createQueue } from "../queue.server"
 
 export type QueueData = {
   orderId: string | number

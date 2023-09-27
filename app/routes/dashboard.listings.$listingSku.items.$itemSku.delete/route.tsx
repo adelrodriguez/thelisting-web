@@ -4,35 +4,37 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node"
 import { redirect } from "@remix-run/node"
 import { Form } from "@remix-run/react"
 import { Fragment, useRef } from "react"
+import { route } from "routes-gen"
 import { z } from "zod"
 import { zx } from "zodix"
 
 import { Button } from "~/components/common"
 import { useDialogPage } from "~/utils/hooks"
+import { badRequest } from "~/utils/remix"
 import { removeProductsFromCollection } from "~/utils/shopify.server"
 
-export async function loader({ params, context, request }: LoaderFunctionArgs) {
+export async function loader({ params, context }: LoaderFunctionArgs) {
   const { db } = context
-  const { item: itemSku, listing: listingSku } = zx.parseParams(
-    params,
-    z.object({ item: z.string(), listing: zx.NumAsString })
-  )
+  const { itemSku } = zx.parseParams(params, z.object({ itemSku: z.string() }))
 
   const itemPurchases = await db.itemPurchase.count({
     where: { item: { sku: itemSku } },
   })
 
-  if (itemPurchases > 0)
-    return redirect(`/dashboard/listings/${listingSku}/items/${itemSku}`)
+  if (itemPurchases > 0) {
+    throw badRequest({
+      message: "This items has been purchased and cannot be deleted.",
+    })
+  }
 
   return null
 }
 
 export async function action({ context, params }: ActionFunctionArgs) {
   const { db } = context
-  const { item: itemSku, listing: listingSku } = zx.parseParams(
+  const { itemSku, listingSku } = zx.parseParams(
     params,
-    z.object({ item: z.string(), listing: zx.NumAsString })
+    z.object({ itemSku: z.string(), listingSku: z.coerce.number() })
   )
 
   const listing = await db.listing.findUniqueOrThrow({
@@ -46,7 +48,11 @@ export async function action({ context, params }: ActionFunctionArgs) {
     await removeProductsFromCollection(listing.commerceId, [item.commerceId])
   }
 
-  return redirect(`/dashboard/listings/${listing.sku}/items`)
+  return redirect(
+    route("/dashboard/listings/:listingSku/items", {
+      listingSku: `${listing.sku}`,
+    })
+  )
 }
 
 export default function Example() {

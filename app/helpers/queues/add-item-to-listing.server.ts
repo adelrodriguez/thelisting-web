@@ -5,6 +5,7 @@ import invariant from "tiny-invariant"
 
 import { QUEUE_NAMES } from "~/config/consts"
 import db from "~/helpers/db.server"
+import logger from "~/helpers/logger.server"
 import { createQueue } from "~/helpers/queue.server"
 import {
   calculatePriceWithMargin,
@@ -16,8 +17,6 @@ import {
   getProductsByTag,
   publishToCurrentChannel,
 } from "~/utils/shopify.server"
-
-import logger from "../logger.server"
 
 export type QueueData = {
   exchangeRate: number // The exchange rate from USD to DOP

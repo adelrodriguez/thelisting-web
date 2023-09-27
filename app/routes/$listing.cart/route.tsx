@@ -231,6 +231,7 @@ export default function ListingCartPage() {
       </Transition.Root>
       <AddNoteReminderDialog
         onCancel={() => handleSubmit()}
+        // TODO(adelrodriguez): Replace with route()
         onClose={() => navigate("./")}
         onConfirm={() => navigate("./note")}
         open={!!alertNote}

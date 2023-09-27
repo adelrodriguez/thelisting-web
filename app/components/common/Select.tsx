@@ -19,7 +19,6 @@ function Select<T extends SelectOption>(
     name,
     id = name,
     options,
-    placeholder,
     required,
     ...props
   }: {
@@ -29,7 +28,6 @@ function Select<T extends SelectOption>(
     label?: string
     name?: string
     options: T[]
-    placeholder?: string
     required?: boolean
   } & ComponentProps<"select">,
   ref: Ref<HTMLSelectElement>

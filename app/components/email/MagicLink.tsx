@@ -32,15 +32,15 @@ export default function Email({
       <Preview>Log in with this magic link 🪄</Preview>
       <Tailwind>
         <Section className="bg-white">
-          <Container className="mx-auto px-6 pt-5 pb-12">
+          <Container className="mx-auto px-6 pb-12 pt-5">
             <Img
               alt="The Listing"
               className="mx-auto"
               height={48}
               src={baseUrl + THE_LISTING_LOGO_BLACK}
             />
-            <Text className="mt-12 mb-6 text-center text-xl font-bold">
-              🪄 {user.firstName}, here's your magic link
+            <Text className="mb-6 mt-12 text-center text-xl font-bold">
+              🪄 {user.firstName}, here&rsquo;s your magic link
             </Text>
             <Text className="text-center leading-6">
               <Link className="text-base text-amber-500" href={magicLink}>
@@ -54,7 +54,7 @@ export default function Email({
             </Text>
 
             <Text className="text-sm leading-6">
-              If you didn't request this, please ignore this email.
+              If you didn&rsquo;t request this, please ignore this email.
             </Text>
             <Text className="text-sm leading-6">
               Best,

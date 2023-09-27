@@ -1,6 +1,8 @@
 import type { Item } from "@prisma/client"
-import { Link } from "@remix-run/react"
+import { Link, useParams } from "@remix-run/react"
 import { useTranslation } from "react-i18next"
+import type { RouteParams } from "routes-gen"
+import { route } from "routes-gen"
 
 import { Alert } from "~/components/common"
 import { useCart, useExchangeRate, useProduct } from "~/utils/hooks"
@@ -12,6 +14,7 @@ export default function CartItem({
   quantity,
   sku,
 }: Pick<Item, "id" | "commerceId" | "quantity" | "sku">) {
+  const { listing } = useParams<RouteParams["/:listing/cart"]>()
   const { data, isLoading, isError } = useProduct(commerceId!)
   const cart = useCart()
   const { t } = useTranslation("registry")
@@ -20,7 +23,7 @@ export default function CartItem({
   // TODO(adelrodriguez): Handle loading and error states
   if (isLoading) return <div>Loading...</div>
 
-  if (isError)
+  if (isError || !listing)
     return (
       <div className="w-full">
         <Alert onClose={() => cart.remove(id)} type="error">
@@ -45,7 +48,9 @@ export default function CartItem({
         <div>
           <div className="flex justify-between text-base font-medium text-gray-900">
             <h3>
-              <Link to={`../${sku}`}>{title}</Link>
+              <Link to={route("/:listing/:item", { item: sku, listing })}>
+                {title}
+              </Link>
             </h3>
             <p className="ml-4">
               {formatPrice(price / exchangeRate, currency)}

@@ -1,10 +1,14 @@
 import { Outlet } from "@remix-run/react"
+import { route } from "routes-gen"
 
-export const handle = {
+import { RouteHandle } from "~/utils/remix"
+
+export const handle: RouteHandle = {
   crumb: () => ({
-    href: "/dashboard/admin/",
+    href: route("/dashboard/admin"),
     name: "Admin Tools",
   }),
+  id: "dashboard-admin",
 }
 
 export default function DashboardListingsPage() {

@@ -1,6 +1,5 @@
+import { BaseScraper } from "~/helpers/scrapers/product/base.server"
 import { cleanText } from "~/utils/scraper"
-
-import { BaseScraper } from "../base.server"
 
 export default class WayfairScraper extends BaseScraper {
   static domain = "wayfair.com"

@@ -8,40 +8,43 @@ import {
   ValidatedForm,
   validationError,
 } from "remix-validated-form"
+import { route } from "routes-gen"
 import { z } from "zod"
 import { zx } from "zodix"
 
 import { FormInput, FormListRadioGroup, FormSubmit } from "~/components/form"
 import { isUserAdmin } from "~/utils/auth.server"
-import { notFound } from "~/utils/remix"
+import { RouteHandle, notFound } from "~/utils/remix"
 import { getUserFullName, UserSchema } from "~/utils/user"
 
 const validator = withZod(UserSchema)
 
-export const handle = {
-  // @ts-expect-error find the recommended typing for matches
+export const handle: RouteHandle<{ userId: string }, typeof loader> = {
   crumb: ({ params, data }) => ({
-    href: `/dashboard/admin/users/${params.userId}/`,
+    href: route("/dashboard/admin/users/:userId", {
+      userId: params.userId,
+    }),
     name: getUserFullName(data.user),
   }),
+  id: "dashboard-admin-users-edit",
 }
 
 export async function loader({ params, context }: LoaderFunctionArgs) {
   const { db } = context
-  const { user: id } = zx.parseParams(params, { user: z.string() })
+  const { userId } = zx.parseParams(params, { userId: z.string() })
 
   const user = await db.user.findUnique({
-    where: { id },
+    where: { id: userId },
   })
 
   if (!user) {
     throw notFound({
-      message: "Sorry, we couldn’t find the page you’re looking for.",
+      message: "The user you are trying to edit does not exist.",
       title: "Not Found",
     })
   }
 
-  return json(setFormDefaults("edit-user", user))
+  return json({ ...setFormDefaults("edit-user", user), user })
 }
 
 export async function action({ request, params, context }: ActionFunctionArgs) {

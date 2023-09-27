@@ -1,21 +1,26 @@
-import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node"
-import { redirect, json } from "@remix-run/node"
-import { useLoaderData } from "@remix-run/react"
+import type { ActionFunctionArgs } from "@remix-run/node"
+import { redirect } from "@remix-run/node"
+import { useParams } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
 import { useSnackbar } from "notistack"
 import { ValidatedForm, validationError } from "remix-validated-form"
+import { RouteParams, route } from "routes-gen"
 import { z } from "zod"
 import { zx } from "zodix"
 
 import { FormInput, FormSubmit } from "~/components/form"
 import { isUserAdmin } from "~/utils/auth.server"
+import { RouteHandle } from "~/utils/remix"
 import { getShopifyId } from "~/utils/shopify"
 
-export const handle = {
-  crumb: () => ({
-    href: `/dashboard/listings/new/`,
+export const handle: RouteHandle<{ listingSku: string }> = {
+  crumb: ({ params }) => ({
+    href: route("/dashboard/listings/:listingSku/items/new", {
+      listingSku: params.listingSku,
+    }),
     name: "New Listing",
   }),
+  id: "dashboard-listings-listing-items-new",
 }
 
 const CreateItemSchema = z.object({
@@ -27,22 +32,12 @@ const CreateItemSchema = z.object({
 
 const validator = withZod(CreateItemSchema)
 
-export async function loader({ request, params }: LoaderFunctionArgs) {
-  await isUserAdmin(request)
-
-  const { listing: sku } = zx.parseParams(params, {
-    listing: z.coerce.number(),
-  })
-
-  return json({ listingSku: sku })
-}
-
 export async function action({ request, params, context }: ActionFunctionArgs) {
   const { db } = context
 
   await isUserAdmin(request)
-  const { listing: sku } = zx.parseParams(params, {
-    listing: z.coerce.number(),
+  const { listingSku } = zx.parseParams(params, {
+    listingSku: z.coerce.number(),
   })
 
   const formData = await request.formData()
@@ -52,7 +47,7 @@ export async function action({ request, params, context }: ActionFunctionArgs) {
 
   const listing = await db.listing.findUniqueOrThrow({
     select: { id: true },
-    where: { sku },
+    where: { sku: listingSku },
   })
 
   const item = await db.item.create({
@@ -61,17 +56,23 @@ export async function action({ request, params, context }: ActionFunctionArgs) {
       description: result.data.description,
       listingId: listing.id,
       quantity: result.data.quantity,
-      sku: sku + "-" + result.data.sku,
+      sku: listingSku + "-" + result.data.sku,
       stock: result.data.quantity,
     },
   })
 
-  return redirect(`/dashboard/listings/${sku}/items/${item.sku}`)
+  return redirect(
+    route("/dashboard/listings/:listingSku/items/:itemSku", {
+      itemSku: item.sku,
+      listingSku: `${listingSku}`,
+    })
+  )
 }
 
 export default function CreateListingsPage() {
   const { enqueueSnackbar } = useSnackbar()
-  const { listingSku } = useLoaderData<typeof loader>()
+  const { listingSku } =
+    useParams<RouteParams["/dashboard/listings/:listingSku/items/new"]>()
 
   return (
     <ValidatedForm

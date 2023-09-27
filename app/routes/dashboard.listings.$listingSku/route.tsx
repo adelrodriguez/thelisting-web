@@ -1,18 +1,21 @@
 import type { UIMatch } from "@remix-run/react"
 import { NavLink, Outlet, useMatches, useNavigate } from "@remix-run/react"
 import clsx from "clsx"
+import { route } from "routes-gen"
 
 import { Select } from "~/components/common"
-import { handle as indexHandle } from "~/routes/dashboard.listings.$listing._index/route"
-import { handle as itemsHandle } from "~/routes/dashboard.listings.$listing.items/route"
-import { handle as ribbonsHandle } from "~/routes/dashboard.listings.$listing.ribbons/route"
-import { handle as statsHandle } from "~/routes/dashboard.listings.$listing.stats/route"
+import { handle as indexHandle } from "~/routes/dashboard.listings.$listingSku._index/route"
+import { handle as itemsHandle } from "~/routes/dashboard.listings.$listingSku.items/route"
+import { handle as ribbonsHandle } from "~/routes/dashboard.listings.$listingSku.ribbons/route"
+import { handle as statsHandle } from "~/routes/dashboard.listings.$listingSku.stats/route"
 import type { RouteHandle } from "~/utils/remix"
 
-export const handle: RouteHandle<{ listing: string }> = {
+export const handle: RouteHandle<{ listingSku: string }> = {
   crumb: ({ params }) => ({
-    href: `/dashboard/listings/${params.listing}/`,
-    name: params.listing,
+    href: route("/dashboard/listings/:listingSku", {
+      listingSku: params.listingSku,
+    }),
+    name: params.listingSku,
   }),
   id: "dashboard-listings-listing",
 }

@@ -8,6 +8,7 @@ import { QueueListIcon, UserGroupIcon } from "@heroicons/react/24/solid"
 import { Link } from "@remix-run/react"
 import clsx from "clsx"
 
+// TODO(adelrodriguez): Replace hrefs with route()
 const tools = [
   {
     description:
@@ -54,7 +55,8 @@ const tools = [
     title: "Jobs Dashboard",
   },
   {
-    href: "./webhooks",
+    description: "Manually queue a job.",
+    href: "./manual-jobs",
     icon: AcademicCapIcon,
     iconBackground: "bg-gray-50",
     iconForeground: "text-gray-700",

@@ -20,13 +20,13 @@ import { useProduct } from "~/utils/hooks"
 
 export async function loader({ params, context }: LoaderFunctionArgs) {
   const { db } = context
-  const { listing: sku } = zx.parseParams(params, {
-    listing: z.coerce.number(),
+  const { listingSku } = zx.parseParams(params, {
+    listingSku: z.coerce.number(),
   })
 
   const items = await db.item.findMany({
     orderBy: { sku: "asc" },
-    where: { listing: { sku } },
+    where: { listing: { sku: listingSku } },
   })
 
   return json({ items })
@@ -162,7 +162,7 @@ function TitleCell({
   sku: Item["sku"]
   commerceId: Item["commerceId"]
 }) {
-  const { data, isLoading, isError } = useProduct(commerceId!)
+  const { data, isLoading, isError } = useProduct(commerceId ?? "")
 
   if (isLoading) return <div>Loading...</div>
 

@@ -9,6 +9,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table"
 import { format, parseISO } from "date-fns"
+import { route } from "routes-gen"
 
 import { Button } from "~/components/common"
 import { isUserAdmin } from "~/utils/auth.server"
@@ -88,7 +89,7 @@ export default function AdminToolsUserManagementPage() {
           </p>
         </div>
         <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-          <Link to="/dashboard/admin/users/new">
+          <Link to={route("/dashboard/admin/users/new")}>
             <Button>Create User</Button>
           </Link>
         </div>
@@ -123,6 +124,7 @@ export default function AdminToolsUserManagementPage() {
                       className="hover:cursor-pointer hover:bg-gray-50"
                       key={row.id}
                       onClick={() => {
+                        // TODO(adelrodriguez): Replace with route()
                         navigate(row.original.id, {
                           relative: "path",
                         })

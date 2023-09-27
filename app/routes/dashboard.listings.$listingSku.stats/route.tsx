@@ -3,29 +3,32 @@ import { json } from "@remix-run/node"
 import { useLoaderData } from "@remix-run/react"
 import currency from "currency.js"
 import { format } from "date-fns"
+import { route } from "routes-gen"
 import { z } from "zod"
 import { zx } from "zodix"
 
 import { CREDIT_CARD_FEE, SHIPPING_FEE, SHOPIFY_FEE } from "~/config/consts"
 import { getPriceSymbol } from "~/utils/money"
+import type { RouteHandle } from "~/utils/remix"
 import { notFound } from "~/utils/remix"
 
-export const handle = {
-  // @ts-expect-error fix the typing for this
+export const handle: RouteHandle<{ listingSku: string }> = {
   crumb: ({ params }) => ({
-    href: `/dashboard/listings/${params.listing}/stats`,
+    href: route("/dashboard/listings/:listingSku/stats", {
+      listingSku: params.listingSku,
+    }),
     name: "Stats",
   }),
-  id: "dashboard-listings-stats",
+  id: "dashboard-listings-listing-stats",
 }
 
 export async function loader({ params, context }: LoaderFunctionArgs) {
   const db = context.db
-  const { listing: sku } = zx.parseParams(params, {
-    listing: z.coerce.number(),
+  const { listingSku } = zx.parseParams(params, {
+    listingSku: z.coerce.number(),
   })
 
-  const listing = await db.listing.findUnique({ where: { sku } })
+  const listing = await db.listing.findUnique({ where: { sku: listingSku } })
 
   if (!listing) {
     throw notFound({ message: "Listing not found" })

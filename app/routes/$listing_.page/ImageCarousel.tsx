@@ -70,13 +70,13 @@ export default function ImageCarousel({
             </Transition>
           ))}
           <button
-            className="absolute left-0 bottom-1/2 z-10 rounded-r-lg bg-slate-700 bg-opacity-50 p-2 text-white focus:outline-none"
+            className="absolute bottom-1/2 left-0 z-10 rounded-r-lg bg-slate-700 bg-opacity-50 p-2 text-white focus:outline-none"
             onClick={() => navigate("prev")}
           >
             <ChevronLeftIcon className="h-6 w-6" />
           </button>
           <button
-            className="absolute right-0 bottom-1/2 z-10 rounded-l-lg bg-slate-700 bg-opacity-50 p-2 text-white focus:outline-none"
+            className="absolute bottom-1/2 right-0 z-10 rounded-l-lg bg-slate-700 bg-opacity-50 p-2 text-white focus:outline-none"
             onClick={() => navigate("next")}
           >
             <ChevronRightIcon className="h-6 w-6" />

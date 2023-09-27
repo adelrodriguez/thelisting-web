@@ -6,6 +6,7 @@ import { withZod } from "@remix-validated-form/with-zod"
 import { DndProvider } from "react-dnd"
 import { HTML5Backend } from "react-dnd-html5-backend"
 import { setFormDefaults, validationError } from "remix-validated-form"
+import { route } from "routes-gen"
 import { z } from "zod"
 import { zx } from "zodix"
 
@@ -13,12 +14,19 @@ import { Button } from "~/components/common"
 import { Autocomplete, Form, Input, SubmitButton } from "~/components/form"
 import { getGoogleWebFontsList } from "~/utils/font"
 import { ListingThemeSchema } from "~/utils/listing"
+import { RouteHandle, badRequest } from "~/utils/remix"
 
 import PageRibbons from "./PageRibbons"
 import RibbonsPreview from "./RibbonsPreview"
 
-export const handle = {
-  id: "dashboard-listings-ribbons",
+export const handle: RouteHandle<{ listingSku: string }> = {
+  crumb: ({ params }) => ({
+    href: route("/dashboard/listings/:listingSku/ribbons", {
+      listingSku: params.listingSku,
+    }),
+    name: "Ribbons",
+  }),
+  id: "dashboard-listings-listing-ribbons",
 }
 
 export const themeValidator = withZod(ListingThemeSchema)
@@ -27,19 +35,19 @@ export async function loader({ params, context }: LoaderFunctionArgs) {
   const db = context.db
   const cache = context.cache
 
-  const { listing: sku } = zx.parseParams(
+  const { listingSku } = zx.parseParams(
     params,
-    z.object({ listing: z.coerce.number() })
+    z.object({ listingSku: z.coerce.number() })
   )
 
   const [listing, ribbons, fonts] = await Promise.all([
     db.listing.findUniqueOrThrow({
       select: { path: true, theme: true },
-      where: { sku },
+      where: { sku: listingSku },
     }),
     db.ribbon.findMany({
       orderBy: { position: "asc" },
-      where: { listing: { sku } },
+      where: { listing: { sku: listingSku } },
     }),
     getGoogleWebFontsList(cache),
   ])
@@ -56,10 +64,17 @@ export async function loader({ params, context }: LoaderFunctionArgs) {
 
 export async function action({ request, context, params }: ActionFunctionArgs) {
   const db = context.db
-  const { listing: sku } = zx.parseParams(
+  const result = zx.parseParamsSafe(
     params,
-    z.object({ listing: z.coerce.number() })
+    z.object({ listingSku: z.coerce.number() })
   )
+
+  if (!result.success) {
+    throw badRequest({ message: result.error.message })
+  }
+
+  const sku = result.data.listingSku
+
   const formData = await request.formData()
   const subaction = formData.get("subaction")
 

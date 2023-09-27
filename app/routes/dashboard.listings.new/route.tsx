@@ -8,6 +8,7 @@ import { getTimezoneOffset } from "date-fns-tz"
 import { StatusCodes } from "http-status-codes"
 import { useSnackbar } from "notistack"
 import { useEffect } from "react"
+import { route } from "routes-gen"
 import { z } from "zod"
 
 import {
@@ -32,7 +33,7 @@ import { getUserFullName } from "~/utils/user"
 
 export const handle = {
   crumb: () => ({
-    href: `/dashboard/listings/new/`,
+    href: route("/dashboard/listings/new"),
     name: "New Listing",
   }),
 }
@@ -117,7 +118,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
     listingId: listing.id,
   })
 
-  return redirect("/dashboard/listings/")
+  return redirect(route("/dashboard/listings"))
 }
 
 export default function CreateListingsPage() {

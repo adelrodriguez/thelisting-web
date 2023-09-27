@@ -16,3 +16,6 @@ commit:
 
 generate-shopify:
 	doppler run -- pnpm run generate:shopify
+
+generate-routes:
+	doppler run -- pnpm run generate:routes
