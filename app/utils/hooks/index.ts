@@ -1,5 +1,6 @@
 export { default as useChangeLanguage } from "./use-change-language"
 export { default as useCSVParser } from "./use-csv-parser"
+export { default as useDebouncedSearchParam } from "./use-debounced-search-param"
 export { default as useDialogPage } from "./use-dialog-page"
 export { default as useInterval } from "./use-interval"
 export { default as useIsomorphicLayoutEffect } from "./use-isomorphic-layout-effect"

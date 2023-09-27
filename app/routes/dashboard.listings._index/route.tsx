@@ -2,11 +2,12 @@ import { Menu, Transition } from "@headlessui/react"
 import {
   ArrowTopRightOnSquareIcon,
   EllipsisHorizontalIcon,
+  MagnifyingGlassIcon,
 } from "@heroicons/react/20/solid"
 import { ListingStatus } from "@prisma/client"
 import type { LoaderFunctionArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
-import { Link, useLoaderData, useSearchParams } from "@remix-run/react"
+import { Link, useLoaderData } from "@remix-run/react"
 import clsx from "clsx"
 import { format, parseISO } from "date-fns"
 import { Fragment } from "react"
@@ -16,11 +17,10 @@ import { zx } from "zodix"
 
 import { Button } from "~/components/common"
 import { generateCloudflareImageUrl } from "~/utils/cloudflare"
+import { useDebouncedSearchParam } from "~/utils/hooks"
 import { ListingStatusSchema } from "~/utils/listing"
 import { formatPrice } from "~/utils/money"
 import { getShopifyIdNumber } from "~/utils/shopify"
-
-import TitleInput from "./TitleInput"
 
 const tabs = [
   { label: "All", value: "" },
@@ -68,8 +68,8 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
 
 export default function DashboardListingPage() {
   const { listings } = useLoaderData<typeof loader>()
-  const [searchParams, setSearchParams] = useSearchParams()
-  const status = searchParams.get("status") ?? ""
+  const [title, setTitle] = useDebouncedSearchParam("title", 500)
+  const [status, setStatus] = useDebouncedSearchParam("status")
 
   return (
     <>
@@ -83,17 +83,7 @@ export default function DashboardListingPage() {
             defaultValue={status}
             id="tabs"
             name="tabs"
-            onChange={(event) => {
-              setSearchParams((params) => {
-                if (event.target.value) {
-                  params.set("status", event.target.value)
-                } else {
-                  params.delete("status")
-                }
-
-                return params
-              })
-            }}
+            onChange={(event) => setStatus(event.target.value)}
           >
             {tabs.map((tab) => (
               <option key={tab.label} value={tab.value}>
@@ -104,7 +94,23 @@ export default function DashboardListingPage() {
         </div>
 
         <div className="flex-1">
-          <TitleInput />
+          <div className="relative rounded-md shadow-sm">
+            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+              <MagnifyingGlassIcon
+                aria-hidden="true"
+                className="h-5 w-5 text-slate-400"
+              />
+            </div>
+            <input
+              className="block w-full rounded-md border-0 py-1.5 pl-10 text-slate-900 ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
+              defaultValue={title}
+              id="title"
+              name="title"
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Search for a listing"
+              type="text"
+            />
+          </div>{" "}
         </div>
 
         <Link to={route("/dashboard/listings/new")}>
@@ -121,17 +127,7 @@ export default function DashboardListingPage() {
                 "text-slate-500 hover:text-slate-800": tab.value !== status,
               })}
               key={tab.label}
-              onClick={() => {
-                setSearchParams((params) => {
-                  if (tab.value) {
-                    params.set("status", tab.value)
-                  } else {
-                    params.delete("status")
-                  }
-
-                  return params
-                })
-              }}
+              onClick={() => setStatus(tab.value)}
             >
               {tab.label}
             </button>
@@ -139,7 +135,23 @@ export default function DashboardListingPage() {
         </nav>
 
         <div className="flex-1">
-          <TitleInput />
+          <div className="relative rounded-md shadow-sm">
+            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+              <MagnifyingGlassIcon
+                aria-hidden="true"
+                className="h-5 w-5 text-slate-400"
+              />
+            </div>
+            <input
+              className="block w-full rounded-md border-0 py-1.5 pl-10 text-slate-900 ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
+              defaultValue={title}
+              id="title"
+              name="title"
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Search for a listing"
+              type="text"
+            />
+          </div>
         </div>
 
         <Link to={route("/dashboard/listings/new")}>
