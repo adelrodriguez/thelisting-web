@@ -6,11 +6,12 @@ import {
 import { ListingStatus } from "@prisma/client"
 import type { LoaderFunctionArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
-import { Link, useLoaderData, useNavigate } from "@remix-run/react"
+import { Link, useLoaderData, useSearchParams } from "@remix-run/react"
 import clsx from "clsx"
 import { format, parseISO } from "date-fns"
 import { Fragment } from "react"
 import { route } from "routes-gen"
+import { z } from "zod"
 import { zx } from "zodix"
 
 import { Button } from "~/components/common"
@@ -19,13 +20,15 @@ import { ListingStatusSchema } from "~/utils/listing"
 import { formatPrice } from "~/utils/money"
 import { getShopifyIdNumber } from "~/utils/shopify"
 
+import TitleInput from "./TitleInput"
+
 const tabs = [
-  { label: "All", value: undefined },
-  { label: ListingStatus.Draft, value: ListingStatus.Draft },
+  { label: "All", value: "" },
   {
     label: ListingStatus.Published,
     value: ListingStatus.Published,
   },
+  { label: ListingStatus.Draft, value: ListingStatus.Draft },
   { label: ListingStatus.Closed, value: ListingStatus.Closed },
 ]
 
@@ -37,8 +40,9 @@ const statuses = {
 
 export async function loader({ context, request }: LoaderFunctionArgs) {
   const { db } = context
-  const { status } = zx.parseQuery(request, {
+  const { status, title } = zx.parseQuery(request, {
     status: ListingStatusSchema.optional(),
+    title: z.string().optional(),
   })
 
   const listings = await db.listing.findMany({
@@ -56,19 +60,20 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
     },
     orderBy: { eventDate: "asc" },
     take: 100,
-    where: { status },
+    where: { status, title: { contains: title, mode: "insensitive" } },
   })
 
-  return json({ listings, status })
+  return json({ listings })
 }
 
 export default function DashboardListingPage() {
-  const { listings, status } = useLoaderData<typeof loader>()
-  const navigate = useNavigate()
+  const { listings } = useLoaderData<typeof loader>()
+  const [searchParams, setSearchParams] = useSearchParams()
+  const status = searchParams.get("status") ?? ""
 
   return (
     <>
-      <div className="flex justify-between sm:hidden">
+      <div className="flex items-center justify-between gap-x-2 sm:hidden">
         <div>
           <label className="sr-only" htmlFor="tabs">
             Select a tab
@@ -79,41 +84,64 @@ export default function DashboardListingPage() {
             id="tabs"
             name="tabs"
             onChange={(event) => {
-              navigate(event.target.value)
+              setSearchParams((params) => {
+                if (event.target.value) {
+                  params.set("status", event.target.value)
+                } else {
+                  params.delete("status")
+                }
+
+                return params
+              })
             }}
           >
             {tabs.map((tab) => (
-              <option
-                key={tab.label}
-                value={tab.value ? `?status=${tab.value}` : "#"}
-              >
+              <option key={tab.label} value={tab.value}>
                 {tab.label}
               </option>
             ))}
           </select>
         </div>
 
+        <div className="flex-1">
+          <TitleInput />
+        </div>
+
         <Link to={route("/dashboard/listings/new")}>
           <Button>Create Listing</Button>
         </Link>
       </div>
-      <div className="hidden sm:flex sm:justify-between">
+      <div className="hidden gap-x-8 sm:flex sm:justify-between">
         <nav aria-label="Tabs" className="flex space-x-4">
           {tabs.map((tab) => (
-            <Link
-              aria-current={false}
+            <button
+              aria-current={tab.value === status}
               className={clsx("rounded-md px-3 py-2 text-sm font-medium", {
-                "bg-gray-200 text-gray-800": tab.value === status,
-                "text-gray-500 hover:text-gray-800": tab.value !== status,
+                "bg-slate-200 text-slate-800": tab.value === status,
+                "text-slate-500 hover:text-slate-800": tab.value !== status,
               })}
               key={tab.label}
-              relative="route"
-              to={tab.value ? `?status=${tab.value}` : "#"}
+              onClick={() => {
+                setSearchParams((params) => {
+                  if (tab.value) {
+                    params.set("status", tab.value)
+                  } else {
+                    params.delete("status")
+                  }
+
+                  return params
+                })
+              }}
             >
               {tab.label}
-            </Link>
+            </button>
           ))}
         </nav>
+
+        <div className="flex-1">
+          <TitleInput />
+        </div>
+
         <Link to={route("/dashboard/listings/new")}>
           <Button>Create Listing</Button>
         </Link>

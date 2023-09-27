@@ -32,7 +32,7 @@ function Button(
           "rounded-md px-6 py-3 text-base": size === "xl",
         },
         {
-          "border-slate-300 bg-white text-slate-700 ring-1 ring-inset ring-gray-300 hover:bg-slate-50":
+          "border-slate-300 bg-white text-slate-700 ring-1 ring-inset ring-slate-300 hover:bg-slate-50":
             variant === "secondary",
           "border-transparent bg-red-600 text-white hover:bg-red-500":
             variant === "danger",

@@ -152,6 +152,9 @@ dependencies:
   isbot:
     specifier: 3.6.12
     version: 3.6.12
+  lodash:
+    specifier: 4.17.21
+    version: 4.17.21
   morgan:
     specifier: ^1.10.0
     version: 1.10.0
@@ -307,6 +310,9 @@ devDependencies:
   '@types/express':
     specifier: ^4.17.18
     version: 4.17.18
+  '@types/lodash':
+    specifier: ^4.14.199
+    version: 4.14.199
   '@types/morgan':
     specifier: ^1.9.5
     version: 1.9.5
@@ -3960,6 +3966,10 @@ packages:
 
   /@types/json-stable-stringify@1.0.34:
     resolution: {integrity: sha512-s2cfwagOQAS8o06TcwKfr9Wx11dNGbH2E9vJz1cqV+a/LOyhWNLUNd6JSRYNzvB4d29UuJX2M0Dj9vE1T8fRXw==}
+    dev: true
+
+  /@types/lodash@4.14.199:
+    resolution: {integrity: sha512-Vrjz5N5Ia4SEzWWgIVwnHNEnb1UE1XMkvY5DGXrAeOGE9imk0hgTHh5GyDjLDJi9OTCn9oo9dXH1uToK1VRfrg==}
     dev: true
 
   /@types/mdast@3.0.12:
