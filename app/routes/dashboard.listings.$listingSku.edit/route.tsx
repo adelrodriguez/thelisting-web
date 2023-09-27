@@ -14,6 +14,7 @@ import { zfd } from "zod-form-data"
 import { zx } from "zodix"
 
 import {
+  Autocomplete,
   Checkbox,
   Form,
   ImageInput,
@@ -301,7 +302,7 @@ export default function DashboardListingPage() {
         ]}
         required
       />
-      <Select
+      <Autocomplete
         description="The user owner of this listing"
         label="Owner"
         name="ownerId"

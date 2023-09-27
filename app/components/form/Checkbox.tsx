@@ -12,7 +12,6 @@ export default function Checkbox({
   label,
   className,
   description,
-  required,
   ...props
 }: ComponentProps<typeof Input>) {
   const { getInputProps, error, defaultValue } = useField(name)

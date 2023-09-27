@@ -3,16 +3,12 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { withZod } from "@remix-validated-form/with-zod"
 import { useSnackbar } from "notistack"
-import {
-  setFormDefaults,
-  ValidatedForm,
-  validationError,
-} from "remix-validated-form"
+import { setFormDefaults, validationError } from "remix-validated-form"
 import { route } from "routes-gen"
 import { z } from "zod"
 import { zx } from "zodix"
 
-import { FormInput, FormListRadioGroup, FormSubmit } from "~/components/form"
+import { Form, Input, ListRadioGroup, SubmitButton } from "~/components/form"
 import { isUserAdmin } from "~/utils/auth.server"
 import { RouteHandle, notFound } from "~/utils/remix"
 import { getUserFullName, UserSchema } from "~/utils/user"
@@ -81,7 +77,7 @@ export default function AdminToolsUserEditPage() {
   const { enqueueSnackbar } = useSnackbar()
 
   return (
-    <ValidatedForm
+    <Form
       className="m-auto mt-8 flex w-full max-w-xl flex-col gap-y-6"
       id="edit-user"
       method="POST"
@@ -93,24 +89,23 @@ export default function AdminToolsUserEditPage() {
       }}
       validator={validator}
     >
-      <FormInput label="First Name" name="firstName" required />
-      <FormInput label="Last Name" name="lastName" required />
-      <FormInput
+      <Input label="First Name" name="firstName" required />
+      <Input label="Last Name" name="lastName" required />
+      <Input
         description="The user's email address to receive email notifications"
         label="Email"
         name="email"
         required
       />
-      <FormInput
+      <Input
         description="The user's phone number to receive WhatsApp notifications"
         label="Phone"
         name="phone"
       />
 
-      <FormListRadioGroup
+      <ListRadioGroup
         label="Role"
         name="role"
-        // @ts-expect-error This component should be changed since its deprecated
         options={[
           {
             description: "A regular user without admin privileges",
@@ -126,7 +121,7 @@ export default function AdminToolsUserEditPage() {
         required
       />
 
-      <FormSubmit loadingText="Updating..." text="Update" />
-    </ValidatedForm>
+      <SubmitButton loadingText="Updating...">Update</SubmitButton>
+    </Form>
   )
 }

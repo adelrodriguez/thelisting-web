@@ -3,10 +3,10 @@ import type { ActionFunctionArgs } from "@remix-run/node"
 import { redirect } from "@remix-run/node"
 import { withZod } from "@remix-validated-form/with-zod"
 import { useSnackbar } from "notistack"
-import { ValidatedForm, validationError } from "remix-validated-form"
+import { validationError } from "remix-validated-form"
 import { route } from "routes-gen"
 
-import { FormInput, FormListRadioGroup, FormSubmit } from "~/components/form"
+import { Form, Input, ListRadioGroup, SubmitButton } from "~/components/form"
 import { isUserAdmin } from "~/utils/auth.server"
 import { RouteHandle, unauthorized } from "~/utils/remix"
 import { UserSchema } from "~/utils/user"
@@ -58,7 +58,7 @@ export default function CreateListingsPage() {
           Create a new user to manage their listings.
         </p>
       </div>
-      <ValidatedForm
+      <Form
         className="m-auto mt-8 flex w-full max-w-xl flex-col gap-y-6"
         id="editUser"
         method="POST"
@@ -70,25 +70,24 @@ export default function CreateListingsPage() {
         }}
         validator={validator}
       >
-        <FormInput label="First Name" name="firstName" required />
-        <FormInput label="Last Name" name="lastName" required />
-        <FormInput
+        <Input label="First Name" name="firstName" required />
+        <Input label="Last Name" name="lastName" required />
+        <Input
           description="The user's email address to receive email notifications"
           label="Email"
           name="email"
           required
         />
-        <FormInput
+        <Input
           description="The user's phone number to receive WhatsApp notifications"
           label="Phone"
           name="phone"
+          required
         />
 
-        <FormListRadioGroup
+        <ListRadioGroup
           label="Role"
           name="role"
-          // @ts-expect-error this hopefully is fixed when the component is
-          // updated
           options={[
             {
               description: "A regular user without admin privileges",
@@ -104,8 +103,8 @@ export default function CreateListingsPage() {
           required
         />
 
-        <FormSubmit loadingText="Updating..." text="Update" />
-      </ValidatedForm>
+        <SubmitButton loadingText="Updating...">Create</SubmitButton>
+      </Form>
     </div>
   )
 }
