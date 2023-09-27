@@ -27,12 +27,10 @@ export type RouteHandle<Params = unknown, LoaderData = unknown> = {
 /**
  * 400 Bad Request
  */
-export function badRequest(
-  { message, title }: { message: string; title?: string } = {
-    message: "The request was invalid.",
-    title: "Bad Request",
-  }
-) {
+export function badRequest({
+  message = "The request was invalid.",
+  title = "Bad Request",
+} = {}) {
   return json(
     { message, title },
     { status: StatusCodes.BAD_REQUEST, statusText: ReasonPhrases.BAD_REQUEST }
@@ -40,27 +38,12 @@ export function badRequest(
 }
 
 /**
- * 404 Not Found
- */
-export function notFound({
-  message = "The requested resource was not found.",
-  title = "Not Found",
-}) {
-  return json(
-    { message: message, title },
-    { status: StatusCodes.NOT_FOUND, statusText: ReasonPhrases.NOT_FOUND }
-  )
-}
-
-/**
  * 401 Unauthorized
  */
-export function unauthorized(
-  { message, title }: { message: string; title?: string } = {
-    message: "You are not authorized to access this resource.",
-    title: "Unauthorized",
-  }
-) {
+export function unauthorized({
+  message = "You are not authorized to access this resource.",
+  title = "Unauthorized",
+} = {}) {
   return json(
     { message, title },
     {
@@ -70,15 +53,29 @@ export function unauthorized(
   )
 }
 
-export function forbidden(
-  { message, title }: { message: string; title?: string } = {
-    message: "You are not allowed to access this resource.",
-    title: "Forbidden",
-  }
-) {
+/**
+ * 403 Forbidden
+ */
+export function forbidden({
+  message = "You are not allowed to access this resource.",
+  title = "Forbidden",
+} = {}) {
   return json(
     { message, title },
     { status: StatusCodes.FORBIDDEN, statusText: ReasonPhrases.FORBIDDEN }
+  )
+}
+
+/**
+ * 404 Not Found
+ */
+export function notFound({
+  message = "The requested resource was not found.",
+  title = "Not Found",
+} = {}) {
+  return json(
+    { message: message, title },
+    { status: StatusCodes.NOT_FOUND, statusText: ReasonPhrases.NOT_FOUND }
   )
 }
 
@@ -102,7 +99,7 @@ export function unprocessableEntity<T>({
 export function notAllowed({
   message = "The request method is not allowed.",
   title = "Method Not Allowed",
-}) {
+} = {}) {
   return json(
     { message, title },
     {
@@ -115,7 +112,7 @@ export function notAllowed({
 export function internalServerError({
   message = "An internal error ocurred.",
   title = "Internal Server Error",
-}) {
+} = {}) {
   return json(
     { message, title },
     {
