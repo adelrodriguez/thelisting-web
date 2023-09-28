@@ -21,8 +21,6 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
     return json(
       { cart: null },
       {
-        // TODO(adelrodriguez): Set the expiration date to be the same as the
-        // previous one
         headers: {
           "Set-Cookie": await commitSession(session),
         },

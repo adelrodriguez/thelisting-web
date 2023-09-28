@@ -1,14 +1,14 @@
 import { createCookieSessionStorage } from "@remix-run/node"
-import { add } from "date-fns"
 import { z } from "zod"
 
+import { ONE_WEEK } from "~/config/consts"
 import { REMIX_AUTH_SECRET } from "~/config/env.server"
 import { isProduction } from "~/config/vars"
 
-const sessionStorage = createCookieSessionStorage({
+const sessionStorage = createCookieSessionStorage<Session>({
   cookie: {
-    expires: add(new Date(), { days: 30 }), // expire in 30 days
     httpOnly: true,
+    maxAge: 2 * ONE_WEEK.inSeconds, // two weeks
     name: "thelisting", // use any name you want here
     path: "/", // remember to add this so the cookie will work in all routes
     sameSite: "lax", // this helps with CSRF
@@ -26,6 +26,7 @@ const SessionSchema = z
     user: z.any().optional(), // TODO(adelrodriguez): add typing
   })
   .passthrough()
+export type Session = z.infer<typeof SessionSchema>
 
 // you can also export the methods individually for your own usage
 export const { getSession, commitSession, destroySession } = sessionStorage
