@@ -20,6 +20,7 @@ import { generateCloudflareImageUrl } from "~/utils/cloudflare"
 import { useDebouncedSearchParam } from "~/utils/hooks"
 import { ListingStatusSchema } from "~/utils/listing"
 import { formatPrice } from "~/utils/money"
+import { isNumber } from "~/utils/number"
 import { getShopifyIdNumber } from "~/utils/shopify"
 
 const tabs = [
@@ -40,9 +41,9 @@ const statuses = {
 
 export async function loader({ context, request }: LoaderFunctionArgs) {
   const { db } = context
-  const { status, title } = zx.parseQuery(request, {
+  const { status, q } = zx.parseQuery(request, {
+    q: z.string().optional(),
     status: ListingStatusSchema.optional(),
-    title: z.string().optional(),
   })
 
   const listings = await db.listing.findMany({
@@ -60,7 +61,12 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
     },
     orderBy: { eventDate: "asc" },
     take: 100,
-    where: { status, title: { contains: title, mode: "insensitive" } },
+    where: {
+      ...(isNumber(q)
+        ? { sku: { equals: Number(q) } }
+        : { title: { contains: q, mode: "insensitive" } }),
+      status,
+    },
   })
 
   return json({ listings })
@@ -68,7 +74,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
 
 export default function DashboardListingPage() {
   const { listings } = useLoaderData<typeof loader>()
-  const [title, setTitle] = useDebouncedSearchParam("title", 500)
+  const [query, setQuery] = useDebouncedSearchParam("q", 500)
   const [status, setStatus] = useDebouncedSearchParam("status")
 
   return (
@@ -103,11 +109,11 @@ export default function DashboardListingPage() {
             </div>
             <input
               className="block w-full rounded-md border-0 py-1.5 pl-10 text-slate-900 ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
-              defaultValue={title}
+              defaultValue={query}
               id="title"
               name="title"
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="Search for a listing"
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search for a listing by title or SKU"
               type="text"
             />
           </div>{" "}
@@ -144,11 +150,11 @@ export default function DashboardListingPage() {
             </div>
             <input
               className="block w-full rounded-md border-0 py-1.5 pl-10 text-slate-900 ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
-              defaultValue={title}
+              defaultValue={query}
               id="title"
               name="title"
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="Search for a listing"
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search for a listing by title or SKU"
               type="text"
             />
           </div>
