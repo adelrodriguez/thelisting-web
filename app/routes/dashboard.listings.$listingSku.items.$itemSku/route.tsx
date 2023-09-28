@@ -80,17 +80,18 @@ export async function loader({ params, context }: LoaderFunctionArgs) {
 
 export async function action({ request, params, context }: ActionFunctionArgs) {
   const { db } = context
+  const { itemSku } = zx.parseParams(params, {
+    itemSku: z.string(),
+  })
+
   const formData = await request.formData()
   const result = await validator.validate(formData)
-  const { item: sku } = zx.parseParams(params, {
-    item: z.string(),
-  })
 
   if (result.error) return validationError(result.error)
 
   const item = await db.item.update({
     data: result.data,
-    where: { sku },
+    where: { sku: itemSku },
   })
 
   return { item }
