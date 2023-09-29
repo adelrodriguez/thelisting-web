@@ -39,7 +39,14 @@ export function ExchangeRateProvider({ children }: { children: ReactNode }) {
   )
 
   function handleSetCurrency(currency: Currency) {
-    setSearchParams({ currency }, { preventScrollReset: true })
+    setSearchParams(
+      (params) => {
+        params.set("currency", currency)
+
+        return params
+      },
+      { preventScrollReset: true }
+    )
     setCurrency(currency)
   }
 

@@ -1,4 +1,4 @@
-import { useNavigate } from "@remix-run/react"
+import { useSearchParams } from "@remix-run/react"
 import i18next from "i18next"
 import { type ChangeEvent } from "react"
 import { useTranslation } from "react-i18next"
@@ -7,15 +7,25 @@ import { Select } from "~/components/common"
 import type { Currency } from "~/config/consts"
 import { useExchangeRate } from "~/utils/hooks"
 
-export default function LanguageCurrencySelector({ showLabels = false }) {
-  const navigate = useNavigate()
+export default function LanguageCurrencySelector({
+  showLabels = false,
+}: {
+  showLabels?: boolean
+}) {
+  const [, setSearchParams] = useSearchParams()
   const { currency, setCurrency } = useExchangeRate()
   const { t } = useTranslation("common")
 
   function handleLanguageChange(e: ChangeEvent<HTMLSelectElement>) {
     void i18next.changeLanguage(e.target.value, () => {
-      const params = new URLSearchParams({ lng: i18next.language })
-      navigate("?" + params, { preventScrollReset: true })
+      setSearchParams(
+        (params) => {
+          params.set("lng", e.target.value)
+
+          return params
+        },
+        { preventScrollReset: true }
+      )
     })
   }
 
