@@ -29,7 +29,7 @@
     "generate:scraper:product": "hygen product-scraper new --name",
     "generate:shopify:watch": "npm run generate:shopify -- --watch",
     "generate:shopify": "DOTENV_CONFIG_PATH=.env graphql-codegen -r dotenv/config  --config app/services/shopify/codegen.ts",
-    "generate:routes": "cross-env NODE_ENV=development routes-gen -d @routes-gen/remix",
+    "generate:routes": "routes-gen -d @routes-gen/remix",
     "lint": "eslint .",
     "logs": "railway logs",
     "prebuild": "run-s clean generate:shopify",
