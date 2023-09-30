@@ -16,8 +16,8 @@ import {
   SubmitButton,
   TextArea,
 } from "~/components/form"
-import { WHATSAPP_MESSAGE_TEMPLATES } from "~/config/consts"
-import whatsapp from "~/services/whatsapp.server"
+import { SendWhatsAppTemplateMessageQueue } from "~/helpers/queues"
+import { WHATSAPP_MESSAGE_TEMPLATES } from "~/services/whatsapp/types"
 import { generateCloudflareImageUrl } from "~/utils/cloudflare"
 
 export const handle = {
@@ -58,28 +58,33 @@ export async function action({ request }: ActionFunctionArgs) {
     })
   }
 
-  const response = await Promise.allSettled(
-    result.data.phoneNumbers.map(async (phoneNumber) => {
-      try {
-        // We are awaiting the promise here because we want to catch any errors
-        return await whatsapp.sendGuestNotification(
-          result.data.template,
-          phoneNumber,
-          {
-            customer: result.data.customer,
-            mediaUrl: generateCloudflareImageUrl(result.data.image, "public"),
-            path: result.data.path,
-          }
-        )
-      } catch (error) {
-        return Promise.reject({
-          phoneNumber,
-        })
-      }
-    })
-  )
+  switch (result.data.template) {
+    case WHATSAPP_MESSAGE_TEMPLATES.BabyShowerGuestNotification:
+    case WHATSAPP_MESSAGE_TEMPLATES.WeddingGuestNotification:
+      await SendWhatsAppTemplateMessageQueue.addBulk(
+        result.data.phoneNumbers.map((phoneNumber) => ({
+          data: {
+            locale: "ES",
+            payload: {
+              imageUrl: generateCloudflareImageUrl(result.data.image, "public"),
+              path: result.data.path,
+              recipient: result.data.customer,
+            },
+            template: result.data.template,
+            to: phoneNumber,
+          },
+          name: phoneNumber,
+        }))
+      )
+      break
+    default:
+      throw new Error("Invalid template")
+  }
 
-  return json({ response, success: true } as const)
+  return json({
+    amount: result.data.phoneNumbers.length,
+    success: true,
+  } as const)
 }
 
 export default function WhatsAppBroadcastPage() {
@@ -89,21 +94,17 @@ export default function WhatsAppBroadcastPage() {
   useEffect(() => {
     if (!actionData) return
 
-    if (!actionData.success) return
-
-    actionData.response.forEach((result) => {
-      if (result.status === "fulfilled") {
-        enqueueSnackbar("Message sent", {
-          description: `Message sent successfully to ${result.value.phoneNumber}`,
-          variant: "success",
-        })
-      } else if (result.status === "rejected") {
-        enqueueSnackbar("Error sending message", {
-          description: `Error sending message to ${result.reason.phoneNumber}`,
-          variant: "error",
-        })
-      }
-    })
+    if (actionData.success) {
+      enqueueSnackbar("Message enqueued", {
+        description: `Messages enqueue to be sent to ${actionData.amount} phone numbers. Check the job queue for status.`,
+        variant: "success",
+      })
+    } else {
+      enqueueSnackbar("Error sending messages", {
+        description: "Error sending messages",
+        variant: "error",
+      })
+    }
   }, [actionData, enqueueSnackbar])
 
   return (

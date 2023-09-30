@@ -5,15 +5,16 @@ import invariant from "tiny-invariant"
 
 import { QUEUE_NAMES } from "~/config/consts"
 import { SHOPIFY_SHIPPING_ITEM_1_ID } from "~/config/env.server"
-import { isDevelopment } from "~/config/vars"
 import db from "~/helpers/db.server"
 import logger from "~/helpers/logger.server"
 import { createQueue } from "~/helpers/queue.server"
 import Sentry from "~/services/sentry"
-import whatsapp from "~/services/whatsapp.server"
+import { WHATSAPP_MESSAGE_TEMPLATES } from "~/services/whatsapp/types"
 import { getPriceSymbol } from "~/utils/money"
 import { getShopifyId, transformCustomAttributes } from "~/utils/shopify"
 import { getOrder } from "~/utils/shopify.server"
+
+import { SendWhatsAppTemplateMessageQueue } from "."
 
 export type QueueData = {
   orderId: string | number
@@ -21,11 +22,6 @@ export type QueueData = {
 
 export const processor: Processor<QueueData> = async (job) => {
   try {
-    if (isDevelopment) {
-      await job.log("Development mode, skipping")
-      return
-    }
-
     const order = await getOrder(getShopifyId(job.data.orderId, "Order"))
     const purchase = await db.purchase.findFirstOrThrow({
       include: { customer: true },
@@ -49,21 +45,32 @@ export const processor: Processor<QueueData> = async (job) => {
       `Sending purchase notification to ${listing.owner.firstName} ${listing.owner.lastName} at ${listing.owner.phone}`
     )
 
-    await whatsapp.sendGiftPurchaseNotification(listing.owner.phone, {
-      amount: currency(purchase.cost).format({
-        symbol: getPriceSymbol(order.totalPriceSet.shopMoney.currencyCode),
-      }),
-      buyer: purchase.customer?.name || order.customer?.displayName || "",
-      gift: flattenConnection(order.lineItems)
-        .filter(
-          (lineItem) =>
-            flattenConnection(lineItem.product?.variants)[0]?.id !==
-            SHOPIFY_SHIPPING_ITEM_1_ID
-        )
-        .map((lineItem) => lineItem.product?.title)
-        .join(", "),
-      path: `${listing.path}/review`,
-      recipient: listing.owner.firstName,
+    const amount = currency(purchase.cost).format({
+      symbol: getPriceSymbol(order.totalPriceSet.shopMoney.currencyCode),
+    })
+    const buyer = purchase.customer?.name || order.customer?.displayName || ""
+    const gift = flattenConnection(order.lineItems)
+      .filter(
+        (lineItem) =>
+          flattenConnection(lineItem.product?.variants)[0]?.id !==
+          SHOPIFY_SHIPPING_ITEM_1_ID
+      )
+      .map((lineItem) => lineItem.product?.title)
+      .join(", ")
+    const path = `${listing.path}/review`
+    const recipient = listing.owner.firstName
+
+    await SendWhatsAppTemplateMessageQueue.add(listing.owner.phone, {
+      locale: "ES",
+      payload: {
+        amount,
+        buyer,
+        gift,
+        path,
+        recipient,
+      },
+      template: WHATSAPP_MESSAGE_TEMPLATES.ListingGiftPurchase,
+      to: listing.owner.phone,
     })
   } catch (error) {
     Sentry.captureException(error)

@@ -236,9 +236,6 @@ dependencies:
   user-agents:
     specifier: 1.0.1444
     version: 1.0.1444
-  whatsapp-cloud-api:
-    specifier: 0.3.1
-    version: 0.3.1
   winston:
     specifier: 3.9.0
     version: 3.9.0
@@ -10346,10 +10343,6 @@ packages:
     resolution: {integrity: sha512-b/YwNhb8lk1Zz2+bXXpS/LK9OisiZZ1SNsSLxN1x2OXVEhW2Ckr/7mWE5vrC1ZTiJlD9g19jWszTmJsB+oEpFQ==}
     dev: false
 
-  /pubsub-js@1.9.4:
-    resolution: {integrity: sha512-hJYpaDvPH4w8ZX/0Fdf9ma1AwRgU353GfbaVfPjfJQf1KxZ2iHaHl3fAUw1qlJIR5dr4F3RzjGaWohYUEyoh7A==}
-    dev: false
-
   /pump@2.0.1:
     resolution: {integrity: sha512-ruPMNRkN3MHP1cWJc9OWr+T/xDP0jhXYCLfJcBuX54hhfIBnaQmAUMfDcG4DM5UMWByBbJY69QSphm3jtDKIkA==}
     dependencies:
@@ -12404,11 +12397,6 @@ packages:
     dependencies:
       builtins: 5.0.1
 
-  /validator@13.9.0:
-    resolution: {integrity: sha512-B+dGG8U3fdtM0/aNK4/X8CXq/EcxU2WPrPEkJGslb47qyHsxmbggTWK0yEA4qnYVNF+nxNlN88o14hIcPmSIEA==}
-    engines: {node: '>= 0.10'}
-    dev: false
-
   /value-or-promise@1.0.12:
     resolution: {integrity: sha512-Z6Uz+TYwEqE7ZN50gwn+1LCVo9ZVrpxRPOhOLnncYkY1ZzOYtrX8Fwf/rFktZ8R5mJms6EZf5TqNOMeZmnPq9Q==}
     engines: {node: '>=12'}
@@ -12672,21 +12660,6 @@ packages:
 
   /webidl-conversions@3.0.1:
     resolution: {integrity: sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==}
-
-  /whatsapp-cloud-api@0.3.1:
-    resolution: {integrity: sha512-w8m4WEB36xW5YZhJCJEMlaWU3affLOecKUJGqMCmEcsKsHVCkf5aKslo5lyuLI4izVCbR4P1DwtCSP7zWQrzSA==}
-    engines: {node: '>=12'}
-    dependencies:
-      axios: 1.4.0
-      dotenv: 16.3.1
-      express: 4.18.2
-      pubsub-js: 1.9.4
-      type-fest: 3.8.0
-      validator: 13.9.0
-    transitivePeerDependencies:
-      - debug
-      - supports-color
-    dev: false
 
   /whatwg-url@5.0.0:
     resolution: {integrity: sha512-saE57nupxk6v3HY35+jzBwYa0rKSy0XR8JSxZPwgLr7ys0IBzhGviA1/TUGJLmSVqs8pb9AnvICXEuOHLprYTw==}
