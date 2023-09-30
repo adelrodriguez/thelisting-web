@@ -10,6 +10,7 @@ import { isDevelopment } from "~/config/vars"
 import logger from "~/helpers/logger.server"
 import { createQueue } from "~/helpers/queue.server"
 import alegra from "~/services/alegra.server"
+import Sentry from "~/services/sentry"
 import { CreateInvoiceRequestSchema } from "~/utils/alegra"
 import { getShopifyId } from "~/utils/shopify"
 import { getOrder } from "~/utils/shopify.server"
@@ -64,6 +65,8 @@ export const processor: Processor<QueueData> = async (job) => {
 
     logger.info(`Invoice ${invoiceNumber} sent to ${emails.join(", ")}`)
   } catch (error) {
+    Sentry.captureException(error)
+
     logger.error((error as Error).message, {
       error,
       jobId: job.id,

@@ -8,6 +8,7 @@ import db from "~/helpers/db.server"
 import logger from "~/helpers/logger.server"
 import { createQueue } from "~/helpers/queue.server"
 import { CreateItemPurchaseQueue } from "~/helpers/queues"
+import Sentry from "~/services/sentry"
 import { getShopifyId, transformCustomAttributes } from "~/utils/shopify"
 import { getOrder } from "~/utils/shopify.server"
 
@@ -109,6 +110,8 @@ export const processor: Processor<QueueData> = async (job) => {
 
     await job.log(`Finished processing purchase ${purchase.id}`)
   } catch (error) {
+    Sentry.captureException(error)
+
     logger.error((error as Error).message, {
       error,
       jobId: job.id,

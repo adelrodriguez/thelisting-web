@@ -1,4 +1,5 @@
 import logger from "~/helpers/logger.server"
+import Sentry from "~/services/sentry"
 import { UnknownError } from "~/utils/error"
 import type { ScrapedProductPayload } from "~/utils/scraper"
 
@@ -54,6 +55,7 @@ export default async function scraper(
 
     return payload
   } catch (error) {
+    Sentry.captureException(error)
     logger.error(`Error scrapping product ${requestUrl}`, {
       error: (error as Error).message,
       url: requestUrl,

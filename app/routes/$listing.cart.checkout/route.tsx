@@ -9,6 +9,7 @@ import { z } from "zod"
 
 import { Alert } from "~/components/common"
 import { getSession } from "~/helpers/session.server"
+import Sentry from "~/services/sentry"
 import { CartItemsSchema } from "~/utils/cart"
 import { checkStock } from "~/utils/checkout.server"
 import { createCheckout } from "~/utils/shopify.server"
@@ -68,7 +69,9 @@ export async function action({
 
     return redirect(checkout.url)
   } catch (error) {
+    Sentry.captureException(error)
     logger.error(error)
+
     throw json("There was an error creating your order.", { status: 500 })
   }
 }

@@ -3,6 +3,7 @@ import { json } from "@remix-run/node"
 import { ReasonPhrases, StatusCodes } from "http-status-codes"
 import { z } from "zod"
 
+import Sentry from "~/services/sentry"
 import {
   badRequest,
   internalServerError,
@@ -85,6 +86,8 @@ export async function action({ request, context }: ActionFunctionArgs) {
       }
     )
   } catch (error) {
+    Sentry.captureException(error)
+
     if (error instanceof z.ZodError) {
       logger.error("Error parsing request body")
       logger.error(error.message)

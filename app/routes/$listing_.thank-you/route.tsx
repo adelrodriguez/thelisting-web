@@ -9,6 +9,7 @@ import { zx } from "zodix"
 
 import { Image } from "~/components/common"
 import { OrderItem } from "~/components/registry"
+import Sentry from "~/services/sentry"
 import { generateCloudflareImageUrl } from "~/utils/cloudflare"
 import useTrackPageview from "~/utils/hooks/use-track-pageview"
 import { formatPrice } from "~/utils/money"
@@ -51,6 +52,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
 
     return json({ listing, order })
   } catch (error) {
+    Sentry.captureException(error)
     logger.error((error as Error).message, {
       orderId,
     })

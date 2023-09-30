@@ -29,7 +29,6 @@ type AnalyticsEvent =
   | "add_to_cart"
   | "begin_checkout"
   | "checkout_progress"
-  | "exception"
   | "login"
   | "purchase"
   | "remove_from_cart"

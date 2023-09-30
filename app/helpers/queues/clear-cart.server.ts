@@ -4,6 +4,7 @@ import { QUEUE_NAMES, REDIS_KEYS } from "~/config/consts"
 import redis from "~/helpers/cache.server"
 import logger from "~/helpers/logger.server"
 import { createQueue } from "~/helpers/queue.server"
+import Sentry from "~/services/sentry"
 import { GenericError } from "~/utils/error"
 import { generateKey } from "~/utils/redis"
 import { getShopifyId } from "~/utils/shopify"
@@ -50,6 +51,8 @@ export const processor: Processor<QueueData> = async (job) => {
       )} from Redis: ${Boolean(response)}`
     )
   } catch (error) {
+    Sentry.captureException(error)
+
     logger.error((error as Error).message, {
       error,
       jobId: job.id,

@@ -5,6 +5,7 @@ import {
   CLOUDFLARE_IMAGES_API_TOKEN,
 } from "~/config/env.server"
 import logger from "~/helpers/logger.server"
+import Sentry from "~/services/sentry"
 
 const UploadImageToCloudflareResponseSchema = z.object({
   errors: z.array(
@@ -66,8 +67,11 @@ export async function uploadImageToCloudflare(
     const result = await res.json()
 
     return UploadImageToCloudflareResponseSchema.parse(result)
-  } catch (err) {
-    logger.error("Error uploading image to Cloudflare", { err })
-    throw err
+  } catch (error) {
+    Sentry.captureException(error)
+
+    logger.error("Error uploading image to Cloudflare", { error })
+
+    throw error
   }
 }

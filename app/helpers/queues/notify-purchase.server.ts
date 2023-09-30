@@ -9,6 +9,7 @@ import { isDevelopment } from "~/config/vars"
 import db from "~/helpers/db.server"
 import logger from "~/helpers/logger.server"
 import { createQueue } from "~/helpers/queue.server"
+import Sentry from "~/services/sentry"
 import whatsapp from "~/services/whatsapp.server"
 import { getPriceSymbol } from "~/utils/money"
 import { getShopifyId, transformCustomAttributes } from "~/utils/shopify"
@@ -65,6 +66,8 @@ export const processor: Processor<QueueData> = async (job) => {
       recipient: listing.owner.firstName,
     })
   } catch (error) {
+    Sentry.captureException(error)
+
     logger.error((error as Error).message, {
       error,
       jobId: job.id,

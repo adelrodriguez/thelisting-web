@@ -4,6 +4,7 @@ import { zx } from "zodix"
 
 import { ONE_HOUR } from "~/config/consts"
 import alegra from "~/services/alegra.server"
+import Sentry from "~/services/sentry"
 import { CurrencySchema } from "~/utils/money"
 import { generateKey } from "~/utils/redis"
 
@@ -29,6 +30,7 @@ export async function loader({ params, context }: LoaderFunctionArgs) {
 
     return json({ exchangeRate: currency.exchangeRate })
   } catch (error) {
+    Sentry.captureException(error)
     logger.error((error as Error).message, { error })
 
     throw error

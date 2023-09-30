@@ -3,6 +3,7 @@ import { redirect } from "@remix-run/node"
 import invariant from "tiny-invariant"
 
 import { CUSTOM_ATTRIBUTES } from "~/config/consts"
+import Sentry from "~/services/sentry"
 import { getShopifyId } from "~/utils/shopify"
 import { getOrderCustomAttributes } from "~/utils/shopify.server"
 
@@ -29,6 +30,8 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
 
     return redirect(`/${listing.path}/thank-you?order_id=${orderId}`)
   } catch (error) {
+    Sentry.captureException(error)
+
     logger.error((error as Error).message, {
       orderId,
     })

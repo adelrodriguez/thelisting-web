@@ -5,7 +5,7 @@ import { useEffect } from "react"
 import { useTranslation } from "react-i18next"
 
 import { Image } from "~/components/common"
-import * as gtag from "~/utils/gtag.client"
+import Sentry from "~/services/sentry"
 import { useExchangeRate, useProduct } from "~/utils/hooks"
 import { formatPrice } from "~/utils/money"
 
@@ -24,11 +24,7 @@ export default function RegistryItem({
 
   useEffect(() => {
     if (isError) {
-      gtag.event({
-        action: "exception",
-        category: "registry-item",
-        parameters: { error },
-      })
+      Sentry.captureException(error)
     }
   }, [isError, error])
 
