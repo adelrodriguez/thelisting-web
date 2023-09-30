@@ -100,6 +100,7 @@ export const getProductQuery = graphql(`
           key
           namespace
           value
+          type
         }
       }
     }
