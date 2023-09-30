@@ -5,6 +5,7 @@ type PublicEnvs = {
   shopifyStore: string
   shopifyStorefrontAccessToken: string
   shopifyStorefrontAPIEndpoint: string
+  environment: "development" | "production"
 }
 
 declare global {

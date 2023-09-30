@@ -1,6 +1,7 @@
 import type { DataFunctionArgs, EntryContext } from "@remix-run/node"
 import { createReadableStreamFromReadable } from "@remix-run/node"
 import { RemixServer } from "@remix-run/react"
+import * as Sentry from "@sentry/remix"
 import { createInstance } from "i18next"
 import Backend from "i18next-fs-backend"
 import isbot from "isbot"
@@ -9,6 +10,8 @@ import { renderToPipeableStream } from "react-dom/server"
 import { I18nextProvider, initReactI18next } from "react-i18next"
 import { PassThrough } from "stream"
 
+import { NODE_ENV, SENTRY_DSN } from "~/config/env.server"
+import db from "~/helpers/db.server"
 import i18next from "~/helpers/i18next.server"
 import i18n from "~/i18n"
 
@@ -81,6 +84,8 @@ export function handleError(
   error: unknown,
   { request, params, context }: DataFunctionArgs
 ) {
+  void Sentry.captureRemixServerException(error, "remix.server", request)
+
   if (error instanceof Error) {
     context.logger.error(error.message, {
       error,
@@ -95,3 +100,10 @@ export function handleError(
     })
   }
 }
+
+Sentry.init({
+  dsn: SENTRY_DSN,
+  environment: NODE_ENV,
+  integrations: [new Sentry.Integrations.Prisma({ client: db })],
+  tracesSampleRate: 1,
+})

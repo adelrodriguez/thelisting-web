@@ -2,6 +2,7 @@ import { Bars3Icon } from "@heroicons/react/24/solid"
 import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { Outlet, useLoaderData } from "@remix-run/react"
+import * as Sentry from "@sentry/remix"
 import clsx from "clsx"
 import { useState } from "react"
 import { z } from "zod"
@@ -30,6 +31,7 @@ export async function loader({ params, context }: LoaderFunctionArgs) {
   })
 
   if (!listing) {
+    Sentry.captureMessage(`Listing not found: ${path}`)
     throw notFound({
       message: "Sorry, we couldn’t find the page you’re looking for.",
     })

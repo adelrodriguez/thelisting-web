@@ -39,6 +39,9 @@ module.exports = {
       },
     },
   ],
+  parserOptions: {
+    ecmaVersion: "latest",
+  },
   plugins: ["sort-keys"],
   root: true,
   rules: {

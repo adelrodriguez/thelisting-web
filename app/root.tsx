@@ -15,6 +15,7 @@ import {
   useRouteError,
   isRouteErrorResponse,
 } from "@remix-run/react"
+import { captureRemixErrorBoundaryError, withSentry } from "@sentry/remix"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 import type { ComponentProps } from "react"
@@ -67,6 +68,8 @@ export function ErrorBoundary() {
     )
   }
 
+  captureRemixErrorBoundaryError(error)
+
   return <NotFound data={error.data} status={error.status} />
 }
 
@@ -75,6 +78,7 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
   const env = context.env
 
   const publicEnv: ComponentProps<typeof PublicEnv> = {
+    environment: env.NODE_ENV,
     gaTrackingId: env.GA_TRACKING_ID,
     release: env.RAILWAY_GIT_COMMIT_SHA,
     sentryDsn: env.SENTRY_DSN,
@@ -96,7 +100,7 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
   )
 }
 
-export const meta: MetaFunction<typeof loader> = ({ data }) => [
+export const meta: MetaFunction<typeof loader> = () => [
   { title: "The Listing" },
   {
     content:
@@ -107,7 +111,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => [
   { content: "width=device-width, initial-scale=1", name: "viewport" },
 ]
 
-export default function App() {
+function App() {
   const { env, locale } = useLoaderData<typeof loader>()
   const { i18n } = useTranslation()
 
@@ -156,3 +160,5 @@ export default function App() {
     </html>
   )
 }
+
+export default withSentry(App)
