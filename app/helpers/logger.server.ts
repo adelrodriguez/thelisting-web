@@ -1,6 +1,7 @@
 import { WinstonTransport as AxiomTransport } from "@axiomhq/winston"
 import { createLogger, transports, addColors, format } from "winston"
 
+import env from "~/config/env.server"
 import { isDevelopment } from "~/config/vars"
 
 // Define different colors for each level. Colors make the log message more
@@ -39,7 +40,11 @@ const logger = createLogger({
       ? new transports.Console({ format: format.simple() })
       : new transports.Console({ format: format.json() }),
 
-    new AxiomTransport(),
+    new AxiomTransport({
+      dataset: env.AXIOM_DATASET,
+      orgId: env.AXIOM_ORG_ID,
+      token: env.AXIOM_TOKEN,
+    }),
   ],
 })
 
