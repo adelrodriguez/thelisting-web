@@ -14,7 +14,7 @@ export default function useLocalization(): UseQueryResult<GetLocalizationQuery> 
       {
         "X-Shopify-Storefront-Access-Token":
           window.env.shopifyStorefrontAccessToken,
-      }
-    )
+      },
+    ),
   )
 }

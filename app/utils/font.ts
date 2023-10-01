@@ -32,7 +32,7 @@ export async function getGoogleWebFontsList(cache: Redis) {
       headers: {
         Referer: "https://www.giftthelisting.com/",
       },
-    }
+    },
   )
 
   const data = await res.json()
@@ -42,7 +42,7 @@ export async function getGoogleWebFontsList(cache: Redis) {
       items: z.array(
         z.object({
           family: z.string(),
-        })
+        }),
       ),
     })
     .transform((data) => data.items.map((item) => item.family))
@@ -53,7 +53,7 @@ export async function getGoogleWebFontsList(cache: Redis) {
     REDIS_KEYS.GoogleFonts,
     fonts.join(","),
     "EX",
-    ONE_WEEK.inSeconds
+    ONE_WEEK.inSeconds,
   )
 
   return fonts

@@ -59,7 +59,7 @@ export function getShopifyWebhookHeaders(headers: Headers) {
 
 export function getShopifyId(
   id: string | number,
-  resource: "Order" | "Product" | "Collection" | "Checkout"
+  resource: "Order" | "Product" | "Collection" | "Checkout",
 ): string {
   return `gid://shopify/${resource}/${id}`
 }
@@ -69,15 +69,18 @@ export function getShopifyIdNumber(id: string): string {
 }
 
 export function transformCustomAttributes(
-  customAttributes: Array<{ key: string; value?: string | null }>
+  customAttributes: Array<{ key: string; value?: string | null }>,
 ): Record<CustomAttribute, string | null> {
   const customAttributesKeys = Object.values(CUSTOM_ATTRIBUTES)
 
-  return customAttributes.reduce((acc, { key, value }) => {
-    if (customAttributesKeys.includes(key as CustomAttribute) && value) {
-      acc[key as CustomAttribute] = value
-    }
+  return customAttributes.reduce(
+    (acc, { key, value }) => {
+      if (customAttributesKeys.includes(key as CustomAttribute) && value) {
+        acc[key as CustomAttribute] = value
+      }
 
-    return acc
-  }, {} as Record<CustomAttribute, string>)
+      return acc
+    },
+    {} as Record<CustomAttribute, string>,
+  )
 }

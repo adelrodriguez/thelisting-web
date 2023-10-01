@@ -42,7 +42,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export async function action({ request }: ActionFunctionArgs) {
   const result = await parseFormSafe(
     request,
-    z.object({ email: z.string().email() })
+    z.object({ email: z.string().email() }),
   )
 
   if (!result.success) {

@@ -29,7 +29,7 @@ export default function ImagePicker({
       const data = await res.json()
       // TODO(adelrodriguez): Fix this type
       return data as UserImage[]
-    }
+    },
   )
 
   const [step, setStep] = useState<"choose" | "upload">("choose")
@@ -76,7 +76,7 @@ export default function ImagePicker({
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              <Dialog.Panel className="relative h-[80vh] w-full transform  rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:mx-2 sm:max-w-7xl sm:p-6">
+              <Dialog.Panel className="relative h-[80vh] w-full transform  rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:mx-2 sm:my-8 sm:max-w-7xl sm:p-6">
                 {isLoading && <div>Loading...</div>}
                 {isError && <div>Error</div>}
                 {data && step === "choose" && (
@@ -132,7 +132,7 @@ function ImageGallery({
         Choose an image
       </Dialog.Title>
 
-      <div className="flex h-full flex-col gap-y-4 py-6 px-3">
+      <div className="flex h-full flex-col gap-y-4 px-3 py-6">
         <div className="flex-1 overflow-auto p-4">
           <ul className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8">
             <li className="h-full">
@@ -143,7 +143,7 @@ function ImageGallery({
                     {
                       "bg-gray-100 shadow-lg": isDragActive,
                       "border-2 border-dashed border-gray-300": !isDragActive,
-                    }
+                    },
                   ),
                   type: "button",
                 })}
@@ -176,7 +176,7 @@ function ImageGallery({
             </li>
             {images.map((image) => (
               <li className="relative" key={image.id}>
-                <div className="group aspect-w-10 aspect-h-7 block w-full overflow-hidden rounded-lg bg-gray-100 focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 focus-within:ring-offset-gray-100">
+                <div className="group aspect-h-7 aspect-w-10 block w-full overflow-hidden rounded-lg bg-gray-100 focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 focus-within:ring-offset-gray-100">
                   <Image
                     alt=""
                     className="pointer-events-none object-cover group-hover:opacity-75"
@@ -255,7 +255,7 @@ function ImageSubmit({
 
       <div className="h-full">
         <fetcher.Form
-          className="flex h-full flex-col gap-y-4 py-6 px-3"
+          className="flex h-full flex-col gap-y-4 px-3 py-6"
           onSubmit={handleSubmit}
         >
           <div className="flex flex-1 items-center justify-center">

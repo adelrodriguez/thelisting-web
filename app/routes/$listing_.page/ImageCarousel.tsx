@@ -86,7 +86,7 @@ export default function ImageCarousel({
               <span
                 className={clsx(
                   "inline-block h-2 w-2 cursor-pointer rounded-full",
-                  currentIndex === index ? "bg-white" : "bg-slate-300"
+                  currentIndex === index ? "bg-white" : "bg-slate-300",
                 )}
                 key={index}
                 onClick={() => setCurrentIndex(index)}

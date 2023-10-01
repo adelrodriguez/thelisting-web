@@ -31,7 +31,7 @@ export const processor: Processor<QueueData> = async (job) => {
 
     if (existingPurchase) {
       await job.log(
-        `Purchase ${existingPurchase.id} already exists. Skipping...`
+        `Purchase ${existingPurchase.id} already exists. Skipping...`,
       )
       return
     }
@@ -40,17 +40,17 @@ export const processor: Processor<QueueData> = async (job) => {
       .filter(
         (lineItem) =>
           flattenConnection(lineItem.product?.variants)[0]?.id !==
-          SHOPIFY_SHIPPING_ITEM_1_ID
+          SHOPIFY_SHIPPING_ITEM_1_ID,
       )
       .map((lineItem) => ({
         commerceId: lineItem.product!.id,
         cost: parseFloat(
           flattenConnection(lineItem.product?.variants)[0]?.inventoryItem
-            .unitCost?.amount || 0
+            .unitCost?.amount || 0,
         ),
         quantity: lineItem.quantity,
         total: parseFloat(
-          flattenConnection(lineItem.product?.variants)[0]!.price
+          flattenConnection(lineItem.product?.variants)[0]!.price,
         ),
       }))
 
@@ -105,7 +105,7 @@ export const processor: Processor<QueueData> = async (job) => {
             type: "exponential",
           },
         },
-      }))
+      })),
     )
 
     await job.log(`Finished processing purchase ${purchase.id}`)

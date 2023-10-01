@@ -20,7 +20,7 @@ export default class PotteryBarnKidsScraper extends BaseScraper {
   public get description(): Promise<string | null> {
     return this.page
       .$eval("meta[name='description']", (element) =>
-        element.getAttribute("content")
+        element.getAttribute("content"),
       )
       .then(cleanText)
       .catch((err) => this.logError("description: " + err.message))

@@ -15,7 +15,7 @@ export async function loader({ params, context }: LoaderFunctionArgs) {
   if (!image) {
     throw json(
       { message: "Image not found" },
-      { status: StatusCodes.NOT_FOUND, statusText: ReasonPhrases.NOT_FOUND }
+      { status: StatusCodes.NOT_FOUND, statusText: ReasonPhrases.NOT_FOUND },
     )
   }
 

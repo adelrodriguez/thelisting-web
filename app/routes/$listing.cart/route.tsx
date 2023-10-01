@@ -40,7 +40,7 @@ export function loader({ request }: LoaderFunctionArgs) {
     request,
     z.object({
       alert_note: zx.BoolAsString.optional(),
-    })
+    }),
   )
 
   return json({ alertNote })
@@ -157,7 +157,7 @@ export default function ListingCartPage() {
                             <dd>
                               {formatPrice(
                                 cart.subtotal / exchangeRate,
-                                currency
+                                currency,
                               )}
                             </dd>
                           </div>
@@ -172,7 +172,7 @@ export default function ListingCartPage() {
                             <dd>
                               {formatPrice(
                                 cart.shipping / exchangeRate,
-                                currency
+                                currency,
                               )}
                             </dd>
                           </div>

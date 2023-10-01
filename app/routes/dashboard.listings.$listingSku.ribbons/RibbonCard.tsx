@@ -92,7 +92,7 @@ export default function RibbonCard({
         }
       },
     }),
-    [move, find]
+    [move, find],
   )
 
   return (
@@ -101,14 +101,14 @@ export default function RibbonCard({
         <div
           className={clsx(
             "col-span-1 flex rounded-md shadow-sm transition-opacity",
-            isDragging ? "opacity-0" : "opacity-100"
+            isDragging ? "opacity-0" : "opacity-100",
           )}
           ref={(node) => preview(drop(node))}
         >
           <div
             className={clsx(
               "flex w-16 flex-shrink-0 items-center justify-center rounded-l-md text-sm font-medium text-white",
-              RIBBON_CARD[ribbon.type].bgColor
+              RIBBON_CARD[ribbon.type].bgColor,
             )}
           >
             {RIBBON_CARD[ribbon.type].icon}

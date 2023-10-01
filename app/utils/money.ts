@@ -29,21 +29,21 @@ export function getPriceSymbol(currencyCode?: string): string {
 
 export function calculatePriceWithMargin(
   price: number,
-  margin: number
+  margin: number,
 ): number {
   return currency(price).divide((100 - margin) / 100).value
 }
 
 export function calculatePriceMinusMargin(
   price: number,
-  margin: number
+  margin: number,
 ): number {
   return currency(price).multiply((100 - margin) / 100).value
 }
 
 export function multiplyPriceByExchangeRate(
   price: number,
-  exchangeRate: number
+  exchangeRate: number,
 ): number {
   return currency(price).multiply(exchangeRate).value
 }

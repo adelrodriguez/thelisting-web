@@ -48,7 +48,7 @@ export default function Banner({
         <Link
           className={clsx(
             "right-1/2 z-10 mt-10 rounded-lg border-2 bg-transparent px-6 py-2.5 font-semibold tracking-wide shadow-sm outline-white transition-all ",
-            "hover:scale-125 hover:shadow-2xl"
+            "hover:scale-125 hover:shadow-2xl",
           )}
           relative="path"
           style={{ borderColor: theme.colors?.secondary }}

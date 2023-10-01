@@ -18,7 +18,7 @@ function TextArea(
     label?: string
     error?: boolean
   } & ComponentProps<"textarea">,
-  ref: Ref<HTMLTextAreaElement>
+  ref: Ref<HTMLTextAreaElement>,
 ) {
   return (
     <div>

@@ -65,7 +65,7 @@ export async function action({ request, params, context }: ActionFunctionArgs) {
     route("/dashboard/listings/:listingSku/items/:itemSku", {
       itemSku: item.sku,
       listingSku: `${listingSku}`,
-    })
+    }),
   )
 }
 

@@ -68,7 +68,7 @@ const clientValidator = withZod(
     timezone: z.string().optional(),
     title: ListingTitleSchema,
     type: ListingTypeSchema,
-  })
+  }),
 )
 
 export async function loader({ params, context }: LoaderFunctionArgs) {
@@ -111,7 +111,7 @@ export async function action({ request, params, context }: ActionFunctionArgs) {
 
   const { listingSku } = zx.parseParams(
     params,
-    z.object({ listingSku: z.coerce.number() })
+    z.object({ listingSku: z.coerce.number() }),
   )
 
   const listing = await db.listing.findUniqueOrThrow({
@@ -151,14 +151,14 @@ export async function action({ request, params, context }: ActionFunctionArgs) {
 
             return existingListing.id === listing.id
           },
-          { message: "The path you have entered is already in use." }
+          { message: "The path you have entered is already in use." },
         ),
       status: ListingStatusSchema,
       subtitle: ListingSubtitleSchema,
       thankYouImage: ListingThankYouImageSchema,
       title: ListingTitleSchema,
       type: ListingTypeSchema,
-    })
+    }),
   )
 
   const result = await serverValidator.validate(formData)

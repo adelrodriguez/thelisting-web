@@ -26,14 +26,14 @@ export default function MarketingHeader({
             <div
               className={clsx(
                 "space-x-2",
-                isIndex ? "text-white" : "text-gray-700"
+                isIndex ? "text-white" : "text-gray-700",
               )}
             >
               {navigationItems.map((item) => (
                 <Link
                   className={clsx(
-                    "rounded-lg py-2 px-3 text-sm font-medium xl:text-base",
-                    isIndex ? "hover:bg-gray-700/70" : "hover:bg-gray-200"
+                    "rounded-lg px-3 py-2 text-sm font-medium xl:text-base",
+                    isIndex ? "hover:bg-gray-700/70" : "hover:bg-gray-200",
                   )}
                   key={item.key}
                   to={item.href}
@@ -48,7 +48,7 @@ export default function MarketingHeader({
           <button
             className={clsx(
               "-m-2.5 inline-flex items-center justify-center rounded-md p-2.5",
-              isIndex ? "text-white" : "text-gray-700"
+              isIndex ? "text-white" : "text-gray-700",
             )}
             onClick={() => setMobileMenuOpen(true)}
             type="button"
@@ -58,7 +58,7 @@ export default function MarketingHeader({
           </button>
         </div>
         <Link
-          className="absolute top-4 left-1/2 z-10 -translate-x-1/2 transform"
+          className="absolute left-1/2 top-4 z-10 -translate-x-1/2 transform"
           to="/"
         >
           <img
@@ -80,7 +80,7 @@ export default function MarketingHeader({
         <Dialog.Panel className="fixed inset-0 z-10 overflow-y-auto bg-white px-6 py-6 lg:hidden">
           <div className="flex items-center justify-end">
             <Link
-              className="absolute top-4 left-1/2 z-10 -translate-x-1/2 transform"
+              className="absolute left-1/2 top-4 z-10 -translate-x-1/2 transform"
               to="/"
             >
               <img
@@ -104,7 +104,7 @@ export default function MarketingHeader({
               <div className="space-y-2 py-6">
                 {navigationItems.map((item) => (
                   <a
-                    className="-mx-3 block rounded-lg py-2 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-400/10"
+                    className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-400/10"
                     href={item.href}
                     key={item.key}
                   >
@@ -114,7 +114,7 @@ export default function MarketingHeader({
               </div>
               <div className="py-6">
                 <Link
-                  className="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-6 text-gray-900 hover:bg-gray-400/10"
+                  className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-6 text-gray-900 hover:bg-gray-400/10"
                   to="/login"
                 >
                   {loginText} <span aria-hidden="true">&rarr;</span>

@@ -62,7 +62,7 @@ export function CartProvider({
     {
       initialData: createDefaultCart(listing),
       refetchOnWindowFocus: true,
-    }
+    },
   )
 
   const currentCart = data || createDefaultCart(listing)
@@ -70,7 +70,7 @@ export function CartProvider({
   const subtotal = calculateSubtotal([...currentCart.items.values()])
   const itemCount = [...currentCart.items.values()].reduce(
     (acc, item) => acc + item.quantity,
-    0
+    0,
   )
   const shipping = calculateShipping(subtotal)
   const total = subtotal + shipping

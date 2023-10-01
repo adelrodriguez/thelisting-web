@@ -90,7 +90,7 @@ export default function DashboardLayout() {
                                   "text-white hover:bg-gray-500 hover:bg-opacity-75":
                                     !isActive,
                                 },
-                                "rounded-md px-3 py-2 text-sm font-medium"
+                                "rounded-md px-3 py-2 text-sm font-medium",
                               )
                             }
                             end={item.href === route("/dashboard")}
@@ -142,7 +142,7 @@ export default function DashboardLayout() {
                                   <Link
                                     className={clsx(
                                       active ? "bg-gray-100" : "",
-                                      "block px-4 py-2 text-sm text-gray-700"
+                                      "block px-4 py-2 text-sm text-gray-700",
                                     )}
                                     to={item.href}
                                   >
@@ -193,7 +193,7 @@ export default function DashboardLayout() {
                               "bg-gray-700 text-white": isActive,
                               "text-white hover:bg-gray-500 hover:bg-opacity-75":
                                 !isActive,
-                            }
+                            },
                           )}
                         >
                           {item.name}

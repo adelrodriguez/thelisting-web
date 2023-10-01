@@ -19,7 +19,7 @@ const scraperModel = createModel(
       RESET: () => ({}),
       START: (payload: string[]) => ({ payload }),
     },
-  }
+  },
 )
 
 const setPending = scraperModel.assign(
@@ -27,7 +27,7 @@ const setPending = scraperModel.assign(
     controller: () => new AbortController(),
     pending: (_, event) => event.payload,
   },
-  "START"
+  "START",
 )
 
 const reset = scraperModel.assign({ completed: [], pending: [] }, "RESET")
@@ -112,7 +112,7 @@ const scraperMachine = scraperModel.createMachine(
       hasPending: (context) => context.pending.length !== 0,
       isComplete: (context) => context.pending.length === 0,
     },
-  }
+  },
 )
 
 export default scraperMachine

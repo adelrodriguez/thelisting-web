@@ -20,7 +20,7 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
       {
         status: StatusCodes.UNAUTHORIZED,
         statusText: ReasonPhrases.UNAUTHORIZED,
-      }
+      },
     )
   }
 
@@ -43,7 +43,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
       {
         status: StatusCodes.UNAUTHORIZED,
         statusText: ReasonPhrases.UNAUTHORIZED,
-      }
+      },
     )
   }
 
@@ -53,7 +53,10 @@ export async function action({ request, context }: ActionFunctionArgs) {
   if (!filename || typeof filename !== "string") {
     throw json(
       { message: "Missing filename" },
-      { status: StatusCodes.BAD_REQUEST, statusText: ReasonPhrases.BAD_REQUEST }
+      {
+        status: StatusCodes.BAD_REQUEST,
+        statusText: ReasonPhrases.BAD_REQUEST,
+      },
     )
   }
 
@@ -74,7 +77,10 @@ export async function action({ request, context }: ActionFunctionArgs) {
   if (!fileId || typeof fileId !== "string") {
     throw json(
       { message: "Missing image" },
-      { status: StatusCodes.BAD_REQUEST, statusText: ReasonPhrases.BAD_REQUEST }
+      {
+        status: StatusCodes.BAD_REQUEST,
+        statusText: ReasonPhrases.BAD_REQUEST,
+      },
     )
   }
 

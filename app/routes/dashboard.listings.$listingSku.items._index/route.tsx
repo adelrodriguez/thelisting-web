@@ -122,7 +122,7 @@ export default function DashboardListingItemsPage() {
                         >
                           {flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                         </th>
                       ))}
@@ -139,7 +139,7 @@ export default function DashboardListingItemsPage() {
                         >
                           {flexRender(
                             cell.column.columnDef.cell,
-                            cell.getContext()
+                            cell.getContext(),
                           )}
                         </td>
                       ))}

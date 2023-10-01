@@ -33,7 +33,7 @@ export default function Autocomplete<T extends AutocompleteOption>({
     query === ""
       ? options
       : options.filter((option) =>
-          option.label.toLowerCase().includes(query.toLowerCase())
+          option.label.toLowerCase().includes(query.toLowerCase()),
         )
 
   return (
@@ -58,7 +58,7 @@ export default function Autocomplete<T extends AutocompleteOption>({
               "sm:text-sm sm:leading-6",
               error
                 ? "text-red-900 ring-red-300 focus:ring-red-500"
-                : "text-gray-900 ring-gray-300 focus:ring-slate-600"
+                : "text-gray-900 ring-gray-300 focus:ring-slate-600",
             )}
             displayValue={(value) =>
               options.find((o) => o.value === value)?.label || ""
@@ -120,7 +120,7 @@ function VirtualizedOptions({ options }: { options: AutocompleteOption[] }) {
             className={({ active }) =>
               clsx(
                 "absolute left-0 top-0 w-full cursor-default select-none py-2 pl-8 pr-4",
-                active ? "bg-slate-600 text-white" : "text-gray-900"
+                active ? "bg-slate-600 text-white" : "text-gray-900",
               )
             }
             key={virtualItem.key}
@@ -145,7 +145,7 @@ function VirtualizedOptions({ options }: { options: AutocompleteOption[] }) {
                   <span
                     className={clsx(
                       "absolute inset-y-0 left-0 flex items-center pl-1.5",
-                      active ? "text-white" : "text-slate-600"
+                      active ? "text-white" : "text-slate-600",
                     )}
                   >
                     <CheckIcon aria-hidden="true" className="h-5 w-5" />

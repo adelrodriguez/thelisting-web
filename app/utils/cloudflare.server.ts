@@ -12,13 +12,13 @@ const UploadImageToCloudflareResponseSchema = z.object({
     z.object({
       code: z.string(),
       message: z.string(),
-    })
+    }),
   ),
   messages: z.array(
     z.object({
       code: z.string(),
       message: z.string(),
-    })
+    }),
   ),
   result: z.object({
     filename: z.string(),
@@ -31,7 +31,7 @@ const UploadImageToCloudflareResponseSchema = z.object({
 
 export async function uploadImageToCloudflare(
   data: AsyncIterable<Uint8Array>,
-  imageName?: string
+  imageName?: string,
 ) {
   const chunks = []
 
@@ -52,7 +52,7 @@ export async function uploadImageToCloudflare(
         body: formData,
         headers: { Authorization: `Bearer ${CLOUDFLARE_IMAGES_API_TOKEN}` },
         method: "POST",
-      }
+      },
     )
 
     if (res.status !== 200 && res.status !== 409) {

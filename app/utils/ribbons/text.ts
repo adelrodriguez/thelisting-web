@@ -12,7 +12,7 @@ export const TextPropertiesSchema = z
       // string "true" which is the value of the checkbox when checked, and the
       // boolean true value which would come from the database
       (val) => val === "true" || val,
-      z.boolean().optional()
+      z.boolean().optional(),
     ),
     textAlignment: z.string().optional(),
     title: z.string().optional(),
@@ -30,7 +30,7 @@ export const TextPropertiesSchema = z
     {
       message: "You must provide a URL",
       path: ["url"],
-    }
+    },
   )
   .refine(
     (data) => {
@@ -43,7 +43,7 @@ export const TextPropertiesSchema = z
     {
       message: "You must provide a URL label",
       path: ["urlLabel"],
-    }
+    },
   )
 
 export type TextProperties = z.infer<typeof TextPropertiesSchema>

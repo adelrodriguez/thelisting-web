@@ -78,7 +78,7 @@ export default function AdminToolsPage() {
             toolIdx === tools.length - 1
               ? "rounded-bl-lg rounded-br-lg sm:rounded-bl-none"
               : "",
-            "group relative bg-white p-6 focus-within:ring-2 focus-within:ring-inset focus-within:ring-gray-500"
+            "group relative bg-white p-6 focus-within:ring-2 focus-within:ring-inset focus-within:ring-gray-500",
           )}
           key={tool.href}
         >
@@ -87,7 +87,7 @@ export default function AdminToolsPage() {
               className={clsx(
                 tool.iconBackground,
                 tool.iconForeground,
-                "inline-flex rounded-lg p-3 ring-4 ring-white"
+                "inline-flex rounded-lg p-3 ring-4 ring-white",
               )}
             >
               <tool.icon aria-hidden="true" className="h-6 w-6" />

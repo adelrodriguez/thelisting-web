@@ -3,7 +3,7 @@ import Papa from "papaparse"
 export function downloadAsCSVFile(
   filename: string,
   data: unknown[],
-  config?: Papa.UnparseConfig
+  config?: Papa.UnparseConfig,
 ) {
   const csv = Papa.unparse(data, config)
   const blob = new Blob([csv], { type: "text/csv" })

@@ -47,12 +47,12 @@ export const SendMessageSuccessSchema = z.object({
     z.object({
       input: z.string(),
       wa_id: z.string(),
-    })
+    }),
   ),
   messages: z.array(
     z.object({
       id: z.string(),
-    })
+    }),
   ),
   messaging_product: z.string(),
 })

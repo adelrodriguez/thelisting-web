@@ -24,7 +24,7 @@ export default function LanguageCurrencySelector({
 
           return params
         },
-        { preventScrollReset: true }
+        { preventScrollReset: true },
       )
     })
   }

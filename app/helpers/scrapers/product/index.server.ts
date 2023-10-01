@@ -6,7 +6,7 @@ import type { ScrapedProductPayload } from "~/utils/scraper"
 import createScraper from "./scraper.server"
 
 export default async function scraper(
-  requestUrl: string
+  requestUrl: string,
 ): Promise<ScrapedProductPayload> {
   logger.info(`Scrapping product ${requestUrl}`, {
     url: requestUrl,

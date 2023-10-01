@@ -19,7 +19,7 @@ Context.displayName = "ExchangeRate"
 export function ExchangeRateProvider({ children }: { children: ReactNode }) {
   const [searchParams, setSearchParams] = useSearchParams()
   const [currency, setCurrency] = useState<Currency>(
-    (searchParams.get("currency") as Currency) ?? CURRENCIES.DOP
+    (searchParams.get("currency") as Currency) ?? CURRENCIES.DOP,
   )
   const { data } = useQuery(
     ["exchange-rates", currency],
@@ -35,7 +35,7 @@ export function ExchangeRateProvider({ children }: { children: ReactNode }) {
         return data.exchangeRate
       },
       staleTime: ONE_HOUR.inMilliseconds,
-    }
+    },
   )
 
   function handleSetCurrency(currency: Currency) {
@@ -45,7 +45,7 @@ export function ExchangeRateProvider({ children }: { children: ReactNode }) {
 
         return params
       },
-      { preventScrollReset: true }
+      { preventScrollReset: true },
     )
     setCurrency(currency)
   }
@@ -68,7 +68,7 @@ export function useExchangeRate() {
 
   if (context === undefined) {
     throw new Error(
-      "useExchangeRate must be used within a ExchangeRateProvider"
+      "useExchangeRate must be used within a ExchangeRateProvider",
     )
   }
 

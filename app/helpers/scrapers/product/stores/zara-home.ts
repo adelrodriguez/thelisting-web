@@ -24,7 +24,7 @@ export default class ZaraHome extends BaseScraper {
     return this.page
       .$eval(
         "#product-description-paragraphs",
-        (element) => element.textContent
+        (element) => element.textContent,
       )
       .then(cleanText)
       .catch((err) => this.logError("description: " + err.message))

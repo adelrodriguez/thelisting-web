@@ -17,6 +17,6 @@ export function loader({ request, context }: LoaderFunctionArgs) {
       selfUrl: url.href,
       transformer: sharpTransformer,
     },
-    request
+    request,
   )
 }

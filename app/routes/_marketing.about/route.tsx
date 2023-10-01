@@ -19,7 +19,7 @@ export default function AboutPage() {
             >
               <div className="absolute inset-y-0 right-1/2 w-full rounded-r-3xl bg-gray-50 lg:right-72" />
               <svg
-                className="absolute top-8 left-1/2 -ml-3 lg:-right-8 lg:left-auto lg:top-12"
+                className="absolute left-1/2 top-8 -ml-3 lg:-right-8 lg:left-auto lg:top-12"
                 fill="none"
                 height={392}
                 viewBox="0 0 404 392"
@@ -53,7 +53,7 @@ export default function AboutPage() {
             </div>
             <div className="relative mx-auto max-w-md px-4 sm:max-w-3xl sm:px-6 lg:max-w-none lg:px-0 lg:py-20">
               {/* Testimonial card*/}
-              <div className="relative overflow-hidden rounded-2xl pt-64 pb-10 shadow-xl">
+              <div className="relative overflow-hidden rounded-2xl pb-10 pt-64 shadow-xl">
                 <img
                   alt=""
                   className="absolute inset-0 h-full w-full object-cover"
@@ -73,7 +73,7 @@ export default function AboutPage() {
                     <div className="relative text-lg font-medium text-white md:flex-grow">
                       <svg
                         aria-hidden="true"
-                        className="absolute top-0 left-0 h-8 w-8 -translate-x-3 -translate-y-2 transform text-gray-400"
+                        className="absolute left-0 top-0 h-8 w-8 -translate-x-3 -translate-y-2 transform text-gray-400"
                         fill="currentColor"
                         viewBox="0 0 32 32"
                       >
@@ -161,12 +161,12 @@ export default function AboutPage() {
           <div className="lg:absolute lg:inset-y-0 lg:left-0 lg:w-1/2">
             <img
               alt=""
-              className="h-56 w-full object-cover lg:absolute lg:h-full sm:rounded-r-3xl"
+              className="h-56 w-full object-cover sm:rounded-r-3xl lg:absolute lg:h-full"
               src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1567&q=80"
             />
           </div>
         </div>
-        <div className="relative px-4 pt-12 pb-16 sm:px-6 sm:pt-16 lg:mx-auto lg:grid lg:max-w-7xl lg:grid-cols-2 lg:px-8">
+        <div className="relative px-4 pb-16 pt-12 sm:px-6 sm:pt-16 lg:mx-auto lg:grid lg:max-w-7xl lg:grid-cols-2 lg:px-8">
           <div className="lg:col-start-2 lg:pl-8">
             <div className="mx-auto max-w-prose text-base lg:ml-auto lg:mr-0 lg:max-w-lg">
               <h2 className="font-semibold leading-6 text-gray-600">

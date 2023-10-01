@@ -23,7 +23,7 @@ export const ListingTypeSchema = z.enum(
   ],
   {
     errorMap: () => ({ message: "Please select a type of event" }),
-  }
+  },
 )
 
 export const ListingOwnerSchema = z
@@ -34,7 +34,7 @@ export const ListingStatusSchema = z.enum(
   [ListingStatus.Draft, ListingStatus.Published, ListingStatus.Closed],
   {
     errorMap: () => ({ message: "Please select a status" }),
-  }
+  },
 )
 
 export const ListingCoverImageSchema = z.string().optional()

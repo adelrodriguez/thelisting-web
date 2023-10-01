@@ -24,7 +24,7 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
         headers: {
           "Set-Cookie": await commitSession(session),
         },
-      }
+      },
     )
   }
 
@@ -49,7 +49,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
     generateKey(REDIS_KEYS.Cart, cartId, listing),
     text,
     "EX",
-    ONE_DAY.inSeconds * 30
+    ONE_DAY.inSeconds * 30,
   )
 
   return json(response)

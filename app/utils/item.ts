@@ -6,7 +6,7 @@ import type { Item } from "@prisma/client"
  */
 export function sortByQuantity<T extends Pick<Item, "quantity" | "stock">>(
   itemA: T,
-  itemB: T
+  itemB: T,
 ) {
   const itemASold = itemA.quantity - itemA.stock
   const itemBSold = itemB.quantity - itemB.stock

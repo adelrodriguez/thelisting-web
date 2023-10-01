@@ -46,7 +46,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
         {
           status: StatusCodes.NOT_FOUND,
           statusText: ReasonPhrases.NOT_FOUND,
-        }
+        },
       )
     }
 

@@ -26,7 +26,7 @@ export default class LeTavole extends BaseScraper {
     return this.page
       .$eval(
         ".elementor-widget-container > p.price",
-        (element) => element.textContent
+        (element) => element.textContent,
       )
       .then(cleanAmount)
       .catch((err) => this.logError("amount: " + err.message))

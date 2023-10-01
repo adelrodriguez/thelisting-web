@@ -96,7 +96,7 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
       headers: {
         "Set-Cookie": await i18nCookie.serialize(locale),
       },
-    }
+    },
   )
 }
 

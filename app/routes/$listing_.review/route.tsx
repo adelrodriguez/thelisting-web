@@ -61,17 +61,17 @@ export async function loader({ request, params, context }: LoaderFunctionArgs) {
       {
         status: StatusCodes.NOT_FOUND,
         statusText: ReasonPhrases.NOT_FOUND,
-      }
+      },
     )
   }
 
   const totalPurchased = listing.purchases.reduce(
     (total, purchase) => total + purchase.cost,
-    0
+    0,
   )
   const itemsPurchased = listing.purchases.reduce(
     (total, purchase) => total + purchase.itemPurchases.length,
-    0
+    0,
   )
 
   return json({
@@ -185,7 +185,7 @@ export default function ListingReviewPage() {
                                         month: "long",
                                         year: "numeric",
                                       },
-                                      { locale: i18n.language }
+                                      { locale: i18n.language },
                                     )}
                                   </time>
                                 </dd>

@@ -17,7 +17,7 @@ function Button(
     size?: "xs" | "sm" | "md" | "lg" | "xl"
     variant?: "primary" | "secondary" | "danger"
   } & ComponentPropsWithRef<"button">,
-  ref: Ref<HTMLButtonElement>
+  ref: Ref<HTMLButtonElement>,
 ) {
   return (
     <button
@@ -40,7 +40,7 @@ function Button(
             variant === "primary",
         },
         { "cursor-not-allowed opacity-50": disabled },
-        className
+        className,
       )}
       disabled={disabled}
       ref={ref}

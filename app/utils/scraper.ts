@@ -76,7 +76,7 @@ export function cleanCurrency(currency?: string | null): Currency {
 
 export async function scrapeProduct(
   url: string,
-  init?: RequestInit
+  init?: RequestInit,
 ): Promise<ScrapedProductResult> {
   const requestUrl = new URL("/api/scraper/product", window.location.origin)
   requestUrl.searchParams.set("url", url)

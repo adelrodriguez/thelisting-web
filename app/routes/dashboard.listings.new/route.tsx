@@ -42,13 +42,13 @@ const clientValidator = withZod(
   z.object({
     eventDate: ListingEventDateSchema.min(
       startOfTomorrow(),
-      "Event date must be in the future"
+      "Event date must be in the future",
     ),
     ownerId: ListingOwnerSchema,
     path: ListingPathSchema,
     title: ListingTitleSchema,
     type: ListingTypeSchema,
-  })
+  }),
 )
 
 export async function loader({ request, context }: LoaderFunctionArgs) {
@@ -95,11 +95,11 @@ export async function action({ request, context }: ActionFunctionArgs) {
 
             return listings === 0
           },
-          { message: "The path you have entered is already in use." }
+          { message: "The path you have entered is already in use." },
         ),
       title: ListingTitleSchema,
       type: ListingTypeSchema,
-    })
+    }),
   )
 
   const result = await serverValidator.validate(formData)
@@ -107,7 +107,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
   if (result.error)
     return json(
       { ...result.error, listing: null, success: false },
-      { status: StatusCodes.UNPROCESSABLE_ENTITY }
+      { status: StatusCodes.UNPROCESSABLE_ENTITY },
     )
 
   const listing = await db.listing.create({

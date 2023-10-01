@@ -31,7 +31,7 @@ const AddToListingSchema = z.object({
         quantity: z.coerce.number().min(1),
         rowId: z.string(),
         scrapedProductId: z.string().uuid(),
-      })
+      }),
     )
     .min(1),
 })
@@ -83,7 +83,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
       },
       name: `${listing.sku}-${rowId}`,
       opts: { attempts: 7, backoff: { delay: 1000, type: "exponential" } },
-    }))
+    })),
   )
 
   return redirect("..")
@@ -223,7 +223,7 @@ export default function AddToListingPage() {
                                 type="hidden"
                               />
                             </div>
-                          )
+                          ),
                         )}
                         <Alert type="info">
                           You will be adding{" "}

@@ -35,7 +35,7 @@ export const processor: Processor<QueueData> = async (job) => {
 
     if (alegraId) {
       await job.log(
-        `Found Alegra ID ${alegraId} for customer ${customer?.name}`
+        `Found Alegra ID ${alegraId} for customer ${customer?.name}`,
       )
       contactId = alegraId
     } else {
@@ -51,7 +51,7 @@ export const processor: Processor<QueueData> = async (job) => {
           name: order.customer?.displayName,
           phonePrimary: order.billingAddress?.phone,
           type: "client",
-        })
+        }),
       )
 
       await db.customer.upsert({

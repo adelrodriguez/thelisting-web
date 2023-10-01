@@ -31,7 +31,7 @@ export default function DashboardListingPage() {
   const navigate = useNavigate()
   const matches = useMatches() as UIMatch<unknown, RouteHandle | undefined>[]
   const currentTab = tabs.find(
-    (tab) => matches[matches.length - 1]?.handle?.id === tab.id
+    (tab) => matches[matches.length - 1]?.handle?.id === tab.id,
   )
 
   return (

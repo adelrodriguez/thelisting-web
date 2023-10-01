@@ -30,7 +30,7 @@ export default class CasaCool extends BaseScraper {
     return this.page
       .$eval(
         'script[type="application/ld+json"]',
-        (element) => element.textContent
+        (element) => element.textContent,
       )
       .then((content) => z.string().parse(content))
       .then((content) => applicationSchema.parse(JSON.parse(content)))
@@ -43,7 +43,7 @@ export default class CasaCool extends BaseScraper {
     return this.page
       .$eval(
         'script[type="application/ld+json"]',
-        (element) => element.textContent
+        (element) => element.textContent,
       )
       .then((content) => z.string().parse(content))
       .then((content) => applicationSchema.parse(JSON.parse(content)))

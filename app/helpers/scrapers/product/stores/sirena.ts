@@ -28,8 +28,8 @@ export default class SirenaScraper extends BaseScraper {
           element &&
           element.replace(
             "Ver términos de servicio y condiciones de la garantía",
-            ""
-          )
+            "",
+          ),
       )
       .catch((err) => this.logError("description: " + err.message))
   }

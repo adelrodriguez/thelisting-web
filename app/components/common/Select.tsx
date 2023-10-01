@@ -30,7 +30,7 @@ function Select<T extends SelectOption>(
     options: T[]
     required?: boolean
   } & ComponentProps<"select">,
-  ref: Ref<HTMLSelectElement>
+  ref: Ref<HTMLSelectElement>,
 ) {
   return (
     <div className={className}>
@@ -69,7 +69,7 @@ function Select<T extends SelectOption>(
                 error,
               "pr-10": error,
               "text-red-900 placeholder-red-300": error,
-            }
+            },
           )}
           id={id}
           name={name}

@@ -41,11 +41,11 @@ export const processor: Processor = async (job) => {
       const message = await twilio.messages.create({
         body: `Customer has abandoned their checkout. Last update: ${format(
           checkout.updatedAt,
-          "hh:mm aa"
+          "hh:mm aa",
         )} UTC.\n\nName: ${checkout.name}\nEmail: ${checkout.email}\nPhone: ${
           checkout.phone
         }\n\nMore details: https://admin.shopify.com/store/${SHOPIFY_STORE}/checkouts/${getShopifyIdNumber(
-          checkout.commerceId!
+          checkout.commerceId!,
         )}`,
         from: TWILIO_PHONE_NUMBER,
         to: ADMIN_PHONE_NUMBER,
@@ -77,5 +77,5 @@ export const processor: Processor = async (job) => {
 
 export default createQueue(
   QUEUE_NAMES.AutomatedAbandonedCheckoutsNotification,
-  processor
+  processor,
 )

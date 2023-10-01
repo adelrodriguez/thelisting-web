@@ -9,6 +9,6 @@ export function loader() {
     {
       status: StatusCodes.OK,
       statusText: ReasonPhrases.OK,
-    }
+    },
   )
 }

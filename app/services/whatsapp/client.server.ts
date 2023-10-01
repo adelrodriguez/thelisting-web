@@ -39,7 +39,7 @@ class WhatsApp {
     to: string,
     template: WhatsAppMessageTemplate,
     locale: string,
-    components: TemplateToComponentsMap[typeof template]
+    components: TemplateToComponentsMap[typeof template],
   ): Promise<SendMessageResult> {
     const res = await this.postRequest("messages", {
       messaging_product: "whatsapp",

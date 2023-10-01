@@ -15,7 +15,7 @@ export default class Pandaretta extends BaseScraper {
   public get title(): Promise<string | null> {
     return this.page
       .$eval("meta[property='og:title']", (element) =>
-        element.getAttribute("content")
+        element.getAttribute("content"),
       )
       .then(cleanText)
       .catch((err) => this.logError("title: " + err.message))

@@ -50,7 +50,7 @@ export default function InputWithAddOn({
               "ring-red-300 focus-within:ring-red-500 focus:outline-none":
                 error,
               "ring-slate-300 focus-within:ring-slate-500": !error,
-            }
+            },
           )}
         >
           <span className="flex select-none items-center pl-3 text-gray-500 sm:text-sm">
@@ -72,7 +72,7 @@ export default function InputWithAddOn({
               "sm:text-sm sm:leading-6",
               "focus:ring-0",
               "disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500",
-              "invalid:pr-10 invalid:text-red-900 invalid:placeholder-red-300 invalid:ring-red-300 invalid:focus:outline-none invalid:focus:ring-red-500"
+              "invalid:pr-10 invalid:text-red-900 invalid:placeholder-red-300 invalid:ring-red-300 invalid:focus:outline-none invalid:focus:ring-red-500",
             )}
           />
           <div className="pointer-events-none invisible absolute right-0 top-0 flex h-9 items-center pr-3 peer-invalid:visible">

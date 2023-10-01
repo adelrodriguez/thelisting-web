@@ -37,7 +37,7 @@ export async function loader({ params, context }: LoaderFunctionArgs) {
 
   const { listingSku } = zx.parseParams(
     params,
-    z.object({ listingSku: z.coerce.number() })
+    z.object({ listingSku: z.coerce.number() }),
   )
 
   const [listing, ribbons, fonts] = await Promise.all([
@@ -66,7 +66,7 @@ export async function action({ request, context, params }: ActionFunctionArgs) {
   const db = context.db
   const result = zx.parseParamsSafe(
     params,
-    z.object({ listingSku: z.coerce.number() })
+    z.object({ listingSku: z.coerce.number() }),
   )
 
   if (!result.success) {
@@ -124,7 +124,7 @@ export default function DashboardListingRibbonsPage() {
   async function submitOrder(ribbonIds: string[]) {
     await fetcher.submit(
       { ribbonIds: JSON.stringify(ribbonIds), subaction: "ribbons" },
-      { method: "post" }
+      { method: "post" },
     )
   }
 

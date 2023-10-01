@@ -59,7 +59,7 @@ export default function Select<T extends SelectOption>({
             "sm:text-sm sm:leading-6",
             "focus:ring-2 focus:ring-inset focus:ring-slate-600",
             "disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500",
-            "invalid:pr-10 invalid:text-red-900 invalid:placeholder-red-300 invalid:ring-red-300 invalid:focus:outline-none invalid:focus:ring-red-500"
+            "invalid:pr-10 invalid:text-red-900 invalid:placeholder-red-300 invalid:ring-red-300 invalid:focus:outline-none invalid:focus:ring-red-500",
           )}
         >
           {options.map((option) => (

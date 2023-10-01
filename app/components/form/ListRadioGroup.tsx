@@ -48,7 +48,7 @@ export default function ListRadioGroup<T extends ListRadioOption>({
               {
                 "rounded-bl-md rounded-br-md": index === options.length - 1,
                 "rounded-tl-md rounded-tr-md": index === 0,
-              }
+              },
             )}
             key={option.value}
             value={option.value}
@@ -57,7 +57,7 @@ export default function ListRadioGroup<T extends ListRadioOption>({
               aria-hidden="true"
               className={clsx(
                 "mt-0.5 flex h-4 w-4 shrink-0 cursor-pointer items-center justify-center rounded-full border border-gray-300 bg-white",
-                "ui-checked:border-transparent ui-checked:bg-gray-600 ui-active:ring-2 ui-active:ring-gray-500 ui-active:ring-offset-2"
+                "ui-checked:border-transparent ui-checked:bg-gray-600 ui-active:ring-2 ui-active:ring-gray-500 ui-active:ring-offset-2",
               )}
             >
               <span className="h-1.5 w-1.5 rounded-full bg-white" />

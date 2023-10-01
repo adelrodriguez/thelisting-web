@@ -23,7 +23,7 @@ export default class AmazonScraper extends BaseScraper {
   public get image(): Promise<string | null> {
     return this.page
       .$eval("li.image.item.selected img.a-dynamic-image", (element) =>
-        element.getAttribute("src")
+        element.getAttribute("src"),
       )
       .catch((err) => this.logError("image: " + err.message))
   }
@@ -36,7 +36,7 @@ export default class AmazonScraper extends BaseScraper {
           "span.a-price > .a-offscreen",
           "#sns-base-price",
         ].join(","),
-        (element) => element.textContent
+        (element) => element.textContent,
       )
       .then(cleanAmount)
       .catch((err) => this.logError("amount: " + err.message))

@@ -28,7 +28,7 @@ function Input(
     name?: string
     trailing?: string
   } & ComponentProps<"input">,
-  ref: Ref<HTMLInputElement>
+  ref: Ref<HTMLInputElement>,
 ) {
   return (
     <div className={className}>
@@ -87,7 +87,7 @@ function Input(
               {
                 "pr-10": error,
                 "pr-3": !error,
-              }
+              },
             )}
           >
             <span className="text-gray-500 sm:text-sm">{trailing}</span>

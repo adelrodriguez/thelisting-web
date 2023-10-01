@@ -17,7 +17,7 @@ export const processor: Processor<QueueData> = async (job) => {
     const order = await getOrder(getShopifyId(job.data.orderId, "Order"))
 
     const { listing_sku: listingSku } = transformCustomAttributes(
-      order.customAttributes
+      order.customAttributes,
     )
 
     if (!listingSku) {

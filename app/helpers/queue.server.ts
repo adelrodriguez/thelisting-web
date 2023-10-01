@@ -24,7 +24,7 @@ const connection = new Redis(REDIS_JOBS_URL, {
 
 export function createQueue<Payload>(
   name: string,
-  handler: Processor<Payload>
+  handler: Processor<Payload>,
 ): Queue<Payload> {
   const registeredQueue = registeredQueues[name]
 

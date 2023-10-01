@@ -4,7 +4,7 @@ import { useMemo } from "react"
 
 export default function useDebouncedSearchParam(
   param: string,
-  wait?: number
+  wait?: number,
 ): [string, (value: string) => void] {
   const [searchParams, setSearchParams] = useSearchParams()
   const searchParam = searchParams.get(param) || ""
@@ -22,7 +22,7 @@ export default function useDebouncedSearchParam(
           return params
         })
       }, wait),
-    [param, wait, setSearchParams]
+    [param, wait, setSearchParams],
   )
 
   return [searchParam, (value: string) => debouncedSetSearchParams(value)]

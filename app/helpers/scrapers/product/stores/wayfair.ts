@@ -11,7 +11,7 @@ export default class WayfairScraper extends BaseScraper {
   public get title() {
     return this.page
       .$eval("meta[property='og:title']", (element) =>
-        element.getAttribute("content")
+        element.getAttribute("content"),
       )
       .then(cleanText)
   }

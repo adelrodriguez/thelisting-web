@@ -46,7 +46,7 @@ export default function TextArea({
             "peer my-1 block w-full rounded-md border-gray-300 py-1.5 shadow-sm sm:text-sm sm:leading-6",
             "focus:border-gray-500 focus:ring-gray-500",
             "disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500",
-            "invalid:border-red-300 invalid:pr-10 invalid:text-red-900 invalid:placeholder-red-300 invalid:focus:border-red-500 invalid:focus:outline-none invalid:focus:ring-red-500"
+            "invalid:border-red-300 invalid:pr-10 invalid:text-red-900 invalid:placeholder-red-300 invalid:focus:border-red-500 invalid:focus:outline-none invalid:focus:ring-red-500",
           )}
         />
         <div className="pointer-events-none invisible absolute right-0 top-0 flex translate-y-1/2 items-center pr-3 peer-invalid:visible">

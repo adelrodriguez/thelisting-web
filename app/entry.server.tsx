@@ -21,7 +21,7 @@ export default async function handleRequest(
   request: Request,
   responseStatusCode: number,
   responseHeaders: Headers,
-  remixContext: EntryContext
+  remixContext: EntryContext,
 ) {
   const callbackName = isbot(request.headers.get("user-agent"))
     ? "onAllReady"
@@ -59,7 +59,7 @@ export default async function handleRequest(
             new Response(createReadableStreamFromReadable(body), {
               headers: responseHeaders,
               status: didError ? 500 : responseStatusCode,
-            })
+            }),
           )
 
           pipe(body)
@@ -73,7 +73,7 @@ export default async function handleRequest(
         onShellError(error: unknown) {
           reject(error)
         },
-      }
+      },
     )
 
     setTimeout(abort, ABORT_DELAY)
@@ -82,7 +82,7 @@ export default async function handleRequest(
 
 export function handleError(
   error: unknown,
-  { request, params, context }: DataFunctionArgs
+  { request, params, context }: DataFunctionArgs,
 ) {
   void Sentry.captureRemixServerException(error, "remix.server", request)
 

@@ -46,7 +46,7 @@ export default class JanieAndJack extends BaseScraper {
   public get currency(): Currency | Promise<Currency | null> {
     return this.page
       .$eval("meta[itemprop='priceCurrency']", (element) =>
-        element.getAttribute("content")
+        element.getAttribute("content"),
       )
       .then(cleanCurrency)
       .catch((err) => this.logError(err.message))

@@ -34,7 +34,7 @@ function Notification(
     description,
     variant,
   }: { description?: string } & CustomContentProps,
-  ref: Ref<HTMLDivElement>
+  ref: Ref<HTMLDivElement>,
 ) {
   const { closeSnackbar } = useSnackbar()
 

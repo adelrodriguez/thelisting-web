@@ -13,7 +13,7 @@ export default function useDialogPage() {
   const close = useCallback(() => setOpen(false), [])
   const leave = useCallback(
     () => navigate("../", { preventScrollReset: true }),
-    [navigate]
+    [navigate],
   )
 
   return { close, leave, open }

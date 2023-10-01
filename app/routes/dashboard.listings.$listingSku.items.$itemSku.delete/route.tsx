@@ -34,7 +34,7 @@ export async function action({ context, params }: ActionFunctionArgs) {
   const { db } = context
   const { itemSku, listingSku } = zx.parseParams(
     params,
-    z.object({ itemSku: z.string(), listingSku: z.coerce.number() })
+    z.object({ itemSku: z.string(), listingSku: z.coerce.number() }),
   )
 
   const listing = await db.listing.findUniqueOrThrow({
@@ -51,7 +51,7 @@ export async function action({ context, params }: ActionFunctionArgs) {
   return redirect(
     route("/dashboard/listings/:listingSku/items", {
       listingSku: `${listing.sku}`,
-    })
+    }),
   )
 }
 

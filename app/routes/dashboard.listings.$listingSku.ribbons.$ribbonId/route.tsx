@@ -40,7 +40,7 @@ import TextRibbonForm from "./TextRibbonForm"
 const detailsValidator = withZod(
   z.object({
     name: RibbonNameSchema,
-  })
+  }),
 )
 
 export async function loader({ params, context }: LoaderFunctionArgs) {

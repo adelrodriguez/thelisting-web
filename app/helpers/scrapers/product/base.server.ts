@@ -78,7 +78,7 @@ export class BaseScraper implements ScraperInterface {
   public get description(): Promise<string | null> {
     return this.page
       .$eval("meta[name=description]", (element) =>
-        element.getAttribute("content")
+        element.getAttribute("content"),
       )
       .then(cleanText)
       .catch((err) => this.logError(err.message))
@@ -87,7 +87,7 @@ export class BaseScraper implements ScraperInterface {
   public get image(): Promise<string | null> {
     return this.page
       .$eval("meta[property='og:image']", (element) =>
-        element.getAttribute("content")
+        element.getAttribute("content"),
       )
       .catch((err) => this.logError(err.message))
   }
@@ -95,7 +95,7 @@ export class BaseScraper implements ScraperInterface {
   public get amount(): Promise<number | null> {
     return this.page
       .$eval("meta[property='product:price:amount']", (element) =>
-        element.getAttribute("content")
+        element.getAttribute("content"),
       )
       .then(cleanAmount)
       .catch((err) => this.logError(err.message))
@@ -104,7 +104,7 @@ export class BaseScraper implements ScraperInterface {
   public get currency(): Promise<Currency | null> | Currency {
     return this.page
       .$eval("meta[property='product:price:currency']", (element) =>
-        element.getAttribute("content")
+        element.getAttribute("content"),
       )
       .then(cleanText)
       .then(CurrencySchema.parse)
@@ -125,7 +125,7 @@ export class BaseScraper implements ScraperInterface {
       this._start = performance.now()
 
       this.browser = await chromium.connectOverCDP(
-        `${BROWSERLESS_URL}?token=${BROWSERLESS_TOKEN}`
+        `${BROWSERLESS_URL}?token=${BROWSERLESS_TOKEN}`,
       )
       this.page = await this.browser.newPage({
         userAgent: userAgent.toString(),

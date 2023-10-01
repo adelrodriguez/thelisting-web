@@ -111,7 +111,7 @@ export default function AdminToolsUserManagementPage() {
                         >
                           {flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                         </th>
                       ))}
@@ -137,7 +137,7 @@ export default function AdminToolsUserManagementPage() {
                         >
                           {flexRender(
                             cell.column.columnDef.cell,
-                            cell.getContext()
+                            cell.getContext(),
                           )}
                         </td>
                       ))}

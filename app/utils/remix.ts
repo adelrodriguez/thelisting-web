@@ -33,7 +33,7 @@ export function badRequest({
 } = {}) {
   return json(
     { message, title },
-    { status: StatusCodes.BAD_REQUEST, statusText: ReasonPhrases.BAD_REQUEST }
+    { status: StatusCodes.BAD_REQUEST, statusText: ReasonPhrases.BAD_REQUEST },
   )
 }
 
@@ -49,7 +49,7 @@ export function unauthorized({
     {
       status: StatusCodes.UNAUTHORIZED,
       statusText: ReasonPhrases.UNAUTHORIZED,
-    }
+    },
   )
 }
 
@@ -62,7 +62,7 @@ export function forbidden({
 } = {}) {
   return json(
     { message, title },
-    { status: StatusCodes.FORBIDDEN, statusText: ReasonPhrases.FORBIDDEN }
+    { status: StatusCodes.FORBIDDEN, statusText: ReasonPhrases.FORBIDDEN },
   )
 }
 
@@ -75,7 +75,7 @@ export function notFound({
 } = {}) {
   return json(
     { message: message, title },
-    { status: StatusCodes.NOT_FOUND, statusText: ReasonPhrases.NOT_FOUND }
+    { status: StatusCodes.NOT_FOUND, statusText: ReasonPhrases.NOT_FOUND },
   )
 }
 
@@ -92,7 +92,7 @@ export function unprocessableEntity<T>({
     {
       status: StatusCodes.UNPROCESSABLE_ENTITY,
       statusText: ReasonPhrases.UNPROCESSABLE_ENTITY,
-    }
+    },
   )
 }
 
@@ -105,7 +105,7 @@ export function notAllowed({
     {
       status: StatusCodes.METHOD_NOT_ALLOWED,
       statusText: ReasonPhrases.METHOD_NOT_ALLOWED,
-    }
+    },
   )
 }
 
@@ -118,6 +118,6 @@ export function internalServerError({
     {
       status: StatusCodes.INTERNAL_SERVER_ERROR,
       statusText: ReasonPhrases.INTERNAL_SERVER_ERROR,
-    }
+    },
   )
 }

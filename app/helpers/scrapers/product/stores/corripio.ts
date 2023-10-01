@@ -12,7 +12,7 @@ export default class CorripioScraper extends BaseScraper {
   public get title(): Promise<string | null> {
     return this.page
       .$eval('meta[property="og:title"]', (element) =>
-        element.getAttribute("content")
+        element.getAttribute("content"),
       )
       .then((title) => cleanText(title).replace(" — Corripio", ""))
       .catch((err) => this.logError("title: " + err.message))
@@ -21,7 +21,7 @@ export default class CorripioScraper extends BaseScraper {
   public get description(): Promise<string | null> {
     return this.page
       .$eval('meta[property="og:description"]', (element) =>
-        element.getAttribute("content")
+        element.getAttribute("content"),
       )
       .then((title) => cleanText(title).replace(" — Corripio", ""))
       .catch((err) => this.logError("description: " + err.message))

@@ -48,18 +48,18 @@ export async function action({ request, params, context }: ActionFunctionArgs) {
   const db = context.db
   const parsedQuery = zx.parseQuerySafe(
     request,
-    z.object({ note_id: z.string() })
+    z.object({ note_id: z.string() }),
   )
 
   const { listing: listingPath } = zx.parseParams(
     params,
-    z.object({ listing: z.string() })
+    z.object({ listing: z.string() }),
   )
 
   const serverValidator = withZod(
     z.object({
       text: zfd.text(z.string().max(500, "The note is too long").optional()),
-    })
+    }),
   )
 
   const formData = await request.formData()
@@ -72,7 +72,7 @@ export async function action({ request, params, context }: ActionFunctionArgs) {
         success: false,
         ...result.error,
       },
-      { status: StatusCodes.UNPROCESSABLE_ENTITY }
+      { status: StatusCodes.UNPROCESSABLE_ENTITY },
     )
   }
 
@@ -116,7 +116,7 @@ export default function ListingCartNotePage() {
   const clientValidator = withZod(
     z.object({
       text: zfd.text(z.string().max(500, lengthError).optional()),
-    })
+    }),
   )
 
   useEffect(() => {
@@ -200,7 +200,7 @@ export default function ListingCartNotePage() {
                         {t("common:cancel")}
                       </Button>
                       <SubmitButton loadingText={`${t("common:saving")}`}>{`${t(
-                        "common:save"
+                        "common:save",
                       )}`}</SubmitButton>
                     </div>
                   </Form>

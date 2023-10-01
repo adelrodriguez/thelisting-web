@@ -14,7 +14,7 @@ export default function RibbonsPreview({
   path: Listing["path"]
 }) {
   const [previewSize, setPreviewSize] = useState<"mobile" | "desktop">(
-    "desktop"
+    "desktop",
   )
   const [containerWidth, setContainerWidth] = useState(0)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -77,7 +77,7 @@ export default function RibbonsPreview({
               "focus:z-10",
               previewSize === "mobile"
                 ? "bg-gray-600"
-                : "bg-white hover:bg-gray-50"
+                : "bg-white hover:bg-gray-50",
             )}
             disabled={previewSize === "mobile"}
             onClick={() => setPreviewSize("mobile")}
@@ -86,7 +86,7 @@ export default function RibbonsPreview({
             <DevicePhoneMobileIcon
               className={clsx(
                 "h-5 w-5",
-                previewSize === "mobile" ? "text-white" : "text-gray-700"
+                previewSize === "mobile" ? "text-white" : "text-gray-700",
               )}
             />
           </button>
@@ -98,7 +98,7 @@ export default function RibbonsPreview({
               "focus:z-10",
               previewSize === "desktop"
                 ? "bg-gray-600"
-                : "bg-white hover:bg-gray-50"
+                : "bg-white hover:bg-gray-50",
             )}
             disabled={previewSize === "desktop"}
             onClick={() => setPreviewSize("desktop")}
@@ -107,7 +107,7 @@ export default function RibbonsPreview({
             <ComputerDesktopIcon
               className={clsx(
                 "h-5 w-5",
-                previewSize === "desktop" ? "text-white" : "text-gray-700"
+                previewSize === "desktop" ? "text-white" : "text-gray-700",
               )}
             />
           </button>

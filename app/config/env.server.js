@@ -92,7 +92,7 @@ if (!envs.success) {
   // eslint-disable-next-line no-console
   console.error(
     "❌ Invalid environment variables:\n",
-    ...formatErrors(envs.error.format())
+    ...formatErrors(envs.error.format()),
   )
   throw new Error("You have invalid environment variables.")
 }

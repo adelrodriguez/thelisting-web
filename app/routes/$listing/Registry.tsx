@@ -22,7 +22,7 @@ export default function Registry({
       {
         rotate: [0, -12, 12, -12, 12, 0],
       },
-      { duration: 1.5, ease: "easeInOut" }
+      { duration: 1.5, ease: "easeInOut" },
     )
   }, [animate, scope])
 
@@ -33,7 +33,7 @@ export default function Registry({
   }, [cart.itemCount, shake])
 
   return (
-    <div className="grid grid-cols-2 gap-y-8 gap-x-4 md:grid-cols-3 md:gap-x-8 xl:grid-cols-4 xl:gap-x-10">
+    <div className="grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-3 md:gap-x-8 xl:grid-cols-4 xl:gap-x-10">
       {items.sort(sortByQuantity).map((item) => {
         if (!item.commerceId) return null
 
@@ -51,7 +51,7 @@ export default function Registry({
       <div className="group fixed bottom-8 right-8 z-10" ref={scope}>
         <Link prefetch="intent" preventScrollReset relative="path" to="cart">
           {!!cart.itemCount && (
-            <div className="absolute top-0 right-0 z-10 flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-red-500 text-xs text-white md:h-7 md:w-7 md:text-sm">
+            <div className="absolute right-0 top-0 z-10 flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-red-500 text-xs text-white md:h-7 md:w-7 md:text-sm">
               {cart.itemCount}
             </div>
           )}

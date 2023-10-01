@@ -34,7 +34,7 @@ export const processor: Processor<QueueData> = async (job) => {
     })
 
     await job.log(
-      `Updated listing ${listingId} with commerceId ${collection.id}`
+      `Updated listing ${listingId} with commerceId ${collection.id}`,
     )
 
     const published = await publishToCurrentChannel(collection.id)
@@ -42,7 +42,7 @@ export const processor: Processor<QueueData> = async (job) => {
     await job.log(
       published
         ? `Published collection ${collection.id}`
-        : `Failed to publish collection ${collection.id}`
+        : `Failed to publish collection ${collection.id}`,
     )
   } catch (error) {
     Sentry.captureException(error)

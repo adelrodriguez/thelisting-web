@@ -31,7 +31,7 @@ export class Alegra {
       Authorization:
         "Basic " +
         Buffer.from(ALEGRA_API_USERNAME + ":" + ALEGRA_API_TOKEN).toString(
-          "base64"
+          "base64",
         ),
       "Content-Type": "application/json",
     })
@@ -59,7 +59,7 @@ export class Alegra {
   public get contacts() {
     return {
       create: async (
-        request: CreateContactRequest
+        request: CreateContactRequest,
       ): Promise<CreateContactResponse> => {
         try {
           const response = await this.postRequest("contacts", request)
@@ -71,7 +71,7 @@ export class Alegra {
         } catch (error) {
           throw new AlegraError(
             (error as Error).message,
-            "create_contact_error"
+            "create_contact_error",
           )
         }
       },
@@ -93,7 +93,7 @@ export class Alegra {
   public get currencies() {
     return {
       get: async (
-        request: GetCurrencyRequest
+        request: GetCurrencyRequest,
       ): Promise<GetCurrencyResponse> => {
         // Alegra doesn't support the Dominican Peso, so we need to hardcode
         if (request.code === "DOP") {
@@ -123,7 +123,7 @@ export class Alegra {
   public get invoices() {
     return {
       create: async (
-        request: CreateInvoiceRequest
+        request: CreateInvoiceRequest,
       ): Promise<CreateInvoiceResponse> => {
         try {
           const response = await this.postRequest("invoices", request)
@@ -135,17 +135,17 @@ export class Alegra {
         } catch (error) {
           throw new AlegraError(
             (error as Error).message,
-            "create_invoice_error"
+            "create_invoice_error",
           )
         }
       },
       send: async (
-        request: SendInvoiceRequest
+        request: SendInvoiceRequest,
       ): Promise<SendInvoiceResponse> => {
         try {
           const response = await this.postRequest(
             `invoices/${request.id}/email`,
-            request
+            request,
           )
           const data = await response.json()
 

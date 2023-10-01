@@ -177,7 +177,7 @@ export default function DashboardListingPage() {
                   className="h-12 w-12 flex-none rounded-lg bg-white object-cover ring-1 ring-gray-900/10"
                   src={generateCloudflareImageUrl(
                     listing.coverImage,
-                    "thumbnail"
+                    "thumbnail",
                   )}
                 />
               ) : (
@@ -217,7 +217,7 @@ export default function DashboardListingPage() {
                         <Link
                           className={clsx(
                             active ? "bg-gray-50" : "",
-                            "block px-3 py-1 text-sm leading-6 text-gray-900"
+                            "block px-3 py-1 text-sm leading-6 text-gray-900",
                           )}
                           to={`${listing.sku}/edit`}
                         >
@@ -230,7 +230,7 @@ export default function DashboardListingPage() {
                         <Link
                           className={clsx(
                             active ? "bg-gray-50" : "",
-                            "block px-3 py-1 text-sm leading-6 text-gray-900"
+                            "block px-3 py-1 text-sm leading-6 text-gray-900",
                           )}
                           target="_blank"
                           to={`/${listing.path}`}
@@ -244,7 +244,7 @@ export default function DashboardListingPage() {
                         <Link
                           className={clsx(
                             active ? "bg-gray-50" : "",
-                            "block px-3 py-1 text-sm leading-6 text-gray-900"
+                            "block px-3 py-1 text-sm leading-6 text-gray-900",
                           )}
                           target="_blank"
                           to={`/${listing.path}/review`}
@@ -260,7 +260,7 @@ export default function DashboardListingPage() {
                         <a
                           className={clsx(
                             active ? "bg-gray-50" : "",
-                            "block px-3 py-1 text-sm leading-6 text-gray-900"
+                            "block px-3 py-1 text-sm leading-6 text-gray-900",
                           )}
                           href={`/api/admin/listings/${listing.id}/report.csv`}
                         >
@@ -273,7 +273,7 @@ export default function DashboardListingPage() {
                         <Link
                           className={clsx(
                             active ? "bg-gray-50" : "",
-                            "flex items-center px-3 py-1 text-sm leading-6 text-gray-900"
+                            "flex items-center px-3 py-1 text-sm leading-6 text-gray-900",
                           )}
                           target="_blank"
                           to={
@@ -281,7 +281,7 @@ export default function DashboardListingPage() {
                               ? `https://admin.shopify.com/store/${
                                   window.env.shopifyStore
                                 }/Collections/${getShopifyIdNumber(
-                                  listing.commerceId
+                                  listing.commerceId,
                                 )}`
                               : "#"
                           }
@@ -311,14 +311,14 @@ export default function DashboardListingPage() {
                     {formatPrice(
                       listing.purchases.reduce(
                         (acc, purchase) => acc + purchase.total,
-                        0
-                      )
+                        0,
+                      ),
                     )}
                   </div>
                   <div
                     className={clsx(
                       statuses[listing.status],
-                      "rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset"
+                      "rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset",
                     )}
                   >
                     {listing.status}

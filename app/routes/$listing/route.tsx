@@ -93,7 +93,7 @@ export default function ListingPage() {
                   className="h-full w-full object-cover object-center"
                   src={generateCloudflareImageUrl(
                     listing.coverImage,
-                    "display"
+                    "display",
                   )}
                 />
               )}

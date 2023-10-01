@@ -28,7 +28,7 @@ export const alegraHandlers: Array<
       const response = generateMock(GetContactResponseSchema)
 
       return res(ctx.json(response))
-    }
+    },
   ),
   rest.get(
     "https://app.alegra.com/api/v1/currencies/:code",
@@ -36,7 +36,7 @@ export const alegraHandlers: Array<
       const response = generateMock(GetCurrencyResponseSchema)
 
       return res(ctx.json(response))
-    }
+    },
   ),
   rest.post("https://app.alegra.com/api/v1/invoices", async (req, res, ctx) => {
     const response = generateMock(CreateInvoiceResponseSchema)
@@ -49,6 +49,6 @@ export const alegraHandlers: Array<
       const response = generateMock(SendInvoiceResponseSchema)
 
       return res(ctx.json(response))
-    }
+    },
   ),
 ]

@@ -103,7 +103,7 @@ export default function AdminToolsProductScraperPage() {
   }
 
   return (
-    <div className="mx-auto max-w-7xl py-12 px-4 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
       <div className="lg:text-center">
         <p className="text-base font-semibold uppercase tracking-wide text-teal-600">
           Admin Tools
@@ -132,7 +132,7 @@ export default function AdminToolsProductScraperPage() {
                   {
                     "bg-gray-100 shadow-lg": isDragActive,
                     "border-2 border-dashed border-gray-300": !isDragActive,
-                  }
+                  },
                 ),
                 type: "button",
               })}

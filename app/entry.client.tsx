@@ -18,7 +18,7 @@ Sentry.init({
       routingInstrumentation: Sentry.remixRouterInstrumentation(
         useEffect,
         useLocation,
-        useMatches
+        useMatches,
       ),
     }),
     new Sentry.Replay(),
@@ -48,7 +48,7 @@ async function hydrate() {
         <StrictMode>
           <RemixBrowser />
         </StrictMode>
-      </I18nextProvider>
+      </I18nextProvider>,
     )
   })
 }

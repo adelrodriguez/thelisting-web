@@ -44,7 +44,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
     webhookId,
     event,
     "Shopify",
-    jsonBody
+    jsonBody,
   )
 
   if (received) {
@@ -55,7 +55,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
       {
         status: StatusCodes.ACCEPTED,
         statusText: ReasonPhrases.ACCEPTED,
-      }
+      },
     )
   }
 
@@ -83,7 +83,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
       {
         status: StatusCodes.OK,
         statusText: ReasonPhrases.OK,
-      }
+      },
     )
   } catch (error) {
     Sentry.captureException(error)

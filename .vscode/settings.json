@@ -24,9 +24,7 @@
   "[xml]": {
     "editor.defaultFormatter": "redhat.vscode-xml"
   },
-  "cSpell.words": [
-    "alegra"
-  ],
+  "cSpell.words": ["alegra"],
   "[ignore]": {
     "editor.defaultFormatter": "foxundermoon.shell-format"
   },

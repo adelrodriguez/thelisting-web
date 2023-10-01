@@ -88,7 +88,7 @@ export default function Features() {
               <dt className="inline font-semibold text-gray-900">
                 <feature.icon
                   aria-hidden="true"
-                  className="absolute top-1 left-1 h-5 w-5 text-indigo-600"
+                  className="absolute left-1 top-1 h-5 w-5 text-indigo-600"
                 />
                 {feature.name}
               </dt>{" "}

@@ -75,7 +75,7 @@ export default function Alert({
                       type === "success",
                     "bg-red-50 text-red-500 hover:bg-red-100 focus:ring-red-600 focus:ring-offset-red-50":
                       type === "error",
-                  }
+                  },
                 )}
                 onClick={onClose}
                 type="button"

@@ -40,7 +40,7 @@ const validator = withZod(
     .refine((data) => data.quantity >= data.stock, {
       message: "Stock cannot be greater than quantity",
       path: ["stock"],
-    })
+    }),
 )
 
 export async function loader({ params, context }: LoaderFunctionArgs) {

@@ -37,7 +37,7 @@ export async function createCheckout(
     listingId: string
     noteId?: string
     sessionCartsKey: string // The session id used to identify the user's cart in Redis
-  }
+  },
 ) {
   const lineItems = cartItems.map(({ variantId, quantity }) => ({
     quantity,
@@ -80,7 +80,7 @@ export async function createCheckout(
         lineItems,
       },
     },
-    shopifyStorefrontAPIHeaders
+    shopifyStorefrontAPIHeaders,
   )
 
   const id = checkoutCreate?.checkout?.id
@@ -103,7 +103,7 @@ export async function getOrder(id: string) {
     {
       id,
     },
-    shopifyAdminAPIHeaders
+    shopifyAdminAPIHeaders,
   )
 
   if (!order) {
@@ -120,7 +120,7 @@ export async function getOrderCustomAttributes(id: string) {
     {
       id,
     },
-    shopifyAdminAPIHeaders
+    shopifyAdminAPIHeaders,
   )
 
   if (!order) {
@@ -213,7 +213,7 @@ export async function createProduct({
         vendor: store,
       },
     },
-    shopifyAdminAPIHeaders
+    shopifyAdminAPIHeaders,
   )
 
   if (!productCreate?.product) {
@@ -235,7 +235,7 @@ export async function createProduct({
         })),
         productId: productCreate.product.id,
       },
-      shopifyAdminAPIHeaders
+      shopifyAdminAPIHeaders,
     )
 
     if (!productCreateMedia?.media) {
@@ -244,7 +244,7 @@ export async function createProduct({
       })
       throw new ShopifyError(
         "Unable to create product media",
-        "product_media_create_error"
+        "product_media_create_error",
       )
     }
   }
@@ -259,7 +259,7 @@ export async function getProduct(id: string) {
     {
       id,
     },
-    shopifyAdminAPIHeaders
+    shopifyAdminAPIHeaders,
   )
 
   if (!product) {
@@ -276,7 +276,7 @@ export async function getProductsByTag(tag: string) {
     {
       query: "tag:" + tag,
     },
-    shopifyAdminAPIHeaders
+    shopifyAdminAPIHeaders,
   )
 
   return products.edges.map((product) => product!.node)
@@ -289,13 +289,13 @@ export async function publishToCurrentChannel(id: string) {
     {
       id,
     },
-    shopifyAdminAPIHeaders
+    shopifyAdminAPIHeaders,
   )
 
   if (!publishablePublishToCurrentChannel?.publishable) {
     throw new ShopifyError(
       "Unable to publish product to current channel",
-      "product_publish_error"
+      "product_publish_error",
     )
   }
 
@@ -312,13 +312,13 @@ export async function createCollection({ sku }: { sku: number }) {
         title: `Listing ${sku}`,
       },
     },
-    shopifyAdminAPIHeaders
+    shopifyAdminAPIHeaders,
   )
 
   if (!collectionCreate?.collection) {
     throw new ShopifyError(
       "Unable to create collection",
-      "collection_create_error"
+      "collection_create_error",
     )
   }
 
@@ -327,7 +327,7 @@ export async function createCollection({ sku }: { sku: number }) {
 
 export async function addProductsToCollection(
   collectionId: string,
-  productIds: string[]
+  productIds: string[],
 ) {
   const { collectionAddProducts } = await request(
     shopifyAdminAPIEndpoint,
@@ -336,7 +336,7 @@ export async function addProductsToCollection(
       id: collectionId,
       productIds,
     },
-    shopifyAdminAPIHeaders
+    shopifyAdminAPIHeaders,
   )
 
   if (!collectionAddProducts?.collection) {
@@ -345,7 +345,7 @@ export async function addProductsToCollection(
     })
     throw new ShopifyError(
       "Unable to add products to collection",
-      "add_products_to_collection_error"
+      "add_products_to_collection_error",
     )
   }
 
@@ -354,7 +354,7 @@ export async function addProductsToCollection(
 
 export async function removeProductsFromCollection(
   collectionId: string,
-  productIds: string[]
+  productIds: string[],
 ) {
   const { collectionRemoveProducts } = await request(
     shopifyAdminAPIEndpoint,
@@ -363,7 +363,7 @@ export async function removeProductsFromCollection(
       id: collectionId,
       productIds,
     },
-    shopifyAdminAPIHeaders
+    shopifyAdminAPIHeaders,
   )
 
   if (!collectionRemoveProducts?.job) {
@@ -372,7 +372,7 @@ export async function removeProductsFromCollection(
     })
     throw new ShopifyError(
       "Unable to remove products from collection",
-      "remove_products_from_collection_error"
+      "remove_products_from_collection_error",
     )
   }
 
@@ -387,7 +387,7 @@ export async function addTags(id: string, tags: string[]) {
       id,
       tags,
     },
-    shopifyAdminAPIHeaders
+    shopifyAdminAPIHeaders,
   )
 
   if (!tagsAdd?.node?.id) {

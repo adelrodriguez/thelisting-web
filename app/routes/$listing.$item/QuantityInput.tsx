@@ -21,7 +21,7 @@ export default function QuantityInput({
         className={clsx(
           "relative inline-flex items-center rounded-l-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50",
           "focus:z-10 focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500",
-          "disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500"
+          "disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500",
         )}
         disabled={value <= min}
         onClick={() => onChange(value - 1)}
@@ -37,7 +37,7 @@ export default function QuantityInput({
         className={clsx(
           "relative -ml-px inline-flex items-center rounded-r-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50",
           "focus:z-10 focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500",
-          "disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500"
+          "disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500",
         )}
         disabled={value >= max}
         onClick={() => onChange(value + 1)}

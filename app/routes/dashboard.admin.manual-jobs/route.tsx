@@ -14,9 +14,9 @@ export const validator = withZod(
       (value) => {
         return Object.values(QUEUE_NAMES).includes(value)
       },
-      { message: "Invalid queue" }
+      { message: "Invalid queue" },
     ),
-  })
+  }),
 )
 
 export async function action({ request }: ActionFunctionArgs) {

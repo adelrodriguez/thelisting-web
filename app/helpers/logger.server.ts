@@ -24,7 +24,7 @@ const logger = createLogger({
     // Add the message timestamp with the preferred format
     format.timestamp({ format: "YYYY-MM-DD HH:mm:ss:ms" }),
     // Tell Winston that the logs must be colored
-    format.colorize({ all: true })
+    format.colorize({ all: true }),
   ),
 
   level: isDevelopment ? "silly" : "http",

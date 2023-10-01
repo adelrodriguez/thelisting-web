@@ -4,7 +4,7 @@ import useIsomorphicLayoutEffect from "./use-isomorphic-layout-effect"
 
 export default function useInterval(
   callback: () => void,
-  delay: number | null
+  delay: number | null,
 ) {
   const savedCallback = useRef(callback)
   const savedId = useRef<NodeJS.Timer>()

@@ -28,8 +28,8 @@ auth.use(
       })
 
       return user
-    }
-  )
+    },
+  ),
 )
 
 export default auth

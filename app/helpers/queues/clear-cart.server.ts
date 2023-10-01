@@ -17,7 +17,7 @@ export type QueueData = {
 export const processor: Processor<QueueData> = async (job) => {
   try {
     const customAttributes = await getOrderCustomAttributes(
-      getShopifyId(job.data.orderId, "Order")
+      getShopifyId(job.data.orderId, "Order"),
     )
 
     const { session_carts_key: cartsKey, listing_id: listingId } =
@@ -40,15 +40,15 @@ export const processor: Processor<QueueData> = async (job) => {
     }
 
     const response = await redis.del(
-      generateKey(REDIS_KEYS.Cart, cartsKey, listingId)
+      generateKey(REDIS_KEYS.Cart, cartsKey, listingId),
     )
 
     await job.log(
       `Deleted cart ${generateKey(
         "cart",
         cartsKey,
-        listingId
-      )} from Redis: ${Boolean(response)}`
+        listingId,
+      )} from Redis: ${Boolean(response)}`,
     )
   } catch (error) {
     Sentry.captureException(error)

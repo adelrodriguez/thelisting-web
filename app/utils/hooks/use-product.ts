@@ -18,7 +18,7 @@ export default function useProduct(id: string) {
         {
           "X-Shopify-Storefront-Access-Token":
             window.env.shopifyStorefrontAccessToken,
-        }
+        },
       ),
     {
       select: (data) => {
@@ -36,6 +36,6 @@ export default function useProduct(id: string) {
         return { currencyCode, imageUrl, price, title, variantId }
       },
       staleTime: ONE_MINUTE.inMilliseconds,
-    }
+    },
   )
 }

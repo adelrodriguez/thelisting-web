@@ -22,7 +22,7 @@ const clientValidator = withZod(
   z.object({
     name: RibbonNameSchema,
     type: RibbonTypeSchema,
-  })
+  }),
 )
 
 const serverValidator = withZod(
@@ -30,7 +30,7 @@ const serverValidator = withZod(
     name: RibbonNameSchema,
     position: RibbonPositionSchema,
     type: RibbonTypeSchema,
-  })
+  }),
 )
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -84,14 +84,14 @@ export async function action({ params, context, request }: ActionFunctionArgs) {
     })
 
     logger.info(
-      `Updated ribbon ${ribbon.id} moved position: ${ribbon.position} → ${newPosition}`
+      `Updated ribbon ${ribbon.id} moved position: ${ribbon.position} → ${newPosition}`,
     )
   }
 
   return redirect(
     route("/dashboard/listings/:listingSku/ribbons", {
       listingSku: `${listingSku}`,
-    })
+    }),
   )
 }
 

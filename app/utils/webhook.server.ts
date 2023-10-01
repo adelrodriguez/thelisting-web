@@ -35,7 +35,7 @@ export async function checkWebhookLog(
   webhookId: string,
   event: string,
   service: WebhookService,
-  payload?: unknown
+  payload?: unknown,
 ) {
   invariant(typeof payload === "object", "Payload must be an object")
   invariant(payload !== null, "Payload must not be null")

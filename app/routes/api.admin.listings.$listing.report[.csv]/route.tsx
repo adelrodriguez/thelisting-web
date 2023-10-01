@@ -22,7 +22,7 @@ export async function loader({ params, context }: LoaderFunctionArgs) {
       items.map(async (item) => {
         const numberPurchased = item.itemPurchases.reduce(
           (acc, curr) => acc + curr.quantity,
-          0
+          0,
         )
 
         if (numberPurchased === 0) return null
@@ -32,11 +32,11 @@ export async function loader({ params, context }: LoaderFunctionArgs) {
         const product = await getProduct(item.commerceId)
         const price = Number(
           flattenConnection(product?.metafields).find(
-            (field) => field.key === PRODUCT_METAFIELDS.OriginalPrice
-          )?.value
+            (field) => field.key === PRODUCT_METAFIELDS.OriginalPrice,
+          )?.value,
         )
         const url = flattenConnection(product?.metafields).find(
-          (field) => field.key === PRODUCT_METAFIELDS.OriginalUrl
+          (field) => field.key === PRODUCT_METAFIELDS.OriginalUrl,
         )?.value
 
         return {
@@ -47,7 +47,7 @@ export async function loader({ params, context }: LoaderFunctionArgs) {
           url,
           vendor: product?.vendor,
         }
-      })
+      }),
     )
   ).filter(Boolean)
 

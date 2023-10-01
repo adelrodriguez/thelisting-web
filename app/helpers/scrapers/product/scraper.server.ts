@@ -7,7 +7,7 @@ import createScraperFactory, { BaseScraper } from "./base.server"
 import * as storeScrapers from "./stores"
 
 export default async function createScraper(
-  url: URL
+  url: URL,
 ): Promise<ScraperInterface> {
   const { domain } = parse(url.hostname)
 
@@ -19,11 +19,11 @@ export default async function createScraper(
       acc[scraper.domain] = scraper
       return acc
     },
-    {}
+    {},
   )
 
   const scraper = Object.keys(scrapers).find(
-    (storeDomain) => storeDomain === domain
+    (storeDomain) => storeDomain === domain,
   )
 
   const storeScraper = scraper

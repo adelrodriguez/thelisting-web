@@ -3,18 +3,18 @@ declare global {
     gtag: (
       option: string,
       gaTrackingId: string,
-      options: Record<string, unknown>
+      options: Record<string, unknown>,
     ) => void
   }
 }
 
 export const pageview = (
-  parameters: { page_path: string } & Record<string, string>
+  parameters: { page_path: string } & Record<string, string>,
 ) => {
   if (!window.gtag) {
     // eslint-disable-next-line no-console
     console.warn(
-      "window.gtag is not defined. This could mean your google analytics script has not loaded on the page yet."
+      "window.gtag is not defined. This could mean your google analytics script has not loaded on the page yet.",
     )
     return
   }
@@ -51,7 +51,7 @@ export const event = ({
   if (!window.gtag) {
     // eslint-disable-next-line no-console
     console.warn(
-      "window.gtag is not defined. This could mean your google analytics script has not loaded on the page yet."
+      "window.gtag is not defined. This could mean your google analytics script has not loaded on the page yet.",
     )
     return
   }

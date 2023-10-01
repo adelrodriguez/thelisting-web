@@ -53,7 +53,7 @@ const tiers = [
 
 export default function PricingPage() {
   return (
-    <div className="mx-auto max-w-7xl py-32 px-4 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-7xl px-4 py-32 sm:px-6 lg:px-8">
       <div className="sm:align-center sm:flex sm:flex-col">
         <h1 className="font-heading text-5xl font-bold tracking-tight text-gray-900 sm:text-center">
           Pricing Plans
@@ -87,7 +87,7 @@ export default function PricingPage() {
                 Buy {tier.name}
               </a>
             </div>
-            <div className="px-6 pt-6 pb-8">
+            <div className="px-6 pb-8 pt-6">
               <h3 className="text-sm font-medium text-gray-900">
                 What's included
               </h3>

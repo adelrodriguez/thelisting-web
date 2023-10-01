@@ -29,7 +29,7 @@ export const processor: Processor<QueueData> = async (job) => {
     })
 
     const { listing_id: listingId } = transformCustomAttributes(
-      order.customAttributes
+      order.customAttributes,
     )
 
     invariant(listingId, "'listingId' is missing")
@@ -42,7 +42,7 @@ export const processor: Processor<QueueData> = async (job) => {
     invariant(listing.owner.phone, "Owner phone is missing")
 
     await job.log(
-      `Sending purchase notification to ${listing.owner.firstName} ${listing.owner.lastName} at ${listing.owner.phone}`
+      `Sending purchase notification to ${listing.owner.firstName} ${listing.owner.lastName} at ${listing.owner.phone}`,
     )
 
     const amount = currency(purchase.cost).format({
@@ -53,7 +53,7 @@ export const processor: Processor<QueueData> = async (job) => {
       .filter(
         (lineItem) =>
           flattenConnection(lineItem.product?.variants)[0]?.id !==
-          SHOPIFY_SHIPPING_ITEM_1_ID
+          SHOPIFY_SHIPPING_ITEM_1_ID,
       )
       .map((lineItem) => lineItem.product?.title)
       .join(", ")

@@ -170,7 +170,7 @@ export default function ScrapeProductsTable({
               }
             }
             return row
-          })
+          }),
         )
       },
     },
@@ -185,7 +185,7 @@ export default function ScrapeProductsTable({
   const isIdle = useSelector(scraperService, (state) => state.matches("idle"))
   const completed = useSelector(
     scraperService,
-    (state) => state.context.completed
+    (state) => state.context.completed,
   )
   const { enqueueSnackbar } = useSnackbar()
 
@@ -230,12 +230,12 @@ export default function ScrapeProductsTable({
     id: string | number,
     duration: ScrapedProductPayload["duration"],
     errors: ScrapedProductPayload["errors"],
-    cached: ScrapedProductResult["cached"]
+    cached: ScrapedProductResult["cached"],
   ) {
     if (errors.length) {
       enqueueSnackbar(`Fetched product ${id} with errors`, {
         description: `In ${round(duration / 1000)}s. Errors: ${errors.join(
-          ", "
+          ", ",
         )}`,
         variant: "warning",
       })
@@ -323,7 +323,7 @@ export default function ScrapeProductsTable({
                           >
                             {flexRender(
                               header.column.columnDef.header,
-                              header.getContext()
+                              header.getContext(),
                             )}
                           </th>
                         ))}
@@ -340,7 +340,7 @@ export default function ScrapeProductsTable({
                           >
                             {flexRender(
                               cell.column.columnDef.cell,
-                              cell.getContext()
+                              cell.getContext(),
                             )}
                           </td>
                         ))}

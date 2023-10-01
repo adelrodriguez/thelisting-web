@@ -7,7 +7,7 @@ export default function Features() {
     <section className="relative my-16 overflow-hidden bg-white py-16">
       <div className="relative">
         <div className="lg:mx-auto lg:grid lg:max-w-7xl lg:grid-flow-col-dense lg:grid-cols-2 lg:gap-24 lg:px-8">
-          <div className="mx-auto max-w-xl px-4 sm:px-6 lg:mx-0 lg:max-w-none lg:py-16 lg:px-0">
+          <div className="mx-auto max-w-xl px-4 sm:px-6 lg:mx-0 lg:max-w-none lg:px-0 lg:py-16">
             <div>
               <div>
                 <span className="flex h-12 w-12 items-center justify-center rounded-md bg-gray-600">
@@ -77,7 +77,7 @@ export default function Features() {
       </div>
       <div className="mt-24">
         <div className="lg:mx-auto lg:grid lg:max-w-7xl lg:grid-flow-col-dense lg:grid-cols-2 lg:gap-24 lg:px-8">
-          <div className="mx-auto max-w-xl px-4 sm:px-6 lg:col-start-2 lg:mx-0 lg:max-w-none lg:py-32 lg:px-0">
+          <div className="mx-auto max-w-xl px-4 sm:px-6 lg:col-start-2 lg:mx-0 lg:max-w-none lg:px-0 lg:py-32">
             <div>
               <div>
                 <span className="flex h-12 w-12 items-center justify-center rounded-md bg-gray-600">

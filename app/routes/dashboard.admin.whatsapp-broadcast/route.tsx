@@ -43,9 +43,9 @@ const validator = withZod(
       ],
       {
         errorMap: () => ({ message: "Please select a template" }),
-      }
+      },
     ),
-  })
+  }),
 )
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -74,7 +74,7 @@ export async function action({ request }: ActionFunctionArgs) {
             to: phoneNumber,
           },
           name: phoneNumber,
-        }))
+        })),
       )
       break
     default:

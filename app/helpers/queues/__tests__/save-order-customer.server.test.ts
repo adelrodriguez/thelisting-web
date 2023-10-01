@@ -33,7 +33,7 @@ vi.mock("~/utils/shopify.server", () => ({
         email,
       },
       name: "#1234",
-    })
+    }),
   ),
 }))
 
@@ -45,10 +45,10 @@ beforeEach(() => {
 
 test("calls the POST /contacts endpoint", async () => {
   const mockCreate = vi.fn(() =>
-    Promise.resolve(generateMock(CreateContactResponseSchema))
+    Promise.resolve(generateMock(CreateContactResponseSchema)),
   )
   const mockGet = vi.fn(() =>
-    Promise.resolve(generateMock(GetContactResponseSchema))
+    Promise.resolve(generateMock(GetContactResponseSchema)),
   )
 
   vi.spyOn(Alegra.prototype, "contacts", "get").mockImplementation(() => ({
@@ -64,10 +64,10 @@ test("calls the POST /contacts endpoint", async () => {
 
 test("calls the GET /contacts/:id endpoint if the contact already exists", async () => {
   const mockCreate = vi.fn(() =>
-    Promise.resolve(generateMock(CreateContactResponseSchema))
+    Promise.resolve(generateMock(CreateContactResponseSchema)),
   )
   const mockGet = vi.fn(() =>
-    Promise.resolve(generateMock(GetContactResponseSchema))
+    Promise.resolve(generateMock(GetContactResponseSchema)),
   )
 
   db.customer.findUnique.mockResolvedValue({

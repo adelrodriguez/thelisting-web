@@ -55,7 +55,7 @@ export default function ListRadioGroup<T extends ListRadioOption>({
                   !error,
                 "ui-checked:z-10 ui-checked:border-red-300 ui-checked:bg-red-50":
                   error,
-              }
+              },
             )}
             key={option.label}
             value={option}
@@ -67,7 +67,7 @@ export default function ListRadioGroup<T extends ListRadioOption>({
                 {
                   "ui-checked:bg-gray-600 ui-active:ring-gray-500": !error,
                   "ui-checked:bg-red-600 ui-active:ring-red-500": error,
-                }
+                },
               )}
             >
               <span className="h-1.5 w-1.5 rounded-full bg-white" />

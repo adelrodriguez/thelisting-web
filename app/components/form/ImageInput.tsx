@@ -33,7 +33,7 @@ export default function ImageInput({
     },
     {
       enabled: !!value,
-    }
+    },
   )
   const { placeholder } = props
 
@@ -72,7 +72,7 @@ export default function ImageInput({
                 aria-hidden="true"
                 className={clsx(
                   "h-5 w-5",
-                  error ? "text-red-400" : "text-gray-400"
+                  error ? "text-red-400" : "text-gray-400",
                 )}
               />
             </div>
@@ -86,7 +86,7 @@ export default function ImageInput({
                     !error,
                   "pr-10 text-red-900 placeholder-red-300 ring-red-300 focus:outline-none focus:ring-red-500":
                     error,
-                }
+                },
               )}
               placeholder={placeholder}
               readOnly

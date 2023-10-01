@@ -42,7 +42,7 @@ export async function action({
 
     // Check that all items are available, in case someone messed with the cart
     const hasStock = await Promise.all(
-      cartItems.map((item) => checkStock(db, item))
+      cartItems.map((item) => checkStock(db, item)),
     )
     const cartsKey = session.get("cartsKey")
 

@@ -15,7 +15,7 @@ export type TemplateToComponentsMap = {
 
 type GiftPurchaseNotificationComponents = [
   BodyComponent<[TextParameter, TextParameter, TextParameter, TextParameter]>,
-  ButtonComponent
+  ButtonComponent,
 ]
 
 export function generateGiftPurchaseNotificationComponents({
@@ -70,7 +70,7 @@ export function generateGiftPurchaseNotificationComponents({
 export type BabyShowerGuestNotificationComponents = [
   HeaderComponent<[ImageParameter]>,
   BodyComponent<[TextParameter, TextParameter]>,
-  ButtonComponent
+  ButtonComponent,
 ]
 
 export function generateBabyShowerGuestNotificationComponents({
@@ -124,7 +124,7 @@ export function generateBabyShowerGuestNotificationComponents({
 export type WeddingGuestNotificationComponents = [
   HeaderComponent<[ImageParameter]>,
   BodyComponent<[TextParameter, TextParameter]>,
-  ButtonComponent
+  ButtonComponent,
 ]
 
 export function generateWeddingGuestNotificationComponents({

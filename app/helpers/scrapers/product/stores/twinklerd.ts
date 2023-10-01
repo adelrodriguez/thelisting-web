@@ -19,7 +19,7 @@ export default class TwinkleRDScraper extends BaseScraper {
   public get description(): Promise<string | null> {
     return this.page
       .$eval("meta[property='og:description']", (element) =>
-        element.getAttribute("content")
+        element.getAttribute("content"),
       )
       .then(cleanText)
       .catch((err) => this.logError(err.message))

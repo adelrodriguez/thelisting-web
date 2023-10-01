@@ -39,7 +39,7 @@ export default function PageRibbons({
 
       return [index, card] as const
     },
-    [ribbons]
+    [ribbons],
   )
 
   const moveCard = useCallback(
@@ -53,7 +53,7 @@ export default function PageRibbons({
 
       setRibbons(newRibbons)
     },
-    [findCard, ribbons]
+    [findCard, ribbons],
   )
 
   const handleFinish = useCallback(() => {

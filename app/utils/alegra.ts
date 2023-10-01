@@ -40,7 +40,7 @@ export const CreateContactResponseSchema = z.object({
 })
 export type CreateContactResponse = z.infer<typeof CreateContactResponseSchema>
 export function parseCreateContactResponse(
-  data: unknown
+  data: unknown,
 ): CreateContactResponse {
   return CreateContactResponseSchema.parse(data)
 }
@@ -76,7 +76,7 @@ export const CreateInvoiceRequestSchema = z.object({
       id: z.string(),
       price: z.number(),
       quantity: z.number(),
-    })
+    }),
   ),
   status: z.enum(["open", "draft"]),
 })
@@ -93,7 +93,7 @@ export const CreateInvoiceResponseSchema = z.object({
 })
 export type CreateInvoiceResponse = z.infer<typeof CreateInvoiceResponseSchema>
 export function parseCreateInvoiceResponse(
-  data: unknown
+  data: unknown,
 ): CreateInvoiceResponse {
   return CreateInvoiceResponseSchema.parse(data)
 }

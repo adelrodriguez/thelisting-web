@@ -39,7 +39,7 @@ export const processor: Processor<QueueData> = async (job) => {
 
     invariant(
       listing.commerceId,
-      `Listing ${listingId} doesn't have a commerceId`
+      `Listing ${listingId} doesn't have a commerceId`,
     )
 
     const scrapedProduct = await db.scrapedProduct.findUniqueOrThrow({
@@ -58,7 +58,7 @@ export const processor: Processor<QueueData> = async (job) => {
     const tag = crypto
       .createHash("md5")
       .update(
-        `product:${scrapedProduct.url}|amount:${scrapedProduct.amount || 0}`
+        `product:${scrapedProduct.url}|amount:${scrapedProduct.amount || 0}`,
       )
       .digest("hex")
 
@@ -78,7 +78,7 @@ export const processor: Processor<QueueData> = async (job) => {
       // If product doesn't exist, create it
       const priceMultipledByExchangeRate = multiplyPriceByExchangeRate(
         scrapedProduct.amount || 0,
-        exchangeRate
+        exchangeRate,
       )
 
       const shopifyProduct = await createProduct({
@@ -107,7 +107,7 @@ export const processor: Processor<QueueData> = async (job) => {
       await job.log(
         published
           ? `Published product ${shopifyProduct.id}`
-          : `Failed to publish product ${shopifyProduct.id}`
+          : `Failed to publish product ${shopifyProduct.id}`,
       )
 
       commerceId = shopifyProduct.id
