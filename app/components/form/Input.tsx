@@ -14,11 +14,13 @@ export default function Input({
   description,
   required,
   type = "text",
+  trailing,
   ...props
 }: {
   name: string
   label: string
   description?: string
+  trailing?: string
 } & Omit<
   ComponentPropsWithoutRef<"input">,
   "name" | "defaultValue" | "defaultChecked"
@@ -61,8 +63,14 @@ export default function Input({
             "focus:ring-2 focus:ring-inset focus:ring-slate-600",
             "disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500",
             "invalid:pr-10 invalid:text-red-900 invalid:placeholder-red-300 invalid:ring-red-300 invalid:focus:outline-none invalid:focus:ring-red-500",
+            trailing && "pr-10 invalid:pr-16",
           )}
         />
+        {trailing && (
+          <div className="pointer-events-none absolute right-0 top-0 flex h-9 items-center pr-3 peer-invalid:pr-10">
+            <span className="text-gray-500 sm:text-sm">{trailing}</span>
+          </div>
+        )}
         <div className="pointer-events-none invisible absolute right-0 top-0 flex h-9 items-center pr-3 peer-invalid:visible">
           <ExclamationCircleIcon
             aria-hidden="true"

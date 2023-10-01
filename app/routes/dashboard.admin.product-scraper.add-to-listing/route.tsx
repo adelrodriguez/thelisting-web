@@ -4,21 +4,18 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node"
 import { redirect, json } from "@remix-run/node"
 import { useLoaderData } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
+import { useQuery } from "@tanstack/react-query"
 import { useSnackbar } from "notistack"
 import { Fragment, useEffect } from "react"
-import {
-  useFormContext,
-  ValidatedForm,
-  validationError,
-} from "remix-validated-form"
+import { useFormContext, validationError } from "remix-validated-form"
+import { route } from "routes-gen"
 import { z } from "zod"
 
 import { Alert, Button } from "~/components/common"
-import { FormInput, FormSelect, FormSubmit } from "~/components/form"
+import { Autocomplete, Form, Input, SubmitButton } from "~/components/form"
 import { CURRENCIES, DEFAULT_MARGIN } from "~/config/consts"
 import { AddItemToListingQueue } from "~/helpers/queues"
 import { useScrapedProducts } from "~/routes/dashboard.admin.product-scraper/route"
-import alegra from "~/services/alegra.server"
 import { useDialogPage } from "~/utils/hooks"
 
 const AddToListingSchema = z.object({
@@ -45,16 +42,7 @@ export async function loader({ context }: LoaderFunctionArgs) {
     where: { commerceId: { not: null } },
   })
 
-  let exchangeRate: number
-
-  try {
-    const currency = await alegra.currencies.get({ code: CURRENCIES.USD })
-    exchangeRate = currency.exchangeRate
-  } catch (error) {
-    exchangeRate = 1
-  }
-
-  return json({ exchangeRate, listings })
+  return json({ listings })
 }
 
 export async function action({ request, context }: ActionFunctionArgs) {
@@ -86,29 +74,54 @@ export async function action({ request, context }: ActionFunctionArgs) {
     })),
   )
 
-  return redirect("..")
+  return redirect(route("/dashboard/admin/product-scraper"))
 }
 
 export default function AddToListingPage() {
   const { enqueueSnackbar } = useSnackbar()
   const { products } = useScrapedProducts()
-  const productFields = products.map(({ id, scrapedProductId, quantity }) => ({
-    quantity,
-    rowId: `${id}`,
-    scrapedProductId: scrapedProductId!,
-  }))
-
-  const { listings, exchangeRate } = useLoaderData<typeof loader>()
+  const { listings } = useLoaderData<typeof loader>()
   const { open, close, leave } = useDialogPage()
   const { getValues, fieldErrors } = useFormContext("addToListing")
-  const listing = listings.find(({ id }) => id === getValues().get("listingId"))
-  const margin = getValues().get("margin")
+
+  const values = getValues()
+  const margin = values.get("margin")
+  const listing = listings.find(({ id }) => id === values.get("listingId"))
+  const productFields = products
+    .filter(
+      (product): product is typeof product & { scrapedProductId: string } =>
+        !!product.scrapedProductId,
+    )
+    .map(({ id, scrapedProductId, quantity }) => ({
+      quantity,
+      rowId: `${id}`,
+      scrapedProductId,
+    }))
+
+  const { data: currencyData } = useQuery({
+    queryFn: async () => {
+      const res = await fetch("/api/exchange-rates/" + CURRENCIES.USD)
+      const data = (await res.json()) as { exchangeRate: number }
+
+      return data as { exchangeRate: number }
+    },
+    queryKey: ["exchange-rates", CURRENCIES.USD],
+  })
 
   useEffect(() => {
     if (products.length === 0) {
       leave()
     }
   }, [products.length, leave])
+
+  useEffect(() => {
+    if (currencyData) {
+      // We use the DOM API here because we can't use a ref to the input and we
+      // don't want it to be a controlled component
+      const input = document.getElementById("exchangeRate") as HTMLInputElement
+      input.value = currencyData.exchangeRate.toString()
+    }
+  }, [currencyData])
 
   return (
     <Transition.Root appear as={Fragment} show={open}>
@@ -129,10 +142,10 @@ export default function AddToListingPage() {
                 leaveTo="translate-x-full"
               >
                 <Dialog.Panel className="pointer-events-auto w-screen max-w-md">
-                  <ValidatedForm
+                  <Form
                     className="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl"
                     defaultValues={{
-                      exchangeRate,
+                      exchangeRate: currencyData?.exchangeRate ?? 1,
                       listingId: undefined,
                       margin: DEFAULT_MARGIN,
                       products: productFields,
@@ -170,7 +183,7 @@ export default function AddToListingPage() {
                         </div>
                       </div>
                       <div className="mt-6 flex flex-1 flex-col gap-y-6 px-4 sm:px-6">
-                        <FormSelect
+                        <Autocomplete
                           description="Select a listing to add the products to."
                           label="Listing"
                           name="listingId"
@@ -185,7 +198,7 @@ export default function AddToListingPage() {
                             })),
                           ]}
                         />
-                        <FormInput
+                        <Input
                           description="The margin to add to the product price, from 0% to a 100%."
                           label="Gross Profit Margin"
                           max={100}
@@ -195,9 +208,9 @@ export default function AddToListingPage() {
                           trailing="%"
                           type="number"
                         />
-                        <FormInput
+                        <Input
                           description="The exchange rate from USD to DOP, for products with USD prices."
-                          label="Exchange Rate"
+                          label="Exchange Rate USD to DOP"
                           min={1}
                           name="exchangeRate"
                           step={0.01}
@@ -210,15 +223,18 @@ export default function AddToListingPage() {
                               className="hidden"
                               key={`${rowId}-${scrapedProductId}`}
                             >
-                              <FormInput
+                              <Input
+                                label="Row ID"
                                 name={`products[${index}].rowId`}
                                 type="hidden"
                               />
-                              <FormInput
+                              <Input
+                                label="Scraped Product ID"
                                 name={`products[${index}].scrapedProductId`}
                                 type="hidden"
                               />
-                              <FormInput
+                              <Input
+                                label="Quantity"
                                 name={`products[${index}].quantity`}
                                 type="hidden"
                               />
@@ -245,9 +261,11 @@ export default function AddToListingPage() {
                       <Button onClick={close} variant="secondary">
                         Cancel
                       </Button>
-                      <FormSubmit />
+                      <SubmitButton loadingText="Adding items...">
+                        Submit
+                      </SubmitButton>
                     </div>
-                  </ValidatedForm>
+                  </Form>
                 </Dialog.Panel>
               </Transition.Child>
             </div>
