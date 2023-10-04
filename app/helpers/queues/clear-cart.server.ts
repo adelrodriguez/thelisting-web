@@ -39,17 +39,11 @@ export const processor: Processor<QueueData> = async (job) => {
       })
     }
 
-    const response = await redis.del(
-      generateKey(REDIS_KEYS.Cart, cartsKey, listingId),
-    )
+    const key = generateKey(REDIS_KEYS.Cart, cartsKey, listingId)
 
-    await job.log(
-      `Deleted cart ${generateKey(
-        "cart",
-        cartsKey,
-        listingId,
-      )} from Redis: ${Boolean(response)}`,
-    )
+    const response = await redis.del(key)
+
+    await job.log(`Deleted cart ${key} from Redis: ${Boolean(response)}`)
   } catch (error) {
     Sentry.captureException(error)
 
