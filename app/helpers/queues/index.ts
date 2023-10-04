@@ -1,6 +1,6 @@
 export { default as AddItemToListingQueue } from "./add-item-to-listing.server"
 export { default as AddTagsToOrderQueue } from "./add-tags-to-order.server"
-export { default as AutomatedAbandonedCheckoutsNotification } from "./automated-abandoned-checkouts-notification.server"
+export { default as AutomatedAbandonedCheckoutsNotificationQueue } from "./automated-abandoned-checkouts-notification.server"
 export { default as ClearCartQueue } from "./clear-cart.server"
 export { default as CreateInvoiceQueue } from "./create-invoice.server"
 export { default as CreateItemPurchaseQueue } from "./create-item-purchase.server"

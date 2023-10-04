@@ -68,7 +68,7 @@ export const processor: Processor<QueueData> = async (job) => {
   }
 
   if ("error" in response) {
-    void job.log(`Unable to send WhatsApp message: ${response.error.message}`)
+    await job.log(`Unable to send WhatsApp message: ${response.error.message}`)
 
     Sentry.captureException(response.error)
 

@@ -3,11 +3,9 @@ import type { Processor } from "bullmq"
 import { QUEUE_NAMES } from "~/config/consts"
 import { isDevelopment } from "~/config/vars"
 import db from "~/helpers/db.server"
-import logger from "~/helpers/logger.server"
 import { createQueue } from "~/helpers/queue.server"
 import { CreateInvoiceQueue } from "~/helpers/queues"
 import alegra from "~/services/alegra.server"
-import Sentry from "~/services/sentry"
 import { parseCreateContactRequest } from "~/utils/alegra"
 import { getShopifyId } from "~/utils/shopify"
 import { getOrder } from "~/utils/shopify.server"
@@ -17,77 +15,63 @@ export type QueueData = {
 }
 
 export const processor: Processor<QueueData> = async (job) => {
-  try {
-    if (isDevelopment) {
-      await job.log("Development mode, skipping")
-      return
-    }
+  if (isDevelopment) {
+    await job.log("Development mode, skipping")
+    return
+  }
 
-    const order = await getOrder(getShopifyId(job.data.orderId, "Order"))
+  const order = await getOrder(getShopifyId(job.data.orderId, "Order"))
 
-    let contactId: string
+  let contactId: string
 
-    const customer = await db.customer.findUnique({
+  const customer = await db.customer.findUnique({
+    where: { email: order.customer?.email ?? undefined },
+  })
+
+  const alegraId = customer?.alegraId
+
+  if (alegraId) {
+    await job.log(`Found Alegra ID ${alegraId} for customer ${customer?.name}`)
+    contactId = alegraId
+  } else {
+    await job.log("Contact does not exist, creating it")
+
+    const contact = await alegra.contacts.create(
+      parseCreateContactRequest({
+        address: {
+          address: order.billingAddress?.address1,
+          city: order.billingAddress?.city,
+        },
+        email: order.customer?.email,
+        name: order.customer?.displayName,
+        phonePrimary: order.billingAddress?.phone,
+        type: "client",
+      }),
+    )
+
+    await db.customer.upsert({
+      create: {
+        alegraId: contact.id,
+        commerceId: order.customer?.id,
+        email: contact.email,
+        name: order.customer?.displayName,
+      },
+      update: {
+        alegraId: contact.id,
+      },
       where: { email: order.customer?.email ?? undefined },
     })
 
-    const alegraId = customer?.alegraId
+    contactId = contact.id
 
-    if (alegraId) {
-      await job.log(
-        `Found Alegra ID ${alegraId} for customer ${customer?.name}`,
-      )
-      contactId = alegraId
-    } else {
-      await job.log("Contact does not exist, creating it")
-
-      const contact = await alegra.contacts.create(
-        parseCreateContactRequest({
-          address: {
-            address: order.billingAddress?.address1,
-            city: order.billingAddress?.city,
-          },
-          email: order.customer?.email,
-          name: order.customer?.displayName,
-          phonePrimary: order.billingAddress?.phone,
-          type: "client",
-        }),
-      )
-
-      await db.customer.upsert({
-        create: {
-          alegraId: contact.id,
-          commerceId: order.customer?.id,
-          email: contact.email,
-          name: order.customer?.displayName,
-        },
-        update: {
-          alegraId: contact.id,
-        },
-        where: { email: order.customer?.email ?? undefined },
-      })
-
-      contactId = contact.id
-
-      await job.log("Contact created successfully")
-    }
-
-    // Create the invoice for the customer
-    await CreateInvoiceQueue.add(`Order ${order.name}`, {
-      contactId,
-      orderId: job.data.orderId,
-    })
-  } catch (error) {
-    Sentry.captureException(error)
-
-    logger.error((error as Error).message, {
-      error,
-      jobId: job.id,
-      queue: QUEUE_NAMES.SaveOrderCustomer,
-    })
-
-    throw error
+    await job.log("Contact created successfully")
   }
+
+  // Create the invoice for the customer
+  await CreateInvoiceQueue.add(`Order ${order.name}`, {
+    contactId,
+    orderId: job.data.orderId,
+  })
 }
 
 export default createQueue(QUEUE_NAMES.SaveOrderCustomer, processor)

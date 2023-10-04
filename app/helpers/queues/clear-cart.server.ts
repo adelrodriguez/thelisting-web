@@ -2,9 +2,7 @@ import type { Processor } from "bullmq"
 
 import { QUEUE_NAMES, REDIS_KEYS } from "~/config/consts"
 import redis from "~/helpers/cache.server"
-import logger from "~/helpers/logger.server"
 import { createQueue } from "~/helpers/queue.server"
-import Sentry from "~/services/sentry"
 import { GenericError } from "~/utils/error"
 import { generateKey } from "~/utils/redis"
 import { getShopifyId } from "~/utils/shopify"
@@ -15,46 +13,34 @@ export type QueueData = {
 }
 
 export const processor: Processor<QueueData> = async (job) => {
-  try {
-    const customAttributes = await getOrderCustomAttributes(
-      getShopifyId(job.data.orderId, "Order"),
-    )
+  const customAttributes = await getOrderCustomAttributes(
+    getShopifyId(job.data.orderId, "Order"),
+  )
 
-    const { session_carts_key: cartsKey, listing_id: listingId } =
-      customAttributes
+  const { session_carts_key: cartsKey, listing_id: listingId } =
+    customAttributes
 
-    if (!cartsKey) {
-      throw new GenericError({
-        code: "session_carts_key_missing",
-        customData: { customAttributes },
-        message: "Missing custom attribute 'cartsKey' on order",
-      })
-    }
-
-    if (!listingId) {
-      throw new GenericError({
-        code: "listing_id_missing",
-        customData: { customAttributes },
-        message: "Missing custom attribute 'listingId' on order",
-      })
-    }
-
-    const key = generateKey(REDIS_KEYS.Cart, cartsKey, listingId)
-
-    const response = await redis.del(key)
-
-    await job.log(`Deleted cart ${key} from Redis: ${Boolean(response)}`)
-  } catch (error) {
-    Sentry.captureException(error)
-
-    logger.error((error as Error).message, {
-      error,
-      jobId: job.id,
-      queue: QUEUE_NAMES.ClearCart,
+  if (!cartsKey) {
+    throw new GenericError({
+      code: "session_carts_key_missing",
+      customData: { customAttributes },
+      message: "Missing custom attribute 'cartsKey' on order",
     })
-
-    throw error
   }
+
+  if (!listingId) {
+    throw new GenericError({
+      code: "listing_id_missing",
+      customData: { customAttributes },
+      message: "Missing custom attribute 'listingId' on order",
+    })
+  }
+
+  const key = generateKey(REDIS_KEYS.Cart, cartsKey, listingId)
+
+  const response = await redis.del(key)
+
+  await job.log(`Deleted cart ${key} from Redis: ${Boolean(response)}`)
 }
 
 export default createQueue(QUEUE_NAMES.ClearCart, processor)

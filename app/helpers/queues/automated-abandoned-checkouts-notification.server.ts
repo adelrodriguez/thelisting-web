@@ -26,6 +26,7 @@ export const processor: Processor = async (job) => {
   await job.log(`Found ${abandonedCheckouts.length} abandoned checkouts`)
 
   if (abandonedCheckouts.length === 0) {
+    await job.log("No abandoned checkouts to notify about")
     return
   }
 

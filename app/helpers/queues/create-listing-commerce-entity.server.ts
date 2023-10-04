@@ -1,10 +1,9 @@
 import type { Processor } from "bullmq"
+import invariant from "tiny-invariant"
 
 import { QUEUE_NAMES } from "~/config/consts"
 import db from "~/helpers/db.server"
-import logger from "~/helpers/logger.server"
 import { createQueue } from "~/helpers/queue.server"
-import Sentry from "~/services/sentry"
 import {
   createCollection,
   publishToCurrentChannel,
@@ -15,46 +14,30 @@ export type QueueData = {
 }
 
 export const processor: Processor<QueueData> = async (job) => {
-  try {
-    const listingId = job.data.listingId
+  const listingId = job.data.listingId
 
-    const listing = await db.listing.findUniqueOrThrow({
-      where: { id: listingId },
-    })
+  const listing = await db.listing.findUniqueOrThrow({
+    where: { id: listingId },
+  })
 
-    const collection = await createCollection({
-      sku: listing.sku,
-    })
+  const collection = await createCollection({
+    sku: listing.sku,
+  })
 
-    await job.log(`Created collection ${collection.id}`)
+  await job.log(`Created collection ${collection.id}`)
 
-    await db.listing.update({
-      data: { commerceId: collection.id },
-      where: { id: listingId },
-    })
+  await db.listing.update({
+    data: { commerceId: collection.id },
+    where: { id: listingId },
+  })
 
-    await job.log(
-      `Updated listing ${listingId} with commerceId ${collection.id}`,
-    )
+  await job.log(`Updated listing ${listingId} with commerceId ${collection.id}`)
 
-    const published = await publishToCurrentChannel(collection.id)
+  const published = await publishToCurrentChannel(collection.id)
 
-    await job.log(
-      published
-        ? `Published collection ${collection.id}`
-        : `Failed to publish collection ${collection.id}`,
-    )
-  } catch (error) {
-    Sentry.captureException(error)
+  invariant(published, `Failed to publish collection ${collection.id}`)
 
-    logger.error((error as Error).message, {
-      error,
-      jobId: job.id,
-      queue: QUEUE_NAMES.CreateListingCommerceEntity,
-    })
-
-    throw error
-  }
+  await job.log(`Published collection ${collection.id}`)
 }
 
 export default createQueue(QUEUE_NAMES.CreateListingCommerceEntity, processor)
