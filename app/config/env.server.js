@@ -18,10 +18,12 @@ const schema = z.object({
   AXIOM_ORG_ID: z.string(),
   AXIOM_TOKEN: z.string(),
 
+  BASE_URL: z.string().url(),
+
   BROWSERLESS_TOKEN: z.string(),
   BROWSERLESS_URL: z.string(),
 
-  BULL_BOARD_PASSWORD: z.string().optional(),
+  BULL_BOARD_PASSWORD: z.string(),
   BULL_BOARD_PORT: z.string().optional(),
 
   CLOUDFLARE_ACCOUNT_ID: z.string(),
@@ -67,6 +69,8 @@ const schema = z.object({
   SHOPIFY_STORE: z.string(),
   SHOPIFY_STOREFRONT_ACCESS_TOKEN: z.string(),
   SHOPIFY_STORE_DOMAIN: z.string(),
+
+  SLACK_WEB_TOKEN: z.string(),
 
   TWILIO_ACCOUNT_SID: z.string(),
   TWILIO_AUTH_TOKEN: z.string(),

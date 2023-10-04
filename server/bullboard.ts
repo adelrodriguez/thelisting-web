@@ -2,11 +2,16 @@ import { createBullBoard } from "@bull-board/api"
 import { BullMQAdapter } from "@bull-board/api/bullMQAdapter"
 import { ExpressAdapter } from "@bull-board/express"
 import { Queue } from "bullmq"
+import basicAuth from "express-basic-auth"
 import Redis from "ioredis"
 import EventEmitter from "node:events"
 
 import { QUEUE_NAMES } from "~/config/consts"
-import { RAILWAY_STATIC_URL, REDIS_JOBS_URL } from "~/config/env.server"
+import {
+  RAILWAY_STATIC_URL,
+  REDIS_JOBS_URL,
+  BULL_BOARD_PASSWORD,
+} from "~/config/env.server"
 
 // We are doing this to avoid the following error: (node:57671)
 // MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 41
@@ -42,4 +47,11 @@ createBullBoard({
 
 const router = serverAdapter.getRouter()
 
-export default [path, router]
+export default [
+  path,
+  basicAuth({
+    challenge: true,
+    users: { admin: BULL_BOARD_PASSWORD },
+  }),
+  router,
+]
