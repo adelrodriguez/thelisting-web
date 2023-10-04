@@ -92,6 +92,7 @@ export const QUEUE_NAMES = {
   MarkPurchaseAsPaid: "MARK_PURCHASE_AS_PAID",
   NotifyPurchase: "NOTIFY_PURCHASE",
   SaveOrderCustomer: "SAVE_ORDER_CUSTOMER",
+  SendSlackMessage: "SEND_SLACK_MESSAGE",
   SendWhatsAppTemplateMessage: "SEND_WHATSAPP_TEMPLATE_MESSAGE",
 }
 
