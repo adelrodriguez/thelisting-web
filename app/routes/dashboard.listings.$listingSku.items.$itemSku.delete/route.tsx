@@ -31,7 +31,9 @@ export async function loader({ params, context }: LoaderFunctionArgs) {
 }
 
 export async function action({ context, params }: ActionFunctionArgs) {
-  const { db } = context
+  const db = context.db
+  const logger = context.logger
+
   const { itemSku, listingSku } = zx.parseParams(
     params,
     z.object({ itemSku: z.string(), listingSku: z.coerce.number() }),
@@ -41,11 +43,17 @@ export async function action({ context, params }: ActionFunctionArgs) {
     select: { commerceId: true, sku: true },
     where: { sku: listingSku },
   })
-
-  const item = await db.item.delete({ where: { sku: itemSku } })
+  const item = await db.item.findUniqueOrThrow({ where: { sku: itemSku } })
 
   if (listing.commerceId && item.commerceId) {
-    await removeProductsFromCollection(listing.commerceId, [item.commerceId])
+    try {
+      await removeProductsFromCollection(listing.commerceId, [item.commerceId])
+      await db.item.delete({ where: { sku: itemSku } })
+    } catch (error) {
+      // TODO(adelrodriguez): Flash an error message to the user.
+      logger.error("Failed to remove item from Shopify collection")
+      await db.item.delete({ where: { sku: itemSku } })
+    }
   }
 
   return redirect(
@@ -55,7 +63,7 @@ export async function action({ context, params }: ActionFunctionArgs) {
   )
 }
 
-export default function Example() {
+export default function Page() {
   const { open, close, leave } = useDialogPage()
 
   const cancelButtonRef = useRef(null)

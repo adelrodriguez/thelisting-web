@@ -1,7 +1,11 @@
 import { Menu, Transition } from "@headlessui/react"
-import { EllipsisVerticalIcon } from "@heroicons/react/20/solid"
+import {
+  ArrowTopRightOnSquareIcon,
+  EllipsisVerticalIcon,
+} from "@heroicons/react/20/solid"
+import { ExclamationTriangleIcon } from "@heroicons/react/24/outline"
 import type { Item } from "@prisma/client"
-import type { LoaderFunctionArgs } from "@remix-run/node"
+import type { LoaderFunctionArgs, SerializeFrom } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { Link, useLoaderData } from "@remix-run/react"
 import {
@@ -10,13 +14,16 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table"
+import clsx from "clsx"
 import { Fragment } from "react"
+import { route } from "routes-gen"
 import { z } from "zod"
 import { zx } from "zodix"
 
-import { ViewOnShopify } from "~/components/admin"
 import { Button } from "~/components/common"
 import { useProduct } from "~/utils/hooks"
+import { getShopifyIdNumber } from "~/utils/shopify"
+import { ArrayElement } from "~/utils/type"
 
 export async function loader({ params, context }: LoaderFunctionArgs) {
   const { db } = context
@@ -25,6 +32,13 @@ export async function loader({ params, context }: LoaderFunctionArgs) {
   })
 
   const items = await db.item.findMany({
+    include: {
+      listing: {
+        select: {
+          sku: true,
+        },
+      },
+    },
     orderBy: { sku: "asc" },
     where: { listing: { sku: listingSku } },
   })
@@ -33,7 +47,7 @@ export async function loader({ params, context }: LoaderFunctionArgs) {
 }
 
 const columnHelper =
-  createColumnHelper<Pick<Item, "sku" | "commerceId" | "quantity" | "stock">>()
+  createColumnHelper<ArrayElement<SerializeFrom<typeof loader>["items"]>>()
 
 const columns = [
   columnHelper.accessor("sku", {
@@ -74,14 +88,49 @@ const columns = [
             leaveFrom="transform opacity-100 scale-100"
             leaveTo="transform opacity-0 scale-95"
           >
-            <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white px-1 py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+            <Menu.Items className="absolute right-0 z-10 mt-0.5 w-40 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none">
               {item.commerceId && (
                 <Menu.Item>
-                  <div className="px-2 py-2 ">
-                    <ViewOnShopify gid={item.commerceId} />
-                  </div>
+                  {({ active }) => (
+                    <Link
+                      className={clsx(
+                        active ? "bg-gray-50" : "",
+                        "flex items-center px-3 py-1 text-sm leading-6 text-gray-900",
+                      )}
+                      target="_blank"
+                      to={
+                        item.commerceId
+                          ? `https://admin.shopify.com/store/${
+                              window.env.shopifyStore
+                            }/products/${getShopifyIdNumber(item.commerceId)}`
+                          : "#"
+                      }
+                    >
+                      View on Shopify
+                      <ArrowTopRightOnSquareIcon className="ml-1 inline-block h-4 w-4" />
+                    </Link>
+                  )}
                 </Menu.Item>
               )}
+              <Menu.Item>
+                {({ active }) => (
+                  <Link
+                    className={clsx(
+                      active ? "bg-red-50" : "",
+                      "block px-3 py-1 text-sm leading-6 text-red-500",
+                    )}
+                    to={route(
+                      "/dashboard/listings/:listingSku/items/:itemSku/delete",
+                      {
+                        itemSku: item.sku,
+                        listingSku: `${item.listing.sku}`,
+                      },
+                    )}
+                  >
+                    Delete
+                  </Link>
+                )}
+              </Menu.Item>
             </Menu.Items>
           </Transition>
         </Menu>
@@ -166,7 +215,20 @@ function TitleCell({
 
   if (isLoading) return <div>Loading...</div>
 
-  if (isError) return <div>Error</div>
+  if (isError) {
+    // TODO(adelrodriguez): add route()
+    return (
+      <Link
+        className="text-red-500 decoration-red-700 hover:text-red-700 hover:underline"
+        to={`./${sku}`}
+      >
+        <div className="flex gap-x-2">
+          <ExclamationTriangleIcon className="h-5 w-5" />
+          <span>Error</span>
+        </div>
+      </Link>
+    )
+  }
 
   return (
     <Link
