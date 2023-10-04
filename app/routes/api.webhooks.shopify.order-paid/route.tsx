@@ -76,11 +76,15 @@ export async function action({ request, context }: ActionFunctionArgs) {
           orderId: order.id,
         },
         {
-          attempts: 20,
+          attempts: 5,
           backoff: {
-            delay: ONE_SECOND.inMilliseconds,
+            delay: ONE_SECOND.inMilliseconds * 5, // 5 seconds
             type: "exponential",
           },
+          // Since Shopify sends the order/created and order/paid webhooks at
+          // the same time (or very close to each other), we delay the
+          // processing so we can have time for the purchase to be created.
+          delay: ONE_SECOND.inMilliseconds * 5, // 5 seconds
         },
       ),
     ])
