@@ -247,7 +247,9 @@ export default function DashboardListingPage() {
                             "block px-3 py-1 text-sm leading-6 text-gray-900",
                           )}
                           target="_blank"
-                          to={`/${listing.path}/review`}
+                          to={route("/:listing/review", {
+                            listing: listing.path,
+                          })}
                         >
                           Review
                           <span className="sr-only">, {listing.title}</span>
