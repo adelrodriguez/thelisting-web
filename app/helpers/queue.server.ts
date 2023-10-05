@@ -50,7 +50,7 @@ export function createQueue<Payload>(
   // Handle job failures
   worker.on("failed", async (job, err) => {
     const queueUrl = buildUrl(
-      `dashboard/admin/bullboard/queue/${name}/1?status=failed`,
+      `dashboard/admin/bullboard/queue/${name}?status=failed`,
     )
 
     // Log the error
