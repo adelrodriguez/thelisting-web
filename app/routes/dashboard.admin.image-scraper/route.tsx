@@ -2,7 +2,6 @@ import { DocumentArrowDownIcon } from "@heroicons/react/24/outline"
 import clsx from "clsx"
 import { enqueueSnackbar } from "notistack"
 import { useDropzone } from "react-dropzone"
-import invariant from "tiny-invariant"
 
 import { Button } from "~/components/common"
 import { useCSVParser } from "~/utils/hooks"
@@ -25,10 +24,10 @@ const Headers = ["filename", "url"] as const
 function transformHeader(_: string, index: number): string {
   const header = Headers[index]
 
-  invariant(header, () => {
+  if (!header) {
     enqueueSnackbar(`Column ${index + 1} must be empty`, { variant: "error" })
     return `Column ${index + 1} must be empty`
-  })
+  }
 
   return header
 }
@@ -42,7 +41,10 @@ export default function AdminToolsScrapeImagesPage() {
     accept: { "text/csv": [".csv"] },
     maxFiles: 1,
     onDrop: (files) => {
-      invariant(files[0], "You must provide a file")
+      if (!files[0]) {
+        enqueueSnackbar("You must provide a file", { variant: "error" })
+        return
+      }
 
       parse(files[0])
     },

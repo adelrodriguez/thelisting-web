@@ -7,7 +7,6 @@ import clsx from "clsx"
 import type { FormEvent } from "react"
 import { Fragment, useState, useEffect } from "react"
 import { useDropzone } from "react-dropzone"
-import invariant from "tiny-invariant"
 
 import { Button, Image, Input } from "~/components/common"
 import { Spinner } from "~/components/loading"
@@ -120,7 +119,7 @@ function ImageGallery({
     },
     maxFiles: 1,
     onDrop: (files) => {
-      invariant(files[0], "No file was uploaded")
+      if (!files[0]) throw new Error("No file was uploaded")
 
       onUpload(files[0])
     },
@@ -203,7 +202,8 @@ function ImageGallery({
           <Button
             disabled={!selected}
             onClick={() => {
-              invariant(selected, "No image was selected")
+              if (!selected) return
+
               onSelect(selected)
             }}
           >

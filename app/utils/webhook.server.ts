@@ -1,6 +1,5 @@
 import type { PrismaClient, WebhookService } from "@prisma/client"
 import crypto from "node:crypto"
-import invariant from "tiny-invariant"
 
 import { HOOKDECK_SIGNING_SECRET } from "~/config/env.server"
 
@@ -37,8 +36,13 @@ export async function checkWebhookLog(
   service: WebhookService,
   payload?: unknown,
 ) {
-  invariant(typeof payload === "object", "Payload must be an object")
-  invariant(payload !== null, "Payload must not be null")
+  if (typeof payload !== "object") {
+    throw new Error("Payload must be an object")
+  }
+
+  if (payload === null) {
+    throw new Error("Payload must not be null")
+  }
 
   const webhook = await db.webhook.count({ where: { webhookId } })
 

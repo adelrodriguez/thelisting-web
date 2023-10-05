@@ -1,6 +1,5 @@
 import type { LoaderFunctionArgs } from "@remix-run/node"
 import { redirect } from "@remix-run/node"
-import invariant from "tiny-invariant"
 
 import { CUSTOM_ATTRIBUTES } from "~/config/consts"
 import Sentry from "~/services/sentry"
@@ -14,14 +13,16 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
   const orderId = requestUrl.searchParams.get("order_id")
 
   try {
-    invariant(orderId, "No order id found in request")
+    if (!orderId) throw new Error("No order id found in request")
 
     const customAttributes = await getOrderCustomAttributes(
       getShopifyId(orderId, "Order"),
     )
     const listingId = customAttributes[CUSTOM_ATTRIBUTES.ListingId]
 
-    invariant(listingId, "No listing id found in order custom attributes")
+    if (!listingId) {
+      throw new Error("No listing id found in order custom attributes")
+    }
 
     const listing = await db.listing.findFirstOrThrow({
       select: { path: true },

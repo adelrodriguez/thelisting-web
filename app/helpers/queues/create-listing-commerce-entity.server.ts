@@ -1,5 +1,4 @@
 import type { Processor } from "bullmq"
-import invariant from "tiny-invariant"
 
 import { QUEUE_NAMES } from "~/config/consts"
 import db from "~/helpers/db.server"
@@ -35,7 +34,9 @@ export const processor: Processor<QueueData> = async (job) => {
 
   const published = await publishToCurrentChannel(collection.id)
 
-  invariant(published, `Failed to publish collection ${collection.id}`)
+  if (!published) {
+    throw new Error(`Failed to publish collection ${collection.id}`)
+  }
 
   await job.log(`Published collection ${collection.id}`)
 }

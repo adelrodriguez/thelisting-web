@@ -1,6 +1,5 @@
 import { flattenConnection } from "@shopify/hydrogen-react"
 import type { Processor } from "bullmq"
-import invariant from "tiny-invariant"
 
 import { QUEUE_NAMES } from "~/config/consts"
 import { SHOPIFY_SHIPPING_ITEM_1_ID } from "~/config/env.server"
@@ -21,7 +20,9 @@ export const processor: Processor<QueueData> = async (job) => {
     order.customAttributes,
   )
 
-  invariant(listingId, "Missing custom attribute 'listingId' on order")
+  if (!listingId) {
+    throw new Error("Missing custom attribute 'listingId' on order")
+  }
 
   const existingPurchase = await db.purchase.findFirst({
     where: { commerceId: order.id },
@@ -50,7 +51,9 @@ export const processor: Processor<QueueData> = async (job) => {
       ),
     }))
 
-  invariant(order.customer?.email, "Missing customer email on order")
+  if (!order.customer?.email) {
+    throw new Error("Missing customer email on order")
+  }
 
   const customer = await db.customer.upsert({
     create: {

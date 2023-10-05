@@ -1,4 +1,3 @@
-import invariant from "tiny-invariant"
 import { assign, send } from "xstate/lib/actions"
 import { createModel } from "xstate/lib/model"
 
@@ -84,7 +83,9 @@ const scraperMachine = scraperModel.createMachine(
           },
           src: async (context) => {
             const [url] = context.pending
-            invariant(url, "URL is required")
+            if (!url) {
+              throw new Error("URL is required")
+            }
 
             const data = await scrapeProduct(url, {
               signal: context.controller?.signal,

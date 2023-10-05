@@ -4,7 +4,6 @@ import clsx from "clsx"
 import { enqueueSnackbar, useSnackbar } from "notistack"
 import { useEffect, useState } from "react"
 import { useDropzone } from "react-dropzone"
-import invariant from "tiny-invariant"
 
 import { useCSVParser } from "~/utils/hooks"
 import type { ScrapeProductsTableRow } from "~/utils/scraper"
@@ -32,15 +31,17 @@ export const Headers = [
 function transformHeader(_: string, index: number): string {
   const header = Headers[index]
 
-  invariant(header, () => {
+  if (!header) {
     enqueueSnackbar(`Column ${index + 1} must be empty`, { variant: "error" })
     return `Column ${index + 1} must be empty`
-  })
+  }
 
   return header
 }
 
 export default function AdminToolsProductScraperPage() {
+  const { enqueueSnackbar } = useSnackbar()
+
   const { parse, result } = useCSVParser<ScrapeProductsTableRow>({
     header: true,
     transformHeader,
@@ -51,12 +52,14 @@ export default function AdminToolsProductScraperPage() {
     accept: { "text/csv": [".csv"] },
     maxFiles: 1,
     onDrop: (files) => {
-      invariant(files[0], "You must provide a file")
+      if (!files[0]) {
+        enqueueSnackbar("You must provide a file", { variant: "error" })
+        return
+      }
 
       parse(files[0])
     },
   })
-  const { enqueueSnackbar } = useSnackbar()
 
   // TODO(adelrodriguez): Check the data returned from the parser and show
   // errors if we find duplicated ids or urls

@@ -1,5 +1,4 @@
 import currency from "currency.js"
-import invariant from "tiny-invariant"
 import { z } from "zod"
 
 import type { Currency } from "~/config/consts"
@@ -53,23 +52,31 @@ export function parseScrapedProductResult(data: unknown) {
 }
 
 export function cleanAmount(amount?: string | null): number {
-  invariant(amount, "There was no specified amount for this property")
+  if (!amount) {
+    throw new Error("There was no specified amount for this property")
+  }
 
   const value = currency(amount).value
 
-  invariant(!isNaN(value), `The amount "${amount}" is not a valid number`)
+  if (isNaN(value)) {
+    throw new Error(`The amount "${amount}" is not a valid number`)
+  }
 
   return value
 }
 
 export function cleanText(text?: string | null): string {
-  invariant(text, "There was no specified text for this property")
+  if (!text) {
+    throw new Error("There was no specified text for this property")
+  }
 
   return text.trim().replaceAll("\n", " ")
 }
 
 export function cleanCurrency(currency?: string | null): Currency {
-  invariant(currency, "There was no specified currency for this property")
+  if (!currency) {
+    throw new Error("There was no specified currency for this property")
+  }
 
   return currency.trim().toUpperCase() as Currency
 }

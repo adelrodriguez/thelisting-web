@@ -3,7 +3,6 @@ import { json, redirect } from "@remix-run/node"
 import { Link, useLoaderData } from "@remix-run/react"
 import { ReasonPhrases, StatusCodes } from "http-status-codes"
 import { useTranslation } from "react-i18next"
-import invariant from "tiny-invariant"
 import { z } from "zod"
 import { zx } from "zodix"
 
@@ -29,7 +28,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
   try {
     const { listing: path } = zx.parseParams(params, { listing: z.string() })
 
-    invariant(orderId, "No order id found in request")
+    if (!orderId) throw new Error("No order id found in request")
 
     const order = await getOrder(getShopifyId(orderId, "Order"))
 

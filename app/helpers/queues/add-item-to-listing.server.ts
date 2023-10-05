@@ -1,7 +1,6 @@
 import type { Listing } from "@prisma/client"
 import type { Processor } from "bullmq"
 import crypto from "node:crypto"
-import invariant from "tiny-invariant"
 
 import { QUEUE_NAMES } from "~/config/consts"
 import db from "~/helpers/db.server"
@@ -34,10 +33,9 @@ export const processor: Processor<QueueData> = async (job) => {
     where: { id: listingId },
   })
 
-  invariant(
-    listing.commerceId,
-    `Listing ${listingId} doesn't have a commerceId`,
-  )
+  if (!listing.commerceId) {
+    throw new Error(`Listing ${listingId} doesn't have a commerceId`)
+  }
 
   const scrapedProduct = await db.scrapedProduct.findUniqueOrThrow({
     where: { id: scrapedProductId },
@@ -49,7 +47,9 @@ export const processor: Processor<QueueData> = async (job) => {
     where: { sku },
   })
 
-  invariant(!existingItem, `Item ${sku} already exists`)
+  if (existingItem) {
+    throw new Error(`Item ${sku} already exists`)
+  }
 
   // Create hashed tag
   const tag = crypto
@@ -112,7 +112,10 @@ export const processor: Processor<QueueData> = async (job) => {
     // Since product already exists, let's reuse it
     const [shopifyProduct] = shopifyProducts
 
-    invariant(shopifyProduct, "Shopify product does not exist")
+    if (!shopifyProduct) {
+      throw new Error("Shopify product does not exist")
+    }
+
     commerceId = shopifyProduct.id
 
     await job.log(`Found product ${commerceId}`)

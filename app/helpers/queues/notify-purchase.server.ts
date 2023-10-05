@@ -1,7 +1,6 @@
 import { flattenConnection } from "@shopify/hydrogen-react"
 import type { Processor } from "bullmq"
 import currency from "currency.js"
-import invariant from "tiny-invariant"
 
 import { QUEUE_NAMES } from "~/config/consts"
 import { SHOPIFY_SHIPPING_ITEM_1_ID } from "~/config/env.server"
@@ -29,14 +28,18 @@ export const processor: Processor<QueueData> = async (job) => {
     order.customAttributes,
   )
 
-  invariant(listingId, "'listingId' is missing")
+  if (!listingId) {
+    throw new Error("Missing custom attribute 'listingId' on order")
+  }
 
   const listing = await db.listing.findUniqueOrThrow({
     include: { owner: true },
     where: { id: listingId },
   })
 
-  invariant(listing.owner.phone, "Owner phone is missing")
+  if (!listing.owner.phone) {
+    throw new Error("Missing owner phone on listing")
+  }
 
   await job.log(
     `Sending purchase notification to ${listing.owner.firstName} ${listing.owner.lastName} at ${listing.owner.phone}`,
