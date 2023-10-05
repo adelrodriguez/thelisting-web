@@ -10,14 +10,21 @@ export type QueueData = {
     | "alerts-jobs"
     | "notifications-abandoned-checkouts"
     | "notifications-orders"
+  /**
+   * Always requires text since it's used as a fallback in places where blocks
+   * can't be rendered.
+   */
+  text: string
 } & ChatPostMessageArguments
 
 export const processor: Processor<QueueData> = async (job) => {
   const channel = job.data.channel
+  const text = job.data.text
 
   await slack.chat.postMessage({
     ...job.data,
     channel,
+    text,
   })
 }
 

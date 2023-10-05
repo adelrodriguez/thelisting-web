@@ -77,6 +77,7 @@ export function createQueue<Payload>(
         },
       ],
       channel: "alerts-jobs",
+      text: `Job ${job?.name} failed on queue ${name}: ${queueUrl}`,
     })
 
     // Capture the error in Sentry
