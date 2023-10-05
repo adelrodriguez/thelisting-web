@@ -70,7 +70,6 @@ export async function action({ request, context }: ActionFunctionArgs) {
         scrapedProductId,
       },
       name: `${listing.sku}-${rowId}`,
-      opts: { attempts: 7, backoff: { delay: 1000, type: "exponential" } },
     })),
   )
 
