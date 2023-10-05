@@ -62,7 +62,7 @@ export function createQueue<Payload>(
         {
           text: {
             text: `${
-              !isProduction ? ":rotating_light:" : "(Development)"
+              isProduction ? ":rotating_light:" : "(Development)"
             } Job *${job?.name}* failed on queue *${name}*: ${queueUrl}`,
             type: "mrkdwn",
           },
