@@ -1,7 +1,6 @@
 import { createRequestHandler } from "@remix-run/express"
 import type { ServerBuild } from "@remix-run/node"
 import { broadcastDevReady, installGlobals } from "@remix-run/node"
-import chokidar from "chokidar"
 import compression from "compression"
 import express, {
   type NextFunction,
@@ -31,6 +30,7 @@ void run()
 
 async function run() {
   const BUILD_PATH = path.resolve("build/index.js")
+  const VERSION_PATH = path.resolve("build/version.txt")
   const initialBuild = await reimportServer()
 
   const app = express()
@@ -49,8 +49,8 @@ async function run() {
     express.static("public/build", { immutable: true, maxAge: "1y" }),
   )
 
-  // Everything else (like favicon.ico) is cached for an hour. You may want to be
-  // more aggressive with this caching.
+  // Everything else (like favicon.ico) is cached for an hour. You may want to
+  // be more aggressive with this caching.
   app.use(express.static("public", { maxAge: "1h" }))
 
   app.use(
@@ -61,16 +61,17 @@ async function run() {
     }),
   )
 
-  app.all(
-    "*",
-    process.env.NODE_ENV === "development"
-      ? createDevRequestHandler(initialBuild)
+  app.all("*", async (...args) => {
+    const handler = isDevelopment
+      ? await createDevRequestHandler(initialBuild)
       : createRequestHandler({
           build: initialBuild,
           getLoadContext: () => ({ cache, db, env, logger }),
           mode: process.env.NODE_ENV,
-        }),
-  )
+        })
+
+    return handler(...args)
+  })
 
   const port = process.env.PORT || 3000
 
@@ -104,8 +105,9 @@ async function run() {
     return import(BUILD_URL + "?t=" + stat.mtimeMs)
   }
 
-  function createDevRequestHandler(initialBuild: ServerBuild) {
+  async function createDevRequestHandler(initialBuild: ServerBuild) {
     let build = initialBuild
+
     async function handleServerUpdate() {
       // 1. re-import the server build
       build = await reimportServer()
@@ -113,12 +115,14 @@ async function run() {
       void broadcastDevReady(build)
     }
 
+    const chokidar = await import("chokidar")
+
     chokidar
-      .watch(BUILD_PATH, { ignoreInitial: true })
+      .watch(VERSION_PATH, { ignoreInitial: true })
       .on("add", handleServerUpdate)
       .on("change", handleServerUpdate)
 
-    // wrap request handler to make sure its recreated with the latest build for
+    // Wrap request handler to make sure its recreated with the latest build for
     // every request
     return async (req: Request, res: Response, next: NextFunction) => {
       try {

@@ -1,25 +1,13 @@
 import { PrismaClient } from "@prisma/client"
 
-import { isProduction } from "~/config/vars"
+import { singleton } from "~/utils/singleton.server"
 
-let db: PrismaClient
+const prisma = singleton("prisma", () => {
+  const client = new PrismaClient()
 
-declare global {
-  // eslint-disable-next-line no-var
-  var __db: PrismaClient | undefined
-}
+  void client.$connect()
 
-// This are precautions put into place above that prevent live-reloads from
-// saturating the database with connections while developing.
-if (isProduction) {
-  db = new PrismaClient()
-  void db.$connect()
-} else {
-  if (!global.__db) {
-    global.__db = new PrismaClient()
-    void global.__db.$connect()
-  }
-  db = global.__db
-}
+  return client
+})
 
-export default db
+export default prisma
