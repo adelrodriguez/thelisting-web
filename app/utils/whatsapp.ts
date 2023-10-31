@@ -8,9 +8,25 @@ import {
 } from "~/services/whatsapp/types"
 
 export type TemplateToComponentsMap = {
-  [WHATSAPP_MESSAGE_TEMPLATES.ListingGiftPurchase]: GiftPurchaseNotificationComponents
   [WHATSAPP_MESSAGE_TEMPLATES.BabyShowerGuestNotification]: BabyShowerGuestNotificationComponents
+  [WHATSAPP_MESSAGE_TEMPLATES.BabyShowerInvitationV1]: BabyShowerInvitationV1Components
+  [WHATSAPP_MESSAGE_TEMPLATES.ListingGiftPurchase]: GiftPurchaseNotificationComponents
   [WHATSAPP_MESSAGE_TEMPLATES.WeddingGuestNotification]: WeddingGuestNotificationComponents
+}
+
+export type TemplateToParametersMap = {
+  [WHATSAPP_MESSAGE_TEMPLATES.BabyShowerGuestNotification]: Parameters<
+    typeof generateBabyShowerGuestNotificationComponents
+  >[0]
+  [WHATSAPP_MESSAGE_TEMPLATES.BabyShowerInvitationV1]: Parameters<
+    typeof generateBabyShowerInvitationV1Components
+  >[0]
+  [WHATSAPP_MESSAGE_TEMPLATES.ListingGiftPurchase]: Parameters<
+    typeof generateGiftPurchaseNotificationComponents
+  >[0]
+  [WHATSAPP_MESSAGE_TEMPLATES.WeddingGuestNotification]: Parameters<
+    typeof generateWeddingGuestNotificationComponents
+  >[0]
 }
 
 type GiftPurchaseNotificationComponents = [
@@ -166,6 +182,82 @@ export function generateWeddingGuestNotificationComponents({
       parameters: [
         {
           text: path,
+          type: "text",
+        },
+      ],
+      sub_type: "url",
+      type: "button",
+    },
+  ]
+}
+
+export type BabyShowerInvitationV1Components = [
+  HeaderComponent<[ImageParameter]>,
+  BodyComponent<
+    [TextParameter, TextParameter, TextParameter, TextParameter, TextParameter]
+  >,
+  ButtonComponent,
+]
+
+export function generateBabyShowerInvitationV1Components({
+  babyName,
+  date,
+  imageUrl,
+  message,
+  place,
+  recipient,
+  url,
+}: {
+  babyName: string
+  date: string
+  imageUrl: string
+  message: string
+  place: string
+  recipient: string
+  url: string
+}): BabyShowerInvitationV1Components {
+  return [
+    {
+      parameters: [
+        {
+          image: {
+            link: imageUrl,
+          },
+          type: "image",
+        },
+      ],
+      type: "header",
+    },
+    {
+      parameters: [
+        {
+          text: recipient,
+          type: "text",
+        },
+        {
+          text: babyName,
+          type: "text",
+        },
+        {
+          text: date,
+          type: "text",
+        },
+        {
+          text: place,
+          type: "text",
+        },
+        {
+          text: message,
+          type: "text",
+        },
+      ],
+      type: "body",
+    },
+    {
+      index: 0,
+      parameters: [
+        {
+          text: url,
           type: "text",
         },
       ],

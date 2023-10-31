@@ -1,66 +1,60 @@
 import type { ActionFunctionArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
-import { useActionData } from "@remix-run/react"
-import { withZod } from "@remix-validated-form/with-zod"
-import { StatusCodes } from "http-status-codes"
+import { useActionData, useSearchParams } from "@remix-run/react"
 import { useSnackbar } from "notistack"
 import { useEffect } from "react"
-import { ValidatedForm } from "remix-validated-form"
+import { route } from "routes-gen"
 import { z } from "zod"
+import { zx } from "zodix"
 
-import {
-  ImageInput,
-  Input,
-  InputWithAddOn,
-  Select,
-  SubmitButton,
-  TextArea,
-} from "~/components/form"
+import { CardRadioGroup } from "~/components/common"
 import { SendWhatsAppTemplateMessageQueue } from "~/helpers/queues"
 import { WHATSAPP_MESSAGE_TEMPLATES } from "~/services/whatsapp/types"
 import { generateCloudflareImageUrl } from "~/utils/cloudflare"
+import { RouteHandle, unprocessableEntity } from "~/utils/remix"
 
-export const handle = {
+import BabyShowerNotificationForm, {
+  validator as babyShowerNotificationValidator,
+} from "./BabyShowerNotificationForm"
+import WeddingGuestNotificationForm, {
+  validator as WeddingGuestNotificationValidator,
+} from "./WeddingGuestNotificationForm"
+
+export const handle: RouteHandle = {
   crumb: () => ({
-    href: "/dashboard/admin/whatsapp-broadcast",
+    href: route("/dashboard/admin/whatsapp-broadcast"),
     name: "WhatsApp Broadcast",
   }),
+  id: "dashboard-admin-whatsapp-broadcast",
 }
 
-const validator = withZod(
-  z.object({
-    customer: z.string().min(1),
-    image: z.string().uuid("You must provide an image"),
-    path: z.string().min(1),
-    phoneNumbers: z
-      .string()
-      .min(1, { message: "You must provide at least one phone number" })
-      .transform((value) => value.split(",")),
-    template: z.enum(
-      [
-        WHATSAPP_MESSAGE_TEMPLATES.BabyShowerGuestNotification,
-        WHATSAPP_MESSAGE_TEMPLATES.WeddingGuestNotification,
-      ],
-      {
-        errorMap: () => ({ message: "Please select a template" }),
-      },
-    ),
-  }),
-)
-
 export async function action({ request }: ActionFunctionArgs) {
-  const formData = await request.formData()
-  const result = await validator.validate(formData)
+  const queryResult = zx.parseQuerySafe(request, {
+    template: z.enum([
+      WHATSAPP_MESSAGE_TEMPLATES.BabyShowerGuestNotification,
+      WHATSAPP_MESSAGE_TEMPLATES.WeddingGuestNotification,
+    ]),
+  })
 
-  if (result.error) {
-    return json({ ...result.error, response: null, success: false } as const, {
-      status: StatusCodes.UNPROCESSABLE_ENTITY,
-    })
+  if (!queryResult.success) {
+    return json({ error: queryResult.error, success: false } as const)
   }
 
-  switch (result.data.template) {
-    case WHATSAPP_MESSAGE_TEMPLATES.BabyShowerGuestNotification:
-    case WHATSAPP_MESSAGE_TEMPLATES.WeddingGuestNotification:
+  const { template } = queryResult.data
+  const formData = await request.formData()
+
+  switch (template) {
+    case WHATSAPP_MESSAGE_TEMPLATES.BabyShowerGuestNotification: {
+      const result = await babyShowerNotificationValidator.validate(formData)
+
+      if (result.error) {
+        return unprocessableEntity({
+          ...result.error,
+          response: null,
+          success: false,
+        } as const)
+      }
+
       await SendWhatsAppTemplateMessageQueue.addBulk(
         result.data.phoneNumbers.map((phoneNumber) => ({
           data: {
@@ -70,24 +64,63 @@ export async function action({ request }: ActionFunctionArgs) {
               path: result.data.path,
               recipient: result.data.customer,
             },
-            template: result.data.template,
+            template,
             to: phoneNumber,
           },
           name: phoneNumber,
         })),
       )
-      break
-    default:
-      throw new Error("Invalid template")
-  }
 
-  return json({
-    amount: result.data.phoneNumbers.length,
-    success: true,
-  } as const)
+      return json({
+        amount: result.data.phoneNumbers.length,
+        success: true,
+      } as const)
+    }
+
+    case WHATSAPP_MESSAGE_TEMPLATES.WeddingGuestNotification: {
+      const result = await WeddingGuestNotificationValidator.validate(formData)
+
+      if (result.error) {
+        return unprocessableEntity({
+          ...result.error,
+          response: null,
+          success: false,
+        } as const)
+      }
+
+      await SendWhatsAppTemplateMessageQueue.addBulk(
+        result.data.phoneNumbers.map((phoneNumber) => ({
+          data: {
+            locale: "ES",
+            payload: {
+              imageUrl: generateCloudflareImageUrl(result.data.image, "public"),
+              path: result.data.path,
+              recipient: result.data.customer,
+            },
+            template,
+            to: phoneNumber,
+          },
+          name: phoneNumber,
+        })),
+      )
+
+      return json({
+        amount: result.data.phoneNumbers.length,
+        success: true,
+      } as const)
+    }
+
+    default:
+      return unprocessableEntity({
+        error: "Invalid template",
+        success: false,
+      } as const)
+  }
 }
 
 export default function WhatsAppBroadcastPage() {
+  const [searchParams, setSearchParams] = useSearchParams()
+  const template = searchParams.get("template")
   const actionData = useActionData<typeof action>()
   const { enqueueSnackbar } = useSnackbar()
 
@@ -120,55 +153,41 @@ export default function WhatsAppBroadcastPage() {
           Send a pre-defined template message to multiple phone numbers.
         </p>
       </div>
-      <ValidatedForm
-        className="m-auto mt-8 flex flex-col gap-y-6 sm:w-[500px]"
-        id="whatsapp-broadcast"
-        method="POST"
-        validator={validator}
-      >
-        <Select
+      <div className="m-auto mt-8 flex flex-col gap-y-6 sm:max-w-3xl">
+        <CardRadioGroup
           label="Template"
-          name="template"
+          onChange={(value) =>
+            setSearchParams((params) => {
+              params.set("template", value)
+
+              return params
+            })
+          }
           options={[
             {
-              label: "Select a template",
-              value: undefined,
-            },
-            {
-              label: "Wedding Guest Notification",
+              description: "Notify guests of a wedding event",
+              title: "Wedding Guest Notification",
               value: WHATSAPP_MESSAGE_TEMPLATES.WeddingGuestNotification,
             },
             {
-              label: "Baby Shower Guest Notification",
+              description: "Notify guests of a baby shower event",
+              title: "Baby Shower Guest Notification",
               value: WHATSAPP_MESSAGE_TEMPLATES.BabyShowerGuestNotification,
             },
           ]}
-          placeholder="Select a template"
-          required
+          value={template}
         />
-        <InputWithAddOn
-          addOn="https://thelisting.do/"
-          label="Path"
-          name="path"
-        />
-        <Input
-          description="The name of the customer(s) (e.g. José y María)"
-          label="Customer"
-          name="customer"
-        />
-        <ImageInput
-          description="The image to attach to the message"
-          label="Message Image"
-          name="image"
-        />
-        <TextArea
-          description="Comma-separated list of phone numbers with country codes (e.g. 18091234567,18097654321)"
-          label="Phone Numbers"
-          name="phoneNumbers"
-          rows={4}
-        />
-        <SubmitButton loadingText="Sending...">Send</SubmitButton>
-      </ValidatedForm>
+      </div>
+
+      <div className="m-auto mt-8 flex flex-col gap-y-6 sm:max-w-2xl">
+        {template === WHATSAPP_MESSAGE_TEMPLATES.WeddingGuestNotification && (
+          <WeddingGuestNotificationForm />
+        )}
+        {template ===
+          WHATSAPP_MESSAGE_TEMPLATES.BabyShowerGuestNotification && (
+          <BabyShowerNotificationForm />
+        )}
+      </div>
     </div>
   )
 }
