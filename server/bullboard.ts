@@ -12,6 +12,7 @@ import {
   REDIS_JOBS_URL,
   BULL_BOARD_PASSWORD,
 } from "~/config/env.server"
+import { isProduction } from "~/config/vars"
 
 // We are doing this to avoid the following error: (node:57671)
 // MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 41
@@ -51,7 +52,7 @@ export default [
   path,
   basicAuth({
     challenge: true,
-    users: { admin: BULL_BOARD_PASSWORD },
+    users: { admin: isProduction ? BULL_BOARD_PASSWORD : "" },
   }),
   router,
 ]

@@ -2,6 +2,7 @@ import { createRequestHandler } from "@remix-run/express"
 import type { ServerBuild } from "@remix-run/node"
 import { broadcastDevReady, installGlobals } from "@remix-run/node"
 import compression from "compression"
+import type { RequestHandler } from "express"
 import express, {
   type NextFunction,
   type Request,
@@ -25,7 +26,6 @@ import cron from "./cron"
 
 sourceMapSupport.install()
 installGlobals()
-
 void run()
 
 async function run() {
@@ -66,8 +66,7 @@ async function run() {
       ? await createDevRequestHandler(initialBuild)
       : createRequestHandler({
           build: initialBuild,
-          getLoadContext: () => ({ cache, db, env, logger }),
-          mode: process.env.NODE_ENV,
+          mode: initialBuild.mode,
         })
 
     return handler(...args)
@@ -78,14 +77,14 @@ async function run() {
   app.listen(port, () => {
     logger.info("⚡️ Ready: http://localhost:" + port)
 
+    // Start cron jobs
+    logger.info("⏲️ Starting cron jobs")
+    void cron()
+
     if (isDevelopment) {
-      logger.info(`Local network IP: http://${getLocalNetworkIP()}:${port}}`)
+      logger.info(`🔌 Local network IP: http://${getLocalNetworkIP()}:${port}}`)
       void broadcastDevReady(initialBuild)
     }
-
-    // Start cron jobs
-    logger.info("Starting cron jobs")
-    void cron()
   })
 
   async function reimportServer(): Promise<ServerBuild> {
@@ -105,7 +104,9 @@ async function run() {
     return import(BUILD_URL + "?t=" + stat.mtimeMs)
   }
 
-  async function createDevRequestHandler(initialBuild: ServerBuild) {
+  async function createDevRequestHandler(
+    initialBuild: ServerBuild,
+  ): Promise<RequestHandler> {
     let build = initialBuild
 
     async function handleServerUpdate() {
