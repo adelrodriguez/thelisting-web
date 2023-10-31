@@ -22,5 +22,4 @@ module.exports = {
   serverNodeBuiltinsPolyfill: {
     modules: {},
   },
-  tailwind: true,
 }
