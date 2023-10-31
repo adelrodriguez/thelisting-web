@@ -66,6 +66,7 @@ async function run() {
       ? await createDevRequestHandler(initialBuild)
       : createRequestHandler({
           build: initialBuild,
+          getLoadContext: () => ({ cache, db, env, logger }),
           mode: initialBuild.mode,
         })
 
