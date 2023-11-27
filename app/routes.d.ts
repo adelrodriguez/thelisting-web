@@ -10,7 +10,7 @@ declare module "routes-gen" {
     "/:listing/review": { "listing": string };
     "/:listing/thank-you": { "listing": string };
     "/about": Record<string, never>;
-    "/api/admin/listings/:listing/report.csv": { "listing": string };
+    "/api/admin/listings/:listingId/report.csv": { "listingId": string };
     "/api/cart": Record<string, never>;
     "/api/exchange-rates/:code": { "code": string };
     "/api/image": Record<string, never>;
@@ -68,7 +68,7 @@ declare module "routes-gen" {
       | ["/:listing/review", RouteParams["/:listing/review"]]
       | ["/:listing/thank-you", RouteParams["/:listing/thank-you"]]
       | ["/about"]
-      | ["/api/admin/listings/:listing/report.csv", RouteParams["/api/admin/listings/:listing/report.csv"]]
+      | ["/api/admin/listings/:listingId/report.csv", RouteParams["/api/admin/listings/:listingId/report.csv"]]
       | ["/api/cart"]
       | ["/api/exchange-rates/:code", RouteParams["/api/exchange-rates/:code"]]
       | ["/api/image"]

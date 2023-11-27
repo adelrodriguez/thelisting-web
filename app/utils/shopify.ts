@@ -5,6 +5,7 @@ import type { CustomAttribute } from "~/config/consts"
 import { CUSTOM_ATTRIBUTES } from "~/config/consts"
 import { badRequest } from "~/utils/remix"
 import { undefinedToNull } from "~/utils/undefined"
+import { isWindowDefined } from "~/utils/window"
 
 export const OrderPaymentWebhookPayloadSchema = z.object({
   id: z.number(),
@@ -68,6 +69,10 @@ export function getShopifyIdNumber(id: string): string {
   return parseGid(id).id
 }
 
+export function getShopifyIdResource(id: string): string | null {
+  return parseGid(id).resource
+}
+
 export function transformCustomAttributes(
   customAttributes: Array<{ key: string; value?: string | null }>,
 ): Record<CustomAttribute, string | null> {
@@ -83,4 +88,10 @@ export function transformCustomAttributes(
     },
     {} as Record<CustomAttribute, string>,
   )
+}
+
+export function generateShopifyAdminUrl(path: string): string {
+  if (!isWindowDefined()) return "#"
+
+  return `https://admin.shopify.com/store/${window.env.shopifyStore}/${path}`
 }
