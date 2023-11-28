@@ -10,7 +10,7 @@ import { getProduct } from "~/utils/shopify.server"
 
 export async function loader({ params, context }: LoaderFunctionArgs) {
   const db = context.db
-  const { listing: listingId } = zx.parseParams(params, { listing: z.string() })
+  const { listingId } = zx.parseParams(params, { listingId: z.string() })
 
   const items = await db.item.findMany({
     include: { itemPurchases: true },
