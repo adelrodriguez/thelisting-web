@@ -50,6 +50,7 @@ module.exports = {
     "react/jsx-sort-props": "error",
     "react/react-in-jsx-scope": "off",
     "sort-keys/sort-keys-fix": "warn",
+    "sort-vars": "warn",
     "spaced-comment": [
       "error",
       "always",
