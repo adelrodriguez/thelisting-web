@@ -126,7 +126,7 @@
     "zodix": "0.4.2"
   },
   "devDependencies": {
-    "@anatine/zod-mock": "3.13.2",
+    "@anatine/zod-mock": "3.13.3",
     "@bull-board/api": "5.8.4",
     "@bull-board/express": "5.8.4",
     "@faker-js/faker": "8.0.2",
