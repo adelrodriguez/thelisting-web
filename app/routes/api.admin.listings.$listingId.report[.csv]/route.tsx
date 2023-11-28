@@ -30,11 +30,7 @@ export async function loader({ params, context }: LoaderFunctionArgs) {
         if (!item.commerceId) return null
 
         const product = await getProduct(item.commerceId)
-        const price = Number(
-          flattenConnection(product?.metafields).find(
-            (field) => field.key === PRODUCT_METAFIELDS.OriginalPrice,
-          )?.value,
-        )
+        const price = Number(flattenConnection(product?.variants)[0]?.price)
         const url = flattenConnection(product?.metafields).find(
           (field) => field.key === PRODUCT_METAFIELDS.OriginalUrl,
         )?.value
@@ -43,7 +39,7 @@ export async function loader({ params, context }: LoaderFunctionArgs) {
           name: product?.title,
           numberPurchased,
           price: round(isNaN(price) ? 0 : price),
-          total: round(numberPurchased * (Number(price) || 0)),
+          total: round(numberPurchased * (isNaN(price) ? 0 : price)),
           url,
           vendor: product?.vendor,
         }

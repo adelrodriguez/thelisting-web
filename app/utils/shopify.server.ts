@@ -24,6 +24,7 @@ import {
   getOrderQuery,
   createProductMediaMutation,
   MediaContentType,
+  getCollectionQuery,
 } from "~/services/shopify/admin"
 import { createCheckoutMutation } from "~/services/shopify/storefront"
 import type { CartItem } from "~/utils/cart"
@@ -399,4 +400,21 @@ export async function addTags(id: string, tags: string[]) {
   }
 
   return true
+}
+
+export async function getCollection(id: string) {
+  const { collection } = await request(
+    shopifyAdminAPIEndpoint,
+    getCollectionQuery,
+    {
+      id,
+    },
+    shopifyAdminAPIHeaders,
+  )
+
+  if (!collection) {
+    throw new ShopifyError("Unable to get collection", "collection_get_error")
+  }
+
+  return collection
 }

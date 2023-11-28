@@ -95,6 +95,11 @@ export const getProductQuery = graphql(`
     product(id: $id) {
       title
       vendor
+      variants(first: 1) {
+        nodes {
+          price
+        }
+      }
       metafields(first: 10) {
         nodes {
           key
@@ -103,6 +108,15 @@ export const getProductQuery = graphql(`
           type
         }
       }
+    }
+  }
+`)
+
+export const getCollectionQuery = graphql(`
+  query getCollection($id: ID!) {
+    collection(id: $id) {
+      id
+      title
     }
   }
 `)

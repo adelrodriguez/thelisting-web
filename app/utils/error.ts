@@ -126,14 +126,15 @@ export type PurchaseErrorCode =
 export type GenericErrorCode = "unknown_error" | "no_code_provided"
 
 export type ShopifyErrorCode =
+  | "add_products_to_collection_error"
   | "checkout_create_error"
   | "collection_create_error"
+  | "collection_get_error"
   | "order_get_error"
-  | "product_get_error"
   | "product_create_error"
+  | "product_get_error"
   | "product_media_create_error"
   | "product_publish_error"
-  | "add_products_to_collection_error"
   | "remove_products_from_collection_error"
   | "tags_add_error"
 
