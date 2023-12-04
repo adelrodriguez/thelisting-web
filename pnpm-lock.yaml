@@ -69,8 +69,8 @@ dependencies:
     specifier: 2.0.6
     version: 2.0.6(remix-validated-form@5.0.2)(zod@3.21.4)
   '@routes-gen/remix':
-    specifier: 0.3.6
-    version: 0.3.6(@remix-run/dev@2.3.1)
+    specifier: 0.3.7
+    version: 0.3.7(@remix-run/dev@2.3.1)
   '@sendgrid/mail':
     specifier: ^7.7.0
     version: 7.7.0
@@ -3646,10 +3646,10 @@ packages:
     requiresBuild: true
     optional: true
 
-  /@routes-gen/remix@0.3.6(@remix-run/dev@2.3.1):
-    resolution: {integrity: sha512-JDWOLJP5H8YrEs5+driMJtOKjvya6xDSBuSrh7W5oEZddOX3pf98VXO0lQ3mg06A0L+DvvGX2rMA5HwFL/Vz+g==}
+  /@routes-gen/remix@0.3.7(@remix-run/dev@2.3.1):
+    resolution: {integrity: sha512-3sDFer1qOVcJ4CHx4kk1m3767sM79ptM7f35nccCscecwkHf1U8KNvH1GO60ChgGo/23ASDOZzNqVDOoT8kn8w==}
     peerDependencies:
-      '@remix-run/dev': ^1.0.3
+      '@remix-run/dev': ^1.0.3 || ^2.0.0
     dependencies:
       '@remix-run/dev': 2.3.1(@remix-run/serve@2.3.1)(@types/node@18.18.13)(typescript@5.1.6)(vite@5.0.3)
       routes-gen: 0.6.1
