@@ -1,13 +1,13 @@
 bootstrap:
-	pnpm install
-	doppler run -- pnpm run clean
-	doppler run -- pnpm run bootstrap
+	doppler run -- pnpm install
+	doppler run -- pnpm clean
+	doppler run -- pnpm run-p database:deploy build:server
 
 dev:
-	doppler run -- pnpm run dev
+	doppler run -- pnpm dev
 
 test:
-	doppler run -- pnpm run test
+	doppler run -- pnpm test
 
 commit:
 	git add .
@@ -15,7 +15,7 @@ commit:
 	git push
 
 generate-shopify:
-	doppler run -- pnpm run generate:shopify
+	doppler run -- pnpm generate:shopify
 
 generate-routes:
-	doppler run -- pnpm run generate:routes
+	doppler run -- pnpm generate:routes
