@@ -14,7 +14,7 @@ import { z } from "zod"
 import { parseFormSafe } from "zodix"
 
 import { Logo } from "~/components/branding"
-import { Alert, Button, Image } from "~/components/common"
+import { Alert, Button } from "~/components/common"
 import { Spinner } from "~/components/loading"
 import auth from "~/helpers/auth.server"
 import sessionStorage from "~/helpers/session.server"
@@ -145,7 +145,7 @@ export default function LoginPage() {
         </main>
       </div>
       <div className="relative hidden w-0 flex-1 lg:block">
-        <Image
+        <img
           alt=""
           className="absolute inset-0 h-full w-full object-cover"
           src="https://images.unsplash.com/photo-1532712938310-34cb3982ef74?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80"

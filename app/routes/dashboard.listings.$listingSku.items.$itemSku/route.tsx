@@ -13,7 +13,6 @@ import { z } from "zod"
 import { zx } from "zodix"
 
 import { ViewOnShopify } from "~/components/admin"
-import { Image } from "~/components/common"
 import { FormInput, SubmitButton, TextArea } from "~/components/form"
 import { useProduct } from "~/utils/hooks"
 import { formatPrice } from "~/utils/money"
@@ -116,7 +115,7 @@ export default function DashboardListingItemDetailPage() {
             {!isLoading && !isError ? (
               <div className="mt-4 flex flex-col md:flex-row">
                 <div className="mr-4 flex-shrink-0">
-                  <Image
+                  <img
                     alt={data.title}
                     className="h-full w-64 rounded-sm"
                     src={data.imageUrl}

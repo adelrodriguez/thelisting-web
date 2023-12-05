@@ -8,7 +8,6 @@ import { useState } from "react"
 import { z } from "zod"
 import { zx } from "zodix"
 
-import { Image } from "~/components/common"
 import { THE_LISTING_LOGO_BLACK } from "~/config/consts"
 import { generateCloudflareImageUrl } from "~/utils/cloudflare"
 import { CartProvider } from "~/utils/hooks"
@@ -88,7 +87,7 @@ export default function ListingPage() {
           <div className="relative bg-gray-800">
             <div className="absolute inset-0">
               {listing.coverImage && (
-                <Image
+                <img
                   alt=""
                   className="h-full w-full object-cover object-center"
                   src={generateCloudflareImageUrl(

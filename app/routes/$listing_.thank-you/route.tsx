@@ -6,7 +6,6 @@ import { useTranslation } from "react-i18next"
 import { z } from "zod"
 import { zx } from "zodix"
 
-import { Image } from "~/components/common"
 import { OrderItem } from "~/components/registry"
 import Sentry from "~/services/sentry"
 import { generateCloudflareImageUrl } from "~/utils/cloudflare"
@@ -71,7 +70,7 @@ export default function ListingThankYouPage() {
   return (
     <main className="relative lg:min-h-full">
       <div className="h-80 overflow-hidden lg:fixed lg:h-full lg:w-1/2 lg:pr-4 xl:pr-12">
-        <Image
+        <img
           alt=""
           className="h-full w-full object-cover object-center"
           src={

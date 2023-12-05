@@ -1,7 +1,6 @@
 export { default as Alert } from "./Alert"
 export { default as Button } from "./Button"
 export { default as Checkbox } from "./Checkbox"
-export { default as Image } from "./Image"
 export { default as Input } from "./Input"
 export { default as ListRadioGroup } from "./ListRadioGroup"
 export { default as Notification } from "./Notification"

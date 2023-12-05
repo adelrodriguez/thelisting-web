@@ -6,7 +6,7 @@ import { useLoaderData } from "@remix-run/react"
 import { Fragment, useState } from "react"
 import { useTranslation } from "react-i18next"
 
-import { Button, Image } from "~/components/common"
+import { Button } from "~/components/common"
 import {
   useCart,
   useDialogPage,
@@ -49,8 +49,13 @@ export default function ListingItemDetailPage() {
   const [quantity, setQuantity] = useState(Number(isAvailable))
   const { t } = useTranslation(handle.i18n)
   const { currency, exchangeRate } = useExchangeRate()
-
   // TODO(adelrodriguez): Add useDialogPage hook
+
+  // TODO(adelrodriguez): Handle loading and error states
+  if (isLoading) return null
+  if (isError) return <div>Error!</div>
+
+  const { title, price, variantId, imageUrl } = data
 
   function handleAddToCart() {
     const { id, commerceId, sku } = item
@@ -61,12 +66,6 @@ export default function ListingItemDetailPage() {
     cart.add({ commerceId, id, price, quantity, sku, variantId })
     close()
   }
-
-  // TODO(adelrodriguez): Handle loading and error states
-  if (isLoading) return null
-  if (isError) return <div>Error!</div>
-
-  const { title, price, variantId, imageUrl } = data
 
   return (
     <Transition.Root appear as={Fragment} show={open}>
@@ -110,7 +109,7 @@ export default function ListingItemDetailPage() {
                   <div className="grid w-full grid-cols-1 items-start gap-x-6 gap-y-8 sm:grid-cols-12 lg:gap-x-8">
                     <div className="sm:col-span-4 lg:col-span-5 ">
                       <div className="aspect-h-1 aspect-w-1 overflow-hidden rounded-sm bg-gray-100 sm:rounded-md">
-                        <Image
+                        <img
                           alt={title}
                           className="object-cover object-center"
                           src={imageUrl}

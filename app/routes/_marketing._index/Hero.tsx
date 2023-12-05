@@ -1,7 +1,7 @@
 import { Link } from "@remix-run/react"
 import { useTranslation } from "react-i18next"
 
-import { Button, Image } from "~/components/common"
+import { Button } from "~/components/common"
 
 export default function Hero() {
   const { t } = useTranslation("home")
@@ -11,7 +11,7 @@ export default function Hero() {
       {/* We're adding an extra pixel due to a bug in Safari */}
       <div className="position absolute -z-10 h-[calc(100%+1px)] w-full bg-[url('/assets/images/bottom-curve.svg')] bg-contain bg-bottom bg-no-repeat" />
 
-      <Image
+      <img
         alt=""
         className="absolute inset-0 -z-20 h-full w-full object-cover"
         src="https://images.unsplash.com/photo-1520854221256-17451cc331bf?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80"

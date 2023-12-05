@@ -1,4 +1,3 @@
-import { Image } from "~/components/common"
 import { generateCloudflareImageUrl } from "~/utils/cloudflare"
 import type { ImageGalleryProperties } from "~/utils/ribbons"
 
@@ -26,7 +25,7 @@ export default function ImageGallery({
             <div className="flex flex-col gap-2" key={`group${index}`}>
               {images.map((image, index) => (
                 <div key={`image${index}`}>
-                  <Image
+                  <img
                     alt=""
                     className="h-auto max-w-full rounded-md shadow-inner"
                     src={generateCloudflareImageUrl(image, "public")}

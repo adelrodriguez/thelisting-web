@@ -1,7 +1,7 @@
 import type { Item } from "@prisma/client"
 import { useTranslation } from "react-i18next"
 
-import { Alert, Image } from "~/components/common"
+import { Alert } from "~/components/common"
 import { useProduct } from "~/utils/hooks"
 import { formatPrice } from "~/utils/money"
 
@@ -38,7 +38,7 @@ export default function OrderItem({
 
   return (
     <div className="flex w-full gap-x-6">
-      <Image
+      <img
         alt={title}
         className="h-24 w-24 flex-none rounded-md bg-gray-100 object-cover object-center lg:h-32 lg:w-32"
         src={imageUrl}

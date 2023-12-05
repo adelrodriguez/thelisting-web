@@ -4,7 +4,6 @@ import clsx from "clsx"
 import { useEffect } from "react"
 import { useTranslation } from "react-i18next"
 
-import { Image } from "~/components/common"
 import Sentry from "~/services/sentry"
 import { useExchangeRate, useProduct } from "~/utils/hooks"
 import { formatPrice } from "~/utils/money"
@@ -54,12 +53,13 @@ export default function RegistryItem({
     <Link className="group text-center font-body" preventScrollReset to={sku}>
       <div className="relative">
         <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-sm xl:aspect-h-8 xl:aspect-w-7 sm:rounded-md">
-          <Image
+          <img
             alt={title}
             className={clsx("h-full w-full object-cover object-center", {
               "group-hover:opacity-75": available,
               "opacity-50": !available,
             })}
+            loading="lazy"
             src={imageUrl}
           />
         </div>

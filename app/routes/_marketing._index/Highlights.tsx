@@ -1,7 +1,5 @@
 import { InboxIcon, SparklesIcon } from "@heroicons/react/24/outline"
 
-import { Image } from "~/components/common"
-
 export default function Features() {
   return (
     <section className="relative my-16 overflow-hidden bg-white py-16">
@@ -49,10 +47,9 @@ export default function Features() {
                 <footer className="mt-3">
                   <div className="flex items-center space-x-3">
                     <div className="flex-shrink-0">
-                      <Image
+                      <img
                         alt=""
                         className="rounded-full"
-                        responsive={[{ size: { height: 24, width: 24 } }]}
                         src="https://images.unsplash.com/photo-1509783236416-c9ad59bae472?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=1024&h=1024&q=80"
                       />
                     </div>

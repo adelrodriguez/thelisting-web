@@ -20,7 +20,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 import type { ComponentProps } from "react"
 import { useTranslation } from "react-i18next"
-import remixImageStyles from "remix-image/remix-image.css"
 
 import { NotFound } from "~/components/error"
 import { PublicEnv } from "~/components/utils"
@@ -35,7 +34,6 @@ const client = new QueryClient()
 
 export const links: LinksFunction = () => [
   { href: stylesheet, rel: "stylesheet" },
-  { href: remixImageStyles, rel: "stylesheet" },
   {
     href: "https://use.typekit.net/vno7ewy.css",
     rel: "stylesheet",

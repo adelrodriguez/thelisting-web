@@ -109,7 +109,6 @@
     "remix-auth": "3.6.0",
     "remix-auth-email-link": "2.0.2",
     "remix-i18next": "5.4.0",
-    "remix-image": "^1.4.0",
     "remix-image-sharp": "^0.1.4",
     "remix-validated-form": "5.0.2",
     "resend": "0.16.0",
