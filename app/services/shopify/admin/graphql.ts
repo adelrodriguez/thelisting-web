@@ -15012,7 +15012,10 @@ export type FulfillmentOrderLineItem = Node & {
    *
    */
   lineItem: LineItem;
-  /** The variant unit price without discounts applied, in shop and presentment currencies. */
+  /**
+   * The variant unit price without discounts applied, in shop and presentment currencies.
+   * @deprecated Use `financialSummaries` instead.
+   */
   originalUnitPriceSet: MoneyBag;
   /** The title of the product. */
   productTitle: Scalars['String']['output'];
@@ -20090,40 +20093,29 @@ export type MarketingActivityCreateExternalInput = {
   adSpend?: InputMaybe<MoneyInput>;
   /** The budget for this marketing activity. */
   budget?: InputMaybe<MarketingActivityBudgetInput>;
-  /** The channel of your marketing event. */
+  /** Specifies the type of marketing that was used. This is used for reporting aggregation. */
   channel: MarketingChannel;
-  /** When the activity ended. */
+  /** The date and time when the activity ended. If omitted or set to `null`, the current time will be use, if the state is set to `INACTIVE` or `DELETED_EXTERNALLY`. */
   end?: InputMaybe<Scalars['DateTime']['input']>;
-  /** The referring domain. */
+  /** The last domain a user visited before being redirected to the storefront. */
   referringDomain?: InputMaybe<Scalars['String']['input']>;
   /** The ID of an activity that's hosted outside of Shopify. */
   remoteId?: InputMaybe<Scalars['String']['input']>;
   /** The URL for a preview image that's used for the marketing activity. */
   remotePreviewImageUrl?: InputMaybe<Scalars['URL']['input']>;
-  /** URL for viewing and/or managing the activity outside of Shopify. */
+  /** The URL for viewing and/or managing the activity outside of Shopify. */
   remoteUrl: Scalars['URL']['input'];
-  /** When the activity is scheduled to end. */
+  /** The date and time when the activity is scheduled to end. */
   scheduledEnd?: InputMaybe<Scalars['DateTime']['input']>;
-  /** When the activity is scheduled to start. */
+  /** The date and time when the activity is scheduled to start. */
   scheduledStart?: InputMaybe<Scalars['DateTime']['input']>;
-  /** When the activity started. */
+  /** The date and time when the activity started. If omitted or set to `null`, the current time will be used. */
   start?: InputMaybe<Scalars['DateTime']['input']>;
-  /**
-   * Specifies the settings for the marketing platform and the ad format.
-   * The marketing tactic determines which default fields are included
-   * in the marketing activity.
-   *
-   */
+  /** The method of marketing used for this marketing activity. The marketing tactic determines which default fields are included in the marketing activity.. */
   tactic: MarketingTactic;
   /** The title of the marketing activity. */
   title: Scalars['String']['input'];
-  /**
-   * The
-   * [Urchin Traffic Module (UTM) parameters](https://en.wikipedia.org/wiki/UTM_parameters)
-   * that are associated with a related marketing campaign. `UTMInput` is required for all
-   * marketing tactics except for the Storefront app marketing tactic.
-   *
-   */
+  /** Specifies the [Urchin Traffic Module (UTM) parameters](https://en.wikipedia.org/wiki/UTM_parameters) that are associated with a related marketing campaign. */
   utm: UtmInput;
 };
 
@@ -20266,17 +20258,17 @@ export enum MarketingActivityStatusBadgeType {
 export type MarketingActivityUpdateExternalInput = {
   /** The amount spent on the marketing activity. */
   adSpend?: InputMaybe<MoneyInput>;
-  /** The budget for the marketing activity. */
+  /** The budget for this marketing activity. */
   budget?: InputMaybe<MarketingActivityBudgetInput>;
-  /** The channel that your marketing event will use. */
+  /** Specifies the type of marketing that was used. This is used for reporting aggregation. */
   channel?: InputMaybe<MarketingChannel>;
   /** The date and time when the activity ended. */
   end?: InputMaybe<Scalars['DateTime']['input']>;
-  /** The referring domain. */
+  /** The last domain a user visited before being redirected to the storefront. */
   referringDomain?: InputMaybe<Scalars['String']['input']>;
-  /** The preview image URL for the marketing activity. */
+  /** The URL for a preview image that's used for the marketing activity. */
   remotePreviewImageUrl?: InputMaybe<Scalars['URL']['input']>;
-  /** The URL for managing the activity outside of Shopify. */
+  /** The URL for viewing and/or managing the activity outside of Shopify. */
   remoteUrl?: InputMaybe<Scalars['URL']['input']>;
   /** The date and time when the activity is scheduled to end. */
   scheduledEnd?: InputMaybe<Scalars['DateTime']['input']>;
@@ -20284,22 +20276,11 @@ export type MarketingActivityUpdateExternalInput = {
   scheduledStart?: InputMaybe<Scalars['DateTime']['input']>;
   /** The date and time when the activity started. */
   start?: InputMaybe<Scalars['DateTime']['input']>;
-  /**
-   * The settings for the marketing platform and ad format.
-   * The selection of the marketing tactic also determines which default fields are included
-   * in the marketing activity.
-   *
-   */
+  /** The method of marketing used for this marketing activity. The marketing tactic determines which default fields are included in the marketing activity.. */
   tactic?: InputMaybe<MarketingTactic>;
   /** The title of the marketing activity. */
   title?: InputMaybe<Scalars['String']['input']>;
-  /**
-   * Specifies the
-   * [Urchin Traffic Module (UTM) parameters](https://en.wikipedia.org/wiki/UTM_parameters)
-   * that are associated with a related marketing campaign. UTMInput is required for all marketing
-   * tactics except the storefront app.
-   *
-   */
+  /** Specifies the [Urchin Traffic Module (UTM) parameters](https://en.wikipedia.org/wiki/UTM_parameters) that are associated with a related marketing campaign. */
   utm?: InputMaybe<UtmInput>;
 };
 
@@ -20433,37 +20414,37 @@ export type MarketingEngagement = {
   adSpend?: Maybe<MoneyV2>;
   /** The total number of clicks on the marketing event for the day. */
   clicksCount?: Maybe<Scalars['Int']['output']>;
-  /** The total number of comments on marketing content for the day. */
+  /** The total number of comments on the marketing content. */
   commentsCount?: Maybe<Scalars['Int']['output']>;
-  /** The total number of complaints for the day. For message-based platforms such as email or SMS, this represents the number of marketing emails or messages that were marked as spam. For social media platforms, this represents the number of dislikes or the number of times marketing content was reported. */
+  /** The total number of complaints on the marketing content. For message-based platforms such as email or SMS, this represents the number of marketing emails or messages that were marked as spam. For social media platforms, this represents the number of dislikes or the number of times marketing content was reported. */
   complaintsCount?: Maybe<Scalars['Int']['output']>;
-  /** The total number of fails for the day. For message-based platforms such as email or SMS, this represents the number of bounced marketing emails or messages. */
+  /** The total number of fails for the marketing content. For message-based platforms such as email or SMS, this represents the number of bounced marketing emails or messages. */
   failsCount?: Maybe<Scalars['Int']['output']>;
-  /** The total number of favorites, likes, saves, or bookmarks for the day. */
+  /** The total number of favorites, likes, saves, or bookmarks on the marketing content. */
   favoritesCount?: Maybe<Scalars['Int']['output']>;
   /** The date time at which the data was fetched. */
   fetchedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The total number of impressions for the day. */
   impressionsCount?: Maybe<Scalars['Int']['output']>;
-  /** Whether the engagements are reported as lifetime values rather than daily totals. */
+  /** Whether the engagements are reported as lifetime totals rather than daily increments. */
   isCumulative?: Maybe<Scalars['Boolean']['output']>;
   /** The marketing activity object related to this engagement. This corresponds to the marketingActivityId passed in on creation of the engagement. */
   marketingActivity: MarketingActivity;
   /** The date that the engagements occurred on. */
   occurredOn: Scalars['Date']['output'];
-  /** The total number of marketing emails or messages that were sent for the day. */
+  /** The total number of marketing emails or messages that were sent. */
   sendsCount?: Maybe<Scalars['Int']['output']>;
-  /** The total number of times marketing content was distributed or reposted to either one's own network of followers through a social media platform or other digital channels for the day. For message-based platforms such as email or SMS, this represents the number of times marketing emails or messages were forwarded. */
+  /** The total number of times marketing content was distributed or reposted to either one's own network of followers through a social media platform or other digital channels. For message-based platforms such as email or SMS, this represents the number of times marketing emails or messages were forwarded. */
   sharesCount?: Maybe<Scalars['Int']['output']>;
-  /** The total number of unique clicks on marketing content for the day. */
+  /** The total number of unique clicks on the marketing content. */
   uniqueClicksCount?: Maybe<Scalars['Int']['output']>;
-  /** The total number of unique views for the day. For message-based platforms such as  email or SMS, this represents the number of unique users that opened a marketing email or message. For video-based content, this represents the number of unique users that played video content. */
+  /** The total number of unique views on the marketing content. For message-based platforms such as email or SMS, this represents the number of unique users that opened a marketing email or message. For video-based content, this represents the number of unique users that played video content. */
   uniqueViewsCount?: Maybe<Scalars['Int']['output']>;
-  /** The total number of unsubscribes for the day. For social media platforms, this represents the number of unfollows. */
+  /** The total number of unsubscribes on the marketing content. For social media platforms, this represents the number of unfollows. */
   unsubscribesCount?: Maybe<Scalars['Int']['output']>;
   /** The UTC Offset that the app is using to determine which date to allocate spend to. */
   utcOffset?: Maybe<Scalars['UtcOffset']['output']>;
-  /** The total number of views for the day. For message-based platforms such as email or SMS, this represents the number of times marketing emails or messages were opened. For video-based content, this represents the number of times videos were played. */
+  /** The total number of views on the marketing content. For message-based platforms such as email or SMS, this represents the number of times marketing emails or messages were opened. For video-based content, this represents the number of times videos were played. */
   viewsCount?: Maybe<Scalars['Int']['output']>;
 };
 
@@ -20482,35 +20463,35 @@ export type MarketingEngagementInput = {
   adSpend?: InputMaybe<MoneyInput>;
   /** The total number of clicks on the marketing event for the day. */
   clicksCount?: InputMaybe<Scalars['Int']['input']>;
-  /** The total number of comments on marketing content for the day. */
+  /** The total number of comments on the marketing content. */
   commentsCount?: InputMaybe<Scalars['Int']['input']>;
-  /** The total number of complaints for the day. For message-based platforms such as email or SMS, this represents the number of marketing emails or messages that were marked as spam. For social media platforms, this represents the number of dislikes or the number of times marketing content was reported. */
+  /** The total number of complaints on the marketing content. For message-based platforms such as email or SMS, this represents the number of marketing emails or messages that were marked as spam. For social media platforms, this represents the number of dislikes or the number of times marketing content was reported. */
   complaintsCount?: InputMaybe<Scalars['Int']['input']>;
-  /** The total number of fails for the day. For message-based platforms such as email or SMS, this represents the number of bounced marketing emails or messages. */
+  /** The total number of fails for the marketing content. For message-based platforms such as email or SMS, this represents the number of bounced marketing emails or messages. */
   failsCount?: InputMaybe<Scalars['Int']['input']>;
-  /** The total number of favorites, likes, saves, or bookmarks for the day. */
+  /** The total number of favorites, likes, saves, or bookmarks on the marketing content. */
   favoritesCount?: InputMaybe<Scalars['Int']['input']>;
   /** The date time at which the data was fetched. */
   fetchedAt?: InputMaybe<Scalars['DateTime']['input']>;
   /** The total number of impressions for the day. */
   impressionsCount?: InputMaybe<Scalars['Int']['input']>;
-  /** Whether the engagements are reported as lifetime values rather than daily totals. */
+  /** Whether the engagements are reported as lifetime totals rather than daily increments. */
   isCumulative?: InputMaybe<Scalars['Boolean']['input']>;
   /** The date that the engagements occurred on. */
   occurredOn: Scalars['Date']['input'];
-  /** The total number of marketing emails or messages that were sent for the day. */
+  /** The total number of marketing emails or messages that were sent. */
   sendsCount?: InputMaybe<Scalars['Int']['input']>;
-  /** The total number of times marketing content was distributed or reposted to either one's own network of followers through a social media platform or other digital channels for the day. For message-based platforms such as email or SMS, this represents the number of times marketing emails or messages were forwarded. */
+  /** The total number of times marketing content was distributed or reposted to either one's own network of followers through a social media platform or other digital channels. For message-based platforms such as email or SMS, this represents the number of times marketing emails or messages were forwarded. */
   sharesCount?: InputMaybe<Scalars['Int']['input']>;
-  /** The total number of unique clicks on marketing content for the day. */
+  /** The total number of unique clicks on the marketing content. */
   uniqueClicksCount?: InputMaybe<Scalars['Int']['input']>;
-  /** The total number of unique views for the day. For message-based platforms such as  email or SMS, this represents the number of unique users that opened a marketing email or message. For video-based content, this represents the number of unique users that played video content. */
+  /** The total number of unique views on the marketing content. For message-based platforms such as email or SMS, this represents the number of unique users that opened a marketing email or message. For video-based content, this represents the number of unique users that played video content. */
   uniqueViewsCount?: InputMaybe<Scalars['Int']['input']>;
-  /** The total number of unsubscribes for the day. For social media platforms, this represents the number of unfollows. */
+  /** The total number of unsubscribes on the marketing content. For social media platforms, this represents the number of unfollows. */
   unsubscribesCount?: InputMaybe<Scalars['Int']['input']>;
   /** The UTC Offset that the app is using to determine which date to allocate spend to. */
   utcOffset?: InputMaybe<Scalars['UtcOffset']['input']>;
-  /** The total number of views for the day. For message-based platforms such as email or SMS, this represents the number of times marketing emails or messages were opened. For video-based content, this represents the number of times videos were played. */
+  /** The total number of views on the marketing content. For message-based platforms such as email or SMS, this represents the number of times marketing emails or messages were opened. For video-based content, this represents the number of times videos were played. */
   viewsCount?: InputMaybe<Scalars['Int']['input']>;
 };
 
@@ -23569,7 +23550,7 @@ export type Mutation = {
   orderCreateMandatePayment?: Maybe<OrderCreateMandatePaymentPayload>;
   /** Adds a custom line item to an existing order. For example, you could add a gift wrapping service as a [custom line item](https://shopify.dev/apps/fulfillment/order-management-apps/order-editing#add-a-custom-line-item). To learn how to edit existing orders, refer to [Edit an existing order with Admin API](https://shopify.dev/apps/fulfillment/order-management-apps/order-editing). */
   orderEditAddCustomItem?: Maybe<OrderEditAddCustomItemPayload>;
-  /** Adds a discount to a newly added line item on the current order edit. More information on how to use the GraphQL Admin API to edit an existing order, refer to [Edit existing orders](https://shopify.dev/apps/fulfillment/order-management-apps/order-editing). */
+  /** Adds a discount to a line item on the current order edit. For more information on how to use the GraphQL Admin API to edit an existing order, refer to [Edit existing orders](https://shopify.dev/apps/fulfillment/order-management-apps/order-editing). */
   orderEditAddLineItemDiscount?: Maybe<OrderEditAddLineItemDiscountPayload>;
   /** Adds a line item from an existing product variant. */
   orderEditAddVariant?: Maybe<OrderEditAddVariantPayload>;
@@ -23587,7 +23568,7 @@ export type Mutation = {
   orderEditCommit?: Maybe<OrderEditCommitPayload>;
   /** Removes a line item discount that was applied as part of an order edit. */
   orderEditRemoveLineItemDiscount?: Maybe<OrderEditRemoveLineItemDiscountPayload>;
-  /** Sets the quantity of a line item on an order that is being edited. More information on how to use the GraphQL Admin API to edit an existing order, refer to [Edit existing orders](https://shopify.dev/apps/fulfillment/order-management-apps/order-editing). */
+  /** Sets the quantity of a line item on an order that is being edited. For more information on how to use the GraphQL Admin API to edit an existing order, refer to [Edit existing orders](https://shopify.dev/apps/fulfillment/order-management-apps/order-editing). */
   orderEditSetQuantity?: Maybe<OrderEditSetQuantityPayload>;
   /** Sends an email invoice for an order. */
   orderInvoiceSend?: Maybe<OrderInvoiceSendPayload>;
@@ -23953,7 +23934,7 @@ export type Mutation = {
    *
    */
   returnDeclineRequest?: Maybe<ReturnDeclineRequestPayload>;
-  /** Refunds a return and associates it with the related return request. */
+  /** Refunds a return when its status is `OPEN` or `CLOSED` and associates it with the related return request. */
   returnRefund?: Maybe<ReturnRefundPayload>;
   /** Reopens a closed return. */
   returnReopen?: Maybe<ReturnReopenPayload>;
@@ -24153,7 +24134,12 @@ export type Mutation = {
   subscriptionContractCreate?: Maybe<SubscriptionContractCreatePayload>;
   /** Allows for the easy change of a Product in a Contract or a Product price change. */
   subscriptionContractProductChange?: Maybe<SubscriptionContractProductChangePayload>;
-  /** Sets the next billing date of a Subscription Contract. */
+  /**
+   * Sets the next billing date of a Subscription Contract. This field is managed by the apps.
+   *         Alternatively you can utilize our
+   *         [Billing Cycles APIs](https://shopify.dev/docs/apps/selling-strategies/subscriptions/billing-cycles),
+   *         which provide auto-computed billing dates and additional functionalities.
+   */
   subscriptionContractSetNextBillingDate?: Maybe<SubscriptionContractSetNextBillingDatePayload>;
   /** Updates a Subscription Contract. */
   subscriptionContractUpdate?: Maybe<SubscriptionContractUpdatePayload>;
@@ -34107,7 +34093,7 @@ export type QuantityRuleConnection = {
   nodes: Array<QuantityRule>;
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
-  /** The total count of QuantityRules. Note: The maximum count limit is 10000. */
+  /** The total count of QuantityRules. */
   totalCount: Scalars['UnsignedInt64']['output'];
 };
 
@@ -40862,7 +40848,10 @@ export type ShopFeatures = {
    *
    */
   harmonizedSystemCode: Scalars['Boolean']['output'];
-  /** Whether a shop can enable international domains. */
+  /**
+   * Whether a shop can enable international domains.
+   * @deprecated All shops have international domains through Shopify Markets.
+   */
   internationalDomains: Scalars['Boolean']['output'];
   /** Whether a shop can enable international price overrides. */
   internationalPriceOverrides: Scalars['Boolean']['output'];
@@ -43125,7 +43114,12 @@ export type SubscriptionContract = Node & SubscriptionContractBase & {
   lineCount: Scalars['Int']['output'];
   /** The list of subscription lines associated with the subscription contract. */
   lines: SubscriptionLineConnection;
-  /** The next billing date for the subscription contract. */
+  /**
+   * The next billing date for the subscription contract. This field is managed by the apps.
+   *         Alternatively you can utilize our
+   *         [Billing Cycles APIs](https://shopify.dev/docs/apps/selling-strategies/subscriptions/billing-cycles),
+   *         which provide auto-computed billing dates and additional functionalities.
+   */
   nextBillingDate?: Maybe<Scalars['DateTime']['output']>;
   /** The note field that will be applied to the generated orders. */
   note?: Maybe<Scalars['String']['output']>;
@@ -45107,7 +45101,7 @@ export enum TranslatableResourceType {
    *         Translatable fields: `name`.
    */
   ProductOption = 'PRODUCT_OPTION',
-  /** An online store product variant. Translatable fields: `title`, `option1`, `option2`, `option3`. The field `title` has been deprecated. */
+  /** An online store product variant. Translatable fields: `option1`, `option2`, `option3`. */
   ProductVariant = 'PRODUCT_VARIANT',
   /** A selling plan. Translatable fields:`name`, `option1`, `option2`, `option3`, `description`. */
   SellingPlan = 'SELLING_PLAN',

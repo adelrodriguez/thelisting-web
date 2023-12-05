@@ -25,7 +25,7 @@ export const processor: Processor<QueueData> = async (job) => {
   }
 
   await db.purchase.update({
-    data: { paid: true },
+    data: { paid: true, paidAt: new Date() },
     where: { id: purchase.id },
   })
 

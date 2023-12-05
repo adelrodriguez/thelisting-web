@@ -13,7 +13,6 @@ declare module "routes-gen" {
     "/api/admin/listings/:listingId/report.csv": { "listingId": string };
     "/api/cart": Record<string, never>;
     "/api/exchange-rates/:code": { "code": string };
-    "/api/image": Record<string, never>;
     "/api/images": Record<string, never>;
     "/api/images/:image": { "image": string };
     "/api/ribbons/:ribbonId": { "ribbonId": string };
@@ -71,7 +70,6 @@ declare module "routes-gen" {
       | ["/api/admin/listings/:listingId/report.csv", RouteParams["/api/admin/listings/:listingId/report.csv"]]
       | ["/api/cart"]
       | ["/api/exchange-rates/:code", RouteParams["/api/exchange-rates/:code"]]
-      | ["/api/image"]
       | ["/api/images"]
       | ["/api/images/:image", RouteParams["/api/images/:image"]]
       | ["/api/ribbons/:ribbonId", RouteParams["/api/ribbons/:ribbonId"]]
