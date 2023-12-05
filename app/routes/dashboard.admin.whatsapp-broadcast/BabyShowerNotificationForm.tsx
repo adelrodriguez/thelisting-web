@@ -18,7 +18,7 @@ export const validator = withZod(
     phoneNumbers: z
       .string()
       .min(1, { message: "You must provide at least one phone number" })
-      .transform((value) => value.split(",")),
+      .transform((value) => value.split(",").map((v) => v.trim())),
   }),
 )
 
