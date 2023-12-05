@@ -43,7 +43,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
         where: { paid: true },
       },
     },
-    orderBy: { eventDate: "asc" },
+    orderBy: [{ status: "asc" }, { isInternal: "asc" }, { eventDate: "asc" }],
     take: 100,
     where: {
       ...(isNumber(q)
