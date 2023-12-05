@@ -35,7 +35,12 @@ export async function loader({ context }: LoaderFunctionArgs) {
       where: { role: UserRole.Admin },
     }),
     db.listing.count({
-      where: { isInternal: false, status: ListingStatus.Published },
+      where: {
+        isInternal: false,
+        status: {
+          in: [ListingStatus.Published, ListingStatus.Closed],
+        },
+      },
     }),
     db.listing.count({
       where: { isInternal: false, status: ListingStatus.Draft },
@@ -44,7 +49,9 @@ export async function loader({ context }: LoaderFunctionArgs) {
       where: {
         createdAt: { gt: sub(Date.now(), { days: 30 }) },
         isInternal: false,
-        status: ListingStatus.Published,
+        status: {
+          in: [ListingStatus.Published, ListingStatus.Closed],
+        },
       },
     }),
     db.listing.count({
@@ -200,7 +207,7 @@ export async function loader({ context }: LoaderFunctionArgs) {
         },
         {
           label: "Average Items per Listing",
-          value: round(Number(item[0]!.average)),
+          value: round(Number(item[0]?.average)),
         },
       ],
       title: "Listings (All Time)",
