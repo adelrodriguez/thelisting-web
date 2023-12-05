@@ -110,7 +110,8 @@ model Purchase {
   listing   Listing @relation(fields: [listingId], references: [id])
   listingId String  @db.Uuid
 
-  paid Boolean @default(false)
+  paidAt DateTime?
+  paid   Boolean   @default(false)
 
   total Float
   cost  Float
