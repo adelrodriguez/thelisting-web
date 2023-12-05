@@ -7,6 +7,7 @@ import {
 } from "~/config/env.server"
 import { isDevelopment } from "~/config/vars"
 import { createQueue } from "~/helpers/queue.server"
+import { SendInvoiceQueue } from "~/helpers/queues"
 import alegra from "~/services/alegra.server"
 import { CurrencySchema } from "~/utils/money"
 import { getShopifyId } from "~/utils/shopify"
@@ -54,9 +55,10 @@ export const processor: Processor<QueueData> = async (job) => {
 
   const emails = [contact.email, ALEGRA_INVOICE_BACKUP_EMAIL]
 
-  await alegra.invoices.send({ emails, id: invoice.id })
-
-  await job.log(`Invoice ${invoiceNumber} sent to ${emails.join(", ")}`)
+  await SendInvoiceQueue.add(invoiceNumber, {
+    emails,
+    invoiceId: invoice.id,
+  })
 }
 
 export default createQueue(QUEUE_NAMES.CreateInvoice, processor)
