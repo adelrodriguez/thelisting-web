@@ -119,7 +119,7 @@
     "xstate": "4.38.0",
     "zod": "3.21.4",
     "zod-form-data": "2.0.1",
-    "zodix": "0.4.2"
+    "zodix": "0.4.4"
   },
   "devDependencies": {
     "@anatine/zod-mock": "3.13.3",
