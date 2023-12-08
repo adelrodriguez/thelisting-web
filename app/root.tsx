@@ -29,6 +29,9 @@ import i18next from "~/helpers/i18next.server"
 import stylesheet from "~/styles/app.css"
 import { ExchangeRateProvider, useChangeLanguage } from "~/utils/hooks"
 import { i18nCookie } from "~/utils/i18n"
+import { useCapturePageview, usePostHog } from "~/utils/posthog"
+
+console.log("usePostHog")
 
 const client = new QueryClient()
 
@@ -78,6 +81,8 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
   const publicEnv: ComponentProps<typeof PublicEnv> = {
     environment: env.NODE_ENV,
     gaTrackingId: env.GA_TRACKING_ID,
+    posthogApiKey: env.POSTHOG_API_KEY,
+    posthogHost: env.POSTHOG_HOST,
     release: env.RAILWAY_GIT_COMMIT_SHA,
     sentryDsn: env.SENTRY_DSN,
     shopifyStore: env.SHOPIFY_STORE,
@@ -113,7 +118,9 @@ function App() {
   const { env, locale } = useLoaderData<typeof loader>()
   const { i18n } = useTranslation()
 
+  usePostHog(env.posthogApiKey, env.posthogHost)
   useChangeLanguage(locale)
+  useCapturePageview()
 
   return (
     <html className="h-full" dir={i18n.dir()} lang={locale}>

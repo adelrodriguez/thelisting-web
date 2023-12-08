@@ -27,6 +27,7 @@ import {
   useTrackPageview,
 } from "~/utils/hooks"
 import { formatPrice } from "~/utils/money"
+import { captureEvent } from "~/utils/posthog"
 
 import AddNoteReminderDialog from "./AddNoteReminderDialog"
 import CartItem from "./CartItem"
@@ -78,6 +79,10 @@ export default function ListingCartPage() {
     if (cart.noteId) {
       formData.append("noteId", cart.noteId)
     }
+
+    captureEvent("checkout_started", {
+      sku: listing.sku,
+    })
 
     submit(formData, {
       action: `/${listing.path}/cart/checkout`,

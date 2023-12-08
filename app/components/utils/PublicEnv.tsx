@@ -1,11 +1,13 @@
 type PublicEnvs = {
+  environment: "development" | "production" | "test"
   gaTrackingId: string
+  posthogHost: string
+  posthogApiKey: string
   release?: string | undefined
   sentryDsn?: string | undefined
   shopifyStore: string
   shopifyStorefrontAccessToken: string
   shopifyStorefrontAPIEndpoint: string
-  environment: "development" | "production"
 }
 
 declare global {

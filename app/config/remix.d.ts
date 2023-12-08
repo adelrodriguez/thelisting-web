@@ -9,6 +9,6 @@ declare module "@remix-run/node" {
     db: PrismaClient
     logger: Logger
     // eslint-disable-next-line @typescript-eslint/consistent-type-imports
-    env: typeof import("~/config/env.server").default
+    env: typeof import("~/config/env.server")
   }
 }

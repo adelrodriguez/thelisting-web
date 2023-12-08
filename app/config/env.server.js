@@ -47,6 +47,9 @@ const schema = z.object({
 
   NODE_ENV: z.enum(["development", "test", "production"]),
 
+  POSTHOG_API_KEY: z.string(),
+  POSTHOG_HOST: z.string().url(),
+
   RAILWAY_GIT_COMMIT_SHA: z.string().optional(),
   RAILWAY_STATIC_URL: z.string().optional(),
 
@@ -56,8 +59,8 @@ const schema = z.object({
   REMIX_AUTH_SECRET: z.string(),
 
   RESEND_API_KEY: z.string(),
-  SENDGRID_API_KEY: z.string(),
 
+  SENDGRID_API_KEY: z.string(),
   SENDGRID_SENDER_EMAIL: z.string(),
 
   SENTRY_DSN: z.string(),
