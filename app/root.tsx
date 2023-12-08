@@ -26,12 +26,10 @@ import { PublicEnv } from "~/components/utils"
 import { isProduction } from "~/config/vars"
 import { shopifyStorefrontAPIEndpoint } from "~/config/vars.server"
 import i18next from "~/helpers/i18next.server"
+import { useCapturePageview, usePostHog } from "~/services/posthog"
 import stylesheet from "~/styles/app.css"
 import { ExchangeRateProvider, useChangeLanguage } from "~/utils/hooks"
 import { i18nCookie } from "~/utils/i18n"
-import { useCapturePageview, usePostHog } from "~/utils/posthog"
-
-console.log("usePostHog")
 
 const client = new QueryClient()
 

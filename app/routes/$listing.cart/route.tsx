@@ -20,6 +20,7 @@ import { zx } from "zodix"
 import { Button } from "~/components/common"
 import Tooltip from "~/components/common/Tooltip"
 import { Spinner } from "~/components/loading"
+import { captureEvent } from "~/services/posthog"
 import {
   useCart,
   useDialogPage,
@@ -27,7 +28,6 @@ import {
   useTrackPageview,
 } from "~/utils/hooks"
 import { formatPrice } from "~/utils/money"
-import { captureEvent } from "~/utils/posthog"
 
 import AddNoteReminderDialog from "./AddNoteReminderDialog"
 import CartItem from "./CartItem"

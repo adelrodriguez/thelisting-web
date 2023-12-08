@@ -6,7 +6,6 @@ import SuperJSON from "superjson"
 import type { CartItem } from "~/utils/cart"
 import { calculateShipping, calculateSubtotal } from "~/utils/cart"
 import * as gtag from "~/utils/gtag.client"
-import { captureEvent } from "~/utils/posthog"
 
 type CartItems = Map<string, CartItem>
 
@@ -111,8 +110,6 @@ export function CartProvider({
       variantId,
     })
 
-    captureEvent("cart_updated", { id, quantity, sku })
-
     gtag.event({
       action: "add_to_cart",
       category: "engagement",
@@ -130,8 +127,6 @@ export function CartProvider({
     const newItems = new Map(currentCart.items)
 
     newItems.delete(id)
-
-    captureEvent("cart_updated", { id, quantity: 0 })
 
     gtag.event({
       action: "remove_from_cart",

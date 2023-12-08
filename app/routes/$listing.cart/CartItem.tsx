@@ -5,6 +5,7 @@ import type { RouteParams } from "routes-gen"
 import { route } from "routes-gen"
 
 import { Alert } from "~/components/common"
+import { captureEvent } from "~/services/posthog"
 import { useCart, useExchangeRate, useProduct } from "~/utils/hooks"
 import { formatPrice } from "~/utils/money"
 
@@ -65,7 +66,11 @@ export default function CartItem({
           <div className="flex">
             <button
               className="font-medium text-gray-600 hover:text-gray-500"
-              onClick={() => cart.remove(id)}
+              onClick={() => {
+                cart.remove(id)
+
+                captureEvent("item_removed", { id, price, quantity, sku })
+              }}
               type="button"
             >
               {t("quantity.remove")}

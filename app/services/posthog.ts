@@ -4,7 +4,12 @@ import { useEffect } from "react"
 
 import { isProduction } from "~/config/vars"
 
-type Event = "cart_updated" | "checkout_started"
+type Event =
+  | "cart_updated"
+  | "checkout_started"
+  | "item_viewed"
+  | "item_added"
+  | "item_removed"
 
 export function usePostHog(apiKey: string, host: string) {
   useEffect(() => {
