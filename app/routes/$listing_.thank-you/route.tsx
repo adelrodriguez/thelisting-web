@@ -7,6 +7,7 @@ import { z } from "zod"
 import { zx } from "zodix"
 
 import { OrderItem } from "~/components/registry"
+import posthog, { getDistinctId } from "~/services/posthog.server"
 import Sentry from "~/services/sentry"
 import { generateCloudflareImageUrl } from "~/utils/cloudflare"
 import useTrackPageview from "~/utils/hooks/use-track-pageview"
@@ -47,6 +48,17 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
         },
       )
     }
+
+    const distinctId = getDistinctId(request.headers)
+
+    // Identify the user in PostHog so we can track their activity
+    posthog.identify({
+      distinctId,
+      properties: {
+        email: order.customer?.email,
+        name: order.customer?.displayName,
+      },
+    })
 
     return json({ listing, order })
   } catch (error) {
