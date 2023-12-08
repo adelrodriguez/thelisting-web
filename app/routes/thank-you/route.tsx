@@ -2,6 +2,7 @@ import type { LoaderFunctionArgs } from "@remix-run/node"
 import { redirect } from "@remix-run/node"
 
 import { CUSTOM_ATTRIBUTES } from "~/config/consts"
+import posthog, { getDistinctId } from "~/services/posthog.server"
 import Sentry from "~/services/sentry"
 import { getShopifyId } from "~/utils/shopify"
 import { getOrderCustomAttributes } from "~/utils/shopify.server"
@@ -27,6 +28,17 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
     const listing = await db.listing.findFirstOrThrow({
       select: { path: true },
       where: { id: listingId },
+    })
+
+    const distinctId = getDistinctId(request.headers)
+
+    posthog.capture({
+      distinctId,
+      event: "order_completed",
+      properties: {
+        listingId,
+        orderId,
+      },
     })
 
     return redirect(`/${listing.path}/thank-you?order_id=${orderId}`)

@@ -1,15 +1,8 @@
 import { useLocation } from "@remix-run/react"
-import posthog, { type CaptureOptions, type Properties } from "posthog-js"
+import posthog from "posthog-js"
 import { useEffect } from "react"
 
 import { isProduction } from "~/config/vars"
-
-type Event =
-  | "cart_updated"
-  | "checkout_started"
-  | "item_viewed"
-  | "item_added"
-  | "item_removed"
 
 export function usePostHog(apiKey: string, host: string) {
   useEffect(() => {
@@ -27,12 +20,4 @@ export function useCapturePageview() {
   useEffect(() => {
     posthog.capture("$pageview")
   }, [location])
-}
-
-export function captureEvent(
-  event: Event,
-  properties?: Properties,
-  options?: CaptureOptions,
-) {
-  posthog.capture(event, properties, options)
 }

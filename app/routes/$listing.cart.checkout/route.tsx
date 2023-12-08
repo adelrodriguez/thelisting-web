@@ -9,6 +9,7 @@ import { z } from "zod"
 
 import { Alert } from "~/components/common"
 import { getSession } from "~/helpers/session.server"
+import posthog, { getDistinctId } from "~/services/posthog.server"
 import Sentry from "~/services/sentry"
 import { CartItemsSchema } from "~/utils/cart"
 import { checkStock } from "~/utils/checkout.server"
@@ -65,6 +66,17 @@ export async function action({
       noteId,
       sessionCartsKey: cartsKey,
       sku,
+    })
+
+    const distinctId = getDistinctId(headers)
+
+    posthog.capture({
+      distinctId,
+      event: "checkout_started",
+      properties: {
+        checkoutId: checkout.id,
+        sku,
+      },
     })
 
     return redirect(checkout.url)

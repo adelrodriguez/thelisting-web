@@ -20,7 +20,6 @@ import { zx } from "zodix"
 import { Button } from "~/components/common"
 import Tooltip from "~/components/common/Tooltip"
 import { Spinner } from "~/components/loading"
-import { captureEvent } from "~/services/posthog"
 import {
   useCart,
   useDialogPage,
@@ -79,10 +78,6 @@ export default function ListingCartPage() {
     if (cart.noteId) {
       formData.append("noteId", cart.noteId)
     }
-
-    captureEvent("checkout_started", {
-      sku: listing.sku,
-    })
 
     submit(formData, {
       action: `/${listing.path}/cart/checkout`,

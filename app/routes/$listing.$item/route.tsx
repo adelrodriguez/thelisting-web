@@ -3,11 +3,11 @@ import { XMarkIcon } from "@heroicons/react/24/outline"
 import type { LoaderFunctionArgs } from "@remix-run/node"
 import { redirect, json } from "@remix-run/node"
 import { useLoaderData } from "@remix-run/react"
+import posthog from "posthog-js"
 import { Fragment, useState } from "react"
 import { useTranslation } from "react-i18next"
 
 import { Button } from "~/components/common"
-import { captureEvent } from "~/services/posthog"
 import {
   useCart,
   useDialogPage,
@@ -65,7 +65,7 @@ export default function ListingItemDetailPage() {
 
     cart.add({ commerceId, id, price, quantity, sku, variantId })
 
-    captureEvent("item_added", { id, price, quantity, sku })
+    posthog.capture("item_added", { id, price, quantity, sku })
 
     close()
   }

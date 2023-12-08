@@ -1,11 +1,11 @@
 import type { Item } from "@prisma/client"
 import { Link, useParams } from "@remix-run/react"
+import posthog from "posthog-js"
 import { useTranslation } from "react-i18next"
 import type { RouteParams } from "routes-gen"
 import { route } from "routes-gen"
 
 import { Alert } from "~/components/common"
-import { captureEvent } from "~/services/posthog"
 import { useCart, useExchangeRate, useProduct } from "~/utils/hooks"
 import { formatPrice } from "~/utils/money"
 
@@ -69,7 +69,7 @@ export default function CartItem({
               onClick={() => {
                 cart.remove(id)
 
-                captureEvent("item_removed", { id, price, quantity, sku })
+                posthog.capture("item_removed", { id, price, quantity, sku })
               }}
               type="button"
             >
