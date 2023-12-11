@@ -14,7 +14,7 @@ export default function ImageCarousel({
   height,
 }: ImageCarouselProperties) {
   const [currentIndex, setCurrentIndex] = useState(0)
-  const carouselInterval = useRef<NodeJS.Timer>()
+  const carouselInterval = useRef<NodeJS.Timeout>()
 
   useEffect(() => {
     carouselInterval.current = setInterval(() => {

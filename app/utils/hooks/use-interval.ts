@@ -7,7 +7,7 @@ export default function useInterval(
   delay: number | null,
 ) {
   const savedCallback = useRef(callback)
-  const savedId = useRef<NodeJS.Timer>()
+  const savedId = useRef<NodeJS.Timeout>()
 
   // Remember the latest callback if it changes.
   useIsomorphicLayoutEffect(() => {
