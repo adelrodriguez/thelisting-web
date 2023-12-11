@@ -15,7 +15,7 @@ import { zx } from "zodix"
 
 import { Alert, Button } from "~/components/common"
 import { Form, SubmitButton, TextArea } from "~/components/form"
-import { useCart, useDialogPage, useTrackPageview } from "~/utils/hooks"
+import { useCart, useDialogPage } from "~/utils/hooks"
 import type { RouteHandle } from "~/utils/remix"
 
 export const handle: RouteHandle = {
@@ -129,8 +129,6 @@ export default function ListingCartNotePage() {
     close()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [actionData, close])
-
-  useTrackPageview()
 
   return (
     <Transition.Root appear as={Fragment} show={open}>

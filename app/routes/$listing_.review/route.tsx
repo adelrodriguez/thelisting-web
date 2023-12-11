@@ -14,7 +14,6 @@ import { zx } from "zodix"
 import { Button } from "~/components/common"
 import { OrderItem } from "~/components/registry"
 import i18next from "~/helpers/i18next.server"
-import { useTrackPageview } from "~/utils/hooks"
 import { formatPrice, getPriceSymbol } from "~/utils/money"
 
 export const handle = {
@@ -92,8 +91,6 @@ export async function loader({ request, params, context }: LoaderFunctionArgs) {
 export default function ListingReviewPage() {
   const { listing, stats } = useLoaderData<typeof loader>()
   const { t, i18n } = useTranslation(handle.i18n)
-
-  useTrackPageview({ listingId: listing.id })
 
   return (
     <main className="relative lg:min-h-full">

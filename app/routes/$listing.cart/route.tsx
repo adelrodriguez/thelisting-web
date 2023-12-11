@@ -20,12 +20,7 @@ import { zx } from "zodix"
 import { Button } from "~/components/common"
 import Tooltip from "~/components/common/Tooltip"
 import { Spinner } from "~/components/loading"
-import {
-  useCart,
-  useDialogPage,
-  useExchangeRate,
-  useTrackPageview,
-} from "~/utils/hooks"
+import { useCart, useDialogPage, useExchangeRate } from "~/utils/hooks"
 import { formatPrice } from "~/utils/money"
 
 import AddNoteReminderDialog from "./AddNoteReminderDialog"
@@ -56,8 +51,6 @@ export default function ListingCartPage() {
   const navigation = useNavigation()
   const { t } = useTranslation(handle.i18n)
   const { currency, exchangeRate } = useExchangeRate()
-
-  useTrackPageview({ listingId: listing.id })
 
   function handleCheckoutClick() {
     if (!cart.noteId) {

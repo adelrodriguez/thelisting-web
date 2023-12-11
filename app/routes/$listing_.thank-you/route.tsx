@@ -10,7 +10,6 @@ import { OrderItem } from "~/components/registry"
 import posthog, { getDistinctId } from "~/services/posthog.server"
 import Sentry from "~/services/sentry"
 import { generateCloudflareImageUrl } from "~/utils/cloudflare"
-import useTrackPageview from "~/utils/hooks/use-track-pageview"
 import { formatPrice } from "~/utils/money"
 import { getShopifyId } from "~/utils/shopify"
 import { getOrder } from "~/utils/shopify.server"
@@ -76,8 +75,6 @@ export default function ListingThankYouPage() {
   const { listing, order } = useLoaderData<typeof loader>()
 
   const total = order.totalPriceSet.presentmentMoney
-
-  useTrackPageview({ orderId: order.id })
 
   return (
     <main className="relative lg:min-h-full">

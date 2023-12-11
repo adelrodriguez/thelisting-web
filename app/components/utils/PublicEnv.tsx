@@ -1,6 +1,5 @@
 type PublicEnvs = {
   environment: "development" | "production" | "test"
-  gaTrackingId: string
   posthogHost: string
   posthogApiKey: string
   release?: string | undefined

@@ -78,7 +78,6 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
 
   const publicEnv: ComponentProps<typeof PublicEnv> = {
     environment: env.NODE_ENV,
-    gaTrackingId: env.GA_TRACKING_ID,
     posthogApiKey: env.POSTHOG_API_KEY,
     posthogHost: env.POSTHOG_HOST,
     release: env.RAILWAY_GIT_COMMIT_SHA,
@@ -127,28 +126,6 @@ function App() {
         <Links />
       </head>
       <body className="h-auto min-h-full">
-        {isProduction && (
-          <>
-            <script
-              async
-              src={`https://www.googletagmanager.com/gtag/js?id=${env.gaTrackingId}`}
-            />
-            <script
-              async
-              dangerouslySetInnerHTML={{
-                __html: `
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-                gtag('config', '${env.gaTrackingId}', {
-                  page_path: window.location.pathname,
-                });
-              `,
-              }}
-              id="gtag-init"
-            />
-          </>
-        )}
         <QueryClientProvider client={client}>
           <ExchangeRateProvider>
             <Outlet />
