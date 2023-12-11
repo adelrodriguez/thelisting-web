@@ -14,11 +14,13 @@ import {
   ScrollRestoration,
   useRouteError,
   isRouteErrorResponse,
+  useLocation,
 } from "@remix-run/react"
 import { captureRemixErrorBoundaryError, withSentry } from "@sentry/remix"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
-import type { ComponentProps } from "react"
+import posthog from "posthog-js"
+import { useEffect, type ComponentProps } from "react"
 import { useTranslation } from "react-i18next"
 
 import { NotFound } from "~/components/error"
@@ -26,7 +28,6 @@ import { PublicEnv } from "~/components/utils"
 import { isProduction } from "~/config/vars"
 import { shopifyStorefrontAPIEndpoint } from "~/config/vars.server"
 import i18next from "~/helpers/i18next.server"
-import { useCapturePageview, usePostHog } from "~/services/posthog"
 import stylesheet from "~/styles/app.css"
 import { ExchangeRateProvider, useChangeLanguage } from "~/utils/hooks"
 import { i18nCookie } from "~/utils/i18n"
@@ -114,10 +115,24 @@ export const meta: MetaFunction<typeof loader> = () => [
 function App() {
   const { env, locale } = useLoaderData<typeof loader>()
   const { i18n } = useTranslation()
+  const location = useLocation()
 
-  usePostHog(env.posthogApiKey, env.posthogHost)
+  // Change the language of the app based on the locale
   useChangeLanguage(locale)
-  useCapturePageview()
+
+  // Init PostHog analytics tracking
+  useEffect(() => {
+    posthog.init(env.posthogApiKey, {
+      api_host: env.posthogHost,
+      autocapture: isProduction,
+      capture_pageview: false,
+    })
+  }, [env.posthogApiKey, env.posthogHost])
+
+  // Capture all page views
+  useEffect(() => {
+    posthog.capture("$pageview")
+  }, [location])
 
   return (
     <html className="h-full" dir={i18n.dir()} lang={locale}>
