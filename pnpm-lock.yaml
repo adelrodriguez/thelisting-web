@@ -177,8 +177,8 @@ dependencies:
     specifier: 1.35.1
     version: 1.35.1
   posthog-js:
-    specifier: 1.93.6
-    version: 1.93.6
+    specifier: 1.95.0
+    version: 1.95.0
   posthog-node:
     specifier: 3.2.0
     version: 3.2.0
@@ -10120,8 +10120,8 @@ packages:
       picocolors: 1.0.0
       source-map-js: 1.0.2
 
-  /posthog-js@1.93.6:
-    resolution: {integrity: sha512-Jou2awqQH5PDtDe9hZxpe9PO4D0uUOU7eA1lGni4pBxJckeA94P7WF3ieQj355xY96ZcXVQmGJykypO/FyBvpQ==}
+  /posthog-js@1.95.0:
+    resolution: {integrity: sha512-HpepQBEPVi7Al97wBKLYW9Xs525TJTffc5ZwbFMj46l3CuJgkmPlfeTLhtC7hSXEgpNuzrJkzXC+/YeE/Ri2Aw==}
     dependencies:
       fflate: 0.4.8
     dev: false
