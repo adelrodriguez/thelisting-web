@@ -1,5 +1,6 @@
 import { useSearchParams } from "@remix-run/react"
 import i18next from "i18next"
+import posthog from "posthog-js"
 import { type ChangeEvent } from "react"
 import { useTranslation } from "react-i18next"
 
@@ -18,6 +19,8 @@ export default function LanguageCurrencySelector({
 
   function handleLanguageChange(e: ChangeEvent<HTMLSelectElement>) {
     void i18next.changeLanguage(e.target.value, () => {
+      posthog.capture("language_changed", { language: e.target.value })
+
       setSearchParams(
         (params) => {
           params.set("lng", e.target.value)
@@ -30,6 +33,8 @@ export default function LanguageCurrencySelector({
   }
 
   function handleCurrencyChange(e: ChangeEvent<HTMLSelectElement>) {
+    posthog.capture("currency_changed", { currency: e.target.value })
+
     setCurrency(e.target.value as Currency)
   }
 
