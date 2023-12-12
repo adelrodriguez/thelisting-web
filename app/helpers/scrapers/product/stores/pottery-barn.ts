@@ -19,13 +19,10 @@ export default class PotteryBarnScraper extends BaseScraper {
   }
 
   public get image(): Promise<string | null> {
-    return (
-      this.page
-        .$eval("#hero-0", (element) => element.getAttribute("srcset"))
-        // TODO(adelrodriguez): Remove non-null assertion
-        .then((srcset) => srcset!.split(",").pop()!.trim().split(" ")[0]!)
-        .catch((err) => this.logError("image: " + err.message))
-    )
+    return this.page
+      .$eval("#hero-0", (element) => element.getAttribute("srcset"))
+      .then((srcset) => srcset?.split(",").pop()?.trim().split(" ")[0] ?? null)
+      .catch((err) => this.logError("image: " + err.message))
   }
 
   public get amount(): Promise<number | null> {

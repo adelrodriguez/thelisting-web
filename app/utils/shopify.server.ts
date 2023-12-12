@@ -280,7 +280,7 @@ export async function getProductsByTag(tag: string) {
     shopifyAdminAPIHeaders,
   )
 
-  return products.edges.map((product) => product!.node)
+  return products.edges.filter(Boolean).map((product) => product.node)
 }
 
 export async function publishToCurrentChannel(id: string) {

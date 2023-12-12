@@ -27,7 +27,7 @@ export function ExchangeRateProvider({ children }: { children: ReactNode }) {
       const res = await fetch("/api/exchange-rates/" + currency)
       const data = (await res.json()) as { exchangeRate: number }
 
-      return data as { exchangeRate: number }
+      return data
     },
     {
       refetchInterval: ONE_MINUTE.inMilliseconds * 5,

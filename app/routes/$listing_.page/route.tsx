@@ -106,7 +106,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 
 export default function ListingPage() {
   const { listing, coverImages } = useLoaderData<typeof loader>()
-  const [currentImage, setCurrentImage] = useState(coverImages[0])
+  const [currentImage, setCurrentImage] = useState(coverImages[0] || "")
   const handleImageChange = useCallback((image: string) => {
     setCurrentImage(image)
   }, [])
@@ -124,8 +124,8 @@ export default function ListingPage() {
               className="sticky inset-0 h-screen w-full object-cover object-center"
               exit={{ opacity: 0 }}
               initial={{ opacity: 0 }}
-              key={currentImage!}
-              src={generateCloudflareImageUrl(currentImage!, "display")}
+              key={currentImage}
+              src={generateCloudflareImageUrl(currentImage, "display")}
               transition={{ duration: 0.5 }}
             />
           </AnimatePresence>

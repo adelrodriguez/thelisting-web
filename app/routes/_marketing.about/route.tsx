@@ -148,7 +148,7 @@ export default function AboutPage() {
               </dl>
               <div className="mt-10">
                 <Link className="text-base font-medium text-gray-600" to="#">
-                  Learn more about how we're changing the world
+                  Learn more about how we&apos;re changing the world
                   <span aria-hidden="true"> &rarr;</span>
                 </Link>
               </div>
@@ -210,7 +210,7 @@ export default function AboutPage() {
                   id. In id ut tempus egestas. Enim sit aliquam nec, a. Morbi
                   enim fermentum lacus in. Viverra.
                 </p>
-                <h3>How we're different</h3>
+                <h3>How we&apos;re different</h3>
                 <p>
                   Tincidunt integer commodo, cursus etiam aliquam neque, et.
                   Consectetur pretium in volutpat, diam. Montes, magna cursus

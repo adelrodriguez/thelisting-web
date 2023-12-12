@@ -31,9 +31,9 @@ export default class JanieAndJack extends BaseScraper {
 
         const images = srcset.split(", ").map((image) => {
           const parts = image.split(" ")
+          const size = parseFloat(parts[1] || "0")
 
-          // TODO(adelrodriguez): Fix this
-          return { size: parseFloat(parts[1]!), url: parts[0] }
+          return { size, url: parts[0] }
         })
 
         images.sort((a, b) => b.size - a.size)

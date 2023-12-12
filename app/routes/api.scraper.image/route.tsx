@@ -19,7 +19,17 @@ export async function loader({ request }: LoaderFunctionArgs) {
   }
 
   const res = await fetch(imageUrl)
-  const reader = res.body!.getReader()
+  const contentType = res.headers.get("Content-Type")
+  const reader = res.body?.getReader()
+
+  if (!reader) {
+    throw badRequest({ message: "Missing body" })
+  }
+
+  if (!contentType) {
+    throw badRequest({ message: "Missing Content-Type header" })
+  }
+
   const response = new ReadableStream({
     start: async (controller) => {
       for (;;) {
@@ -42,7 +52,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   return new Response(response, {
     headers: {
-      "Content-Type": res.headers.get("Content-Type")!,
+      "Content-Type": contentType,
     },
   })
 }

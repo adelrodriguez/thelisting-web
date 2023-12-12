@@ -1,4 +1,3 @@
-import type { Item } from "@prisma/client"
 import { useTranslation } from "react-i18next"
 
 import { Alert } from "~/components/common"
@@ -10,11 +9,11 @@ export default function OrderItem({
   quantity,
   cost,
 }: {
-  commerceId: Item["commerceId"]
+  commerceId: string
   quantity: number
   cost?: number
 }) {
-  const { data, isLoading, isError } = useProduct(commerceId!)
+  const { data, isLoading, isError } = useProduct(commerceId)
   const { t } = useTranslation(["registry", "common"])
 
   if (isLoading) {

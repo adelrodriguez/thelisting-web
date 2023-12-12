@@ -19,7 +19,6 @@ export default function Select<T extends SelectOption>({
   description,
   label,
   options,
-  placeholder,
   required,
   ...props
 }: {
