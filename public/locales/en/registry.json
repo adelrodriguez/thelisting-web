@@ -40,6 +40,7 @@
     "title": "Your gift has no message 👀",
     "description": "We see that you haven't left a personalized message for your gift. Would you like to add a message?",
     "confirm": "Add a message ✨",
-    "cancel": "Proceed to pay 🎁"
+    "cancel": "Proceed to pay 🎁",
+    "loading": "Preparing..."
   }
 }

@@ -5,6 +5,7 @@ declare module "routes-gen" {
     "/:listing/:item": { "listing": string, "item": string };
     "/:listing/cart": { "listing": string };
     "/:listing/cart/checkout": { "listing": string };
+    "/:listing/cart/confirm": { "listing": string };
     "/:listing/cart/note": { "listing": string };
     "/:listing/page": { "listing": string };
     "/:listing/review": { "listing": string };
@@ -62,6 +63,7 @@ declare module "routes-gen" {
       | ["/:listing/:item", RouteParams["/:listing/:item"]]
       | ["/:listing/cart", RouteParams["/:listing/cart"]]
       | ["/:listing/cart/checkout", RouteParams["/:listing/cart/checkout"]]
+      | ["/:listing/cart/confirm", RouteParams["/:listing/cart/confirm"]]
       | ["/:listing/cart/note", RouteParams["/:listing/cart/note"]]
       | ["/:listing/page", RouteParams["/:listing/page"]]
       | ["/:listing/review", RouteParams["/:listing/review"]]

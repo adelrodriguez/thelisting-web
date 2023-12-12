@@ -1,6 +1,9 @@
+import { Listing } from "@prisma/client"
+import { useSubmit } from "@remix-run/react"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import currency from "currency.js"
 import { type ReactNode, createContext, useContext } from "react"
+import { route } from "routes-gen"
 import SuperJSON from "superjson"
 
 import type { CartItem } from "~/utils/cart"
@@ -20,17 +23,18 @@ type BaseCart = {
 
 type Cart = BaseCart & {
   add: (item: CartItem) => void
-  remove: (item: string) => void
   attachNoteId: (note: string | null) => void
+  checkout: () => void
+  remove: (item: string) => void
 }
 
 const Context = createContext<Cart | undefined>(undefined)
 
-function createDefaultCart(listing: string): BaseCart {
+function createDefaultCart(listingId: string): BaseCart {
   return {
     itemCount: 0,
     items: new Map<string, CartItem>(),
-    listingId: listing,
+    listingId,
     noteId: undefined,
     shipping: 0,
     subtotal: 0,
@@ -45,26 +49,28 @@ export function CartProvider({
   listing,
 }: {
   children: ReactNode
-  listing: string
+  listing: Pick<Listing, "id" | "sku">
 }) {
   // We use a Map to store the carts for each listing
   const { data } = useQuery(
-    ["carts", listing],
+    ["carts", listing.id],
     async () => {
-      const res = await fetch("/api/cart?" + new URLSearchParams({ listing }))
-      // TODO(adelrodriguez): Fix this type
+      const res = await fetch(
+        "/api/cart?" + new URLSearchParams({ listingId: listing.id }),
+      )
       const data = (await res.json()) as { cart: string }
       const cart = SuperJSON.parse<BaseCart>(data.cart)
 
       return cart
     },
     {
-      initialData: createDefaultCart(listing),
+      initialData: createDefaultCart(listing.id),
       refetchOnWindowFocus: true,
     },
   )
+  const submit = useSubmit()
 
-  const currentCart = data || createDefaultCart(listing)
+  const currentCart = data || createDefaultCart(listing.id)
 
   const subtotal = calculateSubtotal([...currentCart.items.values()])
   const itemCount = [...currentCart.items.values()].reduce(
@@ -76,17 +82,17 @@ export function CartProvider({
   const queryClient = useQueryClient()
   const storeCarts = useMutation({
     mutationFn: (cart: BaseCart) =>
-      fetch("/api/cart?" + new URLSearchParams({ listing }), {
+      fetch("/api/cart?" + new URLSearchParams({ listingId: listing.id }), {
         body: SuperJSON.stringify(cart),
         method: "POST",
       }),
     onMutate: (cart) => {
-      queryClient.setQueryData(["carts", listing], cart)
+      queryClient.setQueryData(["carts", listing.id], cart)
 
       return cart
     },
     onSuccess: async (_, cart) => {
-      queryClient.setQueryData(["carts", listing], cart)
+      queryClient.setQueryData(["carts", listing.id], cart)
     },
   })
 
@@ -133,14 +139,36 @@ export function CartProvider({
     storeCarts.mutate(newCart)
   }
 
+  function checkout() {
+    const formData = new FormData()
+    const cartItems = JSON.stringify([...currentCart.items.values()])
+
+    formData.append("cartItems", cartItems)
+    formData.append("listingId", listing.id)
+    formData.append("sku", `${listing.sku}`)
+
+    if (currentCart.noteId) {
+      formData.append("noteId", currentCart.noteId)
+    }
+
+    submit(formData, {
+      action: route("/:listing/cart/checkout", {
+        listing: `${listing.sku}`,
+      }),
+      method: "post",
+      replace: true,
+    })
+  }
+
   return (
     <Context.Provider
       value={{
         add: addItemToCart,
         attachNoteId: attachNoteIdToCart,
+        checkout,
         itemCount,
         items: currentCart.items,
-        listingId: listing,
+        listingId: listing.id,
         noteId: currentCart.noteId,
         remove: removeItemFromCart,
         shipping,

@@ -63,7 +63,7 @@ export default function ListingPage() {
   const [menuOpen, setMenuOpen] = useState(false)
 
   return (
-    <CartProvider listing={listing.id}>
+    <CartProvider listing={listing}>
       <main className="relative">
         <div className="sticky top-0 z-20 h-16 w-full bg-white p-3 drop-shadow-md lg:h-20 lg:p-4">
           <img

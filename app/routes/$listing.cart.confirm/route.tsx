@@ -1,31 +1,41 @@
 import { Dialog, Transition } from "@headlessui/react"
 import { TagIcon } from "@heroicons/react/24/outline"
-import { Fragment, useRef } from "react"
+import { useNavigate, useNavigation, useParams } from "@remix-run/react"
+import { Fragment, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
+import { RouteParams, route } from "routes-gen"
 
-export default function AddNoteReminderDialog({
-  open,
-  onClose,
-  onCancel,
-  onConfirm,
-}: {
-  open: boolean
-  onCancel: () => void
-  onConfirm: () => void
-  onClose: () => void
-}) {
+import { Spinner } from "~/components/loading"
+import { useCart } from "~/utils/hooks"
+import { RouteHandle } from "~/utils/remix"
+
+export const handle: RouteHandle = {
+  i18n: ["registry", "common"],
+  id: "listing-cart-confirm",
+}
+
+export default function Page() {
+  const navigate = useNavigate()
+  const navigation = useNavigation()
+  const cart = useCart()
   const { t } = useTranslation("registry")
   const confirmButtonRef = useRef(null)
+  const [open, isOpen] = useState(true)
+  const { listing } = useParams<RouteParams["/:listing/cart/confirm"]>()
+  const isSubmitting = navigation.state === "submitting"
+
+  if (!listing) return null
 
   return (
-    <Transition.Root as={Fragment} show={open}>
+    <Transition.Root appear as={Fragment} show={open}>
       <Dialog
         as="div"
         className="relative z-30"
         initialFocus={confirmButtonRef}
-        onClose={onClose}
+        onClose={() => isOpen(false)}
       >
         <Transition.Child
+          afterLeave={() => navigate(route("/:listing/cart", { listing }))}
           as={Fragment}
           enter="ease-out duration-300"
           enterFrom="opacity-0"
@@ -34,7 +44,7 @@ export default function AddNoteReminderDialog({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+          <div className="fixed inset-0 bg-slate-500 bg-opacity-75 transition-opacity" />
         </Transition.Child>
 
         <div className="fixed inset-0 z-10 overflow-y-auto">
@@ -59,12 +69,12 @@ export default function AddNoteReminderDialog({
                   <div className="mt-3 text-center sm:mt-5">
                     <Dialog.Title
                       as="h3"
-                      className="text-base font-semibold leading-6 text-gray-900"
+                      className="text-base font-semibold leading-6 text-slate-900"
                     >
                       {t("addNoteReminder.title")}
                     </Dialog.Title>
                     <div className="mt-2">
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-slate-500">
                         {t("addNoteReminder.description")}
                       </p>
                     </div>
@@ -73,18 +83,30 @@ export default function AddNoteReminderDialog({
                 <div className="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
                   <button
                     className="inline-flex w-full justify-center rounded-md bg-slate-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-slate-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-600 sm:col-start-2"
-                    onClick={onConfirm}
+                    onClick={() => {
+                      navigate(route("/:listing/cart/note", { listing }), {
+                        replace: true,
+                      })
+                    }}
                     ref={confirmButtonRef}
                     type="button"
                   >
                     {t("addNoteReminder.confirm")}
                   </button>
                   <button
-                    className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:col-start-1 sm:mt-0"
-                    onClick={onCancel}
+                    className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-slate-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-slate-50 sm:col-start-1 sm:mt-0"
+                    disabled={isSubmitting}
+                    onClick={() => cart.checkout()}
                     type="button"
                   >
-                    {t("addNoteReminder.cancel")}
+                    {isSubmitting ? (
+                      <>
+                        <Spinner className="h-5 w-5 text-slate-900" />
+                        {t("addNoteReminder.loading")}
+                      </>
+                    ) : (
+                      t("addNoteReminder.cancel")
+                    )}
                   </button>
                 </div>
               </Dialog.Panel>
