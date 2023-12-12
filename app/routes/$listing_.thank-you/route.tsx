@@ -1,5 +1,5 @@
 import type { LoaderFunctionArgs } from "@remix-run/node"
-import { json, redirect } from "@remix-run/node"
+import { json } from "@remix-run/node"
 import { Link, useLoaderData } from "@remix-run/react"
 import { ReasonPhrases, StatusCodes } from "http-status-codes"
 import { useTranslation } from "react-i18next"
@@ -31,22 +31,9 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
 
     const order = await getOrder(getShopifyId(orderId, "Order"))
 
-    const listing = await db.listing.findFirst({
+    const listing = await db.listing.findFirstOrThrow({
       where: { path, status: "Published" },
     })
-
-    if (!listing) {
-      throw json(
-        {
-          message: "Sorry, we couldn’t find the page you’re looking for.",
-          title: "Not Found",
-        },
-        {
-          status: StatusCodes.NOT_FOUND,
-          statusText: ReasonPhrases.NOT_FOUND,
-        },
-      )
-    }
 
     const distinctId = getDistinctId(request.headers)
 
@@ -59,6 +46,17 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
       },
     })
 
+    // Track the order completed event
+    posthog.capture({
+      distinctId,
+      event: "order_completed",
+      properties: {
+        listingId: listing.id,
+        orderId,
+        total: order.totalPriceSet.presentmentMoney.amount,
+      },
+    })
+
     return json({ listing, order })
   } catch (error) {
     Sentry.captureException(error)
@@ -66,7 +64,16 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
       orderId,
     })
 
-    return redirect("/")
+    throw json(
+      {
+        message: "Sorry, we couldn’t find the page you’re looking for.",
+        title: "Not Found",
+      },
+      {
+        status: StatusCodes.NOT_FOUND,
+        statusText: ReasonPhrases.NOT_FOUND,
+      },
+    )
   }
 }
 
@@ -104,14 +111,17 @@ export default function ListingThankYouPage() {
             </p>
 
             <ul className="mt-6 divide-y divide-gray-200 border-t border-gray-200 text-sm font-medium text-gray-500">
-              {order.lineItems?.nodes.map((lineItem) => (
-                <li className="py-6" key={lineItem.product?.id}>
-                  <OrderItem
-                    commerceId={lineItem.product?.id || null}
-                    quantity={lineItem.quantity}
-                  />
-                </li>
-              ))}
+              {order.lineItems?.nodes.map(
+                (lineItem) =>
+                  lineItem.product?.id && (
+                    <li className="py-6" key={lineItem.product?.id}>
+                      <OrderItem
+                        commerceId={lineItem.product?.id}
+                        quantity={lineItem.quantity}
+                      />
+                    </li>
+                  ),
+              )}
             </ul>
 
             <div className="flex items-center justify-between border-t border-gray-200 pt-6 text-gray-900">
