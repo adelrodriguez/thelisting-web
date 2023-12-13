@@ -20026,7 +20026,10 @@ export type MarketingActivity = Node & {
   id: Scalars['ID']['output'];
   /** Whether the marketing activity is in the main workflow version of the marketing automation. */
   inMainWorkflowVersion: Scalars['Boolean']['output'];
-  /** The available marketing channels for a marketing activity. */
+  /**
+   * The medium through which the marketing activity and event reached consumers. This is used for reporting aggregation.
+   * @deprecated Use `marketingChannelType` instead.
+   */
   marketingChannel: MarketingChannel;
   /** Associated marketing event of this marketing activity. */
   marketingEvent?: Maybe<MarketingEvent>;
@@ -20093,11 +20096,11 @@ export type MarketingActivityCreateExternalInput = {
   adSpend?: InputMaybe<MoneyInput>;
   /** The budget for this marketing activity. */
   budget?: InputMaybe<MarketingActivityBudgetInput>;
-  /** Specifies the type of marketing that was used. This is used for reporting aggregation. */
+  /** The medium through which the marketing activity and event reached consumers. This is used for reporting aggregation. */
   channel: MarketingChannel;
-  /** The date and time when the activity ended. If omitted or set to `null`, the current time will be use, if the state is set to `INACTIVE` or `DELETED_EXTERNALLY`. */
+  /** The date and time at which the activity ended. If omitted or set to `null`, the current time will be used if the status is set to `INACTIVE` or `DELETED_EXTERNALLY`. */
   end?: InputMaybe<Scalars['DateTime']['input']>;
-  /** The last domain a user visited before being redirected to the storefront. */
+  /** The domain from which ad clicks are forwarded to the shop. */
   referringDomain?: InputMaybe<Scalars['String']['input']>;
   /** The ID of an activity that's hosted outside of Shopify. */
   remoteId?: InputMaybe<Scalars['String']['input']>;
@@ -20105,13 +20108,13 @@ export type MarketingActivityCreateExternalInput = {
   remotePreviewImageUrl?: InputMaybe<Scalars['URL']['input']>;
   /** The URL for viewing and/or managing the activity outside of Shopify. */
   remoteUrl: Scalars['URL']['input'];
-  /** The date and time when the activity is scheduled to end. */
+  /** The date and time at which the activity is scheduled to end. */
   scheduledEnd?: InputMaybe<Scalars['DateTime']['input']>;
-  /** The date and time when the activity is scheduled to start. */
+  /** The date and time at which the activity is scheduled to start. */
   scheduledStart?: InputMaybe<Scalars['DateTime']['input']>;
-  /** The date and time when the activity started. If omitted or set to `null`, the current time will be used. */
+  /** The date and time at which the activity started. If omitted or set to `null`, the current time will be used. */
   start?: InputMaybe<Scalars['DateTime']['input']>;
-  /** The method of marketing used for this marketing activity. The marketing tactic determines which default fields are included in the marketing activity.. */
+  /** The method of marketing used for this marketing activity. The marketing tactic determines which default fields are included in the marketing activity. */
   tactic: MarketingTactic;
   /** The title of the marketing activity. */
   title: Scalars['String']['input'];
@@ -20260,28 +20263,24 @@ export type MarketingActivityUpdateExternalInput = {
   adSpend?: InputMaybe<MoneyInput>;
   /** The budget for this marketing activity. */
   budget?: InputMaybe<MarketingActivityBudgetInput>;
-  /** Specifies the type of marketing that was used. This is used for reporting aggregation. */
-  channel?: InputMaybe<MarketingChannel>;
-  /** The date and time when the activity ended. */
+  /** The date and time at which the activity ended. */
   end?: InputMaybe<Scalars['DateTime']['input']>;
-  /** The last domain a user visited before being redirected to the storefront. */
+  /** The domain from which ad clicks are forwarded to the shop. */
   referringDomain?: InputMaybe<Scalars['String']['input']>;
   /** The URL for a preview image that's used for the marketing activity. */
   remotePreviewImageUrl?: InputMaybe<Scalars['URL']['input']>;
   /** The URL for viewing and/or managing the activity outside of Shopify. */
   remoteUrl?: InputMaybe<Scalars['URL']['input']>;
-  /** The date and time when the activity is scheduled to end. */
+  /** The date and time at which the activity is scheduled to end. */
   scheduledEnd?: InputMaybe<Scalars['DateTime']['input']>;
-  /** The date and time when the activity is scheduled to start. */
+  /** The date and time at which the activity is scheduled to start. */
   scheduledStart?: InputMaybe<Scalars['DateTime']['input']>;
-  /** The date and time when the activity started. */
+  /** The date and time at which the activity started. */
   start?: InputMaybe<Scalars['DateTime']['input']>;
-  /** The method of marketing used for this marketing activity. The marketing tactic determines which default fields are included in the marketing activity.. */
+  /** The method of marketing used for this marketing activity. The marketing tactic determines which default fields are included in the marketing activity. */
   tactic?: InputMaybe<MarketingTactic>;
   /** The title of the marketing activity. */
   title?: InputMaybe<Scalars['String']['input']>;
-  /** Specifies the [Urchin Traffic Module (UTM) parameters](https://en.wikipedia.org/wiki/UTM_parameters) that are associated with a related marketing campaign. */
-  utm?: InputMaybe<UtmInput>;
 };
 
 /** Return type for `marketingActivityUpdateExternal` mutation. */
@@ -20390,10 +20389,7 @@ export enum MarketingBudgetBudgetType {
   Lifetime = 'LIFETIME'
 }
 
-/**
- * The available marketing channels for a marketing activity or event. A marketing channel is broad category of marketing, used for reporting aggregation.
- *
- */
+/** The medium through which the marketing activity and event reached consumers. This is used for reporting aggregation. */
 export enum MarketingChannel {
   /** Displayed ads. */
   Display = 'DISPLAY',
@@ -20410,9 +20406,9 @@ export enum MarketingChannel {
 /** Marketing engagement represents customer activity taken on a marketing activity or a marketing channel. */
 export type MarketingEngagement = {
   __typename?: 'MarketingEngagement';
-  /** The total ad spend for the day, if the marketing event is a paid ad with a daily spend. */
+  /** The total ad spend for the marketing content. Recurring weekly, monthly, or yearly spend needs to be divided into daily amounts. */
   adSpend?: Maybe<MoneyV2>;
-  /** The total number of clicks on the marketing event for the day. */
+  /** The total number of interactions, such as a button press or a screen touch, that occurred on the marketing content. */
   clicksCount?: Maybe<Scalars['Int']['output']>;
   /** The total number of comments on the marketing content. */
   commentsCount?: Maybe<Scalars['Int']['output']>;
@@ -20424,7 +20420,7 @@ export type MarketingEngagement = {
   favoritesCount?: Maybe<Scalars['Int']['output']>;
   /** The date time at which the data was fetched. */
   fetchedAt?: Maybe<Scalars['DateTime']['output']>;
-  /** The total number of impressions for the day. */
+  /** The total number of times marketing content was displayed to users, whether or not an interaction occurred. For message-based platforms such as email or SMS, this represents the number of marketing emails or messages that were delivered. */
   impressionsCount?: Maybe<Scalars['Int']['output']>;
   /** Whether the engagements are reported as lifetime totals rather than daily increments. */
   isCumulative?: Maybe<Scalars['Boolean']['output']>;
@@ -20438,11 +20434,11 @@ export type MarketingEngagement = {
   sharesCount?: Maybe<Scalars['Int']['output']>;
   /** The total number of unique clicks on the marketing content. */
   uniqueClicksCount?: Maybe<Scalars['Int']['output']>;
-  /** The total number of unique views on the marketing content. For message-based platforms such as email or SMS, this represents the number of unique users that opened a marketing email or message. For video-based content, this represents the number of unique users that played video content. */
+  /** The total number of all users who saw marketing content since it was published. For  message-based platforms such as email or SMS, this represents the number of unique users that opened a  marketing email or message. For video-based content, this represents the number of unique users that  played video content. */
   uniqueViewsCount?: Maybe<Scalars['Int']['output']>;
   /** The total number of unsubscribes on the marketing content. For social media platforms, this represents the number of unfollows. */
   unsubscribesCount?: Maybe<Scalars['Int']['output']>;
-  /** The UTC Offset that the app is using to determine which date to allocate spend to. */
+  /** The time difference, in hours, between UTC and the time zone used to aggregate these metrics. */
   utcOffset?: Maybe<Scalars['UtcOffset']['output']>;
   /** The total number of views on the marketing content. For message-based platforms such as email or SMS, this represents the number of times marketing emails or messages were opened. For video-based content, this represents the number of times videos were played. */
   viewsCount?: Maybe<Scalars['Int']['output']>;
@@ -20459,9 +20455,9 @@ export type MarketingEngagementCreatePayload = {
 
 /** The input fields for a marketing engagement. */
 export type MarketingEngagementInput = {
-  /** The total ad spend for the day, if the marketing event is a paid ad with a daily spend. */
+  /** The total ad spend for the marketing content. Recurring weekly, monthly, or yearly spend needs to be divided into daily amounts. */
   adSpend?: InputMaybe<MoneyInput>;
-  /** The total number of clicks on the marketing event for the day. */
+  /** The total number of interactions, such as a button press or a screen touch, that occurred on the marketing content. */
   clicksCount?: InputMaybe<Scalars['Int']['input']>;
   /** The total number of comments on the marketing content. */
   commentsCount?: InputMaybe<Scalars['Int']['input']>;
@@ -20473,7 +20469,7 @@ export type MarketingEngagementInput = {
   favoritesCount?: InputMaybe<Scalars['Int']['input']>;
   /** The date time at which the data was fetched. */
   fetchedAt?: InputMaybe<Scalars['DateTime']['input']>;
-  /** The total number of impressions for the day. */
+  /** The total number of times marketing content was displayed to users, whether or not an interaction occurred. For message-based platforms such as email or SMS, this represents the number of marketing emails or messages that were delivered. */
   impressionsCount?: InputMaybe<Scalars['Int']['input']>;
   /** Whether the engagements are reported as lifetime totals rather than daily increments. */
   isCumulative?: InputMaybe<Scalars['Boolean']['input']>;
@@ -20485,11 +20481,11 @@ export type MarketingEngagementInput = {
   sharesCount?: InputMaybe<Scalars['Int']['input']>;
   /** The total number of unique clicks on the marketing content. */
   uniqueClicksCount?: InputMaybe<Scalars['Int']['input']>;
-  /** The total number of unique views on the marketing content. For message-based platforms such as email or SMS, this represents the number of unique users that opened a marketing email or message. For video-based content, this represents the number of unique users that played video content. */
+  /** The total number of all users who saw marketing content since it was published. For  message-based platforms such as email or SMS, this represents the number of unique users that opened a  marketing email or message. For video-based content, this represents the number of unique users that  played video content. */
   uniqueViewsCount?: InputMaybe<Scalars['Int']['input']>;
   /** The total number of unsubscribes on the marketing content. For social media platforms, this represents the number of unfollows. */
   unsubscribesCount?: InputMaybe<Scalars['Int']['input']>;
-  /** The UTC Offset that the app is using to determine which date to allocate spend to. */
+  /** The time difference, in hours, between UTC and the time zone used to aggregate these metrics. */
   utcOffset?: InputMaybe<Scalars['UtcOffset']['input']>;
   /** The total number of views on the marketing content. For message-based platforms such as email or SMS, this represents the number of times marketing emails or messages were opened. For video-based content, this represents the number of times videos were played. */
   viewsCount?: InputMaybe<Scalars['Int']['input']>;
@@ -20500,7 +20496,10 @@ export type MarketingEvent = LegacyInteroperability & Node & {
   __typename?: 'MarketingEvent';
   /** The app that the marketing event is attributed to. */
   app: App;
-  /** The marketing channel used by the marketing event. */
+  /**
+   * The medium through which the marketing activity and event reached consumers. This is used for reporting aggregation.
+   * @deprecated Use `marketingChannelType` instead.
+   */
   channel?: Maybe<MarketingChannel>;
   /** A human-readable description of the marketing event. */
   description?: Maybe<Scalars['String']['output']>;
@@ -23455,7 +23454,7 @@ export type Mutation = {
   marketingActivityUpdate?: Maybe<MarketingActivityUpdatePayload>;
   /** Update an external marketing activity. */
   marketingActivityUpdateExternal?: Maybe<MarketingActivityUpdateExternalPayload>;
-  /** Creates a new marketing event engagement for a marketing activity or a marketing channel. */
+  /** Creates a new marketing engagement for a marketing activity or a marketing channel. */
   marketingEngagementCreate?: Maybe<MarketingEngagementCreatePayload>;
   /**
    * Creates a metafield definition.
@@ -46413,7 +46412,7 @@ export type GetProductQueryVariables = Exact<{
 }>;
 
 
-export type GetProductQuery = { __typename?: 'QueryRoot', product?: { __typename?: 'Product', title: string, vendor: string, variants: { __typename?: 'ProductVariantConnection', nodes: Array<{ __typename?: 'ProductVariant', price: any }> }, metafields: { __typename?: 'MetafieldConnection', nodes: Array<{ __typename?: 'Metafield', key: string, namespace: string, value: string, type: string }> } } | null };
+export type GetProductQuery = { __typename?: 'QueryRoot', product?: { __typename?: 'Product', title: string, vendor: string, variants: { __typename?: 'ProductVariantConnection', nodes: Array<{ __typename?: 'ProductVariant', price: any, inventoryItem: { __typename?: 'InventoryItem', unitCost?: { __typename?: 'MoneyV2', amount: any } | null } }> }, metafields: { __typename?: 'MetafieldConnection', nodes: Array<{ __typename?: 'Metafield', key: string, namespace: string, value: string, type: string }> } } | null };
 
 export type GetCollectionQueryVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -46433,5 +46432,5 @@ export const AddTagsDocument = {"kind":"Document","definitions":[{"kind":"Operat
 export const GetOrderCustomAttributesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getOrderCustomAttributes"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"order"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"customAttributes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"key"}},{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]}}]}}]} as unknown as DocumentNode<GetOrderCustomAttributesQuery, GetOrderCustomAttributesQueryVariables>;
 export const GetOrderDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getOrder"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"order"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"processedAt"}},{"kind":"Field","name":{"kind":"Name","value":"currencyCode"}},{"kind":"Field","name":{"kind":"Name","value":"customer"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"displayName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}},{"kind":"Field","name":{"kind":"Name","value":"billingAddress"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"address1"}},{"kind":"Field","name":{"kind":"Name","value":"address2"}},{"kind":"Field","name":{"kind":"Name","value":"city"}},{"kind":"Field","name":{"kind":"Name","value":"country"}},{"kind":"Field","name":{"kind":"Name","value":"zip"}},{"kind":"Field","name":{"kind":"Name","value":"phone"}}]}},{"kind":"Field","name":{"kind":"Name","value":"tags"}},{"kind":"Field","name":{"kind":"Name","value":"customAttributes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"key"}},{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"lineItems"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"IntValue","value":"20"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"quantity"}},{"kind":"Field","name":{"kind":"Name","value":"product"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"variants"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"IntValue","value":"1"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"price"}},{"kind":"Field","name":{"kind":"Name","value":"inventoryItem"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"unitCost"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}}]}}]}}]}}]}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalPriceSet"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"presentmentMoney"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"currencyCode"}}]}},{"kind":"Field","name":{"kind":"Name","value":"shopMoney"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"currencyCode"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"customAttributes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"key"}},{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]}}]}}]} as unknown as DocumentNode<GetOrderQuery, GetOrderQueryVariables>;
 export const GetProductsByTagDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getProductsByTag"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"query"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"products"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"IntValue","value":"10"}},{"kind":"Argument","name":{"kind":"Name","value":"query"},"value":{"kind":"Variable","name":{"kind":"Name","value":"query"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetProductsByTagQuery, GetProductsByTagQueryVariables>;
-export const GetProductDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getProduct"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"product"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"vendor"}},{"kind":"Field","name":{"kind":"Name","value":"variants"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"IntValue","value":"1"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"price"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"metafields"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"IntValue","value":"10"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"key"}},{"kind":"Field","name":{"kind":"Name","value":"namespace"}},{"kind":"Field","name":{"kind":"Name","value":"value"}},{"kind":"Field","name":{"kind":"Name","value":"type"}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetProductQuery, GetProductQueryVariables>;
+export const GetProductDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getProduct"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"product"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"vendor"}},{"kind":"Field","name":{"kind":"Name","value":"variants"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"IntValue","value":"1"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"price"}},{"kind":"Field","name":{"kind":"Name","value":"inventoryItem"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"unitCost"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}}]}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"metafields"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"IntValue","value":"10"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"key"}},{"kind":"Field","name":{"kind":"Name","value":"namespace"}},{"kind":"Field","name":{"kind":"Name","value":"value"}},{"kind":"Field","name":{"kind":"Name","value":"type"}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetProductQuery, GetProductQueryVariables>;
 export const GetCollectionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getCollection"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"collection"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}}]}}]}}]} as unknown as DocumentNode<GetCollectionQuery, GetCollectionQueryVariables>;

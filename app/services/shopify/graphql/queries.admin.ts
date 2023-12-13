@@ -98,6 +98,11 @@ export const getProductQuery = graphql(`
       variants(first: 1) {
         nodes {
           price
+          inventoryItem {
+            unitCost {
+              amount
+            }
+          }
         }
       }
       metafields(first: 10) {

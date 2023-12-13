@@ -31,15 +31,21 @@ export async function loader({ params, context }: LoaderFunctionArgs) {
 
         const product = await getProduct(item.commerceId)
         const price = Number(flattenConnection(product?.variants)[0]?.price)
+        const cost = Number(
+          flattenConnection(product?.variants)[0]?.inventoryItem.unitCost
+            ?.amount,
+        )
         const url = flattenConnection(product?.metafields).find(
           (field) => field.key === PRODUCT_METAFIELDS.OriginalUrl,
         )?.value
 
         return {
+          cost: round(isNaN(cost) ? 0 : cost),
           name: product?.title,
           numberPurchased,
           price: round(isNaN(price) ? 0 : price),
-          total: round(numberPurchased * (isNaN(price) ? 0 : price)),
+          totalCost: numberPurchased * cost,
+          totalPrice: numberPurchased * price,
           url,
           vendor: product?.vendor,
         }
