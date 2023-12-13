@@ -11,7 +11,7 @@ import { ReasonPhrases, StatusCodes } from "http-status-codes"
 import { useTranslation } from "react-i18next"
 import { route } from "routes-gen"
 import { z } from "zod"
-import { parseFormSafe } from "zodix"
+import { parseFormSafe, zx } from "zodix"
 
 import { Logo } from "~/components/branding"
 import { Alert, Button } from "~/components/common"
@@ -24,18 +24,21 @@ export const handle = {
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const url = new URL(request.url)
+  const { success } = zx.parseQuery(
+    request,
+    z.object({ success: zx.BoolAsString.optional() }),
+  )
 
   await auth.isAuthenticated(request, { successRedirect: route("/dashboard") })
   const session = await sessionStorage.getSession(request.headers.get("Cookie"))
-  // This session key `auth:magiclink` is the default one used by the EmailLinkStrategy
-  // you can customize it passing a `sessionMagicLinkKey` when creating an
-  // instance.
+
+  // This session key `auth:magiclink` is the default one used by the
+  // EmailLinkStrategy you can customize it passing a `sessionMagicLinkKey` when
+  // creating an instance.
   return json({
-    error: url.searchParams.get("error"),
     magicLinkEmail: session.get("auth:email"),
     magicLinkSent: session.has("auth:magiclink"),
-    success: url.searchParams.get("success"),
+    success,
   })
 }
 
@@ -58,21 +61,19 @@ export async function action({ request }: ActionFunctionArgs) {
   return auth.authenticate("email-link", request, {
     // If this is not set, any error will be throw and the ErrorBoundary will be
     // rendered.
-    failureRedirect: "/login?error",
-    successRedirect: "/login?success",
+    failureRedirect: "/login?success=false",
+    successRedirect: "/login?success=true",
   })
 }
 
 export default function LoginPage() {
-  const { success, error } = useLoaderData<typeof loader>()
+  const { success } = useLoaderData<typeof loader>()
   const navigate = useNavigate()
   const navigation = useNavigation()
   const { t } = useTranslation(handle.i18n)
-  const isSubmitting = navigation.state === "submitting"
 
-  const isSuccess = typeof success === "string"
-  const isError = typeof error === "string"
-  const show = isSuccess || isError
+  const isSubmitting = navigation.state === "submitting"
+  const show = typeof success === "boolean"
 
   return (
     <div className="flex h-screen min-h-full bg-white">
@@ -90,7 +91,7 @@ export default function LoginPage() {
             leave="transition-opacity duration-150"
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
-            show={show && isSuccess}
+            show={show && success}
           >
             <Alert
               onClose={() => navigate("/login", { replace: true })}
@@ -106,7 +107,7 @@ export default function LoginPage() {
             leave="transition-opacity duration-150"
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
-            show={show && isError}
+            show={show && !success}
           >
             <Alert
               onClose={() => navigate("/login", { replace: true })}
