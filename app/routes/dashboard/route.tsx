@@ -12,12 +12,14 @@ import { json } from "@remix-run/node"
 import { Link, NavLink, Outlet, useLoaderData } from "@remix-run/react"
 import clsx from "clsx"
 import { SnackbarProvider } from "notistack"
-import { Fragment } from "react"
+import posthog from "posthog-js"
+import { Fragment, useEffect } from "react"
 import { route } from "routes-gen"
 
 import { Logo } from "~/components/branding"
 import { Notification } from "~/components/common"
 import auth from "~/helpers/auth.server"
+import { getFullName } from "~/utils/user"
 
 import Breadcrumbs from "./Breadcrumbs"
 
@@ -62,6 +64,12 @@ export const meta: MetaFunction = () => [
 
 export default function DashboardLayout() {
   const { user } = useLoaderData<typeof loader>()
+  const name = getFullName(user)
+
+  useEffect(() => {
+    // Identify the logged in user
+    posthog.identify(user.id, { email: user.email, name })
+  }, [user.id, user.email, name])
 
   return (
     <div className="flex h-screen flex-col">
