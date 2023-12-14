@@ -29,7 +29,7 @@ import {
   ListingTypeSchema,
 } from "~/utils/listing"
 import { unauthorized } from "~/utils/remix"
-import { getUserFullName } from "~/utils/user"
+import { getFullName } from "~/utils/user"
 
 export const handle = {
   crumb: () => ({
@@ -223,7 +223,7 @@ export default function CreateListingsPage() {
           options={[
             { label: "Select an option", value: "" },
             ...users.map((user) => ({
-              label: getUserFullName(user),
+              label: getFullName(user),
               value: user.id,
             })),
           ]}

@@ -11,7 +11,7 @@ import { zx } from "zodix"
 import { Form, Input, ListRadioGroup, SubmitButton } from "~/components/form"
 import { isUserAdmin } from "~/utils/auth.server"
 import { RouteHandle, notFound } from "~/utils/remix"
-import { getUserFullName, UserSchema } from "~/utils/user"
+import { getFullName, UserSchema } from "~/utils/user"
 
 const validator = withZod(UserSchema)
 
@@ -20,7 +20,7 @@ export const handle: RouteHandle<{ userId: string }, typeof loader> = {
     href: route("/dashboard/admin/users/:userId", {
       userId: params.userId,
     }),
-    name: getUserFullName(data.user),
+    name: getFullName(data.user),
   }),
   id: "dashboard-admin-users-edit",
 }

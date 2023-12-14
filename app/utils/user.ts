@@ -12,9 +12,8 @@ export const UserSchema: z.ZodSchema<
   role: z.enum([UserRole.Admin, UserRole.User]),
 })
 
-export function getUserFullName(user: {
-  firstName: string
-  lastName: string
-}): string {
+export function getFullName(
+  user: Pick<User, "firstName" | "lastName">,
+): string {
   return `${user.firstName} ${user.lastName}`
 }

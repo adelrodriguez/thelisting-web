@@ -43,7 +43,7 @@ import {
   unauthorized,
   unprocessableEntity,
 } from "~/utils/remix"
-import { getUserFullName } from "~/utils/user"
+import { getFullName } from "~/utils/user"
 
 export const handle: RouteHandle<{ listingSku: string }> = {
   crumb: ({ params }) => ({
@@ -309,7 +309,7 @@ export default function DashboardListingPage() {
         options={[
           { label: "Select an option", value: "" },
           ...users.map((user) => ({
-            label: getUserFullName(user),
+            label: getFullName(user),
             value: user.id,
           })),
         ]}
