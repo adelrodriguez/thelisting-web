@@ -17,6 +17,7 @@ module.exports = {
     "dnd-core",
     "react-dnd-html5-backend",
     "react-dnd",
+    "superjson",
   ],
   serverModuleFormat: "cjs",
   serverNodeBuiltinsPolyfill: {
