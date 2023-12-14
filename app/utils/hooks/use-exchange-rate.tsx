@@ -21,22 +21,21 @@ export function ExchangeRateProvider({ children }: { children: ReactNode }) {
   const [currency, setCurrency] = useState<Currency>(
     (searchParams.get("currency") as Currency) ?? CURRENCIES.DOP,
   )
-  const { data } = useQuery(
-    ["exchange-rates", currency],
-    async () => {
+  const { data } = useQuery({
+    queryFn: async () => {
       const res = await fetch("/api/exchange-rates/" + currency)
       const data = (await res.json()) as { exchangeRate: number }
 
       return data
     },
-    {
-      refetchInterval: ONE_MINUTE.inMilliseconds * 5,
-      select: (data) => {
-        return data.exchangeRate
-      },
-      staleTime: ONE_HOUR.inMilliseconds,
+    queryKey: ["exchange-rates", currency],
+
+    refetchInterval: ONE_MINUTE.inMilliseconds * 5,
+    select: (data) => {
+      return data.exchangeRate
     },
-  )
+    staleTime: ONE_HOUR.inMilliseconds,
+  })
 
   function handleSetCurrency(currency: Currency) {
     setSearchParams(

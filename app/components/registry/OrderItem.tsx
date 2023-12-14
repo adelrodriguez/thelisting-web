@@ -13,10 +13,10 @@ export default function OrderItem({
   quantity: number
   cost?: number
 }) {
-  const { data, isLoading, isError } = useProduct(commerceId)
+  const { data, isPending, isError } = useProduct(commerceId)
   const { t } = useTranslation(["registry", "common"])
 
-  if (isLoading) {
+  if (isPending) {
     return (
       <div className="animate-pulse">
         <div className="flex w-full gap-x-6">

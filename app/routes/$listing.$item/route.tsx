@@ -45,14 +45,14 @@ export default function ListingItemDetailPage() {
   const cart = useCart()
   const { item } = useLoaderData<typeof loader>()
   const { open, close, leave } = useDialogPage()
-  const { data, isLoading, isError } = useProduct(item.commerceId ?? "")
+  const { data, isPending, isError } = useProduct(item.commerceId ?? "")
   const isAvailable = item.stock > 0
   const [quantity, setQuantity] = useState(Number(isAvailable))
   const { t } = useTranslation(handle.i18n)
   const { currency, exchangeRate } = useExchangeRate()
 
   // TODO(adelrodriguez): Handle loading and error states
-  if (isLoading) return null
+  if (isPending) return null
   if (isError) return <div>Error!</div>
 
   const { title, price, variantId, imageUrl } = data

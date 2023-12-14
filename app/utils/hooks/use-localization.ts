@@ -6,15 +6,17 @@ import type { GetLocalizationQuery } from "~/services/shopify/storefront"
 import { getLocalizationQuery } from "~/services/shopify/storefront"
 
 export default function useLocalization(): UseQueryResult<GetLocalizationQuery> {
-  return useQuery(["localization"], async () =>
-    request(
-      window.env.shopifyStorefrontAPIEndpoint,
-      getLocalizationQuery,
-      {},
-      {
-        "X-Shopify-Storefront-Access-Token":
-          window.env.shopifyStorefrontAccessToken,
-      },
-    ),
-  )
+  return useQuery({
+    queryFn: async () =>
+      request(
+        window.env.shopifyStorefrontAPIEndpoint,
+        getLocalizationQuery,
+        {},
+        {
+          "X-Shopify-Storefront-Access-Token":
+            window.env.shopifyStorefrontAccessToken,
+        },
+      ),
+    queryKey: ["localization"],
+  })
 }

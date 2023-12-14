@@ -43,9 +43,9 @@ export function CartProvider({
   listing: Pick<Listing, "id" | "sku">
 }) {
   // We use a Map to store the carts for each listing
-  const { data } = useQuery(
-    ["carts", listing.id],
-    async () => {
+  const { data } = useQuery({
+    initialData: createDefaultCart(listing.id),
+    queryFn: async () => {
       const res = await fetch(
         "/api/cart?" + new URLSearchParams({ listingId: listing.id }),
       )
@@ -54,11 +54,9 @@ export function CartProvider({
 
       return cart
     },
-    {
-      initialData: createDefaultCart(listing.id),
-      refetchOnWindowFocus: true,
-    },
-  )
+    queryKey: ["carts", listing.id],
+    refetchOnWindowFocus: true,
+  })
   const submit = useSubmit()
 
   const currentCart = data || createDefaultCart(listing.id)

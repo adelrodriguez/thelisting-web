@@ -6,9 +6,8 @@ import { ONE_MINUTE } from "~/config/consts"
 import { getProductQuery } from "~/services/shopify/storefront"
 
 export default function useProduct(id: string) {
-  return useQuery(
-    ["products", id],
-    async () =>
+  return useQuery({
+    queryFn: async () =>
       request(
         window.env.shopifyStorefrontAPIEndpoint,
         getProductQuery,
@@ -20,22 +19,21 @@ export default function useProduct(id: string) {
             window.env.shopifyStorefrontAccessToken,
         },
       ),
-    {
-      select: (data) => {
-        if (!data.product) {
-          throw new Error("Product not found")
-        }
+    queryKey: ["products", id],
+    select: (data) => {
+      if (!data.product) {
+        throw new Error("Product not found")
+      }
 
-        const variant = flattenConnection(data.product?.variants)[0]
-        const imageUrl = variant?.image?.url
-        const price = variant?.price.amount as number
-        const currencyCode = variant?.price.currencyCode
-        const title = data.product?.title
-        const variantId = variant?.id
+      const variant = flattenConnection(data.product?.variants)[0]
+      const imageUrl = variant?.image?.url
+      const price = variant?.price.amount as number
+      const currencyCode = variant?.price.currencyCode
+      const title = data.product?.title
+      const variantId = variant?.id
 
-        return { currencyCode, imageUrl, price, title, variantId }
-      },
-      staleTime: ONE_MINUTE.inMilliseconds,
+      return { currencyCode, imageUrl, price, title, variantId }
     },
-  )
+    staleTime: ONE_MINUTE.inMilliseconds,
+  })
 }

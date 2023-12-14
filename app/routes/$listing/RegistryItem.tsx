@@ -17,7 +17,7 @@ export default function RegistryItem({
   commerceId: string
   sku: Item["sku"]
 }) {
-  const { data, isLoading, isError, error } = useProduct(commerceId)
+  const { data, isPending, isError, error } = useProduct(commerceId)
   const { t } = useTranslation("registry")
   const { currency, exchangeRate } = useExchangeRate()
 
@@ -27,7 +27,7 @@ export default function RegistryItem({
     }
   }, [isError, error])
 
-  if (isLoading) {
+  if (isPending) {
     return (
       <div className="animate-pulse">
         <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden xl:aspect-h-8 xl:aspect-w-7 sm:rounded-lg">

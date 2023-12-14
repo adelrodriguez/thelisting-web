@@ -16,13 +16,13 @@ export default function CartItem({
   sku,
 }: Pick<Item, "id" | "commerceId" | "quantity" | "sku">) {
   const { listing } = useParams<RouteParams["/:listing/cart"]>()
-  const { data, isLoading, isError } = useProduct(commerceId!)
+  const { data, isPending, isError } = useProduct(commerceId!)
   const cart = useCart()
   const { t } = useTranslation("registry")
   const { currency, exchangeRate } = useExchangeRate()
 
   // TODO(adelrodriguez): Handle loading and error states
-  if (isLoading) return <div>Loading...</div>
+  if (isPending) return <div>Loading...</div>
 
   if (isError || !listing)
     return (

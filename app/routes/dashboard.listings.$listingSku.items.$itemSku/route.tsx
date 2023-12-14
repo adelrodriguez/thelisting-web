@@ -98,7 +98,7 @@ export async function action({ request, params, context }: ActionFunctionArgs) {
 
 export default function DashboardListingItemDetailPage() {
   const { item, stats, itemPurchaseCount } = useLoaderData<typeof loader>()
-  const { data, isLoading, isError } = useProduct(item.commerceId || "")
+  const { data, isPending, isError } = useProduct(item.commerceId || "")
   const { enqueueSnackbar } = useSnackbar()
 
   return (
@@ -112,7 +112,7 @@ export default function DashboardListingItemDetailPage() {
             <p className="mt-1 text-sm text-gray-500">
               This is the product information available on Shopify.
             </p>
-            {!isLoading && !isError ? (
+            {!isPending && !isError ? (
               <div className="mt-4 flex flex-col md:flex-row">
                 <div className="mr-4 flex-shrink-0">
                   <img

@@ -21,15 +21,15 @@ export default function ImagePicker({
   onClose: () => void
   onSelect: (image: UserImage) => void
 }) {
-  const { data, isLoading, isError, refetch } = useQuery(
-    ["images"],
-    async () => {
+  const { data, isPending, isError, refetch } = useQuery({
+    queryFn: async () => {
       const res = await fetch("/api/images")
       const data = await res.json()
       // TODO(adelrodriguez): Fix this type
       return data as UserImage[]
     },
-  )
+    queryKey: ["images"],
+  })
 
   const [step, setStep] = useState<"choose" | "upload">("choose")
   const [file, setFile] = useState<File | null>(null)
@@ -76,7 +76,7 @@ export default function ImagePicker({
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
               <Dialog.Panel className="relative h-[80vh] w-full transform  rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:mx-2 sm:my-8 sm:max-w-7xl sm:p-6">
-                {isLoading && <div>Loading...</div>}
+                {isPending && <div>Loading...</div>}
                 {isError && <div>Error</div>}
                 {data && step === "choose" && (
                   <ImageGallery

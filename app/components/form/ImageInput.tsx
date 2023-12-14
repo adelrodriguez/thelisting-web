@@ -23,18 +23,16 @@ export default function ImageInput({
   const [value, setValue] = useControlField<string | null>(name)
   const $input = useRef<HTMLInputElement>(null)
   const [open, setOpen] = useState(false)
-  const { data } = useQuery(
-    ["images", value],
-    async () => {
+  const { data } = useQuery({
+    enabled: !!value,
+    queryFn: async () => {
       const res = await fetch(`/api/images/${value}`)
       const data = await res.json()
 
       return data as Image
     },
-    {
-      enabled: !!value,
-    },
-  )
+    queryKey: ["images", value],
+  })
   const { placeholder } = props
 
   useEffect(() => {

@@ -211,9 +211,9 @@ function TitleCell({
   sku: Item["sku"]
   commerceId: Item["commerceId"]
 }) {
-  const { data, isLoading, isError } = useProduct(commerceId ?? "")
+  const { data, isPending, isError } = useProduct(commerceId ?? "")
 
-  if (isLoading) return <div>Loading...</div>
+  if (isPending) return <div>Loading...</div>
 
   if (isError) {
     // TODO(adelrodriguez): add route()
