@@ -12,7 +12,7 @@ export async function sendLoginEmail({
 }: SendEmailOptions<User>): Promise<void> {
   if (!user) throw new Error("User does not exist")
 
-  await resend.sendEmail({
+  await resend.emails.send({
     from: LOGIN_SENDER_EMAIL,
     react: <MagicLinkEmail magicLink={magicLink} user={user} />,
     subject: "Here's your login link",
