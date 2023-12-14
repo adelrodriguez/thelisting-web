@@ -99,7 +99,7 @@ export default function ListingCard({
                   target="_blank"
                   to={route("/:listing", { listing: path })}
                 >
-                  View<span className="sr-only">, {title}</span>
+                  View <span className="sr-only">{title}</span>
                 </Link>
               </Menu.Item>
               <Menu.Item>
@@ -110,8 +110,7 @@ export default function ListingCard({
                     listing: path,
                   })}
                 >
-                  Review
-                  <span className="sr-only">, {title}</span>
+                  Review <span className="sr-only">{title}</span>
                 </Link>
               </Menu.Item>
 
