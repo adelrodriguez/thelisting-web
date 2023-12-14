@@ -7,17 +7,12 @@ import { route } from "routes-gen"
 import SuperJSON from "superjson"
 
 import type { CartItem } from "~/utils/cart"
-import { calculateShipping, calculateSubtotal } from "~/utils/cart"
 
 type CartItems = Map<string, CartItem>
 
 type BaseCart = {
   listingId: string
   items: CartItems
-  subtotal: number
-  shipping: number
-  total: number
-  itemCount: number
   noteId?: string | null
 }
 
@@ -32,13 +27,9 @@ const Context = createContext<Cart | undefined>(undefined)
 
 function createDefaultCart(listingId: string): BaseCart {
   return {
-    itemCount: 0,
     items: new Map<string, CartItem>(),
     listingId,
     noteId: undefined,
-    shipping: 0,
-    subtotal: 0,
-    total: 0,
   }
 }
 
@@ -72,13 +63,6 @@ export function CartProvider({
 
   const currentCart = data || createDefaultCart(listing.id)
 
-  const subtotal = calculateSubtotal([...currentCart.items.values()])
-  const itemCount = [...currentCart.items.values()].reduce(
-    (acc, item) => acc + item.quantity,
-    0,
-  )
-  const shipping = calculateShipping(subtotal)
-  const total = subtotal + shipping
   const queryClient = useQueryClient()
   const storeCarts = useMutation({
     mutationFn: (cart: BaseCart) =>
@@ -166,14 +150,10 @@ export function CartProvider({
         add: addItemToCart,
         attachNoteId: attachNoteIdToCart,
         checkout,
-        itemCount,
         items: currentCart.items,
         listingId: listing.id,
         noteId: currentCart.noteId,
         remove: removeItemFromCart,
-        shipping,
-        subtotal,
-        total,
       }}
     >
       {children}

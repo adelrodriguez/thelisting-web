@@ -15,6 +15,7 @@ import { route } from "routes-gen"
 import { Button } from "~/components/common"
 import Tooltip from "~/components/common/Tooltip"
 import { Spinner } from "~/components/loading"
+import { calculateShipping, calculateSubtotal } from "~/utils/cart"
 import { useCart, useDialogPage, useExchangeRate } from "~/utils/hooks"
 import { formatPrice } from "~/utils/money"
 
@@ -32,6 +33,9 @@ export default function ListingCartPage() {
   const navigation = useNavigation()
   const { t } = useTranslation(handle.i18n)
   const { currency, exchangeRate } = useExchangeRate()
+  const subtotal = calculateSubtotal([...cart.items.values()])
+  const shipping = calculateShipping(subtotal)
+  const total = subtotal + shipping
 
   return (
     <Transition.Root appear as={Fragment} show={open}>
@@ -99,10 +103,7 @@ export default function ListingCartPage() {
                         <div className="flex justify-between">
                           <dt>{t("common:subtotal")}</dt>
                           <dd>
-                            {formatPrice(
-                              cart.subtotal / exchangeRate,
-                              currency,
-                            )}
+                            {formatPrice(subtotal / exchangeRate, currency)}
                           </dd>
                         </div>
 
@@ -114,18 +115,13 @@ export default function ListingCartPage() {
                             </Tooltip>
                           </dt>
                           <dd>
-                            {formatPrice(
-                              cart.shipping / exchangeRate,
-                              currency,
-                            )}
+                            {formatPrice(shipping / exchangeRate, currency)}
                           </dd>
                         </div>
 
                         <div className="flex items-center justify-between  text-gray-900">
                           <dt>{t("common:total")}</dt>
-                          <dd>
-                            {formatPrice(cart.total / exchangeRate, currency)}
-                          </dd>
+                          <dd>{formatPrice(total / exchangeRate, currency)}</dd>
                         </div>
                       </dl>
 

@@ -14,9 +14,9 @@ export type CartItem = z.infer<typeof CartItemSchema>
 
 export const CartItemsSchema = z.array(CartItemSchema)
 
-export function calculateSubtotal(cartItems: CartItem[]): number {
-  return cartItems.reduce((subtotal, cartItem) => {
-    return subtotal + cartItem.price * cartItem.quantity
+export function calculateSubtotal(items: CartItem[]): number {
+  return items.reduce((subtotal, item) => {
+    return subtotal + item.price * item.quantity
   }, 0)
 }
 
@@ -24,4 +24,10 @@ export function calculateShipping(subtotal: number): number {
   if (!subtotal) return 0
 
   return SHIPPING_FEE
+}
+
+export function calculateItemCount(items: CartItem[]): number {
+  return items.reduce((count, item) => {
+    return count + item.quantity
+  }, 0)
 }
