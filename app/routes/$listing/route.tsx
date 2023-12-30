@@ -1,9 +1,14 @@
 import { Bars3Icon } from "@heroicons/react/24/solid"
-import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node"
+import type {
+  HeadersFunction,
+  LoaderFunctionArgs,
+  MetaFunction,
+} from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { Outlet, useLoaderData } from "@remix-run/react"
 import * as Sentry from "@sentry/remix"
 import clsx from "clsx"
+import { cacheHeader } from "pretty-cache-header"
 import { useState } from "react"
 import { z } from "zod"
 import { zx } from "zodix"
@@ -38,6 +43,13 @@ export async function loader({ params, context }: LoaderFunctionArgs) {
 
   return json({ listing })
 }
+
+export const headers: HeadersFunction = () => ({
+  "Cache-Control": cacheHeader({
+    maxAge: "5min",
+    public: true,
+  }),
+})
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   if (!data) return [{ title: "The Listing" }]
