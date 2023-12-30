@@ -17,20 +17,13 @@ import { CURRENCIES, DEFAULT_MARGIN } from "~/config/consts"
 import { AddItemToListingQueue } from "~/helpers/queues"
 import { useScrapedProducts } from "~/routes/dashboard.admin.product-scraper/route"
 import { useDialogPage } from "~/utils/hooks"
+import { ScrapeProductsTableRow } from "~/utils/scraper"
 
 const AddToListingSchema = z.object({
   exchangeRate: z.coerce.number().min(1),
   listingId: z.string().uuid(),
   margin: z.coerce.number().min(0).max(100),
-  products: z
-    .array(
-      z.object({
-        quantity: z.coerce.number().min(1),
-        rowId: z.string(),
-        scrapedProductId: z.string().uuid(),
-      }),
-    )
-    .min(1),
+  products: z.array(ScrapeProductsTableRow).min(1),
 })
 
 const validator = withZod(AddToListingSchema)
@@ -60,16 +53,14 @@ export async function action({ request, context }: ActionFunctionArgs) {
   })
 
   await AddItemToListingQueue.addBulk(
-    products.map(({ scrapedProductId, rowId, quantity }) => ({
+    products.map((product) => ({
       data: {
         exchangeRate,
         listingId,
         margin,
-        quantity,
-        rowId,
-        scrapedProductId,
+        product,
       },
-      name: `${listing.sku}-${rowId}`,
+      name: `${listing.sku}-${product.id}`,
     })),
   )
 
@@ -86,16 +77,6 @@ export default function AddToListingPage() {
   const values = getValues()
   const margin = values.get("margin")
   const listing = listings.find(({ id }) => id === values.get("listingId"))
-  const productFields = products
-    .filter(
-      (product): product is typeof product & { scrapedProductId: string } =>
-        !!product.scrapedProductId,
-    )
-    .map(({ id, scrapedProductId, quantity }) => ({
-      quantity,
-      rowId: `${id}`,
-      scrapedProductId,
-    }))
 
   const { data: currencyData } = useQuery({
     queryFn: async () => {
@@ -147,7 +128,7 @@ export default function AddToListingPage() {
                       exchangeRate: currencyData?.exchangeRate ?? 1,
                       listingId: undefined,
                       margin: DEFAULT_MARGIN,
-                      products: productFields,
+                      products,
                     }}
                     id="addToListing"
                     method="POST"
@@ -216,30 +197,18 @@ export default function AddToListingPage() {
                           type="number"
                         />
 
-                        {productFields.map(
-                          ({ scrapedProductId, rowId }, index) => (
-                            <div
-                              className="hidden"
-                              key={`${rowId}-${scrapedProductId}`}
-                            >
+                        {products.map((product, index) => (
+                          <div className="hidden" key={product.id}>
+                            {Object.keys(product).map((key) => (
                               <Input
-                                label="Row ID"
-                                name={`products[${index}].rowId`}
+                                key={key}
+                                label={key}
+                                name={`products[${index}].${key}`}
                                 type="hidden"
                               />
-                              <Input
-                                label="Scraped Product ID"
-                                name={`products[${index}].scrapedProductId`}
-                                type="hidden"
-                              />
-                              <Input
-                                label="Quantity"
-                                name={`products[${index}].quantity`}
-                                type="hidden"
-                              />
-                            </div>
-                          ),
-                        )}
+                            ))}
+                          </div>
+                        ))}
                         <Alert type="info">
                           You will be adding{" "}
                           <span className="font-bold">{products.length}</span>{" "}

@@ -7,21 +7,15 @@ import {
   createColumnHelper,
   flexRender,
 } from "@tanstack/react-table"
-import { useInterpret, useSelector } from "@xstate/react"
 import { useSnackbar } from "notistack"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 
 import { Button, Checkbox } from "~/components/common"
 import { Spinner } from "~/components/loading"
-import { isDevelopment } from "~/config/vars"
-import { scraperMachine } from "~/helpers/machines"
+import { useScrapeProducts } from "~/utils/hooks"
 import { formatPrice } from "~/utils/money"
 import { round } from "~/utils/number"
-import type {
-  ScrapedProductPayload,
-  ScrapedProductResult,
-  ScrapeProductsTableRow,
-} from "~/utils/scraper"
+import { ScrapedFields, type ScrapeProductsTableRow } from "~/utils/scraper"
 
 declare module "@tanstack/react-table" {
   interface TableMeta<TData> {
@@ -34,17 +28,16 @@ const columnHelper = createColumnHelper<ScrapeProductsTableRow>()
 const columns = [
   columnHelper.display({
     cell: ({ row }) => {
-      const { scrapedProductId, title, description, image, amount } =
-        row.original
+      const { hasError } = row.original
 
-      if (!scrapedProductId) return null
+      if (hasError === undefined) return null
 
-      if (!title || !description || !image || !amount) {
+      if (hasError) {
         return (
           <XMarkIcon
             aria-hidden="true"
             className="h-5 w-5 text-red-500"
-            title={scrapedProductId}
+            title={`Error scraping row ${row.id}`}
           />
         )
       }
@@ -53,11 +46,11 @@ const columns = [
         <CheckIcon
           aria-hidden="true"
           className="h-5 w-5 text-green-500"
-          title={scrapedProductId}
+          title={`Scraped row ${row.id} successfully`}
         />
       )
     },
-    id: "scrapedProductId",
+    id: "status",
   }),
   columnHelper.display({
     cell: ({ row }) => (
@@ -155,6 +148,8 @@ export default function ScrapeProductsTable({
 }) {
   const [data, setData] = useState<ScrapeProductsTableRow[]>(initialData)
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
+  const { enqueueSnackbar } = useSnackbar()
+
   const table = useReactTable({
     columns,
     data,
@@ -179,81 +174,55 @@ export default function ScrapeProductsTable({
       rowSelection,
     },
   })
-  const scraperService = useInterpret(scraperMachine, {
-    devTools: isDevelopment,
+
+  const { scrape, completed, isIdle, cancel } = useScrapeProducts({
+    data: initialData,
+    onSuccess: (payload, index) => {
+      const { fields, duration, errors, cached } = payload
+      const row = data[index]
+
+      if (!row) throw new Error("Row not found")
+
+      const hasError = errors.length > 0
+      const filteredFields = Object.keys(fields)
+        .filter((key) => !errors.includes(key))
+        .reduce((obj, key) => {
+          // @ts-expect-error Key is a string, should be part of ScrapedFields
+          obj[key] = fields[key]
+          return obj
+        }, {} as Partial<ScrapedFields>)
+
+      table.options.meta?.updateData({
+        ...row,
+        ...filteredFields,
+        hasError,
+      })
+
+      if (hasError) {
+        enqueueSnackbar(`Fetched product ${index} with errors`, {
+          description: `In ${round(duration / 1000)}s. Errors: ${errors.join(
+            ", ",
+          )}`,
+          variant: "warning",
+        })
+      } else {
+        enqueueSnackbar(`Fetched product ${row} successfully `, {
+          description: cached
+            ? "Recovered from cache"
+            : `In ${round(duration / 1000)}s`,
+          variant: "success",
+        })
+      }
+    },
+    // TODO(adelrodriguez): Make this configurable
+    order: "sequential",
   })
-  const isIdle = useSelector(scraperService, (state) => state.matches("idle"))
-  const completed = useSelector(
-    scraperService,
-    (state) => state.context.completed,
-  )
-  const { enqueueSnackbar } = useSnackbar()
 
   const selected = data.filter((_, index) => rowSelection[index])
 
-  useEffect(() => {
-    scraperService.onTransition((_, event) => {
-      if (!table.options.meta) return
-
-      if (event.type === "FINISHED") {
-        const result = event.payload
-        const dataMap = new Map(data.map((row) => [row.url, row]))
-        const product = dataMap.get(result.payload.url)
-        const {
-          payload: { fields, duration, errors },
-          id,
-          cached,
-        } = result
-
-        if (!product) return
-        table.options.meta.updateData({
-          ...product,
-          ...fields,
-          scrapedProductId: id,
-        })
-
-        showResultMessage(product.id, duration, errors, cached)
-      }
-
-      if (event.type === "ERROR") {
-        enqueueSnackbar("An error occurred while scraping", {
-          description: event.payload.message,
-          variant: "error",
-        })
-      }
-    })
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  function showResultMessage(
-    id: string | number,
-    duration: ScrapedProductPayload["duration"],
-    errors: ScrapedProductPayload["errors"],
-    cached: ScrapedProductResult["cached"],
-  ) {
-    if (errors.length) {
-      enqueueSnackbar(`Fetched product ${id} with errors`, {
-        description: `In ${round(duration / 1000)}s. Errors: ${errors.join(
-          ", ",
-        )}`,
-        variant: "warning",
-      })
-    } else {
-      enqueueSnackbar(`Fetched product ${id} successfully `, {
-        description: cached
-          ? "Recovered from cache"
-          : `In ${round(duration / 1000)}s`,
-        variant: "success",
-      })
-    }
-  }
-
-  function handleScrape() {
-    const rowsToScrape = data
-      .filter((_, index) => rowSelection[index])
-      .map((row) => row.url)
-    scraperService.send({ payload: rowsToScrape, type: "START" })
+  async function handleScrape() {
+    const indexes = Object.keys(rowSelection)
+    await scrape(indexes.map((index) => Number(index)))
   }
 
   return (
@@ -286,22 +255,19 @@ export default function ScrapeProductsTable({
               </>
             )}
 
-            <Button disabled={!isIdle} onClick={handleScrape} type="button">
+            <Button onClick={handleScrape} type="button">
               {isIdle ? (
-                "Start Scraping"
+                "Scrape Products"
               ) : (
                 <>
                   <Spinner />
-                  Scraping {completed.length + 1} of {selected.length}...
+                  Scraping {completed.length} of {selected.length}...
                 </>
               )}
             </Button>
 
             {!isIdle && (
-              <Button
-                onClick={() => scraperService.send("CANCEL")}
-                variant="secondary"
-              >
+              <Button onClick={cancel} variant="secondary">
                 Stop
               </Button>
             )}

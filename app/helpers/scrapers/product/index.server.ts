@@ -1,13 +1,13 @@
 import logger from "~/helpers/logger.server"
 import Sentry from "~/services/sentry"
 import { UnknownError } from "~/utils/error"
-import type { ScrapedProductPayload } from "~/utils/scraper"
+import type { ScrapedProduct } from "~/utils/scraper"
 
 import createScraper from "./scraper.server"
 
 export default async function scraper(
   requestUrl: string,
-): Promise<ScrapedProductPayload> {
+): Promise<ScrapedProduct> {
   logger.info(`Scrapping product ${requestUrl}`, {
     url: requestUrl,
   })
@@ -34,7 +34,7 @@ export default async function scraper(
     // Close the browser window
     await scraper.stop()
 
-    const payload: ScrapedProductPayload = {
+    const payload: ScrapedProduct = {
       duration: scraper.duration,
       errors: [],
       fields: {

@@ -5,7 +5,7 @@ import type { Currency } from "~/config/consts"
 import { CurrencySchema } from "~/utils/money"
 import { undefinedToNull } from "~/utils/undefined"
 
-export const ScrapedFieldsSchema = z.object({
+export const ScrapedFields = z.object({
   amount: z.preprocess(undefinedToNull, z.coerce.number().nullable()),
   currency: z.preprocess(undefinedToNull, CurrencySchema.nullable()),
   description: z.preprocess(undefinedToNull, z.string().nullable()),
@@ -13,43 +13,27 @@ export const ScrapedFieldsSchema = z.object({
   store: z.preprocess(undefinedToNull, z.string().nullable()),
   title: z.preprocess(undefinedToNull, z.string().nullable()),
 })
-export type ScrapedFields = z.infer<typeof ScrapedFieldsSchema>
+export type ScrapedFields = z.infer<typeof ScrapedFields>
 
-export const ScrapeProductsTableRowSchema = ScrapedFieldsSchema.extend({
+export const ScrapeProductsTableRow = ScrapedFields.extend({
+  hasError: z.boolean().optional(),
   id: z.union([z.string(), z.number()]),
   quantity: z.coerce.number().min(1),
-  scrapedProductId: z.preprocess(undefinedToNull, z.string().nullable()),
   url: z.string(),
 })
-export type ScrapeProductsTableRow = z.infer<
-  typeof ScrapeProductsTableRowSchema
->
+export type ScrapeProductsTableRow = z.infer<typeof ScrapeProductsTableRow>
 
-export function parseScrapeProductsTableRow(data: unknown) {
-  return ScrapeProductsTableRowSchema.parse(data)
-}
-
-export const ScrapedProductPayloadSchema = z.object({
+export const ScrapedProduct = z.object({
+  cached: z.boolean().optional(),
   /** The duration for the function execution (in milliseconds)  */
   duration: z.number(),
   errors: z.array(z.string()),
-  fields: ScrapedFieldsSchema,
+  fields: ScrapedFields,
   /** The start time the function was executed */
   time: z.number(),
   url: z.string(),
 })
-export type ScrapedProductPayload = z.infer<typeof ScrapedProductPayloadSchema>
-
-export const ScrapedProductResultSchema = z.object({
-  cached: z.boolean().optional(),
-  id: z.string().uuid(),
-  payload: ScrapedProductPayloadSchema,
-})
-export type ScrapedProductResult = z.infer<typeof ScrapedProductResultSchema>
-
-export function parseScrapedProductResult(data: unknown) {
-  return ScrapedProductResultSchema.parse(data)
-}
+export type ScrapedProduct = z.infer<typeof ScrapedProduct>
 
 export function cleanAmount(amount?: string | null): number {
   if (!amount) {
@@ -84,7 +68,7 @@ export function cleanCurrency(currency?: string | null): Currency {
 export async function scrapeProduct(
   url: string,
   init?: RequestInit,
-): Promise<ScrapedProductResult> {
+): Promise<ScrapedProduct> {
   const requestUrl = new URL("/api/scraper/product", window.location.origin)
   requestUrl.searchParams.set("url", url)
 
@@ -92,7 +76,7 @@ export async function scrapeProduct(
 
   const data = await res.json()
 
-  return parseScrapedProductResult(data)
+  return ScrapedProduct.parse(data)
 }
 
 export async function scrapeImage(url: string): Promise<Blob> {

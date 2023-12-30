@@ -65,6 +65,7 @@ export default function ExportCSVPage() {
                   onSubmit={async (data) => {
                     downloadAsCSVFile(data.filename, products, {
                       columns: Headers.map((header) => header), // Mapping the headers to the columns (to avoid the "scrapedProductId" column)
+                      // TODO(adelrodriguez): This is actually no longer needed, since we are not using the "scrapedProductId" column anymore.
                     })
                     close()
                   }}

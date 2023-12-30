@@ -1,12 +1,12 @@
 import { assign, send } from "xstate/lib/actions"
 import { createModel } from "xstate/lib/model"
 
-import type { ScrapedProductResult } from "~/utils/scraper"
+import type { ScrapedProduct } from "~/utils/scraper"
 import { scrapeProduct } from "~/utils/scraper"
 
 const scraperModel = createModel(
   {
-    completed: [] as ScrapedProductResult[],
+    completed: [] as ScrapedProduct[],
     controller: null as AbortController | null,
     pending: [] as string[],
   },
@@ -14,7 +14,7 @@ const scraperModel = createModel(
     events: {
       CANCEL: () => ({}),
       ERROR: (payload: Error) => ({ payload }),
-      FINISHED: (payload: ScrapedProductResult) => ({ payload }),
+      FINISHED: (payload: ScrapedProduct) => payload,
       RESET: () => ({}),
       START: (payload: string[]) => ({ payload }),
     },
@@ -31,6 +31,9 @@ const setPending = scraperModel.assign(
 
 const reset = scraperModel.assign({ completed: [], pending: [] }, "RESET")
 
+/**
+ * @deprecated Use the hook instead
+ */
 const scraperMachine = scraperModel.createMachine(
   {
     context: { completed: [], controller: null, pending: [] },
