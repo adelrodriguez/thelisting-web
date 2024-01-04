@@ -9,7 +9,7 @@ export default function useScrapeProducts<T extends { url: string }>(
   options: {
     data: T[]
     onSuccess?: (product: ScrapedProduct, index: number) => void
-  } & ({ order?: "parallel" } | { order: "sequential"; delay?: number }),
+  } & ({ mode: "parallel" } | { mode: "sequential"; delay?: number }),
 ) {
   const queryClient = useQueryClient()
 
@@ -41,7 +41,7 @@ export default function useScrapeProducts<T extends { url: string }>(
   const completed = queries.filter((query) => query.isFetched)
 
   async function scrape(indexes: number[]) {
-    if (options.order === "parallel") {
+    if (options.mode === "parallel") {
       await Promise.all(
         queries.map(async (query, index) => {
           if (indexes.includes(index)) {
@@ -51,7 +51,7 @@ export default function useScrapeProducts<T extends { url: string }>(
       )
     }
 
-    if (options.order === "sequential") {
+    if (options.mode === "sequential") {
       for (const index of indexes) {
         await queries[index]?.refetch()
 
@@ -60,6 +60,8 @@ export default function useScrapeProducts<T extends { url: string }>(
         }
       }
     }
+
+    throw new Error("Invalid order")
   }
 
   async function cancel() {

@@ -1,3 +1,5 @@
+import { Listbox, Transition } from "@headlessui/react"
+import { ChevronDownIcon } from "@heroicons/react/20/solid"
 import { CheckIcon, XMarkIcon } from "@heroicons/react/24/solid"
 import { Link } from "@remix-run/react"
 import type { RowSelectionState } from "@tanstack/react-table"
@@ -8,7 +10,7 @@ import {
   flexRender,
 } from "@tanstack/react-table"
 import { useSnackbar } from "notistack"
-import { useState } from "react"
+import { Fragment, useState } from "react"
 
 import { Button, Checkbox } from "~/components/common"
 import { Spinner } from "~/components/loading"
@@ -137,6 +139,25 @@ const columns = [
   }),
 ]
 
+const scrapingModes = [
+  {
+    description:
+      "Scrape products one by one, for sites that block parallel requests (like Amazon)",
+    title: "Sequential Scrape",
+    value: "sequential",
+  },
+  {
+    description:
+      "Scrape products in parallel, useful for sites that don't block multiple requests in a short amount of time",
+    title: "Parallel Scrape",
+    value: "parallel",
+  },
+] satisfies Array<{
+  description: string
+  title: string
+  value: "sequential" | "parallel"
+}>
+
 export default function ScrapeProductsTable({
   data: initialData,
   onExport,
@@ -147,6 +168,7 @@ export default function ScrapeProductsTable({
   onAddToListing: (data: ScrapeProductsTableRow[]) => void
 }) {
   const [data, setData] = useState<ScrapeProductsTableRow[]>(initialData)
+  const [scrapingMode, setScrapingMode] = useState(scrapingModes[0])
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
   const { enqueueSnackbar } = useSnackbar()
 
@@ -177,6 +199,7 @@ export default function ScrapeProductsTable({
 
   const { scrape, completed, isIdle, cancel } = useScrapeProducts({
     data: initialData,
+    mode: scrapingMode?.value || "sequential",
     onSuccess: (payload, index) => {
       const { fields, duration, errors, cached } = payload
       const row = data[index]
@@ -199,14 +222,14 @@ export default function ScrapeProductsTable({
       })
 
       if (hasError) {
-        enqueueSnackbar(`Fetched product ${index} with errors`, {
+        enqueueSnackbar(`Fetched product ${row.id} with errors`, {
           description: `In ${round(duration / 1000)}s. Errors: ${errors.join(
             ", ",
           )}`,
           variant: "warning",
         })
       } else {
-        enqueueSnackbar(`Fetched product ${row} successfully `, {
+        enqueueSnackbar(`Fetched product ${row.id} successfully `, {
           description: cached
             ? "Recovered from cache"
             : `In ${round(duration / 1000)}s`,
@@ -214,8 +237,6 @@ export default function ScrapeProductsTable({
         })
       }
     },
-    // TODO(adelrodriguez): Make this configurable
-    order: "sequential",
   })
 
   const selected = data.filter((_, index) => rowSelection[index])
@@ -228,13 +249,15 @@ export default function ScrapeProductsTable({
   return (
     <>
       <div className="px-4 sm:px-6 lg:px-8">
-        <div className="sm:flex sm:items-center">
+        <div className="sm:flex sm:items-end">
           <div className="sm:flex-auto">
             <h3 className="text-lg text-gray-700">
               Products to scrape:{" "}
               <span className="font-bold">{selected.length}</span> selected
             </h3>
           </div>
+
+          <div></div>
           <div className="mt-4 flex gap-4 sm:ml-16 sm:mt-0 sm:flex-none">
             {selected.length > 0 && (
               <>
@@ -255,16 +278,79 @@ export default function ScrapeProductsTable({
               </>
             )}
 
-            <Button onClick={handleScrape} type="button">
-              {isIdle ? (
-                "Scrape Products"
-              ) : (
-                <>
-                  <Spinner />
-                  Scraping {completed.length} of {selected.length}...
-                </>
-              )}
-            </Button>
+            {selected.length ? (
+              <Listbox onChange={setScrapingMode} value={scrapingMode}>
+                {({ open }) => (
+                  <>
+                    <Listbox.Label className="sr-only">
+                      Scraping Mode
+                    </Listbox.Label>
+                    <div className="relative">
+                      <div className="inline-flex divide-x divide-slate-700 rounded-md shadow-sm">
+                        <button
+                          className="inline-flex items-center gap-x-1.5 rounded-l-md bg-slate-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-slate-700 focus:outline-none"
+                          disabled={!isIdle}
+                          onClick={handleScrape}
+                        >
+                          {isIdle ? (
+                            scrapingMode?.title
+                          ) : (
+                            <>
+                              <Spinner />
+                              Scraping {completed.length} of {selected.length}
+                              ...
+                            </>
+                          )}
+                        </button>
+                        <Listbox.Button className="inline-flex items-center rounded-l-none rounded-r-md bg-slate-600 p-2 hover:bg-slate-700 focus:outline-none">
+                          <span className="sr-only">Change scraping mode</span>
+                          <ChevronDownIcon
+                            aria-hidden="true"
+                            className="h-5 w-5 text-white"
+                          />
+                        </Listbox.Button>
+                      </div>
+
+                      <Transition
+                        as={Fragment}
+                        leave="transition ease-in duration-100"
+                        leaveFrom="opacity-100"
+                        leaveTo="opacity-0"
+                        show={open}
+                      >
+                        <Listbox.Options className="absolute right-0 z-10 mt-2 w-72 origin-top-right divide-y divide-gray-200 overflow-hidden rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                          {scrapingModes.map((option) => (
+                            <Listbox.Option
+                              className="cursor-default select-none p-4 text-sm text-gray-900 ui-active:bg-slate-600 ui-active:text-white"
+                              disabled={!isIdle}
+                              key={option.title}
+                              value={option}
+                            >
+                              <div className="flex flex-col">
+                                <div className="flex justify-between">
+                                  <p className="font-normal ui-selected:font-semibold">
+                                    {option.title}
+                                  </p>
+                                  <span className="hidden text-slate-600 ui-selected:block ui-active:text-white">
+                                    <CheckIcon
+                                      aria-hidden="true"
+                                      className="h-5 w-5"
+                                    />
+                                  </span>
+                                </div>
+                                <p className="mt-2 text-gray-500 ui-active:text-slate-200">
+                                  {option.description}
+                                </p>
+                              </div>
+                            </Listbox.Option>
+                          ))}
+                        </Listbox.Options>
+                      </Transition>
+                    </div>
+                  </>
+                )}
+              </Listbox>
+            ) : null}
 
             {!isIdle && (
               <Button onClick={cancel} variant="secondary">
