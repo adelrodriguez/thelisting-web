@@ -39,6 +39,7 @@ export default function useScrapeProducts<T extends { url: string }>(
   const isIdle = queries.every((query) => query.fetchStatus === "idle")
   const isPending = queries.some((query) => query.isPending)
   const completed = queries.filter((query) => query.isFetched)
+  const remaining = queries.filter((query) => query.isPending)
 
   async function scrape(indexes: number[]) {
     if (options.mode === "parallel") {
@@ -49,6 +50,8 @@ export default function useScrapeProducts<T extends { url: string }>(
           }
         }),
       )
+
+      return
     }
 
     if (options.mode === "sequential") {
@@ -59,6 +62,8 @@ export default function useScrapeProducts<T extends { url: string }>(
           await new Promise((resolve) => setTimeout(resolve, options.delay))
         }
       }
+
+      return
     }
 
     throw new Error("Invalid order")
@@ -66,6 +71,7 @@ export default function useScrapeProducts<T extends { url: string }>(
 
   async function cancel() {
     await queryClient.cancelQueries({
+      queryKey: [QUERY_KEY],
       stale: true,
     })
   }
@@ -76,6 +82,7 @@ export default function useScrapeProducts<T extends { url: string }>(
     isIdle,
     isPending,
     queries,
+    remaining,
     scrape,
   }
 }

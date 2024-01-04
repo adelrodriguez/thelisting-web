@@ -197,7 +197,7 @@ export default function ScrapeProductsTable({
     },
   })
 
-  const { scrape, completed, isIdle, cancel } = useScrapeProducts({
+  const { scrape, remaining, isIdle, cancel } = useScrapeProducts({
     data: initialData,
     mode: scrapingMode?.value || "sequential",
     onSuccess: (payload, index) => {
@@ -297,7 +297,8 @@ export default function ScrapeProductsTable({
                           ) : (
                             <>
                               <Spinner />
-                              Scraping {completed.length} of {selected.length}
+                              Scraping {selected.length -
+                                remaining.length} of {selected.length}
                               ...
                             </>
                           )}
