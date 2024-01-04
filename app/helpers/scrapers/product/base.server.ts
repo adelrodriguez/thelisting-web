@@ -1,64 +1,52 @@
 import { performance } from "perf_hooks"
 import type { Browser, Page } from "playwright"
-import { chromium } from "playwright"
-import UserAgent from "user-agents"
+import type { Logger } from "winston"
 
 import type { Currency } from "~/config/consts"
-import { BROWSERLESS_TOKEN, BROWSERLESS_URL } from "~/config/env.server"
-import logger from "~/helpers/logger.server"
 import { CurrencySchema } from "~/utils/money"
-import { cleanAmount, cleanText } from "~/utils/scraper"
+import { ScrapedProduct, cleanAmount, cleanText } from "~/utils/scraper"
 
-const userAgent = new UserAgent()
+export type ScraperConfig = {
+  url: URL
+  browser: Browser
+  logger: Logger
+}
 
 interface ScraperConstructor {
-  new (url: URL): ScraperInterface
+  new (config: ScraperConfig): ScraperInterface
 }
 
 export interface ScraperInterface {
-  init(): Promise<void>
-  stop(): Promise<void>
+  exec(): Promise<ScrapedProduct>
+  logError(message: string): void
 
-  url: string
   store: string | null
   title: Promise<string | null>
   description: Promise<string | null>
   image: Promise<string | null>
   amount: Promise<number | null>
   currency: Promise<Currency | null> | Currency
-  notes?: Promise<string | null>
-  start: number
-  duration: number
-
-  logError(message: string): void
 }
 
 // TODO: Create error handler for all the functions to avoid WET
-export default function createScraperFactory(url: URL) {
+export default function createScraperFactory(config: ScraperConfig) {
   return function (ctor: ScraperConstructor): ScraperInterface {
-    return new ctor(url)
+    return new ctor(config)
   }
 }
 
-// TODO(adelrodriguez): Turn into an abstract class
 export class BaseScraper implements ScraperInterface {
-  private readonly _url: URL
+  private readonly url: string
+  private readonly browser: Browser
+  private readonly logger: Logger
 
-  private browser!: Browser
   protected page!: Page
-  private _start?: number
-  private _duration?: number
-
   protected waitFor?(): Promise<void>
 
-  constructor(url: URL) {
-    this._url = url
-    this._start = undefined
-    this._duration = undefined
-  }
-
-  public get url(): string {
-    return this._url.toString()
+  constructor({ url, browser, logger }: ScraperConfig) {
+    this.url = url.toString()
+    this.browser = browser
+    this.logger = logger
   }
 
   /**
@@ -111,29 +99,20 @@ export class BaseScraper implements ScraperInterface {
       .catch((err) => this.logError(err.message))
   }
 
-  public get start(): number {
-    return this._start || 0
-  }
+  public async exec(): Promise<ScrapedProduct> {
+    this.logger.info(`Initializing scraper for store: ${this.store}`)
+    const startTime = performance.now()
 
-  public get duration(): number {
-    return this._duration || 0
-  }
-
-  public async init(): Promise<void> {
     try {
-      logger.info(`Initializing scraper for store: ${this.store}`)
-      this._start = performance.now()
+      // Create a new incognito browser context.
+      const context = await this.browser.newContext()
 
-      this.browser = await chromium.connectOverCDP(
-        `${BROWSERLESS_URL}?token=${BROWSERLESS_TOKEN}`,
-      )
-      this.page = await this.browser.newPage({
-        userAgent: userAgent.toString(),
-      })
+      // Create a new page in a pristine context.
+      this.page = await context.newPage()
 
       await this.page.goto(this.url)
 
-      logger.info(`Scrapping product from store "${this.store}"`)
+      this.logger.info(`Scrapping product from store "${this.store}"`)
     } catch (err) {
       const error = err as Error
       this.logError(error.message)
@@ -146,12 +125,37 @@ export class BaseScraper implements ScraperInterface {
         this.logError((error as Error).message)
       }
     }
-  }
 
-  public async stop(): Promise<void> {
+    const title = await this.title
+    const description = await this.description
+    const image = await this.image
+    const amount = await this.amount
+    const currency = await this.currency
+
     await this.page.close()
-    await this.browser.close()
-    this._duration = performance.now() - this.start
+
+    const duration = performance.now() - startTime
+
+    const payload: ScrapedProduct = {
+      duration,
+      errors: [],
+      fields: {
+        amount,
+        currency,
+        description,
+        image,
+        store: this.store,
+        title,
+      },
+      time: new Date().getTime(),
+      url: this.url,
+    }
+
+    Object.entries(payload.fields).forEach(([key, value]) => {
+      if (value === null) payload.errors.push(key)
+    })
+
+    return payload
   }
 
   /**
@@ -160,7 +164,7 @@ export class BaseScraper implements ScraperInterface {
    * @returns {null} Returns null to avoid WET
    */
   public logError(message: string): null {
-    logger.error(message, { url: this.url })
+    this.logger.error(message, { url: this.url })
 
     return null
   }

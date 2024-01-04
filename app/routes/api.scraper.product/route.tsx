@@ -5,13 +5,17 @@ import { zx } from "zodix"
 
 import { ONE_DAY, REDIS_KEYS } from "~/config/consts"
 import auth from "~/helpers/auth.server"
-import { productScraper } from "~/helpers/scraper.server"
+import { createScraper } from "~/helpers/scraper.server"
+import { getBrowserInstance } from "~/services/browserless.server"
+import Sentry from "~/services/sentry"
+import { UnknownError } from "~/utils/error"
 import { generateKey } from "~/utils/redis"
 import { unauthorized } from "~/utils/remix"
 import { ScrapedProduct } from "~/utils/scraper"
 
 export async function loader({ request, context }: LoaderFunctionArgs) {
-  const { logger, cache } = context
+  const { logger, cache, env } = context
+  const { BROWSERLESS_URL, BROWSERLESS_TOKEN } = env
   const user = await auth.isAuthenticated(request)
 
   if (!user) {
@@ -25,26 +29,45 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
   const cachedPayload = await cache.get(key)
 
   if (cachedPayload) {
+    logger.info(`Using cached product`, { url })
     const result = ScrapedProduct.parse(JSON.parse(cachedPayload))
 
     return json({ ...result, cached: true })
   }
 
-  // TODO(adelrodriguez): We should create the browser instance here and pass it
-  // to the scraped function. This way we can reuse the browser instance for all
-  // the scrapers.
-  const payload = await productScraper(url)
+  logger.info(`Scrapping product...`, { url })
 
-  if (payload.errors.length > 0) {
-    // TODO(adelrodriguez): Report errors to Sentry
-    logger.warn(`${url} scrapped with errors: ${payload.errors.join(", ")}`)
-  } else {
-    logger.info(`${url} scrapped successfully`)
+  const browser = await getBrowserInstance(BROWSERLESS_URL, BROWSERLESS_TOKEN)
+  const scraper = await createScraper({ browser, logger, url: new URL(url) })
+
+  try {
+    const payload = await scraper.exec()
+
+    if (payload.errors.length > 0) {
+      // TODO(adelrodriguez): Report errors to Sentry
+      logger.warn(
+        `${url} scrapped with errors: ${payload.errors.join(", ")}`,
+        payload,
+      )
+
+      Sentry.captureMessage("Product scrapped with errors", {
+        extra: payload,
+      })
+    } else {
+      logger.info(`${url} scrapped successfully`, payload)
+
+      await cache.set(key, JSON.stringify(payload), "EX", ONE_DAY.inSeconds)
+    }
+
+    return json(payload)
+  } catch (error) {
+    Sentry.captureException(error)
+    logger.error(`Error scrapping product ${url}`, {
+      error: (error as Error).message,
+      url,
+    })
+
+    // TODO(adelrodriguez): Handle timeout errors
+    throw new UnknownError((error as Error).message)
   }
-
-  if (payload.errors.length === 0) {
-    await cache.set(key, JSON.stringify(payload), "EX", ONE_DAY.inSeconds)
-  }
-
-  return json(payload)
 }

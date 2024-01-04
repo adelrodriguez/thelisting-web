@@ -1,67 +1,37 @@
-import logger from "~/helpers/logger.server"
-import Sentry from "~/services/sentry"
-import { UnknownError } from "~/utils/error"
-import type { ScrapedProduct } from "~/utils/scraper"
+import { parse } from "tldts"
 
-import createScraper from "./scraper.server"
+import type { ArrayElement } from "~/utils/type"
 
-export default async function scraper(
-  requestUrl: string,
-): Promise<ScrapedProduct> {
-  logger.info(`Scrapping product ${requestUrl}`, {
-    url: requestUrl,
-  })
+import type { ScraperConfig, ScraperInterface } from "./base.server"
+import createScraperFactory, { BaseScraper } from "./base.server"
+import * as storeScrapers from "./stores"
 
-  const url = new URL(requestUrl)
+export default async function createScraper({
+  url,
+  browser,
+  logger,
+}: ScraperConfig): Promise<ScraperInterface> {
+  const { domain } = parse(url.hostname)
 
-  const scraper = await createScraper(url)
+  const scraperFactory = createScraperFactory({ browser, logger, url })
+  const availableScrapers = Object.values(storeScrapers)
 
-  try {
-    // Launch the browser and go to a new page
-    await scraper.init()
+  const scrapers = availableScrapers.reduce(
+    (acc: Record<string, ArrayElement<typeof availableScrapers>>, scraper) => {
+      acc[scraper.domain] = scraper
+      return acc
+    },
+    {},
+  )
 
-    // Obtain scraped properties
-    const [title, description, image, amount, currency, store] =
-      await Promise.all([
-        scraper.title,
-        scraper.description,
-        scraper.image,
-        scraper.amount,
-        scraper.currency,
-        scraper.store,
-      ])
+  const scraper = Object.keys(scrapers).find(
+    (storeDomain) => storeDomain === domain,
+  )
 
-    // Close the browser window
-    await scraper.stop()
+  const storeScraper = scraper
+    ? // If store is not found, use default scraper
+      scrapers[scraper] || BaseScraper
+    : BaseScraper
 
-    const payload: ScrapedProduct = {
-      duration: scraper.duration,
-      errors: [],
-      fields: {
-        amount,
-        currency,
-        description,
-        image,
-        store,
-        title,
-      },
-      time: new Date().getTime(),
-      url: requestUrl,
-    }
-
-    Object.entries(payload.fields).forEach(([key, value]) => {
-      if (value === null) payload.errors.push(key)
-    })
-
-    return payload
-  } catch (error) {
-    Sentry.captureException(error)
-    logger.error(`Error scrapping product ${requestUrl}`, {
-      error: (error as Error).message,
-      url: requestUrl,
-    })
-
-    // TODO(adelrodriguez): Handle timeout errors
-    throw new UnknownError((error as Error).message)
-  }
+  return scraperFactory(storeScraper)
 }

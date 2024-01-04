@@ -1,1 +1,1 @@
-export { default as productScraper } from "./scrapers/product/index.server"
+export { default as createScraper } from "./scrapers/product/index.server"
