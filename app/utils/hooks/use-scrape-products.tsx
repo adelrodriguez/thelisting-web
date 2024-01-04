@@ -31,6 +31,10 @@ export default function useScrapeProducts<T extends { url: string }>(
           options.onSuccess(product, index)
         }
 
+        if (options.mode === "sequential" && options.delay) {
+          await new Promise((resolve) => setTimeout(resolve, options.delay))
+        }
+
         return product
       },
       queryKey: [QUERY_KEY, item.url],
@@ -57,10 +61,6 @@ export default function useScrapeProducts<T extends { url: string }>(
     if (options.mode === "sequential") {
       for (const index of indexes) {
         await queries[index]?.refetch()
-
-        if (options.delay) {
-          await new Promise((resolve) => setTimeout(resolve, options.delay))
-        }
       }
 
       return

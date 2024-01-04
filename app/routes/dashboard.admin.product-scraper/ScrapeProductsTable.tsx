@@ -169,6 +169,9 @@ export default function ScrapeProductsTable({
 }) {
   const [data, setData] = useState<ScrapeProductsTableRow[]>(initialData)
   const [scrapingMode, setScrapingMode] = useState(scrapingModes[0])
+  const [scrapingDelay, setScrapingDelay] = useState<number | undefined>(
+    undefined,
+  )
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
   const { enqueueSnackbar } = useSnackbar()
 
@@ -197,8 +200,9 @@ export default function ScrapeProductsTable({
     },
   })
 
-  const { scrape, remaining, isIdle, cancel } = useScrapeProducts({
+  const { scrape, completed, isIdle, cancel } = useScrapeProducts({
     data: initialData,
+    delay: scrapingDelay && scrapingDelay * 1000, // Convert to ms
     mode: scrapingMode?.value || "sequential",
     onSuccess: (payload, index) => {
       const { fields, duration, errors, cached } = payload
@@ -240,6 +244,7 @@ export default function ScrapeProductsTable({
   })
 
   const selected = data.filter((_, index) => rowSelection[index])
+  const showDelayInput = scrapingMode?.value === "sequential" && selected.length
 
   async function handleScrape() {
     const indexes = Object.keys(rowSelection)
@@ -257,7 +262,6 @@ export default function ScrapeProductsTable({
             </h3>
           </div>
 
-          <div></div>
           <div className="mt-4 flex gap-4 sm:ml-16 sm:mt-0 sm:flex-none">
             {selected.length > 0 && (
               <>
@@ -297,8 +301,7 @@ export default function ScrapeProductsTable({
                           ) : (
                             <>
                               <Spinner />
-                              Scraping {selected.length -
-                                remaining.length} of {selected.length}
+                              Scraping {completed.length} of {selected.length}
                               ...
                             </>
                           )}
@@ -358,6 +361,30 @@ export default function ScrapeProductsTable({
                 Stop
               </Button>
             )}
+
+            {showDelayInput ? (
+              <div>
+                <label className="sr-only" htmlFor="delay">
+                  Delay
+                </label>
+                <div className="relative rounded-md shadow-sm">
+                  <input
+                    className="block w-24 rounded-md border-0 py-1.5 pr-12 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
+                    id="delay"
+                    min="0"
+                    name="price"
+                    onChange={(event) =>
+                      setScrapingDelay(Number(event.target.value))
+                    }
+                    placeholder="0.00"
+                    type="number"
+                  />
+                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                    <span className="text-gray-500 sm:text-sm">secs</span>
+                  </div>
+                </div>
+              </div>
+            ) : null}
           </div>
         </div>
         <div className="mt-8 flex flex-col">
