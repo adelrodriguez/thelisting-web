@@ -31,7 +31,15 @@ void run()
 async function run() {
   const BUILD_PATH = path.resolve("build/index.js")
   const VERSION_PATH = path.resolve("build/version.txt")
+
   const initialBuild = await reimportServer()
+  const remixHandler = isDevelopment
+    ? await createDevRequestHandler(initialBuild)
+    : createRequestHandler({
+        build: initialBuild,
+        getLoadContext: () => ({ cache, db, env, logger }),
+        mode: initialBuild.mode,
+      })
 
   const app = express()
 
@@ -61,30 +69,19 @@ async function run() {
     }),
   )
 
-  app.all("*", async (...args) => {
-    const handler = isDevelopment
-      ? await createDevRequestHandler(initialBuild)
-      : createRequestHandler({
-          build: initialBuild,
-          getLoadContext: () => ({ cache, db, env, logger }),
-          mode: initialBuild.mode,
-        })
-
-    return handler(...args)
-  })
+  app.all("*", remixHandler)
 
   const port = process.env.PORT || 3000
 
   app.listen(port, () => {
     logger.info("⚡️ Ready: http://localhost:" + port)
 
-    // Start cron jobs
-    logger.info("⏲️ Starting cron jobs")
-    void cron()
-
     if (isDevelopment) {
       logger.info(`🔌 Local network IP: http://${getLocalNetworkIP()}:${port}}`)
       void broadcastDevReady(initialBuild)
+    } else {
+      logger.info("⏰ Starting cron jobs")
+      void cron()
     }
   })
 
@@ -118,7 +115,6 @@ async function run() {
     }
 
     const chokidar = await import("chokidar")
-
     chokidar
       .watch(VERSION_PATH, { ignoreInitial: true })
       .on("add", handleServerUpdate)
