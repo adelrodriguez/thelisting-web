@@ -5,22 +5,22 @@ import { Fragment } from "react"
 import { ValidatedForm } from "remix-validated-form"
 import { z } from "zod"
 
-import { FormInput, FormSubmit } from "~/components/form"
+import { Input, SubmitButton } from "~/components/form"
 import {
+  HEADERS,
   useScrapedProducts,
-  Headers,
 } from "~/routes/dashboard.admin.product-scraper/route"
 import { downloadAsCSVFile } from "~/utils/csv"
 import { useDialogPage } from "~/utils/hooks"
 
-const ExportCSVSchema = z.object({
-  filename: z.string().min(1),
-})
-
-const validator = withZod(ExportCSVSchema)
+const validator = withZod(
+  z.object({
+    filename: z.string().min(1),
+  }),
+)
 
 export default function ExportCSVPage() {
-  const { open, close, leave } = useDialogPage()
+  const { close, leave, open } = useDialogPage()
   const { products } = useScrapedProducts()
 
   return (
@@ -64,26 +64,26 @@ export default function ExportCSVPage() {
                   className="mt-5"
                   onSubmit={async (data) => {
                     downloadAsCSVFile(data.filename, products, {
-                      columns: Headers.map((header) => header), // Mapping the headers to the columns (to avoid the "scrapedProductId" column)
-                      // TODO(adelrodriguez): This is actually no longer needed, since we are not using the "scrapedProductId" column anymore.
+                      columns: HEADERS,
                     })
                     close()
                   }}
                   validator={validator}
                 >
                   <div className="mt-2">
-                    <FormInput
+                    <Input
                       label="Filename"
                       name="filename"
                       placeholder="my-csv-file.csv"
                     />
                   </div>
                   <div className="mt-4 sm:mt-5">
-                    <FormSubmit
+                    <SubmitButton
                       className="w-full"
                       loadingText="Downloading..."
-                      text="Download"
-                    />
+                    >
+                      Download
+                    </SubmitButton>
                   </div>
                 </ValidatedForm>
               </Dialog.Panel>

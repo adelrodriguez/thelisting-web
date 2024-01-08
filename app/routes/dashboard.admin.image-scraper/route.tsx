@@ -18,10 +18,8 @@ type ImagesToScrape = {
   url: string
 }
 
-const Headers = ["filename", "url"] as const
-
 function transformHeader(_: string, index: number): string {
-  const header = Headers[index]
+  const header = ["filename", "url"][index]
 
   if (!header) {
     enqueueSnackbar(`Column ${index + 1} must be empty`, { variant: "error" })
@@ -36,7 +34,7 @@ export default function AdminToolsScrapeImagesPage() {
     header: true,
     transformHeader,
   })
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+  const { getInputProps, getRootProps, isDragActive } = useDropzone({
     accept: { "text/csv": [".csv"] },
     maxFiles: 1,
     onDrop: (files) => {

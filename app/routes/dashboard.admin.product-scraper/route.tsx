@@ -15,7 +15,7 @@ export const handle = {
   }),
 }
 
-export const Headers = [
+export const HEADERS = [
   "id",
   "url",
   "quantity",
@@ -24,10 +24,10 @@ export const Headers = [
   "image",
   "amount",
   "currency",
-] as const
+]
 
 function transformHeader(_: string, index: number): string {
-  const header = Headers[index]
+  const header = HEADERS[index]
 
   if (!header) {
     enqueueSnackbar(`Column ${index + 1} must be empty`, { variant: "error" })

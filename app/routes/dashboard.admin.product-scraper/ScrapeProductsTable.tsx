@@ -160,8 +160,8 @@ const scrapingModes = [
 
 export default function ScrapeProductsTable({
   data: initialData,
-  onExport,
   onAddToListing,
+  onExport,
 }: {
   data: ScrapeProductsTableRow[]
   onExport: (data: ScrapeProductsTableRow[]) => void
@@ -200,12 +200,12 @@ export default function ScrapeProductsTable({
     },
   })
 
-  const { scrape, completed, isIdle, cancel } = useScrapeProducts({
+  const { cancel, completed, isIdle, scrape } = useScrapeProducts({
     data: initialData,
     delay: scrapingDelay && scrapingDelay * 1000, // Convert to ms
     mode: scrapingMode?.value || "sequential",
     onSuccess: (payload, index) => {
-      const { fields, duration, errors, cached } = payload
+      const { cached, duration, errors, fields } = payload
       const row = data[index]
 
       if (!row) throw new Error("Row not found")
