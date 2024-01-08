@@ -5,7 +5,6 @@ import { useDropzone } from "react-dropzone"
 
 import { Button } from "~/components/common"
 import { useCSVParser } from "~/utils/hooks"
-import { scrapeImage } from "~/utils/scraper"
 
 export const handle = {
   crumb: () => ({
@@ -54,7 +53,12 @@ export default function AdminToolsScrapeImagesPage() {
     if (!result || !result.data) return
 
     for (const image of result.data) {
-      const blob = await scrapeImage(image.url)
+      const requestUrl = new URL("/api/scraper/image", window.location.origin)
+      requestUrl.searchParams.set("url", image.url)
+
+      const res = await fetch(requestUrl)
+
+      const blob = await res.blob()
 
       const href = window.URL.createObjectURL(blob)
       const a = document.createElement("a")

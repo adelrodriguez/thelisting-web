@@ -64,26 +64,3 @@ export function cleanCurrency(currency?: string | null): Currency {
 
   return currency.trim().toUpperCase() as Currency
 }
-
-export async function scrapeProduct(
-  url: string,
-  init?: RequestInit,
-): Promise<ScrapedProduct> {
-  const requestUrl = new URL("/api/scraper/product", window.location.origin)
-  requestUrl.searchParams.set("url", url)
-
-  const res = await fetch(requestUrl, init)
-
-  const data = await res.json()
-
-  return ScrapedProduct.parse(data)
-}
-
-export async function scrapeImage(url: string): Promise<Blob> {
-  const requestUrl = new URL("/api/scraper/image", window.location.origin)
-  requestUrl.searchParams.set("url", url)
-
-  const res = await fetch(requestUrl)
-
-  return res.blob()
-}
