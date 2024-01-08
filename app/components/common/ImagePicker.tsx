@@ -3,25 +3,23 @@ import { PhotoIcon } from "@heroicons/react/24/outline"
 import type { Image as UserImage } from "@prisma/client"
 import { useFetcher } from "@remix-run/react"
 import { useQuery } from "@tanstack/react-query"
-import clsx from "clsx"
 import type { FormEvent } from "react"
 import { Fragment, useState, useEffect } from "react"
-import { useDropzone } from "react-dropzone"
 
-import { Button, Input } from "~/components/common"
+import { Button, Dropzone, Input } from "~/components/common"
 import { Spinner } from "~/components/loading"
 import { generateCloudflareImageUrl } from "~/utils/cloudflare"
 
 export default function ImagePicker({
-  open,
   onClose,
   onSelect,
+  open,
 }: {
   open: boolean
   onClose: () => void
   onSelect: (image: UserImage) => void
 }) {
-  const { data, isPending, isError, refetch } = useQuery({
+  const { data, isError, isPending, refetch } = useQuery({
     queryFn: async () => {
       const res = await fetch("/api/images")
       const data = await res.json()
@@ -103,27 +101,14 @@ export default function ImagePicker({
 
 function ImageGallery({
   images,
-  onUpload,
   onSelect,
+  onUpload,
 }: {
   images: UserImage[]
   onSelect: (image: UserImage) => void
   onUpload: (file: File) => void
 }) {
   const [selected, setSelected] = useState<UserImage | null>(null)
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    accept: {
-      "image/gif": [".gif"],
-      "image/jpg": [".jpg", ".jpeg"],
-      "image/png": [".png"],
-    },
-    maxFiles: 1,
-    onDrop: (files) => {
-      if (!files[0]) throw new Error("No file was uploaded")
-
-      onUpload(files[0])
-    },
-  })
 
   return (
     <div className="h-full">
@@ -134,44 +119,23 @@ function ImageGallery({
       <div className="flex h-full flex-col gap-y-4 px-3 py-6">
         <div className="flex-1 overflow-auto p-4">
           <ul className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8">
-            <li className="h-full">
-              <button
-                {...getRootProps({
-                  className: clsx(
-                    "flex-1 relative block w-full rounded-lg p-6 md:py-11 text-center transition-all hover:border-gray-400  focus:shadow-lg focus:outline-none",
-                    {
-                      "bg-gray-100 shadow-lg": isDragActive,
-                      "border-2 border-dashed border-gray-300": !isDragActive,
-                    },
-                  ),
-                  type: "button",
-                })}
-              >
-                <div className="flex flex-col space-y-1 text-sm text-gray-600">
-                  <PhotoIcon className="mx-auto h-12 w-12 text-gray-400" />
-                  <div className="mx-auto flex flex-col">
-                    <label
-                      className="relative cursor-pointer rounded-md  font-medium text-gray-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-gray-500 focus-within:ring-offset-2 hover:text-gray-500"
-                      htmlFor="file-upload"
-                    >
-                      Upload a file
-                    </label>
-                    <input
-                      {...getInputProps({
-                        className: "sr-only",
-                        id: "image-upload",
-                        name: "image-upload",
-                        type: "file",
-                      })}
-                    />
-                    <p className="pl-1">or drag and drop</p>
-                  </div>
+            <li>
+              <Dropzone
+                Icon={PhotoIcon}
+                accept={{
+                  "image/gif": [".gif"],
+                  "image/jpg": [".jpg", ".jpeg"],
+                  "image/png": [".png"],
+                }}
+                fileUploadLimitDescription="JPG, PNG and GIF files up to 10MB"
+                name="image-upload"
+                onDrop={(files) => {
+                  if (!files[0]) throw new Error("No file was uploaded")
 
-                  <p className="text-xs text-gray-500">
-                    JPG, PNG and GIF files up to 10MB
-                  </p>
-                </div>
-              </button>
+                  onUpload(files[0])
+                }}
+                title="Upload an image"
+              />
             </li>
             {images.map((image) => (
               <li className="relative" key={image.id}>
