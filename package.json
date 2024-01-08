@@ -158,6 +158,7 @@
     "eslint-plugin-node": "11.1.0",
     "eslint-plugin-react": "7.33.2",
     "eslint-plugin-react-hooks": "4.6.0",
+    "eslint-plugin-sort-destructure-keys": "1.5.0",
     "eslint-plugin-sort-keys": "2.3.5",
     "hygen": "6.2.11",
     "msw": "2.0.12",
