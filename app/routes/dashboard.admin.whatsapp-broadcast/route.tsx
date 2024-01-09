@@ -14,14 +14,17 @@ import { generateCloudflareImageUrl } from "~/utils/cloudflare"
 import { RouteHandle, unprocessableEntity } from "~/utils/remix"
 
 import BabyShowerGuestNotificationForm, {
-  validator as babyShowerGuestNotificationValidator,
+  validator as BabyShowerGuestNotificationValidator,
 } from "./BabyShowerGuestNotificationForm"
 import BabyShowerInvitationV1Form, {
-  validator as babyShowerInvitationV1Validator,
+  validator as BabyShowerInvitationV1Validator,
 } from "./BabyShowerInvitationV1Form"
 import WeddingGuestNotificationForm, {
   validator as WeddingGuestNotificationValidator,
 } from "./WeddingGuestNotificationForm"
+import WeddingInvitationV1Form, {
+  validator as WeddingInvitationV1Validator,
+} from "./WeddingInvitationV1Form"
 
 export const handle: RouteHandle = {
   crumb: () => ({
@@ -37,6 +40,7 @@ export async function action({ request }: ActionFunctionArgs) {
       WHATSAPP_MESSAGE_TEMPLATES.BabyShowerGuestNotification,
       WHATSAPP_MESSAGE_TEMPLATES.WeddingGuestNotification,
       WHATSAPP_MESSAGE_TEMPLATES.BabyShowerInvitationV1,
+      WHATSAPP_MESSAGE_TEMPLATES.WeddingInvitationV1,
     ]),
   })
 
@@ -50,7 +54,7 @@ export async function action({ request }: ActionFunctionArgs) {
   switch (template) {
     case WHATSAPP_MESSAGE_TEMPLATES.BabyShowerGuestNotification: {
       const result =
-        await babyShowerGuestNotificationValidator.validate(formData)
+        await BabyShowerGuestNotificationValidator.validate(formData)
 
       if (result.error) {
         return unprocessableEntity({
@@ -116,7 +120,7 @@ export async function action({ request }: ActionFunctionArgs) {
     }
 
     case WHATSAPP_MESSAGE_TEMPLATES.BabyShowerInvitationV1: {
-      const result = await babyShowerInvitationV1Validator.validate(formData)
+      const result = await BabyShowerInvitationV1Validator.validate(formData)
 
       if (result.error) {
         return unprocessableEntity({
@@ -132,6 +136,43 @@ export async function action({ request }: ActionFunctionArgs) {
             locale: "ES",
             payload: {
               babyName: result.data.babyName,
+              date: result.data.date,
+              imageUrl: generateCloudflareImageUrl(result.data.image, "public"),
+              message: result.data.message,
+              path: result.data.path,
+              place: result.data.place,
+              recipient: recipient.name,
+            },
+            template,
+            to: recipient.phoneNumber,
+          },
+          name: `${recipient.name} - ${recipient.phoneNumber}`,
+        })),
+      )
+
+      return json({
+        amount: result.data.recipients.length,
+        success: true,
+      } as const)
+    }
+
+    case WHATSAPP_MESSAGE_TEMPLATES.WeddingInvitationV1: {
+      const result = await WeddingInvitationV1Validator.validate(formData)
+
+      if (result.error) {
+        return unprocessableEntity({
+          ...result.error,
+          response: null,
+          success: false,
+        } as const)
+      }
+
+      await SendWhatsAppTemplateMessageQueue.addBulk(
+        result.data.recipients.map((recipient) => ({
+          data: {
+            locale: "ES",
+            payload: {
+              coupleName: result.data.coupleName,
               date: result.data.date,
               imageUrl: generateCloudflareImageUrl(result.data.image, "public"),
               message: result.data.message,
@@ -221,6 +262,11 @@ export default function WhatsAppBroadcastPage() {
               title: "Baby Shower Invitation V1",
               value: WHATSAPP_MESSAGE_TEMPLATES.BabyShowerInvitationV1,
             },
+            {
+              description: "Invite guests to a wedding event",
+              title: "Wedding Invitation V1",
+              value: WHATSAPP_MESSAGE_TEMPLATES.WeddingInvitationV1,
+            },
           ]}
           value={template}
         />
@@ -236,6 +282,9 @@ export default function WhatsAppBroadcastPage() {
         )}
         {template === WHATSAPP_MESSAGE_TEMPLATES.BabyShowerInvitationV1 && (
           <BabyShowerInvitationV1Form />
+        )}
+        {template === WHATSAPP_MESSAGE_TEMPLATES.WeddingInvitationV1 && (
+          <WeddingInvitationV1Form />
         )}
       </div>
     </div>

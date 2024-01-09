@@ -12,6 +12,7 @@ import {
   generateBabyShowerInvitationV1Components,
   generateGiftPurchaseNotificationComponents,
   generateWeddingGuestNotificationComponents,
+  generateWeddingInvitationV1Components,
 } from "~/utils/whatsapp"
 
 export type QueueData = {
@@ -24,7 +25,7 @@ export type QueueData = {
 }[(typeof WHATSAPP_MESSAGE_TEMPLATES)[keyof typeof WHATSAPP_MESSAGE_TEMPLATES]]
 
 export const processor: Processor<QueueData> = async (job) => {
-  const { to, template, locale, payload } = job.data
+  const { locale, payload, template, to } = job.data
 
   if (isDevelopment) {
     await job.log("Development mode, skipping")
@@ -48,6 +49,10 @@ export const processor: Processor<QueueData> = async (job) => {
     }
     case WHATSAPP_MESSAGE_TEMPLATES.BabyShowerInvitationV1: {
       components = generateBabyShowerInvitationV1Components(payload)
+      break
+    }
+    case WHATSAPP_MESSAGE_TEMPLATES.WeddingInvitationV1: {
+      components = generateWeddingInvitationV1Components(payload)
       break
     }
     default:

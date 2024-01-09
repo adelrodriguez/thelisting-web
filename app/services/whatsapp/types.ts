@@ -5,7 +5,7 @@ export const WHATSAPP_MESSAGE_TEMPLATES = {
   BabyShowerInvitationV1: "baby_shower_invitation_v1",
   ListingGiftPurchase: "listing_gift_purchase",
   WeddingGuestNotification: "wedding_guest_notification",
-  // WeddingInvitationV1: "wedding_invitation_v1",
+  WeddingInvitationV1: "wedding_invitation_v1",
 } as const
 
 export type WhatsAppMessageTemplate =

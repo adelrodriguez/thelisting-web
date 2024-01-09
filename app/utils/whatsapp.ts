@@ -12,6 +12,7 @@ export type TemplateToComponentsMap = {
   [WHATSAPP_MESSAGE_TEMPLATES.BabyShowerInvitationV1]: BabyShowerInvitationV1Components
   [WHATSAPP_MESSAGE_TEMPLATES.ListingGiftPurchase]: GiftPurchaseNotificationComponents
   [WHATSAPP_MESSAGE_TEMPLATES.WeddingGuestNotification]: WeddingGuestNotificationComponents
+  [WHATSAPP_MESSAGE_TEMPLATES.WeddingInvitationV1]: WeddingInvitationV1Components
 }
 
 export type TemplateToParametersMap = {
@@ -26,6 +27,9 @@ export type TemplateToParametersMap = {
   >[0]
   [WHATSAPP_MESSAGE_TEMPLATES.WeddingGuestNotification]: Parameters<
     typeof generateWeddingGuestNotificationComponents
+  >[0]
+  [WHATSAPP_MESSAGE_TEMPLATES.WeddingInvitationV1]: Parameters<
+    typeof generateWeddingInvitationV1Components
   >[0]
 }
 
@@ -236,6 +240,82 @@ export function generateBabyShowerInvitationV1Components({
         },
         {
           text: babyName,
+          type: "text",
+        },
+        {
+          text: date,
+          type: "text",
+        },
+        {
+          text: place,
+          type: "text",
+        },
+        {
+          text: message,
+          type: "text",
+        },
+      ],
+      type: "body",
+    },
+    {
+      index: 0,
+      parameters: [
+        {
+          text: path,
+          type: "text",
+        },
+      ],
+      sub_type: "url",
+      type: "button",
+    },
+  ]
+}
+
+export type WeddingInvitationV1Components = [
+  HeaderComponent<[ImageParameter]>,
+  BodyComponent<
+    [TextParameter, TextParameter, TextParameter, TextParameter, TextParameter]
+  >,
+  ButtonComponent,
+]
+
+export function generateWeddingInvitationV1Components({
+  coupleName,
+  date,
+  imageUrl,
+  message,
+  path,
+  place,
+  recipient,
+}: {
+  coupleName: string
+  date: string
+  imageUrl: string
+  message: string
+  path: string
+  place: string
+  recipient: string
+}): BabyShowerInvitationV1Components {
+  return [
+    {
+      parameters: [
+        {
+          image: {
+            link: imageUrl,
+          },
+          type: "image",
+        },
+      ],
+      type: "header",
+    },
+    {
+      parameters: [
+        {
+          text: recipient,
+          type: "text",
+        },
+        {
+          text: coupleName,
           type: "text",
         },
         {
