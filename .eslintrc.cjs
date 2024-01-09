@@ -42,7 +42,7 @@ module.exports = {
   parserOptions: {
     ecmaVersion: "latest",
   },
-  plugins: ["sort-keys", "sort-destructure-keys"],
+  plugins: ["sort-keys-fix", "sort-destructure-keys"],
   root: true,
   rules: {
     "no-console": "warn",
@@ -50,7 +50,7 @@ module.exports = {
     "react/jsx-sort-props": "error",
     "react/react-in-jsx-scope": "off",
     "sort-destructure-keys/sort-destructure-keys": "warn",
-    "sort-keys/sort-keys-fix": "warn",
+    "sort-keys-fix/sort-keys-fix": "warn",
     "sort-vars": "warn",
     "spaced-comment": [
       "error",
