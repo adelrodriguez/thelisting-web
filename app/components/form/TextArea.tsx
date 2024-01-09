@@ -8,10 +8,10 @@ import { useField } from "remix-validated-form"
  * This component should only be used within a Form component.
  */
 export default function TextArea({
-  name,
-  label,
   className,
   description,
+  label,
+  name,
   required,
   ...props
 }: {
@@ -19,7 +19,7 @@ export default function TextArea({
   label: string
   description?: string
 } & ComponentPropsWithoutRef<"textarea">) {
-  const { getInputProps, error } = useField(name)
+  const { error, getInputProps } = useField(name)
   const $input = useRef<HTMLTextAreaElement>(null)
 
   useEffect(() => {

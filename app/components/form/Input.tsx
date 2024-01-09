@@ -8,13 +8,13 @@ import { useField } from "remix-validated-form"
  * This component should only be used within a Form component.
  */
 export default function Input({
-  name,
-  label,
   className,
   description,
+  label,
+  name,
   required,
-  type = "text",
   trailing,
+  type = "text",
   ...props
 }: {
   name: string
@@ -25,7 +25,7 @@ export default function Input({
   ComponentPropsWithoutRef<"input">,
   "name" | "defaultValue" | "defaultChecked"
 >) {
-  const { getInputProps, error } = useField(name)
+  const { error, getInputProps } = useField(name)
   const $input = useRef<HTMLInputElement>(null)
 
   useEffect(() => {

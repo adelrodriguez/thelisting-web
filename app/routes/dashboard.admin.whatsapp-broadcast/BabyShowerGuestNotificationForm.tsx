@@ -10,6 +10,7 @@ import {
   InputWithAddOn,
   SubmitButton,
 } from "~/components/form"
+import { HOMEPAGE_URL } from "~/config/consts"
 import { useCSVParser } from "~/utils/hooks"
 
 export const validator = withZod(
@@ -41,13 +42,11 @@ export default function BabyShowerGuestNotificationForm() {
       className="flex flex-col gap-y-6"
       id="babyShowerGuestNotification"
       method="POST"
-      onReset={() => {
-        reset()
-      }}
+      onReset={reset}
       resetAfterSubmit
       validator={validator}
     >
-      <InputWithAddOn addOn="https://thelisting.do/" label="Path" name="path" />
+      <InputWithAddOn addOn={HOMEPAGE_URL + "/"} label="Path" name="path" />
       <Input
         description="The name of the customer(s) (e.g. José y María)"
         label="Customer"
@@ -68,7 +67,7 @@ export default function BabyShowerGuestNotificationForm() {
                   className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                   scope="col"
                 >
-                  Phone Numbers
+                  Phone Number
                 </th>
               </tr>
             </thead>
@@ -93,7 +92,7 @@ export default function BabyShowerGuestNotificationForm() {
               parse(files[0])
             }
           }}
-          title="Upload a CSV file"
+          title="Upload the CSV file with the phone numbers"
         />
       )}
 

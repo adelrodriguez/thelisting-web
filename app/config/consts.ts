@@ -97,4 +97,8 @@ export const QUEUE_NAMES = {
   SendWhatsAppTemplateMessage: "SEND_WHATSAPP_TEMPLATE_MESSAGE",
 }
 
-export const GOOGLE_FONTS_CSS_API_URL = `https://fonts.googleapis.com/css2`
+export const GOOGLE_FONTS_CSS_API_URL = "https://fonts.googleapis.com/css2"
+
+export const HOMEPAGE_URL = "https://thelisting.do"
+
+export const REDIRECT_URL = "https://somos.thelisting.do"

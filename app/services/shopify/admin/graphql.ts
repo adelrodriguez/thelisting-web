@@ -5777,7 +5777,7 @@ export enum CountryCode {
   Tn = 'TN',
   /** Tonga. */
   To = 'TO',
-  /** Turkey. */
+  /** Türkiye. */
   Tr = 'TR',
   /** Trinidad & Tobago. */
   Tt = 'TT',
@@ -15447,7 +15447,15 @@ export enum FulfillmentOrderRequestStatus {
 /** Return type for `fulfillmentOrderReschedule` mutation. */
 export type FulfillmentOrderReschedulePayload = {
   __typename?: 'FulfillmentOrderReschedulePayload';
-  /** The fulfillment order that was rescheduled. */
+  /**
+   * A fulfillment order with the rescheduled line items.
+   *
+   * Fulfillment orders may be merged if they have the same `fulfillAt` datetime.
+   *
+   * If the fulfillment order is merged then the resulting fulfillment order will be returned.
+   * Otherwise the original fulfillment order will be returned with an updated `fulfillAt` datetime.
+   *
+   */
   fulfillmentOrder?: Maybe<FulfillmentOrder>;
   /** The list of errors that occurred from executing the mutation. */
   userErrors: Array<FulfillmentOrderRescheduleUserError>;
@@ -19491,7 +19499,8 @@ export type MarketCurrencySettings = {
    * Whether or not local currencies are enabled. If enabled, then prices will
    * be converted to give each customer the best experience based on their
    * region. If disabled, then all customers in this market will see prices
-   * in the market's base currency.
+   * in the market's base currency. For single country markets this will be true when
+   * the market's base currency is the same as the default currency for the region.
    *
    */
   localCurrencies: Scalars['Boolean']['output'];
@@ -19885,7 +19894,7 @@ export type MarketWebPresence = Node & {
   /**
    * The ISO code for the default locale. When a domain is used, this is the locale that will
    * be used when the domain root is accessed. For example, if French is the default locale,
-   * and `example.ca` is the market’s domian, then `example.ca` will load in French.
+   * and `example.ca` is the market’s domain, then `example.ca` will load in French.
    *
    */
   defaultLocale: Scalars['String']['output'];
@@ -23327,7 +23336,14 @@ export type Mutation = {
   fulfillmentOrderRejectFulfillmentRequest?: Maybe<FulfillmentOrderRejectFulfillmentRequestPayload>;
   /** Releases the fulfillment hold on a fulfillment order. */
   fulfillmentOrderReleaseHold?: Maybe<FulfillmentOrderReleaseHoldPayload>;
-  /** Reschedules a scheduled fulfillment order. */
+  /**
+   * Reschedules a scheduled fulfillment order.
+   *
+   * Updates the value of the `fulfillAt` field on a scheduled fulfillment order.
+   *
+   * The fulfillment order will be marked as ready for fulfillment at this date and time.
+   *
+   */
   fulfillmentOrderReschedule?: Maybe<FulfillmentOrderReschedulePayload>;
   /** Splits a fulfillment order or orders based on line item inputs and quantities. */
   fulfillmentOrderSplit?: Maybe<FulfillmentOrderSplitPayload>;
@@ -45093,7 +45109,7 @@ export enum TranslatableResourceType {
   PackingSlipTemplate = 'PACKING_SLIP_TEMPLATE',
   /** A payment gateway. Translatable fields: `name`. */
   PaymentGateway = 'PAYMENT_GATEWAY',
-  /** An online store product. Translatable fields: `title`, `body_html`, `handle`, `meta_title`, `meta_description`. */
+  /** An online store product. Translatable fields: `title`, `body_html`, `handle`, `product_type`, `meta_title`, `meta_description`. */
   Product = 'PRODUCT',
   /**
    * An online store custom product property name. For example, "Size", "Color", or "Material".
@@ -46082,7 +46098,14 @@ export enum WebhookSubscriptionTopic {
   FulfillmentOrdersOrderRoutingComplete = 'FULFILLMENT_ORDERS_ORDER_ROUTING_COMPLETE',
   /** The webhook topic for `fulfillment_orders/placed_on_hold` events. Occurs when a fulfillment order is placed on hold. Requires at least one of the following scopes: read_merchant_managed_fulfillment_orders, read_assigned_fulfillment_orders, read_third_party_fulfillment_orders. */
   FulfillmentOrdersPlacedOnHold = 'FULFILLMENT_ORDERS_PLACED_ON_HOLD',
-  /** The webhook topic for `fulfillment_orders/rescheduled` events. Triggers when a fulfillment order is rescheduled Requires at least one of the following scopes: read_merchant_managed_fulfillment_orders, read_assigned_fulfillment_orders, read_third_party_fulfillment_orders. */
+  /**
+   * The webhook topic for `fulfillment_orders/rescheduled` events. Triggers when a fulfillment order is rescheduled.
+   *
+   * Fulfillment orders may be merged if they have the same `fulfillAt` datetime.
+   * If the fulfillment order is merged then the resulting fulfillment order will be indicated in the webhook body.
+   * Otherwise it will be the original fulfillment order with an updated `fulfill_at` datetime.
+   *  Requires at least one of the following scopes: read_merchant_managed_fulfillment_orders, read_assigned_fulfillment_orders, read_third_party_fulfillment_orders.
+   */
   FulfillmentOrdersRescheduled = 'FULFILLMENT_ORDERS_RESCHEDULED',
   /** The webhook topic for `fulfillment_orders/scheduled_fulfillment_order_ready` events. Occurs whenever a fulfillment order which was scheduled becomes due. Requires at least one of the following scopes: read_merchant_managed_fulfillment_orders, read_assigned_fulfillment_orders, read_third_party_fulfillment_orders. */
   FulfillmentOrdersScheduledFulfillmentOrderReady = 'FULFILLMENT_ORDERS_SCHEDULED_FULFILLMENT_ORDER_READY',

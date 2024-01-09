@@ -25,7 +25,7 @@ export type QueueData = {
 }
 
 export const processor: Processor<QueueData> = async (job) => {
-  const { product, listingId, margin } = job.data
+  const { listingId, margin, product } = job.data
 
   // Get listing
   const listing = await db.listing.findUniqueOrThrow({

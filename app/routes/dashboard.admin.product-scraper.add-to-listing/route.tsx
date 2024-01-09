@@ -38,7 +38,7 @@ export async function loader({ context }: LoaderFunctionArgs) {
   return json({ listings })
 }
 
-export async function action({ request, context }: ActionFunctionArgs) {
+export async function action({ context, request }: ActionFunctionArgs) {
   const db = context.db
 
   const formData = await request.formData()
@@ -46,7 +46,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
 
   if (result.error) return validationError(result.error)
 
-  const { listingId, margin, products, exchangeRate } = result.data
+  const { exchangeRate, listingId, margin, products } = result.data
 
   const listing = await db.listing.findUniqueOrThrow({
     where: { id: listingId },
@@ -71,8 +71,8 @@ export default function AddToListingPage() {
   const { enqueueSnackbar } = useSnackbar()
   const { products } = useScrapedProducts()
   const { listings } = useLoaderData<typeof loader>()
-  const { open, close, leave } = useDialogPage()
-  const { getValues, fieldErrors } = useFormContext("addToListing")
+  const { close, leave, open } = useDialogPage()
+  const { fieldErrors, getValues } = useFormContext("addToListing")
 
   const values = getValues()
   const margin = values.get("margin")

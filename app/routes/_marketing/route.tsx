@@ -3,6 +3,7 @@ import { Outlet } from "@remix-run/react"
 import { StatusCodes } from "http-status-codes"
 import { useTranslation } from "react-i18next"
 
+import { HOMEPAGE_URL } from "~/config/consts"
 import { isProduction } from "~/config/vars"
 
 import Footer from "./Footer"
@@ -21,7 +22,7 @@ export const handle = { i18n: "common" }
 export function loader() {
   // TODO: remove this once we're live
   if (isProduction) {
-    return redirect("https://thelisting.do", {
+    return redirect(HOMEPAGE_URL, {
       status: StatusCodes.TEMPORARY_REDIRECT,
     })
   }

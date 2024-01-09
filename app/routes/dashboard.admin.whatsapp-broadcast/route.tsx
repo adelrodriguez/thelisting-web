@@ -16,6 +16,9 @@ import { RouteHandle, unprocessableEntity } from "~/utils/remix"
 import BabyShowerGuestNotificationForm, {
   validator as babyShowerGuestNotificationValidator,
 } from "./BabyShowerGuestNotificationForm"
+import BabyShowerInvitationV1Form, {
+  validator as babyShowerInvitationV1Validator,
+} from "./BabyShowerInvitationV1Form"
 import WeddingGuestNotificationForm, {
   validator as WeddingGuestNotificationValidator,
 } from "./WeddingGuestNotificationForm"
@@ -112,6 +115,43 @@ export async function action({ request }: ActionFunctionArgs) {
       } as const)
     }
 
+    case WHATSAPP_MESSAGE_TEMPLATES.BabyShowerInvitationV1: {
+      const result = await babyShowerInvitationV1Validator.validate(formData)
+
+      if (result.error) {
+        return unprocessableEntity({
+          ...result.error,
+          response: null,
+          success: false,
+        } as const)
+      }
+
+      await SendWhatsAppTemplateMessageQueue.addBulk(
+        result.data.recipients.map((recipient) => ({
+          data: {
+            locale: "ES",
+            payload: {
+              babyName: result.data.babyName,
+              date: result.data.date,
+              imageUrl: generateCloudflareImageUrl(result.data.image, "public"),
+              message: result.data.message,
+              path: result.data.path,
+              place: result.data.place,
+              recipient: recipient.name,
+            },
+            template,
+            to: recipient.phoneNumber,
+          },
+          name: `${recipient.name} - ${recipient.phoneNumber}`,
+        })),
+      )
+
+      return json({
+        amount: result.data.recipients.length,
+        success: true,
+      } as const)
+    }
+
     default:
       return unprocessableEntity({
         error: "Invalid template",
@@ -176,6 +216,11 @@ export default function WhatsAppBroadcastPage() {
               title: "Baby Shower Guest Notification",
               value: WHATSAPP_MESSAGE_TEMPLATES.BabyShowerGuestNotification,
             },
+            {
+              description: "Invite guests to a baby shower event",
+              title: "Baby Shower Invitation V1",
+              value: WHATSAPP_MESSAGE_TEMPLATES.BabyShowerInvitationV1,
+            },
           ]}
           value={template}
         />
@@ -188,6 +233,9 @@ export default function WhatsAppBroadcastPage() {
         {template ===
           WHATSAPP_MESSAGE_TEMPLATES.BabyShowerGuestNotification && (
           <BabyShowerGuestNotificationForm />
+        )}
+        {template === WHATSAPP_MESSAGE_TEMPLATES.BabyShowerInvitationV1 && (
+          <BabyShowerInvitationV1Form />
         )}
       </div>
     </div>

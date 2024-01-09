@@ -35,11 +35,11 @@ type GiftPurchaseNotificationComponents = [
 ]
 
 export function generateGiftPurchaseNotificationComponents({
-  recipient,
-  buyer,
   amount,
+  buyer,
   gift,
   path,
+  recipient,
 }: {
   recipient: string
   buyer: string
@@ -91,8 +91,8 @@ export type BabyShowerGuestNotificationComponents = [
 
 export function generateBabyShowerGuestNotificationComponents({
   imageUrl,
-  recipient,
   path,
+  recipient,
 }: {
   imageUrl: string
   recipient: string
@@ -145,8 +145,8 @@ export type WeddingGuestNotificationComponents = [
 
 export function generateWeddingGuestNotificationComponents({
   imageUrl,
-  recipient,
   path,
+  recipient,
 }: {
   imageUrl: string
   recipient: string
@@ -204,17 +204,17 @@ export function generateBabyShowerInvitationV1Components({
   date,
   imageUrl,
   message,
+  path,
   place,
   recipient,
-  url,
 }: {
   babyName: string
   date: string
   imageUrl: string
   message: string
+  path: string
   place: string
   recipient: string
-  url: string
 }): BabyShowerInvitationV1Components {
   return [
     {
@@ -257,7 +257,7 @@ export function generateBabyShowerInvitationV1Components({
       index: 0,
       parameters: [
         {
-          text: url,
+          text: path,
           type: "text",
         },
       ],
