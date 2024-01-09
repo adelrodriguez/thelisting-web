@@ -13,9 +13,9 @@ import { WHATSAPP_MESSAGE_TEMPLATES } from "~/services/whatsapp/types"
 import { generateCloudflareImageUrl } from "~/utils/cloudflare"
 import { RouteHandle, unprocessableEntity } from "~/utils/remix"
 
-import BabyShowerNotificationForm, {
-  validator as babyShowerNotificationValidator,
-} from "./BabyShowerNotificationForm"
+import BabyShowerGuestNotificationForm, {
+  validator as babyShowerGuestNotificationValidator,
+} from "./BabyShowerGuestNotificationForm"
 import WeddingGuestNotificationForm, {
   validator as WeddingGuestNotificationValidator,
 } from "./WeddingGuestNotificationForm"
@@ -33,6 +33,7 @@ export async function action({ request }: ActionFunctionArgs) {
     template: z.enum([
       WHATSAPP_MESSAGE_TEMPLATES.BabyShowerGuestNotification,
       WHATSAPP_MESSAGE_TEMPLATES.WeddingGuestNotification,
+      WHATSAPP_MESSAGE_TEMPLATES.BabyShowerInvitationV1,
     ]),
   })
 
@@ -45,7 +46,8 @@ export async function action({ request }: ActionFunctionArgs) {
 
   switch (template) {
     case WHATSAPP_MESSAGE_TEMPLATES.BabyShowerGuestNotification: {
-      const result = await babyShowerNotificationValidator.validate(formData)
+      const result =
+        await babyShowerGuestNotificationValidator.validate(formData)
 
       if (result.error) {
         return unprocessableEntity({
@@ -185,7 +187,7 @@ export default function WhatsAppBroadcastPage() {
         )}
         {template ===
           WHATSAPP_MESSAGE_TEMPLATES.BabyShowerGuestNotification && (
-          <BabyShowerNotificationForm />
+          <BabyShowerGuestNotificationForm />
         )}
       </div>
     </div>

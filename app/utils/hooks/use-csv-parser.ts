@@ -11,13 +11,19 @@ export default function useCSVParser<T>({
   header?: boolean
   transform?: Papa.ParseConfig["transform"]
   transformHeader?: Papa.ParseConfig["transformHeader"]
-}): {
+} = {}): {
   filename: string | null
   parse: (file: File) => void
+  reset: () => void
   result: Papa.ParseResult<T> | null
 } {
   const [file, setFile] = useState<File | null>(null)
   const [result, setResult] = useState<Papa.ParseResult<T> | null>(null)
+
+  function reset() {
+    setFile(null)
+    setResult(null)
+  }
 
   useEffect(() => {
     if (!file) return
@@ -48,6 +54,7 @@ export default function useCSVParser<T>({
   return {
     filename,
     parse: setFile,
+    reset,
     result,
   }
 }

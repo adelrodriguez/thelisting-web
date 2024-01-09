@@ -29,21 +29,22 @@ function transformHeader(header: string, index: number) {
   return HEADERS[index] ?? header
 }
 
-export default function WeddingGuestNotificationForm() {
+export default function BabyShowerGuestNotificationForm() {
   const { parse, reset, result } = useCSVParser<{ phoneNumber: string }>({
     header: true,
     transformHeader,
   })
-  const { fieldErrors } = useFormContext("weddingGuestNotification")
+  const { fieldErrors } = useFormContext("babyShowerGuestNotification")
 
   return (
     <Form
       className="flex flex-col gap-y-6"
-      id="weddingGuestNotification"
+      id="babyShowerGuestNotification"
       method="POST"
       onReset={() => {
         reset()
       }}
+      resetAfterSubmit
       validator={validator}
     >
       <InputWithAddOn addOn="https://thelisting.do/" label="Path" name="path" />
@@ -113,6 +114,7 @@ export default function WeddingGuestNotificationForm() {
           <pre className="text-wrap">{JSON.stringify(fieldErrors)}</pre>
         </Alert>
       )}
+
       <SubmitButton loadingText="Sending...">Send</SubmitButton>
     </Form>
   )
