@@ -47,7 +47,7 @@ import { getFullName } from "~/utils/user"
 
 export const handle: RouteHandle<{ listingSku: string }> = {
   crumb: ({ params }) => ({
-    href: route("/dashboard/listings/:listingSku/edit", {
+    href: route("/dashboard/listings/:listingSku/details/edit", {
       listingSku: params.listingSku,
     }),
     name: "Edit Listing",
@@ -71,7 +71,7 @@ const clientValidator = withZod(
   }),
 )
 
-export async function loader({ params, context }: LoaderFunctionArgs) {
+export async function loader({ context, params }: LoaderFunctionArgs) {
   const db = context.db
   const { listingSku } = zx.parseParams(params, {
     listingSku: z.coerce.number(),
@@ -98,7 +98,7 @@ export async function loader({ params, context }: LoaderFunctionArgs) {
   })
 }
 
-export async function action({ request, params, context }: ActionFunctionArgs) {
+export async function action({ context, params, request }: ActionFunctionArgs) {
   const db = context.db
   const user = await auth.isAuthenticated(request)
 

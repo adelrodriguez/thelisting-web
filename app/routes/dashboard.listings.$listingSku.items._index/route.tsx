@@ -22,10 +22,21 @@ import { zx } from "zodix"
 
 import { Button } from "~/components/common"
 import { useProduct } from "~/utils/hooks"
+import { RouteHandle } from "~/utils/remix"
 import { getShopifyIdNumber } from "~/utils/shopify"
 import { ArrayElement } from "~/utils/type"
 
-export async function loader({ params, context }: LoaderFunctionArgs) {
+export const handle: RouteHandle<{ listingSku: string }> = {
+  crumb: ({ params }) => ({
+    href: route("/dashboard/listings/:listingSku/items", {
+      listingSku: params.listingSku,
+    }),
+    name: "Items List",
+  }),
+  id: "dashboard-listings-listing-items-index",
+}
+
+export async function loader({ context, params }: LoaderFunctionArgs) {
   const { db } = context
   const { listingSku } = zx.parseParams(params, {
     listingSku: z.coerce.number(),
@@ -205,13 +216,13 @@ export default function DashboardListingItemsPage() {
 }
 
 function TitleCell({
-  sku,
   commerceId,
+  sku,
 }: {
   sku: Item["sku"]
   commerceId: Item["commerceId"]
 }) {
-  const { data, isPending, isError } = useProduct(commerceId ?? "")
+  const { data, isError, isPending } = useProduct(commerceId ?? "")
 
   if (isPending) return <div>Loading...</div>
 

@@ -36,7 +36,8 @@ declare module "routes-gen" {
     "/dashboard/admin/whatsapp-broadcast": Record<string, never>;
     "/dashboard/listings": Record<string, never>;
     "/dashboard/listings/:listingSku": { "listingSku": string };
-    "/dashboard/listings/:listingSku/edit": { "listingSku": string };
+    "/dashboard/listings/:listingSku/details": { "listingSku": string };
+    "/dashboard/listings/:listingSku/details/edit": { "listingSku": string };
     "/dashboard/listings/:listingSku/items": { "listingSku": string };
     "/dashboard/listings/:listingSku/items/:itemSku": { "listingSku": string, "itemSku": string };
     "/dashboard/listings/:listingSku/items/:itemSku/delete": { "listingSku": string, "itemSku": string };
@@ -94,7 +95,8 @@ declare module "routes-gen" {
       | ["/dashboard/admin/whatsapp-broadcast"]
       | ["/dashboard/listings"]
       | ["/dashboard/listings/:listingSku", RouteParams["/dashboard/listings/:listingSku"]]
-      | ["/dashboard/listings/:listingSku/edit", RouteParams["/dashboard/listings/:listingSku/edit"]]
+      | ["/dashboard/listings/:listingSku/details", RouteParams["/dashboard/listings/:listingSku/details"]]
+      | ["/dashboard/listings/:listingSku/details/edit", RouteParams["/dashboard/listings/:listingSku/details/edit"]]
       | ["/dashboard/listings/:listingSku/items", RouteParams["/dashboard/listings/:listingSku/items"]]
       | ["/dashboard/listings/:listingSku/items/:itemSku", RouteParams["/dashboard/listings/:listingSku/items/:itemSku"]]
       | ["/dashboard/listings/:listingSku/items/:itemSku/delete", RouteParams["/dashboard/listings/:listingSku/items/:itemSku/delete"]]

@@ -4,7 +4,7 @@ import clsx from "clsx"
 import { route } from "routes-gen"
 
 import { Select } from "~/components/common"
-import { handle as indexHandle } from "~/routes/dashboard.listings.$listingSku._index/route"
+import { handle as detailsHandle } from "~/routes/dashboard.listings.$listingSku.details/route"
 import { handle as itemsHandle } from "~/routes/dashboard.listings.$listingSku.items/route"
 import { handle as ribbonsHandle } from "~/routes/dashboard.listings.$listingSku.ribbons/route"
 import { handle as statsHandle } from "~/routes/dashboard.listings.$listingSku.stats/route"
@@ -21,7 +21,7 @@ export const handle: RouteHandle<{ listingSku: string }> = {
 }
 
 const tabs = [
-  { id: indexHandle, label: "Details", value: "./" },
+  { id: detailsHandle, label: "Details", value: "./details" },
   { id: statsHandle.id, label: "Stats", value: "./stats" },
   { id: itemsHandle.id, label: "Items", value: "./items" },
   { id: ribbonsHandle.id, label: "Ribbons", value: "./ribbons" },
@@ -33,6 +33,8 @@ export default function DashboardListingPage() {
   const currentTab = tabs.find(
     (tab) => matches[matches.length - 1]?.handle?.id === tab.id,
   )
+
+  console.log({ currentTab })
 
   return (
     <>
@@ -50,10 +52,9 @@ export default function DashboardListingPage() {
         />
       </div>
       <div className="hidden sm:block">
-        <nav aria-label="Tabs" className="flex space-x-4">
+        <nav aria-label="tabs" className="flex space-x-4">
           {tabs.map((tab) => (
             <NavLink
-              aria-current={tab.id === currentTab?.id ? "page" : undefined}
               className={({ isActive }) =>
                 clsx("rounded-md px-3 py-2 text-sm font-medium", {
                   "bg-gray-200 text-gray-800": isActive,
