@@ -30,8 +30,8 @@ const CheckoutDataSchema = z.object({
 })
 
 export async function action({
-  request,
   context,
+  request,
 }: ActionFunctionArgs): Promise<Response> {
   const { db, logger } = context
   try {
@@ -39,7 +39,7 @@ export async function action({
     const formData = await request.formData()
     const data = Object.fromEntries(formData.entries())
     const session = await getSession(headers.get("cookie"))
-    const { cartItems, sku, listingId, noteId } = CheckoutDataSchema.parse(data)
+    const { cartItems, listingId, noteId, sku } = CheckoutDataSchema.parse(data)
 
     // Check that all items are available, in case someone messed with the cart
     const hasStock = await Promise.all(

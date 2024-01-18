@@ -6,14 +6,14 @@ import { formatPrice } from "~/utils/money"
 
 export default function OrderItem({
   commerceId,
-  quantity,
   cost,
+  quantity,
 }: {
   commerceId: string
   quantity: number
   cost?: number
 }) {
-  const { data, isPending, isError } = useProduct(commerceId)
+  const { data, isError, isPending } = useProduct(commerceId)
   const { t } = useTranslation(["registry", "common"])
 
   if (isPending) {
@@ -33,7 +33,7 @@ export default function OrderItem({
 
   if (isError) return <Alert type="error">{t("common:error")}</Alert>
 
-  const { title, imageUrl, currencyCode, price } = data
+  const { currencyCode, imageUrl, price, title } = data
 
   return (
     <div className="flex w-full gap-x-6">

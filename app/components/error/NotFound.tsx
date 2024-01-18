@@ -8,8 +8,8 @@ export type BoundaryData = {
 }
 
 export default function NotFound({
-  status,
   data,
+  status,
 }: {
   status: number
   data: BoundaryData

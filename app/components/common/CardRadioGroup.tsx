@@ -10,9 +10,9 @@ type CardRadioGroupOption = {
 
 export default function CardRadioGroup({
   label,
+  onChange,
   options,
   value,
-  onChange,
 }: {
   label?: string
   value: CardRadioGroupOption["value"] | null | undefined

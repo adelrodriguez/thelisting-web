@@ -14,7 +14,7 @@ import { route } from "routes-gen"
 import { Button } from "~/components/common"
 import { isUserAdmin } from "~/utils/auth.server"
 
-export async function loader({ request, context }: LoaderFunctionArgs) {
+export async function loader({ context, request }: LoaderFunctionArgs) {
   const { db } = context
   await isUserAdmin(request)
 

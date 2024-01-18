@@ -17,7 +17,7 @@ export const processor: Processor<QueueData> = async (job) => {
     getShopifyId(job.data.orderId, "Order"),
   )
 
-  const { session_carts_key: cartsKey, listing_id: listingId } =
+  const { listing_id: listingId, session_carts_key: cartsKey } =
     customAttributes
 
   if (!cartsKey) {

@@ -23,7 +23,7 @@ export const handle: RouteHandle = {
   id: "listing-cart-note",
 }
 
-export async function loader({ request, context }: LoaderFunctionArgs) {
+export async function loader({ context, request }: LoaderFunctionArgs) {
   const db = context.db
   const query = zx.parseQuerySafe(request, z.object({ note_id: z.string() }))
 
@@ -44,7 +44,7 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
   })
 }
 
-export async function action({ request, params, context }: ActionFunctionArgs) {
+export async function action({ context, params, request }: ActionFunctionArgs) {
   const db = context.db
   const parsedQuery = zx.parseQuerySafe(
     request,
@@ -107,7 +107,7 @@ export async function action({ request, params, context }: ActionFunctionArgs) {
 
 export default function ListingCartNotePage() {
   const { note } = useLoaderData<typeof loader>()
-  const { open, close, leave } = useDialogPage()
+  const { close, leave, open } = useDialogPage()
 
   const { t } = useTranslation(handle.i18n)
   const cart = useCart()

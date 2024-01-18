@@ -83,8 +83,8 @@ export function CartProvider({
     id,
     price,
     quantity,
-    variantId,
     sku,
+    variantId,
   }: CartItem) {
     const newItems = new Map(currentCart.items)
 

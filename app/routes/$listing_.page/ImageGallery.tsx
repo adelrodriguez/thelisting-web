@@ -4,8 +4,8 @@ import type { ImageGalleryProperties } from "~/utils/ribbons"
 import SectionWrapper from "./SectionWrapper"
 
 export default function ImageGallery({
-  images,
   groupSize,
+  images,
 }: ImageGalleryProperties) {
   const groupedImages = images.reduce((acc: string[][], image, index) => {
     if (index % groupSize === 0) {

@@ -14,10 +14,10 @@ type SelectOption = {
  * This component should only be used within a Form component.
  */
 export default function Select<T extends SelectOption>({
-  name,
   className,
   description,
   label,
+  name,
   options,
   required,
   ...props

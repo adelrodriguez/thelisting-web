@@ -8,8 +8,8 @@ import { Input } from "~/components/common"
  * @deprecated Use Input instead.
  */
 export default function FormInput({
-  name,
   description,
+  name,
   ...props
 }: {
   name: string

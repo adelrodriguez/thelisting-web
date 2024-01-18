@@ -8,9 +8,9 @@ import { Spinner } from "~/components/loading"
  * @deprecated Use SubmitButton instead.
  */
 export default function FormSubmit({
-  text = `${i18next.t("common:submit")}`,
-  loadingText = `${i18next.t("common:submitting")}...`,
   className,
+  loadingText = `${i18next.t("common:submitting")}...`,
+  text = `${i18next.t("common:submit")}`,
 }: {
   text?: string
   loadingText?: string

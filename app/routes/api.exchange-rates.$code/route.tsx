@@ -8,7 +8,7 @@ import Sentry from "~/services/sentry"
 import { CurrencySchema } from "~/utils/money"
 import { generateKey } from "~/utils/redis"
 
-export async function loader({ params, context }: LoaderFunctionArgs) {
+export async function loader({ context, params }: LoaderFunctionArgs) {
   const cache = context.cache
   const logger = context.logger
 

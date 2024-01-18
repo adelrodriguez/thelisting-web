@@ -16,7 +16,7 @@ export default function CartItem({
   sku,
 }: Pick<Item, "id" | "commerceId" | "quantity" | "sku">) {
   const { listing } = useParams<RouteParams["/:listing/cart"]>()
-  const { data, isPending, isError } = useProduct(commerceId!)
+  const { data, isError, isPending } = useProduct(commerceId!)
   const cart = useCart()
   const { t } = useTranslation("registry")
   const { currency, exchangeRate } = useExchangeRate()
@@ -33,7 +33,7 @@ export default function CartItem({
       </div>
     )
 
-  const { title, price, imageUrl } = data
+  const { imageUrl, price, title } = data
 
   return (
     <>

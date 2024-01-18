@@ -29,7 +29,7 @@ const SessionSchema = z
 export type Session = z.infer<typeof SessionSchema>
 
 // you can also export the methods individually for your own usage
-export const { getSession, commitSession, destroySession } = sessionStorage
+export const { commitSession, destroySession, getSession } = sessionStorage
 
 export { SessionSchema }
 export default sessionStorage

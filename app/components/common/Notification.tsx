@@ -29,9 +29,9 @@ declare module "notistack" {
 
 function Notification(
   {
+    description,
     id,
     message,
-    description,
     variant,
   }: { description?: string } & CustomContentProps,
   ref: Ref<HTMLDivElement>,

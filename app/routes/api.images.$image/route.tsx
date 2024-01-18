@@ -4,7 +4,7 @@ import { ReasonPhrases, StatusCodes } from "http-status-codes"
 import { z } from "zod"
 import { zx } from "zodix"
 
-export async function loader({ params, context }: LoaderFunctionArgs) {
+export async function loader({ context, params }: LoaderFunctionArgs) {
   const db = context.db
   const { image: id } = zx.parseParams(params, { image: z.string() })
 

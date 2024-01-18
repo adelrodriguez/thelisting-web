@@ -2,7 +2,7 @@ export class GenericError extends Error {
   code: ErrorCode
   customData?: Record<string, unknown>
 
-  constructor({ message, code, customData, name }: ErrorProps) {
+  constructor({ code, customData, message, name }: ErrorProps) {
     const defaultError: ErrorData = {
       code: "no_code_provided",
       message: "No error message provided",

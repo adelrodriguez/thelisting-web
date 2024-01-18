@@ -7,9 +7,9 @@ import createScraperFactory, { BaseScraper } from "./base.server"
 import * as storeScrapers from "./stores"
 
 export default async function createScraper({
-  url,
   browser,
   logger,
+  url,
 }: ScraperConfig): Promise<ScraperInterface> {
   const { domain } = parse(url.hostname)
 

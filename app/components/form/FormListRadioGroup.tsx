@@ -12,11 +12,11 @@ type FormListRadioGroupOption = ComponentProps<
  * @deprecated Use ListRadioGroup instead.
  */
 export default function FormListRadioGroup<T extends FormListRadioGroupOption>({
+  description,
+  label,
   name,
   options,
-  label,
   required,
-  description,
 }: {
   name: string
   options: T[]

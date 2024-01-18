@@ -18,7 +18,7 @@ export const handle = {
   i18n: ["registry", "common"],
 }
 
-export async function loader({ params, request, context }: LoaderFunctionArgs) {
+export async function loader({ context, params, request }: LoaderFunctionArgs) {
   const db = context.db
   const logger = context.logger
   const requestUrl = new URL(request.url)

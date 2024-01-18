@@ -8,8 +8,8 @@ import { LanguageCurrencySelector } from "~/components/marketing"
 import { THE_LISTING_LOGO_BLACK, THE_LISTING_LOGO_WHITE } from "~/config/consts"
 
 export default function MarketingHeader({
-  navigationItems,
   loginText,
+  navigationItems,
 }: {
   navigationItems: Array<{ href: string; key: string }>
   loginText: string

@@ -9,13 +9,13 @@ type ListRadioOption = {
 export default function ListRadioGroup<T extends ListRadioOption>({
   description,
   error = false,
+  id,
   label,
+  name,
   onChange,
   options,
   required,
   value,
-  name,
-  id,
 }: {
   description?: string
   error?: boolean

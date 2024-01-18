@@ -13,9 +13,9 @@ import type { Input } from "~/components/form"
  */
 export default function ImageInput({
   className,
-  name,
   description,
   label,
+  name,
   required,
   ...props
 }: ComponentProps<typeof Input>) {

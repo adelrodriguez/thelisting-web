@@ -6,7 +6,7 @@ import Sentry from "~/services/sentry"
 import { getShopifyId } from "~/utils/shopify"
 import { getOrderCustomAttributes } from "~/utils/shopify.server"
 
-export async function loader({ request, context }: LoaderFunctionArgs) {
+export async function loader({ context, request }: LoaderFunctionArgs) {
   const db = context.db
   const logger = context.logger
   const requestUrl = new URL(request.url)

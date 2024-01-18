@@ -14,11 +14,11 @@ type AutocompleteOption = {
  * This component should only be used within a Form component.
  */
 export default function Autocomplete<T extends AutocompleteOption>({
-  name,
-  label,
-  required,
-  options,
   description,
+  label,
+  name,
+  options,
+  required,
 }: {
   name: string
   label: string
@@ -27,7 +27,7 @@ export default function Autocomplete<T extends AutocompleteOption>({
   options: T[]
 }) {
   const [query, setQuery] = useState("")
-  const { getInputProps, error } = useField(name)
+  const { error, getInputProps } = useField(name)
 
   const filteredOptions =
     query === ""

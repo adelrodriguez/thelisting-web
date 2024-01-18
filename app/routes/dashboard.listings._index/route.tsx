@@ -28,7 +28,7 @@ const tabs = [
 
 export async function loader({ context, request }: LoaderFunctionArgs) {
   const { db } = context
-  const { status, q } = zx.parseQuery(request, {
+  const { q, status } = zx.parseQuery(request, {
     q: z.string().optional(),
     status: ListingStatusSchema.optional(),
   })

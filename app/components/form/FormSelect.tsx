@@ -8,8 +8,8 @@ import { Select } from "~/components/common"
  * @deprecated Use Select instead.
  */
 export default function FormSelect({
-  name,
   description,
+  name,
   options,
   ...props
 }: {

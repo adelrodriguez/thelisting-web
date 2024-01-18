@@ -8,7 +8,7 @@ import { PRODUCT_METAFIELDS } from "~/config/consts"
 import { round } from "~/utils/number"
 import { getProduct } from "~/utils/shopify.server"
 
-export async function loader({ params, context }: LoaderFunctionArgs) {
+export async function loader({ context, params }: LoaderFunctionArgs) {
   const db = context.db
   const { listingId } = zx.parseParams(params, { listingId: z.string() })
 

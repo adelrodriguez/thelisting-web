@@ -43,7 +43,7 @@ export class BaseScraper implements ScraperInterface {
   protected page!: Page
   protected waitFor?(): Promise<void>
 
-  constructor({ url, browser, logger }: ScraperConfig) {
+  constructor({ browser, logger, url }: ScraperConfig) {
     this.url = url.toString()
     this.browser = browser
     this.logger = logger

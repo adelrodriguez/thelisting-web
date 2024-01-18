@@ -10,18 +10,18 @@ import type { Input } from "~/components/form"
  * This component should only be used within a Form component.
  */
 export default function InputWithAddOn({
-  name,
-  label,
+  addOn,
   className,
   description,
+  label,
+  name,
   required,
-  addOn,
   type = "text",
   ...props
 }: {
   addOn: string
 } & ComponentProps<typeof Input>) {
-  const { getInputProps, error } = useField(name)
+  const { error, getInputProps } = useField(name)
   const $input = useRef<HTMLInputElement>(null)
 
   useEffect(() => {

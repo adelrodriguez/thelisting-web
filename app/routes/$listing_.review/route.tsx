@@ -20,7 +20,7 @@ export const handle = {
   i18n: ["common", "registry"],
 }
 
-export async function loader({ request, params, context }: LoaderFunctionArgs) {
+export async function loader({ context, params, request }: LoaderFunctionArgs) {
   const db = context.db
   const { listing: path } = zx.parseParams(params, { listing: z.string() })
   const t = await i18next.getFixedT(request, "registry")
@@ -90,7 +90,7 @@ export async function loader({ request, params, context }: LoaderFunctionArgs) {
 
 export default function ListingReviewPage() {
   const { listing, stats } = useLoaderData<typeof loader>()
-  const { t, i18n } = useTranslation(handle.i18n)
+  const { i18n, t } = useTranslation(handle.i18n)
 
   return (
     <main className="relative lg:min-h-full">

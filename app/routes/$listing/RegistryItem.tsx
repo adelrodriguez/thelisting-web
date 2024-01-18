@@ -17,7 +17,7 @@ export default function RegistryItem({
   commerceId: string
   sku: Item["sku"]
 }) {
-  const { data, isPending, isError, error } = useProduct(commerceId)
+  const { data, error, isError, isPending } = useProduct(commerceId)
   const { t } = useTranslation("registry")
   const { currency, exchangeRate } = useExchangeRate()
 
@@ -47,7 +47,7 @@ export default function RegistryItem({
     return null
   }
 
-  const { title, imageUrl, price } = data
+  const { imageUrl, price, title } = data
 
   return (
     <Link className="group text-center font-body" preventScrollReset to={sku}>

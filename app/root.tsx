@@ -73,7 +73,7 @@ export function ErrorBoundary() {
   return <NotFound data={error.data} status={error.status} />
 }
 
-export async function loader({ request, context }: LoaderFunctionArgs) {
+export async function loader({ context, request }: LoaderFunctionArgs) {
   const locale = await i18next.getLocale(request)
   const env = context.env
 

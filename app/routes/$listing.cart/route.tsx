@@ -26,7 +26,7 @@ export const handle = {
 }
 
 export default function ListingCartPage() {
-  const { open, close, leave } = useDialogPage()
+  const { close, leave, open } = useDialogPage()
   const cart = useCart()
   const listing = useOutletContext<Listing>()
   const navigate = useNavigate()

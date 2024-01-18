@@ -5,8 +5,8 @@ import { useTranslation } from "react-i18next"
 export default function QuantityInput({
   max = 1,
   min = 1,
-  value = 0,
   onChange,
+  value = 0,
 }: {
   max?: number
   min?: number

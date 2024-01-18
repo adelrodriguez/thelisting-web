@@ -8,7 +8,7 @@ import { ONE_DAY, REDIS_KEYS } from "~/config/consts"
 import { commitSession, getSession } from "~/helpers/session.server"
 import { generateKey } from "~/utils/redis"
 
-export async function loader({ request, context }: LoaderFunctionArgs) {
+export async function loader({ context, request }: LoaderFunctionArgs) {
   const result = zx.parseQuerySafe(request, z.object({ listingId: z.string() }))
 
   if (!result.success) return json({ cart: null })
@@ -37,7 +37,7 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
   })
 }
 
-export async function action({ request, context }: ActionFunctionArgs) {
+export async function action({ context, request }: ActionFunctionArgs) {
   const result = zx.parseQuerySafe(request, z.object({ listingId: z.string() }))
 
   if (!result.success) return null

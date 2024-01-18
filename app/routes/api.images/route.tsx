@@ -10,7 +10,7 @@ import { ReasonPhrases, StatusCodes } from "http-status-codes"
 import auth from "~/helpers/auth.server"
 import { uploadImageToCloudflare } from "~/utils/cloudflare.server"
 
-export async function loader({ request, context }: LoaderFunctionArgs) {
+export async function loader({ context, request }: LoaderFunctionArgs) {
   const db = context.db
   const user = await auth.isAuthenticated(request)
 
@@ -33,7 +33,7 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
   return json(images)
 }
 
-export async function action({ request, context }: ActionFunctionArgs) {
+export async function action({ context, request }: ActionFunctionArgs) {
   const db = context.db
   const user = await auth.isAuthenticated(request)
 
@@ -60,7 +60,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
     )
   }
 
-  const uploadHandler = composeUploadHandlers(async ({ name, data }) => {
+  const uploadHandler = composeUploadHandlers(async ({ data, name }) => {
     if (name !== "file") {
       return undefined
     }
