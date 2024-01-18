@@ -13,7 +13,7 @@ import { withZod } from "@remix-validated-form/with-zod"
 import clsx from "clsx"
 import { DndProvider } from "react-dnd"
 import { HTML5Backend } from "react-dnd-html5-backend"
-import { setFormDefaults, validationError } from "remix-validated-form"
+import { validationError } from "remix-validated-form"
 import { route } from "routes-gen"
 import { z } from "zod"
 import { zx } from "zodix"
@@ -25,8 +25,8 @@ import { badRequest } from "~/utils/http"
 import { ListingThemeSchema } from "~/utils/listing"
 import type { RouteHandle } from "~/utils/remix"
 
+import PagePreview from "./PagePreview"
 import PageRibbons from "./PageRibbons"
-import RibbonsPreview from "./RibbonsPreview"
 
 export const handle: RouteHandle<{ listingSku: string }> = {
   crumb: ({ params }) => ({
@@ -72,7 +72,7 @@ export async function loader({ context, params }: LoaderFunctionArgs) {
   return json({
     fonts,
     listing,
-    ...setFormDefaults("edit-theme", theme),
+    theme,
   })
 }
 
@@ -155,9 +155,11 @@ export default function DashboardListingRibbonsPage() {
   const {
     fonts,
     listing: { path, ribbons },
+    theme,
   } = useLoaderData<typeof loader>()
   const fetcher = useFetcher()
-  const ribbonIds = ribbons.map((r) => r.id)
+  // We stringify the ribbons so we can detect if we need to reload the iframe
+  const dependencyString = JSON.stringify({ ribbons, theme })
 
   return (
     <>
@@ -210,7 +212,7 @@ export default function DashboardListingRibbonsPage() {
               <Tab.Panel>
                 <Form
                   className="grid grid-cols-2 gap-x-5 gap-y-3"
-                  id="edit-theme"
+                  defaultValues={theme}
                   method="POST"
                   subaction="theme"
                   validator={themeValidator}
@@ -268,7 +270,7 @@ export default function DashboardListingRibbonsPage() {
           </div>
           <div className="relative col-span-2">
             <div className="sticky top-20">
-              <RibbonsPreview path={path} ribbonIds={ribbonIds} />
+              <PagePreview dependencyString={dependencyString} path={path} />
             </div>
           </div>
         </div>

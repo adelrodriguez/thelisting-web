@@ -3,7 +3,6 @@ import {
   ComputerDesktopIcon,
   DevicePhoneMobileIcon,
 } from "@heroicons/react/24/solid"
-import type { Listing } from "@prisma/client"
 import { Link } from "@remix-run/react"
 import clsx from "clsx"
 import { useEffect, useRef, useState } from "react"
@@ -12,11 +11,11 @@ import { route } from "routes-gen"
 import { CircularButton } from "~/components/common"
 
 export default function RibbonsPreview({
+  dependencyString,
   path,
-  ribbonIds,
 }: {
-  ribbonIds: string[]
-  path: Listing["path"]
+  dependencyString: string
+  path: string
 }) {
   const [previewSize, setPreviewSize] = useState<"mobile" | "desktop">(
     "desktop",
@@ -45,7 +44,7 @@ export default function RibbonsPreview({
       ref.current.contentWindow.location.reload()
     }
     // We should only reload the iframe when ribbons change
-  }, [ribbonIds])
+  }, [dependencyString])
 
   useEffect(() => {
     setContainerWidth(containerRef.current?.clientWidth ?? 0)
