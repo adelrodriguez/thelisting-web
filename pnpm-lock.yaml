@@ -113,6 +113,12 @@ dependencies:
   dotenv:
     specifier: 16.3.1
     version: 16.3.1
+  embla-carousel-react:
+    specifier: 8.0.0-rc19
+    version: 8.0.0-rc19(react@18.2.0)
+  embla-carousel-wheel-gestures:
+    specifier: 8.0.0-rc05
+    version: 8.0.0-rc05(embla-carousel@8.0.0-rc19)
   express:
     specifier: 4.18.2
     version: 4.18.2
@@ -6178,6 +6184,38 @@ packages:
 
   /electron-to-chromium@1.4.623:
     resolution: {integrity: sha512-lKoz10iCYlP1WtRYdh5MvocQPWVRoI7ysp6qf18bmeBgR8abE6+I2CsfyNKztRDZvhdWc+krKT6wS7Neg8sw3A==}
+
+  /embla-carousel-react@8.0.0-rc19(react@18.2.0):
+    resolution: {integrity: sha512-4BBj1HvlUqhWXFyDJOL/JbQ74jtekfdH646B1wQzM9QmWn6CEcbD/SmovKqc6B5jYTKaaGEGEEw7bpUJRajA8w==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.1 || ^18.0.0
+    dependencies:
+      embla-carousel: 8.0.0-rc19
+      embla-carousel-reactive-utils: 8.0.0-rc19(embla-carousel@8.0.0-rc19)
+      react: 18.2.0
+    dev: false
+
+  /embla-carousel-reactive-utils@8.0.0-rc19(embla-carousel@8.0.0-rc19):
+    resolution: {integrity: sha512-ed9NppY0OxTtrSIwTCYNcMLlQfSNcNy8Zsw8uIG0te3qrhvQ2ePPsbcElK2SRAV8VMU6G7JQweQIb6amzYMDXA==}
+    peerDependencies:
+      embla-carousel: 8.0.0-rc19
+    dependencies:
+      embla-carousel: 8.0.0-rc19
+    dev: false
+
+  /embla-carousel-wheel-gestures@8.0.0-rc05(embla-carousel@8.0.0-rc19):
+    resolution: {integrity: sha512-KfPlGuOvMterlg01FDd+Iws5wefInkyks4ai3p4n4B5WAiyel+DHs4AFu09UmshcnHpIH5cLJQ6VJCbp/kyy1A==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      embla-carousel: ^8.0.0 || ~8.0.0-rc03
+    dependencies:
+      embla-carousel: 8.0.0-rc19
+      wheel-gestures: 2.2.5
+    dev: false
+
+  /embla-carousel@8.0.0-rc19:
+    resolution: {integrity: sha512-PAChVyYoVZo8subkBN8LjZ7+0vk4CmVvMnxH0Y2ux76VUEUBl1wk5xDo8+MUhH5MXU6ZrgkBpMe++bKob1Z+2g==}
+    dev: false
 
   /emoji-regex@8.0.0:
     resolution: {integrity: sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==}
@@ -12472,6 +12510,11 @@ packages:
     dependencies:
       tr46: 0.0.3
       webidl-conversions: 3.0.1
+
+  /wheel-gestures@2.2.5:
+    resolution: {integrity: sha512-01BlXRjBVt5Gy0VH2rRqMeccHruTGq2Gd1fx0UqCPN8KDeDCmlTXsRGc/hXJk6W+wnO9CNJp2xfntMNRArBxKQ==}
+    engines: {node: '>=10'}
+    dev: false
 
   /which-boxed-primitive@1.0.2:
     resolution: {integrity: sha512-bwZdv0AKLpplFY2KZRX6TvyuN7ojjr7lwkg6ml0roIy9YeuSr7JS372qlNW18UQYzgYK9ziGcerWqZOmEn9VNg==}
