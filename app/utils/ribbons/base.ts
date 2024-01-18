@@ -1,24 +1,26 @@
-import { RibbonType } from "@prisma/client"
+import { RibbonType as Type } from "@prisma/client"
 import { z } from "zod"
 
-export const RibbonNameSchema = z
+export const RibbonName = z
   .string()
   .min(3, "You must provide a name for the ribbon")
   .max(50, "Ribbon name must be less than 50 characters")
 
-export const RibbonPositionSchema = z.coerce.number().int()
+export const RibbonPosition = z.coerce.number().int()
 
-export const RibbonTypeSchema = z.enum([
-  RibbonType.Banner,
-  RibbonType.Countdown,
-  RibbonType.CoverImage,
-  RibbonType.ImageCarousel,
-  RibbonType.ImageGallery,
-  RibbonType.Location,
-  RibbonType.Text,
+export const RibbonType = z.enum([
+  Type.Banner,
+  Type.Countdown,
+  Type.CoverImage,
+  Type.ImageCarousel,
+  Type.ImageGallery,
+  Type.Location,
+  Type.Text,
 ])
+export type RibbonType = z.infer<typeof RibbonType>
 
-export const RibbonBaseSchema = z.object({
-  name: RibbonNameSchema,
-  position: RibbonPositionSchema,
+export const RibbonBase = z.object({
+  name: RibbonName,
+  position: RibbonPosition,
 })
+type RibbonBase = z.infer<typeof RibbonBase>

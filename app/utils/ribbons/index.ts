@@ -1,12 +1,12 @@
 import { z } from "zod"
 
-import { BannerRibbonSchema } from "./banner"
-import { CountdownRibbonSchema } from "./countdown"
-import { CoverImageRibbonSchema } from "./cover-image"
-import { ImageCarouselRibbonSchema } from "./image-carousel"
-import { ImageGalleryRibbonSchema } from "./image-gallery"
-import { LocationRibbonSchema } from "./location"
-import { TextRibbonSchema } from "./text"
+import { BannerRibbon } from "./banner"
+import { CountdownRibbon } from "./countdown"
+import { CoverImageRibbon } from "./cover-image"
+import { ImageCarouselRibbon } from "./image-carousel"
+import { ImageGalleryRibbon } from "./image-gallery"
+import { LocationRibbon } from "./location"
+import { TextRibbon } from "./text"
 
 export * from "./banner"
 export * from "./base"
@@ -17,14 +17,14 @@ export * from "./image-carousel"
 export * from "./location"
 export * from "./text"
 
-export const RibbonSchema = z.discriminatedUnion("type", [
-  BannerRibbonSchema,
-  CountdownRibbonSchema,
-  CoverImageRibbonSchema,
-  ImageCarouselRibbonSchema,
-  ImageGalleryRibbonSchema,
-  LocationRibbonSchema,
-  TextRibbonSchema,
+export const Ribbon = z.discriminatedUnion("type", [
+  BannerRibbon,
+  CountdownRibbon,
+  CoverImageRibbon,
+  ImageCarouselRibbon,
+  ImageGalleryRibbon,
+  LocationRibbon,
+  TextRibbon,
 ])
 
-export type Ribbon = z.infer<typeof RibbonSchema>
+export type Ribbon = z.infer<typeof Ribbon>

@@ -1,8 +1,9 @@
+import { Ribbon, RibbonType } from "@prisma/client"
+import { SerializeFrom } from "@remix-run/node"
 import { withZod } from "@remix-validated-form/with-zod"
-import { useSnackbar } from "notistack"
-import { useEffect, useState } from "react"
-import { ValidatedForm as Form } from "remix-validated-form"
+import { useState } from "react"
 
+import { Form } from "~/components/form"
 import {
   Checkbox,
   ImageInput,
@@ -10,54 +11,52 @@ import {
   Select,
   TextArea,
 } from "~/components/form"
-import { TextPropertiesSchema } from "~/utils/ribbons"
+import { TextRibbon } from "~/utils/ribbons"
 
-const validator = withZod(TextPropertiesSchema)
+const validator = withZod(TextRibbon)
 
 export default function TextRibbonForm({
-  properties,
   formId,
+  ribbon,
 }: {
-  properties: unknown
+  ribbon: SerializeFrom<Ribbon>
   formId: string
 }) {
   let defaultValues
 
-  const result = TextPropertiesSchema.safeParse(properties)
-  const [hasUrl, setHasUrl] = useState(false)
-  const { enqueueSnackbar } = useSnackbar()
+  const result = TextRibbon.safeParse(ribbon)
 
   if (result.success) {
     defaultValues = result.data
   }
 
-  useEffect(() => {
-    if (result.success) {
-      setHasUrl(!!result.data.hasUrl)
-    } else {
-      enqueueSnackbar("Unable to parse ribbon properties", {
-        description: JSON.stringify(result.error.flatten().fieldErrors),
-        variant: "error",
-      })
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  const [hasUrl, setHasUrl] = useState(defaultValues?.properties?.hasUrl)
 
   return (
     <Form
-      action="?/properties"
       className="flex flex-col gap-2"
       defaultValues={defaultValues}
       id={formId}
       method="POST"
+      subaction="update"
       validator={validator}
     >
-      <ImageInput label="Decoration Image" name="decorationImage" />
-      <Input label="Title" name="title" />
-      <TextArea label="Body" name="body" required rows={10} />
+      <input name="id" type="hidden" />
+      <input name="type" type="hidden" value={RibbonType.Text} />
+      <input name="position" type="hidden" />
+
+      <Input
+        description="The name of the ribbon, as it will appear on the menu"
+        label="Name"
+        name="name"
+      />
+
+      <ImageInput label="Decoration Image" name="properties.decorationImage" />
+      <Input label="Title" name="properties.title" />
+      <TextArea label="Body" name="properties.body" required rows={10} />
       <Select
         label="Text Alignment"
-        name="textAlignment"
+        name="properties.textAlignment"
         options={[
           { label: "Select an option", value: "" },
           { label: "Left", value: "text-left" },
@@ -69,14 +68,16 @@ export default function TextRibbonForm({
       <Checkbox
         description="Show a clickable button with a link"
         label="Has URL"
-        name="hasUrl"
-        onChange={(e) => setHasUrl(e.target.checked)}
+        name="properties.hasUrl"
+        onChange={(e) => {
+          setHasUrl(e.target.checked)
+        }}
         value="true"
       />
       {hasUrl && (
         <>
-          <Input label="URL" name="url" />
-          <Input label="Label" name="urlLabel" />
+          <Input label="URL" name="properties.url" />
+          <Input label="Label" name="properties.urlLabel" />
         </>
       )}
     </Form>

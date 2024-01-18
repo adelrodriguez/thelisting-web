@@ -10,20 +10,14 @@ import SectionWrapper from "./SectionWrapper"
 import useTheme from "./ThemeProvider"
 
 export default function CoverImage({
-  image,
   height,
-}: // onView,
-{ onView: (image: string) => void } & CoverImageProperties) {
+  image,
+}: { onView: (image: string) => void } & CoverImageProperties) {
   const ref = useRef<HTMLDivElement>(null)
   const { theme } = useTheme()
-  // const inView = useInView(ref)
-
-  // useEffect(() => {
-  //   if (inView) onView(image)
-  // }, [inView, onView, image])
 
   return (
-    <SectionWrapper className="min-h-screen sm:min-h-0">
+    <SectionWrapper className="sm:hidden">
       <div ref={ref}>
         <div className={clsx("relative block lg:hidden")}>
           <div style={{ height: height ? height : "100vh" }}>

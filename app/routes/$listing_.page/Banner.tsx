@@ -9,18 +9,18 @@ import SectionWrapper from "./SectionWrapper"
 import useTheme from "./ThemeProvider"
 
 export default function Banner({
-  title,
-  subtitle,
   backgroundImage,
+  decorationImage,
   imageFit,
   imagePosition,
-  decorationImage,
+  subtitle,
+  title,
 }: BannerProperties) {
   const { theme } = useTheme()
   const { t } = useTranslation("listing", { useSuspense: true })
 
   return (
-    <SectionWrapper className="h-screen">
+    <SectionWrapper>
       <div className="flex h-full flex-col items-center justify-center">
         <div className="relative z-10 px-4">
           {decorationImage && (

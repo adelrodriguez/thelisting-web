@@ -2711,7 +2711,7 @@ export enum CountryCode {
   Tn = 'TN',
   /** Tonga. */
   To = 'TO',
-  /** Turkey. */
+  /** Türkiye. */
   Tr = 'TR',
   /** Trinidad & Tobago. */
   Tt = 'TT',

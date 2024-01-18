@@ -1,21 +1,23 @@
 import { MinusIcon } from "@heroicons/react/20/solid"
+import { Ribbon, RibbonType } from "@prisma/client"
+import { SerializeFrom } from "@remix-run/node"
 import { withZod } from "@remix-validated-form/with-zod"
 import { useFieldArray } from "remix-validated-form"
 
 import { Button } from "~/components/common"
 import { Form, ImageInput, Input } from "~/components/form"
-import { ImageCarouselPropertiesSchema } from "~/utils/ribbons"
+import { ImageCarouselRibbon } from "~/utils/ribbons"
 
-const validator = withZod(ImageCarouselPropertiesSchema)
+const validator = withZod(ImageCarouselRibbon)
 
 export default function ImageCarouselRibbonForm({
-  properties,
   formId,
+  ribbon,
 }: {
-  properties: unknown
+  ribbon: SerializeFrom<Ribbon> // Serialized ribbon coming from loader
   formId: string
 }) {
-  const result = ImageCarouselPropertiesSchema.safeParse(properties)
+  const result = ImageCarouselRibbon.safeParse(ribbon)
   const [inputs, { push, remove }] = useFieldArray("images", {
     formId,
   })
@@ -28,20 +30,30 @@ export default function ImageCarouselRibbonForm({
 
   return (
     <Form
-      action="?/properties"
       className="flex flex-col gap-2"
       defaultValues={defaultValues}
       id={formId}
       method="POST"
+      subaction="update"
       validator={validator}
     >
+      <input name="id" type="hidden" />
+      <input name="type" type="hidden" value={RibbonType.ImageCarousel} />
+      <input name="position" type="hidden" />
+
+      <Input
+        description="The name of the ribbon, as it will appear on the menu"
+        label="Name"
+        name="name"
+      />
+
       <div className="flex gap-2">
         <Input
           className="w-1/2"
           description="The height of the carousel"
           label="Height"
           min={0}
-          name="height"
+          name="properties.height"
           step={1}
           type="number"
         />
@@ -50,7 +62,7 @@ export default function ImageCarouselRibbonForm({
           description="The duration to show each image for (in seconds)"
           label="Duration"
           min={1}
-          name="duration"
+          name="properties.duration"
           step={1}
           type="number"
         />
@@ -74,7 +86,7 @@ export default function ImageCarouselRibbonForm({
             <ImageInput
               className="mr-2 w-full"
               label={`Image ${index + 1}`}
-              name={`images[${index}]`}
+              name={`properties.images[${index}]`}
             />
             <Button
               className="my-1"

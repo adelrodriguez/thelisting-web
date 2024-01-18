@@ -1,9 +1,9 @@
 import { RibbonType } from "@prisma/client"
 import { z } from "zod"
 
-import { RibbonBaseSchema } from "./base"
+import { RibbonBase } from "./base"
 
-export const CoverImagePropertiesSchema = z.object({
+export const CoverImageProperties = z.object({
   height: z.coerce
     .number()
     .min(0, "Height must be greater than 0")
@@ -12,9 +12,10 @@ export const CoverImagePropertiesSchema = z.object({
   image: z.string().uuid("You must provide an image for the cover"),
 })
 
-export type CoverImageProperties = z.infer<typeof CoverImagePropertiesSchema>
+export type CoverImageProperties = z.infer<typeof CoverImageProperties>
 
-export const CoverImageRibbonSchema = RibbonBaseSchema.extend({
-  properties: CoverImagePropertiesSchema,
+export const CoverImageRibbon = RibbonBase.extend({
+  properties: CoverImageProperties,
   type: z.literal(RibbonType.CoverImage),
 })
+type CoverImageRibbon = z.infer<typeof CoverImageRibbon>

@@ -1,9 +1,9 @@
 import { RibbonType } from "@prisma/client"
 import { z } from "zod"
 
-import { RibbonBaseSchema } from "./base"
+import { RibbonBase } from "./base"
 
-export const BannerPropertiesSchema = z.object({
+export const BannerProperties = z.object({
   backgroundImage: z.string().optional(),
   decorationImage: z.string().optional(),
   imageFit: z.string().optional(),
@@ -11,9 +11,10 @@ export const BannerPropertiesSchema = z.object({
   subtitle: z.string().optional(),
   title: z.string().min(1, "You must provide a title for the banner"),
 })
-export type BannerProperties = z.infer<typeof BannerPropertiesSchema>
+export type BannerProperties = z.infer<typeof BannerProperties>
 
-export const BannerRibbonSchema = RibbonBaseSchema.extend({
-  properties: BannerPropertiesSchema,
+export const BannerRibbon = RibbonBase.extend({
+  properties: BannerProperties,
   type: z.literal(RibbonType.Banner),
 })
+export type BannerRibbon = z.infer<typeof BannerRibbon>

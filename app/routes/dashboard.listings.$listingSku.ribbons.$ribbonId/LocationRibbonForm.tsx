@@ -1,18 +1,20 @@
+import { Ribbon, RibbonType } from "@prisma/client"
+import { SerializeFrom } from "@remix-run/node"
 import { withZod } from "@remix-validated-form/with-zod"
 
 import { Form, Input, TextArea } from "~/components/form"
-import { LocationPropertiesSchema } from "~/utils/ribbons"
+import { LocationRibbon } from "~/utils/ribbons"
 
-const validator = withZod(LocationPropertiesSchema)
+const validator = withZod(LocationRibbon)
 
 export default function LocationRibbonForm({
-  properties,
   formId,
+  ribbon,
 }: {
-  properties: unknown
+  ribbon: SerializeFrom<Ribbon> // Serialized ribbon coming from loader
   formId: string
 }) {
-  const result = LocationPropertiesSchema.safeParse(properties)
+  const result = LocationRibbon.safeParse(ribbon)
 
   let defaultValues
 
@@ -22,15 +24,19 @@ export default function LocationRibbonForm({
 
   return (
     <Form
-      action="?/properties"
       className="flex flex-col gap-2"
       defaultValues={defaultValues}
       id={formId}
       method="POST"
+      subaction="update"
       validator={validator}
     >
-      <Input label="Caption" name="caption" />
-      <TextArea label="Address" name="address" rows={2} />
+      <input name="id" type="hidden" />
+      <input name="type" type="hidden" value={RibbonType.Location} />
+      <input name="position" type="hidden" />
+
+      <Input label="Caption" name="properties.caption" />
+      <TextArea label="Address" name="properties.address" rows={2} />
     </Form>
   )
 }

@@ -5,7 +5,6 @@ import {
   EllipsisVerticalIcon,
   MapIcon,
   PhotoIcon,
-  PlusIcon,
   RectangleGroupIcon,
   RectangleStackIcon,
 } from "@heroicons/react/20/solid"
@@ -51,33 +50,36 @@ const RIBBON_CARD = {
 }
 
 export default function RibbonCard({
-  ribbon,
-  move,
   find,
-  onFinish,
+  id,
+  move,
+  name,
+  onDrop,
+  type,
 }: {
-  ribbon: Ribbon
+  find: (id: string) => readonly [number, Pick<Ribbon, "name" | "type" | "id">]
+  id: string
   move: (id: string, atIndex: number) => void
-  find: (id: string) => readonly [number, Ribbon]
-  onFinish: () => void
+  name: string
+  onDrop: () => void
+  type: RibbonType
 }) {
-  const originalIndex = find(ribbon.id)[0]
+  const originalIndex = find(id)[0]
 
   const [{ isDragging }, drag, preview] = useDrag(() => ({
-    collect: (monitor) => ({
-      isDragging: !!monitor.isDragging(),
-    }),
+    collect: (monitor) => ({ isDragging: monitor.isDragging() }),
     end: (item, monitor) => {
       const { id: droppedId, originalIndex } = item
       const didDrop = monitor.didDrop()
 
-      if (!didDrop) {
-        move(droppedId, originalIndex)
-      } else {
-        onFinish()
+      if (didDrop) {
+        onDrop()
+        return
       }
+
+      move(droppedId, originalIndex)
     },
-    item: { id: ribbon.id, originalIndex },
+    item: { id, originalIndex },
     type: ItemTypes.RIBBON,
   }))
 
@@ -85,11 +87,11 @@ export default function RibbonCard({
     () => ({
       accept: ItemTypes.RIBBON,
       hover({ id: draggedId }: Ribbon) {
-        if (draggedId !== ribbon.id) {
-          const [overIndex] = find(ribbon.id)
+        if (draggedId === id) return
 
-          move(draggedId, overIndex)
-        }
+        const [overIndex] = find(id)
+
+        move(draggedId, overIndex)
       },
     }),
     [move, find],
@@ -97,7 +99,7 @@ export default function RibbonCard({
 
   return (
     <div className="group">
-      <Link to={ribbon.id}>
+      <Link to={id}>
         <div
           className={clsx(
             "col-span-1 flex rounded-md shadow-sm transition-opacity",
@@ -108,17 +110,17 @@ export default function RibbonCard({
           <div
             className={clsx(
               "flex w-16 flex-shrink-0 items-center justify-center rounded-l-md text-sm font-medium text-white",
-              RIBBON_CARD[ribbon.type].bgColor,
+              RIBBON_CARD[type].bgColor,
             )}
           >
-            {RIBBON_CARD[ribbon.type].icon}
+            {RIBBON_CARD[type].icon}
           </div>
           <div className="flex flex-1 items-center justify-between truncate rounded-r-md border-b border-r border-t border-gray-200 bg-white">
             <div className="flex-1 truncate px-4 py-2 text-sm">
               <h3 className="font-medium text-gray-900 hover:text-gray-600">
-                {ribbon.name}
+                {name}
               </h3>
-              <p className="text-gray-500">{ribbon.type}</p>
+              <p className="text-gray-500">{type}</p>
             </div>
             <div
               className="flex flex-shrink-0 pr-2 hover:cursor-grab"
@@ -133,30 +135,6 @@ export default function RibbonCard({
           </div>
         </div>
       </Link>
-      <div
-        className={clsx("relative mt-2 hidden", {
-          "group-hover:block": !isDragging,
-        })}
-      >
-        <div aria-hidden="true" className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-gray-300" />
-        </div>
-        <div className="relative flex justify-center">
-          <Link
-            preventScrollReset
-            relative="route"
-            to={`new?position=${ribbon.position + 1}`}
-          >
-            <button className="inline-flex items-center gap-x-1.5 rounded-full bg-white px-3 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-              <PlusIcon
-                aria-hidden="true"
-                className="-ml-1 -mr-0.5 h-5 w-5 text-gray-400"
-              />
-              Add new ribbon
-            </button>
-          </Link>
-        </div>
-      </div>
     </div>
   )
 }

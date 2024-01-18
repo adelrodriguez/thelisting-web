@@ -1,45 +1,51 @@
+import { Ribbon, RibbonType } from "@prisma/client"
+import { SerializeFrom } from "@remix-run/node"
 import { withZod } from "@remix-validated-form/with-zod"
 import { format, startOfToday } from "date-fns"
-import { ValidatedForm as Form } from "remix-validated-form"
 
+import { Form } from "~/components/form"
 import { Input } from "~/components/form"
-import { CountdownPropertiesSchema } from "~/utils/ribbons"
+import { CountdownRibbon } from "~/utils/ribbons"
 
-const validator = withZod(CountdownPropertiesSchema)
+const validator = withZod(CountdownRibbon)
 
 export default function CountdownRibbonForm({
-  properties,
   formId,
+  ribbon,
 }: {
-  properties: unknown
+  ribbon: SerializeFrom<Ribbon> // Serialized ribbon coming from loader
   formId: string
 }) {
-  const result = CountdownPropertiesSchema.safeParse(properties)
+  const result = CountdownRibbon.safeParse(ribbon)
   let defaultValues
 
   if (result.success) {
-    defaultValues = {
-      eventDatetime: format(result.data.eventDatetime, "yyyy-MM-dd HH:mm"),
-    }
+    defaultValues = result.data
   }
 
   return (
     <Form
-      action="?/properties"
       className="flex flex-col gap-2"
-      // TODO(adelrodriguez): Fix this type error. The issue here is that an
-      // input only takes strings, but our schema describes a Date object. Maybe
-      // creating a custom component that can accept Date objects?
-      // @ts-expect-error Due to type mismatch
       defaultValues={defaultValues}
       id={formId}
       method="POST"
+      subaction="update"
       validator={validator}
     >
+      <input name="id" type="hidden" />
+      <input name="type" type="hidden" value={RibbonType.Countdown} />
+      <input name="position" type="hidden" />
+
+      <Input
+        description="The name of the ribbon, as it will appear on the menu"
+        label="Name"
+        name="name"
+      />
+
       <Input
         label="Event Date & Time"
         min={format(startOfToday(), "yyyy-MM-dd HH:mm")}
-        name="eventDatetime"
+        name="properties.eventDatetime"
         required
         type="datetime-local"
       />

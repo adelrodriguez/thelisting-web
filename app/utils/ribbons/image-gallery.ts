@@ -1,9 +1,9 @@
 import { RibbonType } from "@prisma/client"
 import { z } from "zod"
 
-import { RibbonBaseSchema } from "./base"
+import { RibbonBase } from "./base"
 
-export const ImageGalleryPropertiesSchema = z.object({
+export const ImageGalleryProperties = z.object({
   groupSize: z.coerce
     .number()
     .min(1, "You must provide a group size of at least 1"),
@@ -13,11 +13,10 @@ export const ImageGalleryPropertiesSchema = z.object({
     .max(10, "You can only provide up to 10 images"),
 })
 
-export type ImageGalleryProperties = z.infer<
-  typeof ImageGalleryPropertiesSchema
->
+export type ImageGalleryProperties = z.infer<typeof ImageGalleryProperties>
 
-export const ImageGalleryRibbonSchema = RibbonBaseSchema.extend({
-  properties: ImageGalleryPropertiesSchema,
+export const ImageGalleryRibbon = RibbonBase.extend({
+  properties: ImageGalleryProperties,
   type: z.literal(RibbonType.ImageGallery),
 })
+export type ImageGalleryRibbon = z.infer<typeof ImageGalleryRibbon>

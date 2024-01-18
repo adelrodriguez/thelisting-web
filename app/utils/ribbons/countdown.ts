@@ -1,17 +1,19 @@
 import { RibbonType } from "@prisma/client"
+import { isValid } from "date-fns"
 import { z } from "zod"
 
-import { RibbonBaseSchema } from "./base"
+import { RibbonBase } from "./base"
 
-export const CountdownPropertiesSchema = z.object({
-  eventDatetime: z.coerce
-    .date()
-    .min(new Date(), { message: "Event date and time must be in the future" }),
+export const CountdownProperties = z.object({
+  eventDatetime: z.string().refine((value) => {
+    return isValid(new Date(value))
+  }),
 })
 
-export type CountdownProperties = z.infer<typeof CountdownPropertiesSchema>
+export type CountdownProperties = z.infer<typeof CountdownProperties>
 
-export const CountdownRibbonSchema = RibbonBaseSchema.extend({
-  properties: CountdownPropertiesSchema,
+export const CountdownRibbon = RibbonBase.extend({
+  properties: CountdownProperties,
   type: z.literal(RibbonType.Countdown),
 })
+export type CountdownRibbon = z.infer<typeof CountdownRibbon>

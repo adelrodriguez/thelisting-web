@@ -1,5 +1,5 @@
 import { intervalToDuration, isPast } from "date-fns"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 
 import { Spinner } from "~/components/loading"
 import { useInterval } from "~/utils/hooks"
@@ -20,19 +20,20 @@ function getRemainingTime(eventDatetime: Date) {
 }
 
 export default function Countdown({ eventDatetime }: CountdownProperties) {
-  const [remaining, setRemaining] = useState(getRemainingTime(eventDatetime))
+  const datetime = useMemo(() => new Date(eventDatetime), [eventDatetime])
+  const [remaining, setRemaining] = useState(getRemainingTime(datetime))
   const { theme } = useTheme()
 
   const clearInterval = useInterval(() => {
-    setRemaining(getRemainingTime(eventDatetime))
+    setRemaining(getRemainingTime(datetime))
   }, 1000)
 
   useEffect(() => {
     // If the event has already passed, clear the interval.
-    if (isPast(eventDatetime)) {
+    if (isPast(datetime)) {
       clearInterval()
     }
-  }, [clearInterval, eventDatetime])
+  }, [clearInterval, datetime])
 
   // TODO(adelrodriguez): Set a loading component
   if (!isWindowDefined()) {

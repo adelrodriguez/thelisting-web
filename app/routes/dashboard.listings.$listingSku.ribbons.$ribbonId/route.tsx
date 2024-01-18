@@ -6,44 +6,41 @@ import {
 } from "@heroicons/react/24/outline"
 import { RibbonType } from "@prisma/client"
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node"
-import { json } from "@remix-run/node"
-import { Form, useActionData, useLoaderData } from "@remix-run/react"
+import { json, redirect } from "@remix-run/node"
+import {
+  useActionData,
+  useLoaderData,
+  Form as RemixForm,
+} from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
 import { Fragment, useEffect } from "react"
-import { ValidatedForm } from "remix-validated-form"
+import { route } from "routes-gen"
 import { z } from "zod"
 import { zx } from "zodix"
 
-import { Input, SubmitButton } from "~/components/form"
+import { SubmitButton } from "~/components/form"
 import { isUserAdmin } from "~/utils/auth.server"
 import { useDialogPage } from "~/utils/hooks"
-import { notFound } from "~/utils/remix"
+import { notFound } from "~/utils/http"
 import {
-  RibbonNameSchema,
-  BannerPropertiesSchema,
-  CountdownPropertiesSchema,
-  CoverImagePropertiesSchema,
-  ImageCarouselPropertiesSchema,
-  ImageGalleryPropertiesSchema,
-  TextPropertiesSchema,
-  LocationPropertiesSchema,
+  BannerRibbon,
+  CountdownRibbon,
+  CoverImageRibbon,
+  ImageCarouselRibbon,
+  ImageGalleryRibbon,
+  LocationRibbon,
+  TextRibbon,
 } from "~/utils/ribbons"
 
 import BannerRibbonForm from "./BannerRibbonForm"
 import CountdownRibbonForm from "./CountdownRibbonForm"
 import CoverImageRibbonForm from "./CoverImageRibbonForm"
-import ImageGalleryRibbonForm from "./ImagaGalleryRibbonForm"
 import ImageCarouselRibbonForm from "./ImageCarouselRibbonForm"
+import ImageGalleryRibbonForm from "./ImageGalleryRibbonForm"
 import LocationRibbonForm from "./LocationRibbonForm"
 import TextRibbonForm from "./TextRibbonForm"
 
-const detailsValidator = withZod(
-  z.object({
-    name: RibbonNameSchema,
-  }),
-)
-
-export async function loader({ params, context }: LoaderFunctionArgs) {
+export async function loader({ context, params }: LoaderFunctionArgs) {
   const db = context.db
   const { ribbonId } = zx.parseParams(params, {
     ribbonId: z.string(),
@@ -56,13 +53,15 @@ export async function loader({ params, context }: LoaderFunctionArgs) {
   return json({ ribbon })
 }
 
-export async function action({ params, context, request }: ActionFunctionArgs) {
+export async function action({ context, params, request }: ActionFunctionArgs) {
   await isUserAdmin(request)
 
   const { db } = context
 
-  const { ribbonId } = zx.parseParams(params, { ribbonId: z.string() })
-  const { action } = zx.parseQuery(request, { action: z.string() })
+  const { listingSku, ribbonId } = zx.parseParams(params, {
+    listingSku: z.string(),
+    ribbonId: z.string(),
+  })
 
   const ribbon = await db.ribbon.findUnique({ where: { id: ribbonId } })
 
@@ -70,66 +69,68 @@ export async function action({ params, context, request }: ActionFunctionArgs) {
     throw notFound({ message: "Ribbon not found" })
   }
 
-  // TODO(adelrodriguez): This might be totally broken since we removed
-  // remix-utils. Eventually the Form component should be replaced with a
-  // ValidatedForm component that includes a subaction and we can be sure that's
-  // solved.
-  switch (action) {
+  const formData = await request.formData()
+  const subaction = formData.get("subaction")
+
+  switch (subaction) {
     case "delete": {
-      const deletedRibbon = await db.ribbon.delete({
-        where: { id: ribbonId },
-      })
-      return json({ ribbon: deletedRibbon, success: true })
-    }
-    case "details": {
-      const formData = await request.formData()
-      const result = await detailsValidator.validate(formData)
-
-      if (result.error) {
-        return json({ success: false, ...result.error })
-      }
-
-      const updatedRibbon = await db.ribbon.update({
-        data: {
-          name: result.data.name,
-        },
+      await db.ribbon.delete({
         where: { id: ribbonId },
       })
 
-      return json({ ribbon: updatedRibbon, success: true })
+      return redirect(
+        route("/dashboard/listings/:listingSku/ribbons", { listingSku }),
+      )
     }
+
     case "duplicate": {
       const ribbonCount = await db.ribbon.count({
         where: { listingId: ribbon.listingId },
       })
 
-      const duplicatedRibbon = await db.ribbon.create({
+      const newRibbon = await db.ribbon.create({
         data: {
           listingId: ribbon.listingId,
           name: `${ribbon.name} (copy)`,
           position: ribbonCount,
-          properties: ribbon.properties!,
+          properties: ribbon.properties ?? {},
           type: ribbon.type,
         },
       })
 
-      return json({ ribbon: duplicatedRibbon, success: true })
+      return json({ ribbon: newRibbon, success: true })
     }
-    case "properties": {
-      const schemas = {
-        [RibbonType.Banner]: BannerPropertiesSchema,
-        [RibbonType.Countdown]: CountdownPropertiesSchema,
-        [RibbonType.CoverImage]: CoverImagePropertiesSchema,
-        [RibbonType.ImageCarousel]: ImageCarouselPropertiesSchema,
-        [RibbonType.ImageGallery]: ImageGalleryPropertiesSchema,
-        [RibbonType.Text]: TextPropertiesSchema,
-        [RibbonType.Location]: LocationPropertiesSchema,
+
+    case "update": {
+      let schema: z.ZodSchema | undefined
+
+      switch (ribbon.type) {
+        case RibbonType.Banner:
+          schema = BannerRibbon
+          break
+        case RibbonType.Countdown:
+          schema = CountdownRibbon
+          break
+        case RibbonType.CoverImage:
+          schema = CoverImageRibbon
+          break
+        case RibbonType.ImageCarousel:
+          schema = ImageCarouselRibbon
+          break
+        case RibbonType.ImageGallery:
+          schema = ImageGalleryRibbon
+          break
+        case RibbonType.Location:
+          schema = LocationRibbon
+          break
+        case RibbonType.Text:
+          schema = TextRibbon
+          break
+        default:
+          throw notFound({ message: "Ribbon type not found" })
       }
 
-      const formData = await request.formData()
-      // TODO(adelrodriguez): Fix this type error
-      // @ts-expect-error Due to union type
-      const validator = withZod(schemas[ribbon.type])
+      const validator = withZod(schema)
       const result = await validator.validate(formData)
 
       if (result.error) {
@@ -137,12 +138,13 @@ export async function action({ params, context, request }: ActionFunctionArgs) {
       }
 
       const updatedRibbon = await db.ribbon.update({
-        data: { properties: result.data },
+        data: { name: result.data.name, properties: result.data.properties },
         where: { id: ribbonId },
       })
 
       return json({ ribbon: updatedRibbon, success: true })
     }
+
     default:
       throw notFound({ message: "Action not found" })
   }
@@ -152,6 +154,7 @@ export default function DashboardListingRibbonsEditPage() {
   const { ribbon } = useLoaderData<typeof loader>()
   const actionData = useActionData<typeof action>()
   const { close, leave, open } = useDialogPage()
+  const formId = `form-${ribbon.id}`
 
   useEffect(() => {
     if (!actionData) return
@@ -160,8 +163,6 @@ export default function DashboardListingRibbonsEditPage() {
 
     close()
   }, [actionData, close])
-
-  const formId = `form-${ribbon.id}`
 
   return (
     <Transition.Root appear as={Fragment} show={open}>
@@ -190,135 +191,60 @@ export default function DashboardListingRibbonsEditPage() {
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              <Dialog.Panel className="relative w-full transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:max-w-5xl sm:p-6">
+              <Dialog.Panel className="relative flex w-full transform flex-col gap-y-4 overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:max-w-xl sm:p-6">
                 <Dialog.Title as="div" className="flex justify-between">
                   <h3 className="text-lg font-medium leading-6 text-gray-900">
                     Edit Ribbon
                   </h3>
                   <div className="flex items-center gap-x-4">
-                    <Form
-                      action="?/delete"
-                      className="flex items-center"
-                      method="POST"
-                    >
+                    <RemixForm className="flex items-center" method="POST">
+                      <input name="subaction" type="hidden" value="delete" />
                       <button title="Delete the ribbon">
                         <TrashIcon className="h-5 w-5 text-red-500" />
                       </button>
-                    </Form>
-                    <Form
-                      action="?/duplicate"
-                      className="flex items-center"
-                      method="POST"
-                    >
-                      <button>
+                    </RemixForm>
+
+                    <RemixForm className="flex items-center" method="POST">
+                      <input name="subaction" type="hidden" value="duplicate" />
+                      <button title="Duplicate the ribbon">
                         <Square2StackIcon className="h-5 w-5 text-gray-500" />
                       </button>
-                    </Form>
+                    </RemixForm>
+
                     <button onClick={close}>
                       <XMarkIcon className="h-5 w-5 text-gray-500" />
                     </button>
                   </div>
                 </Dialog.Title>
 
-                <div className="mt-4 space-y-12">
-                  <div className="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-900/10 pb-12 md:grid-cols-4">
-                    <div>
-                      <h2 className="text-base font-semibold leading-7 text-gray-900">
-                        Details
-                      </h2>
-                      <p className="mt-1 text-sm leading-6 text-gray-600">
-                        Edit the name of the ribbon.
-                      </p>
-                    </div>
-
-                    <div className="col-span-1 md:col-span-3">
-                      <ValidatedForm
-                        action="?/details"
-                        className="grid"
-                        defaultValues={{ name: ribbon.name }}
-                        id="details-form"
-                        method="POST"
-                        validator={detailsValidator}
-                      >
-                        <Input
-                          description="The name of the ribbon, as it will appear on the menu"
-                          id="details-form"
-                          label="Name"
-                          name="name"
-                        />
-                        <SubmitButton
-                          className="mt-4 justify-self-end"
-                          loadingText="Updating..."
-                        >
-                          Update
-                        </SubmitButton>
-                      </ValidatedForm>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 gap-x-8 gap-y-10 md:grid-cols-4">
-                    <div>
-                      <h2 className="text-base font-semibold leading-7 text-gray-900">
-                        Properties
-                      </h2>
-                      <p className="mt-1 text-sm leading-6 text-gray-600">
-                        Change the specific properties of the ribbon.
-                      </p>
-                    </div>
-
-                    <div className="col-span-1 grid md:col-span-3">
-                      {ribbon.type === RibbonType.Banner && (
-                        <BannerRibbonForm
-                          formId={formId}
-                          properties={ribbon.properties}
-                        />
-                      )}
-                      {ribbon.type === RibbonType.Countdown && (
-                        <CountdownRibbonForm
-                          formId={formId}
-                          properties={ribbon.properties}
-                        />
-                      )}
-                      {ribbon.type === RibbonType.CoverImage && (
-                        <CoverImageRibbonForm
-                          formId={formId}
-                          properties={ribbon.properties}
-                        />
-                      )}
-                      {ribbon.type === RibbonType.ImageCarousel && (
-                        <ImageCarouselRibbonForm
-                          formId={formId}
-                          properties={ribbon.properties}
-                        />
-                      )}
-                      {ribbon.type === RibbonType.ImageGallery && (
-                        <ImageGalleryRibbonForm
-                          formId={formId}
-                          properties={ribbon.properties}
-                        />
-                      )}
-                      {ribbon.type === RibbonType.Location && (
-                        <LocationRibbonForm
-                          formId={formId}
-                          properties={ribbon.properties}
-                        />
-                      )}
-                      {ribbon.type === RibbonType.Text && (
-                        <TextRibbonForm
-                          formId={formId}
-                          properties={ribbon.properties}
-                        />
-                      )}
-                      <SubmitButton
-                        className="mt-4 justify-self-end"
-                        formId={formId}
-                        loadingText="Updating..."
-                      >
-                        Update
-                      </SubmitButton>
-                    </div>
-                  </div>
-                </div>
+                {ribbon.type === RibbonType.Banner && (
+                  <BannerRibbonForm formId={formId} ribbon={ribbon} />
+                )}
+                {ribbon.type === RibbonType.Countdown && (
+                  <CountdownRibbonForm formId={formId} ribbon={ribbon} />
+                )}
+                {ribbon.type === RibbonType.CoverImage && (
+                  <CoverImageRibbonForm formId={formId} ribbon={ribbon} />
+                )}
+                {ribbon.type === RibbonType.ImageCarousel && (
+                  <ImageCarouselRibbonForm formId={formId} ribbon={ribbon} />
+                )}
+                {ribbon.type === RibbonType.ImageGallery && (
+                  <ImageGalleryRibbonForm formId={formId} ribbon={ribbon} />
+                )}
+                {ribbon.type === RibbonType.Location && (
+                  <LocationRibbonForm formId={formId} ribbon={ribbon} />
+                )}
+                {ribbon.type === RibbonType.Text && (
+                  <TextRibbonForm formId={formId} ribbon={ribbon} />
+                )}
+                <SubmitButton
+                  className=""
+                  formId={formId}
+                  loadingText="Updating..."
+                >
+                  Update
+                </SubmitButton>
               </Dialog.Panel>
             </Transition.Child>
           </div>

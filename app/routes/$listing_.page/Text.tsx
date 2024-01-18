@@ -19,7 +19,7 @@ export default function Text({
   const { theme } = useTheme()
 
   return (
-    <SectionWrapper className="h-screen min-h-screen">
+    <SectionWrapper>
       <div className="flex h-full items-center">
         <div className="w-full px-4">
           {decorationImage && (
@@ -39,14 +39,14 @@ export default function Text({
               {title}
             </h3>
             <p className="mt-4 whitespace-pre-wrap text-lg leading-7">{body}</p>
-            {hasUrl && (
+            {hasUrl && url && (
               <div className="mt-8">
                 <Link
                   className={clsx(
                     "mt-4 rounded-full border-2 border-white bg-transparent px-6 py-2.5 font-semibold tracking-wide text-white transition-all",
                     "hover:bg-white hover:text-black hover:mix-blend-screen",
                   )}
-                  to={url!}
+                  to={url}
                 >
                   {urlLabel}
                 </Link>

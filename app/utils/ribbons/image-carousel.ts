@@ -1,9 +1,9 @@
 import { RibbonType } from "@prisma/client"
 import { z } from "zod"
 
-import { RibbonBaseSchema } from "./base"
+import { RibbonBase } from "./base"
 
-export const ImageCarouselPropertiesSchema = z.object({
+export const ImageCarouselProperties = z.object({
   duration: z.coerce
     .number()
     .int()
@@ -15,11 +15,9 @@ export const ImageCarouselPropertiesSchema = z.object({
     .max(10, "You can only provide up to 10 images"),
 })
 
-export type ImageCarouselProperties = z.infer<
-  typeof ImageCarouselPropertiesSchema
->
+export type ImageCarouselProperties = z.infer<typeof ImageCarouselProperties>
 
-export const ImageCarouselRibbonSchema = RibbonBaseSchema.extend({
-  properties: ImageCarouselPropertiesSchema,
+export const ImageCarouselRibbon = RibbonBase.extend({
+  properties: ImageCarouselProperties,
   type: z.literal(RibbonType.ImageCarousel),
 })

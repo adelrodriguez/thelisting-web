@@ -1,19 +1,20 @@
+import { Ribbon, RibbonType } from "@prisma/client"
+import { SerializeFrom } from "@remix-run/node"
 import { withZod } from "@remix-validated-form/with-zod"
-import { ValidatedForm as Form } from "remix-validated-form"
 
-import { ImageInput, Input, Select } from "~/components/form"
-import { BannerPropertiesSchema } from "~/utils/ribbons"
+import { Form, ImageInput, Input, Select } from "~/components/form"
+import { BannerRibbon } from "~/utils/ribbons"
 
-const validator = withZod(BannerPropertiesSchema)
+const validator = withZod(BannerRibbon)
 
 export default function BannerRibbonFields({
-  properties,
   formId,
+  ribbon,
 }: {
-  properties: unknown
+  ribbon: SerializeFrom<Ribbon> // Serialized ribbon coming from loader
   formId: string
 }) {
-  const result = BannerPropertiesSchema.safeParse(properties)
+  const result = BannerRibbon.safeParse(ribbon)
   let defaultValues
 
   if (result.success) {
@@ -22,22 +23,32 @@ export default function BannerRibbonFields({
 
   return (
     <Form
-      action="?/properties"
       className="flex flex-col gap-2"
       defaultValues={defaultValues}
       id={formId}
       method="POST"
+      subaction="update"
       validator={validator}
     >
-      <ImageInput label="Decoration Image" name="decorationImage" />
-      <Input label="Title" name="title" required type="text" />
-      <Input label="Subtitle" name="subtitle" type="text" />
-      <ImageInput label="Background Image" name="backgroundImage" />
+      <input name="id" type="hidden" />
+      <input name="type" type="hidden" value={RibbonType.Banner} />
+      <input name="position" type="hidden" />
+
+      <Input
+        description="The name of the ribbon, as it will appear on the menu"
+        label="Name"
+        name="name"
+      />
+
+      <ImageInput label="Decoration Image" name="properties.decorationImage" />
+      <Input label="Title" name="properties.title" required type="text" />
+      <Input label="Subtitle" name="properties.subtitle" type="text" />
+      <ImageInput label="Background Image" name="properties.backgroundImage" />
       <div className="flex gap-2">
         <Select
           className="flex-1"
           label="Image Fit"
-          name="imageFit"
+          name="properties.imageFit"
           options={[
             { label: "Select an option", value: "" },
             { label: "Contain", value: "object-contain" },
@@ -50,7 +61,7 @@ export default function BannerRibbonFields({
         <Select
           className="flex-1"
           label="Image Position"
-          name="imagePosition"
+          name="properties.imagePosition"
           options={[
             { label: "Select an option", value: "" },
             { label: "Bottom", value: "object-bottom" },

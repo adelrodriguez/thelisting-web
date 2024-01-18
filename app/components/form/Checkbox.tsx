@@ -8,13 +8,13 @@ import type { Input } from "~/components/form"
  * This component should only be used within a Form component.
  */
 export default function Checkbox({
-  name,
-  label,
   className,
   description,
+  label,
+  name,
   ...props
 }: ComponentProps<typeof Input>) {
-  const { getInputProps, error, defaultValue } = useField(name)
+  const { defaultValue, error, getInputProps } = useField(name)
 
   return (
     <div className={className}>

@@ -1,5 +1,4 @@
 import clsx from "clsx"
-import { motion } from "framer-motion"
 import type { ReactNode } from "react"
 
 export default function SectionWrapper({
@@ -10,18 +9,13 @@ export default function SectionWrapper({
   className?: string
 }) {
   return (
-    <section>
-      <div className={clsx("relative", className)}>
-        <motion.div
-          className="h-full"
-          initial={{ opacity: 0 }}
-          transition={{ duration: 1 }}
-          viewport={{ amount: 0.5, once: true }}
-          whileInView={{ opacity: 1 }}
-        >
-          {children}
-        </motion.div>
-      </div>
+    <section
+      className={clsx(
+        "h-screen min-h-0 min-w-0 shrink-0 grow-0 basis-full",
+        className,
+      )}
+    >
+      {children}
     </section>
   )
 }

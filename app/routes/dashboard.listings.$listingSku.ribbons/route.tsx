@@ -1,8 +1,16 @@
-import { ArrowTopRightOnSquareIcon } from "@heroicons/react/20/solid"
+import { Tab } from "@headlessui/react"
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
-import { Link, Outlet, useFetcher, useLoaderData } from "@remix-run/react"
+import {
+  Link,
+  Outlet,
+  isRouteErrorResponse,
+  useFetcher,
+  useLoaderData,
+  useRouteError,
+} from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
+import clsx from "clsx"
 import { DndProvider } from "react-dnd"
 import { HTML5Backend } from "react-dnd-html5-backend"
 import { setFormDefaults, validationError } from "remix-validated-form"
@@ -13,8 +21,9 @@ import { zx } from "zodix"
 import { Button } from "~/components/common"
 import { Autocomplete, Form, Input, SubmitButton } from "~/components/form"
 import { getGoogleWebFontsList } from "~/utils/font"
+import { badRequest } from "~/utils/http"
 import { ListingThemeSchema } from "~/utils/listing"
-import { RouteHandle, badRequest } from "~/utils/remix"
+import type { RouteHandle } from "~/utils/remix"
 
 import PageRibbons from "./PageRibbons"
 import RibbonsPreview from "./RibbonsPreview"
@@ -31,25 +40,31 @@ export const handle: RouteHandle<{ listingSku: string }> = {
 
 export const themeValidator = withZod(ListingThemeSchema)
 
-export async function loader({ params, context }: LoaderFunctionArgs) {
+export async function loader({ context, params }: LoaderFunctionArgs) {
   const db = context.db
   const cache = context.cache
+  const env = context.env
 
   const { listingSku } = zx.parseParams(
     params,
     z.object({ listingSku: z.coerce.number() }),
   )
 
-  const [listing, ribbons, fonts] = await Promise.all([
+  const [listing, fonts] = await Promise.all([
     db.listing.findUniqueOrThrow({
-      select: { path: true, theme: true },
+      include: {
+        ribbons: {
+          orderBy: { position: "asc" },
+        },
+      },
       where: { sku: listingSku },
     }),
-    db.ribbon.findMany({
-      orderBy: { position: "asc" },
-      where: { listing: { sku: listingSku } },
-    }),
-    getGoogleWebFontsList(cache),
+
+    getGoogleWebFontsList(
+      cache,
+      env.GOOGLE_WEB_FONTS_URL,
+      env.GOOGLE_WEB_FONTS_DEVELOPER_API_KEY,
+    ),
   ])
 
   const theme = ListingThemeSchema.parse(listing.theme)
@@ -57,12 +72,11 @@ export async function loader({ params, context }: LoaderFunctionArgs) {
   return json({
     fonts,
     listing,
-    ribbons,
     ...setFormDefaults("edit-theme", theme),
   })
 }
 
-export async function action({ request, context, params }: ActionFunctionArgs) {
+export async function action({ context, params, request }: ActionFunctionArgs) {
   const db = context.db
   const result = zx.parseParamsSafe(
     params,
@@ -79,9 +93,8 @@ export async function action({ request, context, params }: ActionFunctionArgs) {
   const subaction = formData.get("subaction")
 
   if (subaction === "ribbons") {
-    const jsonData = z.string().parse(formData.get("ribbonIds"))
-    const unparsedIds = JSON.parse(jsonData)
-    const ribbonIds = z.array(z.string()).parse(unparsedIds)
+    const data = z.string().parse(formData.get("ribbonIds"))
+    const ribbonIds = z.array(z.string()).parse(JSON.parse(data))
 
     for (const [index, id] of ribbonIds.entries()) {
       await db.ribbon.update({
@@ -112,34 +125,62 @@ export async function action({ request, context, params }: ActionFunctionArgs) {
   return null
 }
 
-// TODO(adelrodriguez): Fix this
-export function ErrorBoundary({ error }: { error: Error }) {
-  return <div className="pt-2">There was an error. Error: {error.message}</div>
+export function ErrorBoundary() {
+  const error = useRouteError()
+
+  if (isRouteErrorResponse(error)) {
+    return (
+      <div>
+        <h1>
+          {error.status} {error.statusText}
+        </h1>
+        <p>{error.data}</p>
+      </div>
+    )
+  } else if (error instanceof Error) {
+    return (
+      <div>
+        <h1>Error</h1>
+        <p>{error.message}</p>
+        <p>The stack trace is:</p>
+        <pre>{error.stack}</pre>
+      </div>
+    )
+  } else {
+    return <h1>Unknown Error</h1>
+  }
 }
 
 export default function DashboardListingRibbonsPage() {
-  const { listing, ribbons, fonts } = useLoaderData<typeof loader>()
+  const {
+    fonts,
+    listing: { path, ribbons },
+  } = useLoaderData<typeof loader>()
   const fetcher = useFetcher()
-
-  async function submitOrder(ribbonIds: string[]) {
-    await fetcher.submit(
-      { ribbonIds: JSON.stringify(ribbonIds), subaction: "ribbons" },
-      { method: "post" },
-    )
-  }
+  const ribbonIds = ribbons.map((r) => r.id)
 
   return (
     <>
-      <div className="mt-4 grid grid-cols-1 items-start gap-4 md:grid-cols-8 md:gap-6">
-        <div className="gap-4 md:col-span-3">
-          <section>
-            <div className="rounded-lg bg-white shadow">
-              <div className="border-b border-gray-200 bg-white px-4 py-5 sm:px-6">
-                <h2 className="text-base font-semibold leading-6 text-gray-700">
-                  Page
-                </h2>
-              </div>
-              <div className="px-6 py-2">
+      <Tab.Group>
+        <Tab.List className="mt-4 flex space-x-1 rounded-xl bg-slate-900/20 p-1">
+          {["Ribbons", "Theme"].map((tab) => (
+            <Tab
+              className={clsx(
+                "w-full rounded-lg py-2.5 text-sm font-medium leading-5",
+                "ring-white/60 ring-offset-2 ring-offset-slate-400 focus:outline-none focus:ring-2",
+                "ui-selected:bg-white ui-selected:text-slate-700 ui-selected:shadow",
+                "text-slate-100 hover:bg-white/[0.12] hover:text-white",
+              )}
+              key={tab}
+            >
+              {tab}
+            </Tab>
+          ))}
+        </Tab.List>
+        <div className="mt-4 grid grid-cols-5 gap-x-4 rounded-xl bg-white p-6">
+          <div className="col-span-3">
+            <Tab.Panels>
+              <Tab.Panel>
                 {ribbons.length === 0 ? (
                   <div className="flex flex-col items-center gap-2 py-4">
                     <p className="text-sm text-gray-500">
@@ -151,27 +192,24 @@ export default function DashboardListingRibbonsPage() {
                   </div>
                 ) : (
                   <DndProvider backend={HTML5Backend}>
-                    {/* TODO: Fix this type error that's happening due to serialization from Remix */}
-                    {/* @ts-expect-error Due to serialized type */}
-                    <PageRibbons onMove={submitOrder} ribbons={ribbons} />
+                    <PageRibbons
+                      onMove={(ribbonIds) =>
+                        fetcher.submit(
+                          {
+                            ribbonIds: JSON.stringify(ribbonIds),
+                            subaction: "ribbons",
+                          },
+                          { method: "post" },
+                        )
+                      }
+                      ribbons={ribbons}
+                    />
                   </DndProvider>
                 )}
-              </div>
-            </div>
-          </section>
-        </div>
-
-        <div className="gap-4 md:col-span-2">
-          <section>
-            <div className="rounded-lg bg-white shadow">
-              <div className="border-b border-gray-200 bg-white px-4 py-5 sm:px-6">
-                <h2 className="text-base font-semibold leading-6 text-gray-700">
-                  Theme
-                </h2>
-              </div>
-              <div className="px-6 py-2">
+              </Tab.Panel>
+              <Tab.Panel>
                 <Form
-                  className="flex flex-col gap-2 py-3"
+                  className="grid grid-cols-2 gap-x-5 gap-y-3"
                   id="edit-theme"
                   method="POST"
                   subaction="theme"
@@ -209,33 +247,21 @@ export default function DashboardListingRibbonsPage() {
                       value: font,
                     }))}
                   />
-                  <SubmitButton className="mt-2" loadingText="Saving...">
+                  <SubmitButton className="col-span-2" loadingText="Saving...">
                     Save
                   </SubmitButton>
                 </Form>
-              </div>
+              </Tab.Panel>
+            </Tab.Panels>
+          </div>
+          <div className="relative col-span-2">
+            <div className="sticky top-20">
+              <RibbonsPreview path={path} ribbonIds={ribbonIds} />
             </div>
-          </section>
+          </div>
         </div>
+      </Tab.Group>
 
-        <div className="gap-4 md:col-span-3">
-          <section>
-            <div className="rounded-lg bg-white shadow">
-              <div className="flex justify-between border-b border-gray-200 bg-white px-4 py-5 sm:px-6">
-                <h2 className="text-base font-semibold leading-6 text-gray-700">
-                  Preview
-                </h2>
-                <Link target="_blank" to={`/${listing.path}/page`}>
-                  <ArrowTopRightOnSquareIcon className="inline-block h-4 w-4" />
-                </Link>
-              </div>
-              {/* TODO: Fix this type error that's happening due to serialization from Remix */}
-              {/* @ts-expect-error Due to serialization */}
-              <RibbonsPreview path={listing.path} ribbons={ribbons} />
-            </div>
-          </section>
-        </div>
-      </div>
       <Outlet />
     </>
   )

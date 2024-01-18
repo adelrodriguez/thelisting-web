@@ -1,19 +1,21 @@
+import { Ribbon, RibbonType } from "@prisma/client"
+import { SerializeFrom } from "@remix-run/node"
 import { withZod } from "@remix-validated-form/with-zod"
-import { ValidatedForm as Form } from "remix-validated-form"
 
+import { Form } from "~/components/form"
 import { ImageInput, Input } from "~/components/form"
-import { CoverImagePropertiesSchema } from "~/utils/ribbons"
+import { CoverImageRibbon } from "~/utils/ribbons"
 
-const validator = withZod(CoverImagePropertiesSchema)
+const validator = withZod(CoverImageRibbon)
 
 export default function CoverImageRibbonForm({
-  properties,
   formId,
+  ribbon,
 }: {
-  properties: unknown
+  ribbon: SerializeFrom<Ribbon> // Serialized ribbon coming from loader
   formId: string
 }) {
-  const result = CoverImagePropertiesSchema.safeParse(properties)
+  const result = CoverImageRibbon.safeParse(ribbon)
   let defaultValues
 
   if (result.success) {
@@ -22,19 +24,29 @@ export default function CoverImageRibbonForm({
 
   return (
     <Form
-      action="?/properties"
       className="flex flex-col gap-2"
       defaultValues={defaultValues}
       id={formId}
       method="POST"
+      subaction="update"
       validator={validator}
     >
-      <ImageInput label="Cover Image" name="image" />
+      <input name="id" type="hidden" />
+      <input name="type" type="hidden" value={RibbonType.CoverImage} />
+      <input name="position" type="hidden" />
+
+      <Input
+        description="The name of the ribbon, as it will appear on the menu"
+        label="Name"
+        name="name"
+      />
+
+      <ImageInput label="Cover Image" name="properties.image" />
       <Input
         description="The height of the cover image (in mobile view). Provide 0 to cover the whole screen"
         label="Height"
         min={0}
-        name="height"
+        name="properties.height"
         step={1}
         type="number"
       />

@@ -3,6 +3,8 @@ import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node"
 import { json, redirect } from "@remix-run/node"
 import { useLoaderData } from "@remix-run/react"
 import clsx from "clsx"
+import useEmblaCarousel from "embla-carousel-react"
+import { WheelGesturesPlugin } from "embla-carousel-wheel-gestures"
 import { AnimatePresence, motion } from "framer-motion"
 import { useCallback, useState } from "react"
 import { z } from "zod"
@@ -11,9 +13,9 @@ import { zx } from "zodix"
 import { isProduction } from "~/config/vars"
 import { generateCloudflareImageUrl } from "~/utils/cloudflare"
 import { generateGoogleFontsUrl } from "~/utils/font"
+import { notFound } from "~/utils/http"
 import { ListingThemeSchema } from "~/utils/listing"
-import { notFound } from "~/utils/remix"
-import { CoverImagePropertiesSchema, RibbonSchema } from "~/utils/ribbons"
+import { CoverImageProperties, Ribbon } from "~/utils/ribbons"
 
 import Banner from "./Banner"
 import Countdown from "./Countdown"
@@ -24,7 +26,7 @@ import Location from "./Location"
 import Text from "./Text"
 import { ThemeProvider } from "./ThemeProvider"
 
-export async function loader({ params, context }: LoaderFunctionArgs) {
+export async function loader({ context, params }: LoaderFunctionArgs) {
   const db = context.db
   const { listing: path } = zx.parseParams(params, { listing: z.string() })
 
@@ -55,7 +57,7 @@ export async function loader({ params, context }: LoaderFunctionArgs) {
 
   const coverImages = listing.ribbons.reduce((acc: string[], ribbon) => {
     if (ribbon.type === RibbonType.CoverImage) {
-      const result = CoverImagePropertiesSchema.safeParse(ribbon.properties)
+      const result = CoverImageProperties.safeParse(ribbon.properties)
 
       if (!result.success) return acc
 
@@ -105,11 +107,23 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 }
 
 export default function ListingPage() {
-  const { listing, coverImages } = useLoaderData<typeof loader>()
+  const { coverImages, listing } = useLoaderData<typeof loader>()
   const [currentImage, setCurrentImage] = useState(coverImages[0] || "")
   const handleImageChange = useCallback((image: string) => {
     setCurrentImage(image)
   }, [])
+  const [carouselRef] = useEmblaCarousel(
+    {
+      axis: "y",
+      loop: false,
+      slidesToScroll: 1,
+    },
+    [
+      WheelGesturesPlugin({
+        forceWheelAxis: "y",
+      }),
+    ],
+  )
 
   const theme = ListingThemeSchema.parse(listing.theme)
 
@@ -144,54 +158,64 @@ export default function ListingPage() {
           </div>
         </div>
         <div
-          className="justify-cente z-10 flex flex-1 flex-col shadow-gray-700 lg:w-2/5 lg:flex-none lg:border-l-8"
+          className="z-10 overflow-hidden shadow-gray-700 lg:w-2/5 lg:flex-none lg:border-l-8"
+          ref={carouselRef}
           style={{
             backgroundColor: theme.colors?.background,
             borderColor: theme.colors?.secondary,
             color: theme.colors?.text,
           }}
         >
-          {listing.ribbons.map((ribbon) => {
-            const result = RibbonSchema.safeParse(ribbon)
+          <div className="flex h-screen flex-col">
+            {listing.ribbons.map((ribbon) => {
+              const result = Ribbon.safeParse(ribbon)
 
-            if (!result.success) return null
+              if (!result.success) return null
 
-            switch (result.data.type) {
-              case RibbonType.Banner: {
-                return <Banner {...result.data.properties} key={ribbon.id} />
+              switch (result.data.type) {
+                case RibbonType.Banner: {
+                  return <Banner {...result.data.properties} key={ribbon.id} />
+                }
+                case RibbonType.Countdown: {
+                  return (
+                    <Countdown {...result.data.properties} key={ribbon.id} />
+                  )
+                }
+                case RibbonType.CoverImage: {
+                  return (
+                    <CoverImage
+                      {...result.data.properties}
+                      key={ribbon.id}
+                      onView={handleImageChange}
+                    />
+                  )
+                }
+                case RibbonType.ImageCarousel: {
+                  return (
+                    <ImageCarousel
+                      {...result.data.properties}
+                      key={ribbon.id}
+                    />
+                  )
+                }
+                case RibbonType.ImageGallery: {
+                  return (
+                    <ImageGallery {...result.data.properties} key={ribbon.id} />
+                  )
+                }
+                case RibbonType.Location: {
+                  return (
+                    <Location {...result.data.properties} key={ribbon.id} />
+                  )
+                }
+                case RibbonType.Text: {
+                  return <Text {...result.data.properties} key={ribbon.id} />
+                }
+                default:
+                  return null
               }
-              case RibbonType.Countdown: {
-                return <Countdown {...result.data.properties} key={ribbon.id} />
-              }
-              case RibbonType.CoverImage: {
-                return (
-                  <CoverImage
-                    {...result.data.properties}
-                    key={ribbon.id}
-                    onView={handleImageChange}
-                  />
-                )
-              }
-              case RibbonType.ImageCarousel: {
-                return (
-                  <ImageCarousel {...result.data.properties} key={ribbon.id} />
-                )
-              }
-              case RibbonType.ImageGallery: {
-                return (
-                  <ImageGallery {...result.data.properties} key={ribbon.id} />
-                )
-              }
-              case RibbonType.Location: {
-                return <Location {...result.data.properties} key={ribbon.id} />
-              }
-              case RibbonType.Text: {
-                return <Text {...result.data.properties} key={ribbon.id} />
-              }
-              default:
-                return null
-            }
-          })}
+            })}
+          </div>
         </div>
       </main>
     </ThemeProvider>

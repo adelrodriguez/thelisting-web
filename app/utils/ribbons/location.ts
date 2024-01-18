@@ -1,16 +1,17 @@
 import { RibbonType } from "@prisma/client"
 import { z } from "zod"
 
-import { RibbonBaseSchema } from "./base"
+import { RibbonBase } from "./base"
 
-export const LocationPropertiesSchema = z.object({
+export const LocationProperties = z.object({
   address: z.string(),
   caption: z.string().optional(),
 })
 
-export type LocationProperties = z.infer<typeof LocationPropertiesSchema>
+export type LocationProperties = z.infer<typeof LocationProperties>
 
-export const LocationRibbonSchema = RibbonBaseSchema.extend({
-  properties: LocationPropertiesSchema,
+export const LocationRibbon = RibbonBase.extend({
+  properties: LocationProperties,
   type: z.literal(RibbonType.Location),
 })
+export type LocationRibbon = z.infer<typeof LocationRibbon>

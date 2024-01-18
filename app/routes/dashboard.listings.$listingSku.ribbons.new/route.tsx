@@ -1,8 +1,7 @@
 import { Dialog, Transition } from "@headlessui/react"
 import { RibbonType } from "@prisma/client"
-import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node"
-import { redirect, json } from "@remix-run/node"
-import { useLoaderData } from "@remix-run/react"
+import type { ActionFunctionArgs } from "@remix-run/node"
+import { redirect } from "@remix-run/node"
 import { withZod } from "@remix-validated-form/with-zod"
 import { Fragment } from "react"
 import { ValidatedForm as Form, validationError } from "remix-validated-form"
@@ -10,44 +9,23 @@ import { route } from "routes-gen"
 import { z } from "zod"
 import { zx } from "zodix"
 
-import { Input, SubmitButton, ListRadioGroup } from "~/components/form"
+import { SubmitButton, ListRadioGroup } from "~/components/form"
 import { useDialogPage } from "~/utils/hooks"
-import {
-  RibbonTypeSchema,
-  RibbonNameSchema,
-  RibbonPositionSchema,
-} from "~/utils/ribbons"
+import { RibbonType as RibbonTypeSchema } from "~/utils/ribbons"
 
-const clientValidator = withZod(
+const validator = withZod(
   z.object({
-    name: RibbonNameSchema,
     type: RibbonTypeSchema,
   }),
 )
 
-const serverValidator = withZod(
-  z.object({
-    name: RibbonNameSchema,
-    position: RibbonPositionSchema,
-    type: RibbonTypeSchema,
-  }),
-)
-
-export async function loader({ request }: LoaderFunctionArgs) {
-  const { position } = zx.parseQuery(request, {
-    position: z.coerce.number().default(0),
-  })
-
-  return json({ position })
-}
-
-export async function action({ params, context, request }: ActionFunctionArgs) {
+export async function action({ context, params, request }: ActionFunctionArgs) {
   const { db, logger } = context
   const { listingSku } = zx.parseParams(params, {
     listingSku: z.coerce.number(),
   })
   const formData = await request.formData()
-  const result = await serverValidator.validate(formData)
+  const result = await validator.validate(formData)
 
   if (result.error) {
     return validationError(result.error)
@@ -66,27 +44,13 @@ export async function action({ params, context, request }: ActionFunctionArgs) {
           sku: listingSku,
         },
       },
-      name: result.data.name,
-      position: result.data.position,
+      name: result.data.type,
+      position: ribbons.length + 1,
       type: result.data.type,
     },
   })
 
   logger.info("Created new ribbon", { ribbon })
-
-  const ribbonsAfter = ribbons.slice(result.data.position)
-
-  for (const [index, ribbon] of ribbonsAfter.entries()) {
-    const newPosition = index + result.data.position + 1
-    await db.ribbon.update({
-      data: { position: newPosition },
-      where: { id: ribbon.id },
-    })
-
-    logger.info(
-      `Updated ribbon ${ribbon.id} moved position: ${ribbon.position} → ${newPosition}`,
-    )
-  }
 
   return redirect(
     route("/dashboard/listings/:listingSku/ribbons", {
@@ -96,7 +60,6 @@ export async function action({ params, context, request }: ActionFunctionArgs) {
 }
 
 export default function DashboardListingRibbonsEditPage() {
-  const { position } = useLoaderData<typeof loader>()
   const { close, leave, open } = useDialogPage()
 
   return (
@@ -136,23 +99,9 @@ export default function DashboardListingRibbonsEditPage() {
 
                 <Form
                   className="mx-auto mt-4 flex flex-col gap-y-3"
-                  defaultValues={{ type: RibbonType.Banner }}
                   method="POST"
-                  validator={clientValidator}
+                  validator={validator}
                 >
-                  <input
-                    className="hidden"
-                    defaultValue={position}
-                    name="position"
-                    type="hidden"
-                  />
-
-                  <Input
-                    description="The name of the ribbon"
-                    label="Name"
-                    name="name"
-                    required
-                  />
                   <ListRadioGroup
                     description="The type of ribbon"
                     label="Type"

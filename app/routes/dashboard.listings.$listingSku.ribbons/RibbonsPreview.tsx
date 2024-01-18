@@ -1,16 +1,21 @@
 import {
+  ArrowTopRightOnSquareIcon,
   ComputerDesktopIcon,
   DevicePhoneMobileIcon,
 } from "@heroicons/react/24/solid"
-import type { Listing, Ribbon } from "@prisma/client"
+import type { Listing } from "@prisma/client"
+import { Link } from "@remix-run/react"
 import clsx from "clsx"
 import { useEffect, useRef, useState } from "react"
+import { route } from "routes-gen"
+
+import { CircularButton } from "~/components/common"
 
 export default function RibbonsPreview({
-  ribbons,
   path,
+  ribbonIds,
 }: {
-  ribbons: Ribbon[]
+  ribbonIds: string[]
   path: Listing["path"]
 }) {
   const [previewSize, setPreviewSize] = useState<"mobile" | "desktop">(
@@ -39,7 +44,8 @@ export default function RibbonsPreview({
     if (ref.current && ref.current.contentWindow) {
       ref.current.contentWindow.location.reload()
     }
-  }, [ribbons])
+    // We should only reload the iframe when ribbons change
+  }, [ribbonIds])
 
   useEffect(() => {
     setContainerWidth(containerRef.current?.clientWidth ?? 0)
@@ -69,7 +75,7 @@ export default function RibbonsPreview({
           />
         </div>
       </div>
-      <div className="flex justify-center py-2">
+      <div className="relative flex justify-center py-2">
         <span className="isolate inline-flex rounded-md shadow-sm">
           <button
             className={clsx(
@@ -94,7 +100,6 @@ export default function RibbonsPreview({
           <button
             className={clsx(
               "relative -ml-px inline-flex items-center rounded-r-md  px-3 py-2 text-sm font-semibold ring-1 ring-inset ring-gray-300",
-              "hover:bg-gray-50",
               "focus:z-10",
               previewSize === "desktop"
                 ? "bg-gray-600"
@@ -112,6 +117,15 @@ export default function RibbonsPreview({
             />
           </button>
         </span>
+        <Link
+          className="absolute right-0"
+          target="_blank"
+          to={route("/:listing/page", { listing: path })}
+        >
+          <CircularButton size="lg">
+            <ArrowTopRightOnSquareIcon className="h-5 w-5" />
+          </CircularButton>
+        </Link>
       </div>
     </>
   )
