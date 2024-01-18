@@ -216,22 +216,32 @@ export default function DashboardListingRibbonsPage() {
                   validator={themeValidator}
                 >
                   <Input
+                    description="The color used as the default background"
                     label="Background Color"
                     name="colors.background"
                     type="color"
                   />
                   <Input
+                    description="The color used on the ribbon's title and buttons"
                     label="Primary Color"
                     name="colors.primary"
                     type="color"
                   />
                   <Input
+                    description="The color used on the decorations and icons"
                     label="Secondary Color"
                     name="colors.secondary"
                     type="color"
                   />
-                  <Input label="Text Color" name="colors.text" type="color" />
+                  <Input
+                    description="The color used on text"
+                    label="Text Color"
+                    name="colors.text"
+                    type="color"
+                  />
+
                   <Autocomplete
+                    description="Used on headings"
                     label="Heading Font"
                     name="fonts.heading"
                     options={fonts.map((font) => ({
@@ -240,6 +250,7 @@ export default function DashboardListingRibbonsPage() {
                     }))}
                   />
                   <Autocomplete
+                    description="Used on body text"
                     label="Body Font"
                     name="fonts.body"
                     options={fonts.map((font) => ({
@@ -247,6 +258,7 @@ export default function DashboardListingRibbonsPage() {
                       value: font,
                     }))}
                   />
+
                   <SubmitButton className="col-span-2" loadingText="Saving...">
                     Save
                   </SubmitButton>

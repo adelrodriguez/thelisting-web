@@ -7,7 +7,6 @@ import type { CountdownProperties } from "~/utils/ribbons"
 import { capitalize } from "~/utils/string"
 import { isWindowDefined } from "~/utils/window"
 
-import SectionWrapper from "./SectionWrapper"
 import useTheme from "./ThemeProvider"
 
 function getRemainingTime(eventDatetime: Date) {
@@ -45,22 +44,20 @@ export default function Countdown({ eventDatetime }: CountdownProperties) {
   }
 
   return (
-    <SectionWrapper className="h-screen">
-      <div className="grid h-full w-full grid-cols-5 items-center justify-around">
-        {Object.keys(remaining)
-          .filter((key) => key !== "years")
-          .map((key) => (
-            <div className="flex flex-col items-center" key={key}>
-              <div
-                className="text-4xl lg:text-5xl"
-                style={{ fontFamily: theme.fonts?.heading }}
-              >
-                {remaining[key as keyof typeof remaining]}
-              </div>
-              <div className="pt-1 font-body text-sm">{capitalize(key)}</div>
+    <div className="grid h-full w-full grid-cols-5 items-center justify-around">
+      {Object.keys(remaining)
+        .filter((key) => key !== "years")
+        .map((key) => (
+          <div className="flex flex-col items-center" key={key}>
+            <div
+              className="text-4xl lg:text-5xl"
+              style={{ fontFamily: theme.fonts?.heading }}
+            >
+              {remaining[key as keyof typeof remaining]}
             </div>
-          ))}
-      </div>
-    </SectionWrapper>
+            <div className="pt-1 font-body text-sm">{capitalize(key)}</div>
+          </div>
+        ))}
+    </div>
   )
 }

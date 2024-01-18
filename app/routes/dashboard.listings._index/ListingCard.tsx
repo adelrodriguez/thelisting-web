@@ -63,7 +63,7 @@ export default function ListingCard({
             </span>
           </span>
         )}
-        <Link className="flex flex-col" to={`${sku}/`}>
+        <Link className="flex flex-col" to={`${sku}/details`}>
           <h3 className="text-sm font-medium leading-6 text-gray-900">
             {title}
           </h3>

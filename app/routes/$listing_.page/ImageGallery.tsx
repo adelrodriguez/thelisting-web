@@ -1,8 +1,6 @@
 import { generateCloudflareImageUrl } from "~/utils/cloudflare"
 import type { ImageGalleryProperties } from "~/utils/ribbons"
 
-import SectionWrapper from "./SectionWrapper"
-
 export default function ImageGallery({
   groupSize,
   images,
@@ -18,24 +16,22 @@ export default function ImageGallery({
   }, [])
 
   return (
-    <SectionWrapper>
-      <div className="px-4 py-20">
-        <div className="grid grid-cols-2 gap-2">
-          {groupedImages.map((images, index) => (
-            <div className="flex flex-col gap-2" key={`group${index}`}>
-              {images.map((image, index) => (
-                <div key={`image${index}`}>
-                  <img
-                    alt=""
-                    className="h-auto max-w-full rounded-md shadow-inner"
-                    src={generateCloudflareImageUrl(image, "public")}
-                  />
-                </div>
-              ))}
-            </div>
-          ))}
-        </div>
+    <div className="px-4 py-20">
+      <div className="grid grid-cols-2 gap-2">
+        {groupedImages.map((images, index) => (
+          <div className="flex flex-col gap-2" key={`group${index}`}>
+            {images.map((image, index) => (
+              <div key={`image${index}`}>
+                <img
+                  alt=""
+                  className="h-auto max-w-full rounded-md shadow-inner"
+                  src={generateCloudflareImageUrl(image, "public")}
+                />
+              </div>
+            ))}
+          </div>
+        ))}
       </div>
-    </SectionWrapper>
+    </div>
   )
 }

@@ -1,4 +1,5 @@
 import { json, type LoaderFunctionArgs } from "@remix-run/node"
+import { cacheHeader } from "pretty-cache-header"
 import { z } from "zod"
 import { zx } from "zodix"
 
@@ -21,7 +22,17 @@ export async function loader({ context, params }: LoaderFunctionArgs) {
   const result = z.coerce.number().safeParse(cached)
 
   if (cached && result.success) {
-    return json({ exchangeRate: result.data })
+    return json(
+      { exchangeRate: result.data },
+      {
+        headers: {
+          "Cache-Control": cacheHeader({
+            maxAge: "10min",
+            public: true,
+          }),
+        },
+      },
+    )
   }
 
   try {

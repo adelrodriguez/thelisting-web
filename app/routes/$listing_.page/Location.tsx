@@ -1,10 +1,8 @@
 import type { LocationProperties } from "~/utils/ribbons"
 
-import SectionWrapper from "./SectionWrapper"
-
 export default function Location({ address, caption }: LocationProperties) {
   return (
-    <SectionWrapper>
+    <div>
       <iframe
         allowFullScreen
         className="h-screen w-full border-0 shadow-lg"
@@ -15,6 +13,6 @@ export default function Location({ address, caption }: LocationProperties) {
         title={caption || "Map"}
       />
       {caption && <p className="mt-4 text-center text-lg">{caption}</p>}
-    </SectionWrapper>
+    </div>
   )
 }

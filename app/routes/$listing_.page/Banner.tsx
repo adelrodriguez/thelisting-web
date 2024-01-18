@@ -5,7 +5,6 @@ import { useTranslation } from "react-i18next"
 import { generateCloudflareImageUrl } from "~/utils/cloudflare"
 import type { BannerProperties } from "~/utils/ribbons"
 
-import SectionWrapper from "./SectionWrapper"
 import useTheme from "./ThemeProvider"
 
 export default function Banner({
@@ -20,7 +19,7 @@ export default function Banner({
   const { t } = useTranslation("listing", { useSuspense: true })
 
   return (
-    <SectionWrapper>
+    <>
       <div className="flex h-full flex-col items-center justify-center">
         <div className="relative z-10 px-4">
           {decorationImage && (
@@ -66,6 +65,6 @@ export default function Banner({
           />
         </div>
       )}
-    </SectionWrapper>
+    </>
   )
 }

@@ -3,10 +3,9 @@ import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node"
 import { json, redirect } from "@remix-run/node"
 import { useLoaderData } from "@remix-run/react"
 import clsx from "clsx"
-import useEmblaCarousel from "embla-carousel-react"
-import { WheelGesturesPlugin } from "embla-carousel-wheel-gestures"
 import { AnimatePresence, motion } from "framer-motion"
-import { useCallback, useState } from "react"
+import { cacheHeader } from "pretty-cache-header"
+import { useState } from "react"
 import { z } from "zod"
 import { zx } from "zodix"
 
@@ -23,6 +22,7 @@ import CoverImage from "./CoverImage"
 import ImageCarousel from "./ImageCarousel"
 import ImageGallery from "./ImageGallery"
 import Location from "./Location"
+import SectionWrapper from "./SectionWrapper"
 import Text from "./Text"
 import { ThemeProvider } from "./ThemeProvider"
 
@@ -49,25 +49,31 @@ export async function loader({ context, params }: LoaderFunctionArgs) {
     })
   }
 
+  const theme = ListingThemeSchema.parse(listing.theme)
+
   // TODO(adelrodriguez): Remove this when ribbons are ready
   // Only see pages for internal pages in production
   if (isProduction && !listing.isInternal) {
     throw redirect(`/${path}`, { status: 302 })
   }
 
-  const coverImages = listing.ribbons.reduce((acc: string[], ribbon) => {
-    if (ribbon.type === RibbonType.CoverImage) {
-      const result = CoverImageProperties.safeParse(ribbon.properties)
+  // Get all the cover images plus their index
+  const coverImages = listing.ribbons.reduce(
+    (acc: { id: string; index: number }[], ribbon, index) => {
+      if (ribbon.type === RibbonType.CoverImage) {
+        const result = CoverImageProperties.safeParse(ribbon.properties)
 
-      if (!result.success) return acc
+        if (!result.success) return acc
 
-      acc.push(result.data.image)
-    }
+        acc.push({ id: result.data.image, index })
+      }
 
-    return acc
-  }, [])
+      return acc
+    },
+    [],
+  )
 
-  return json({ coverImages, listing })
+  return json({ coverImages, listing, theme })
 }
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
@@ -107,46 +113,40 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 }
 
 export default function ListingPage() {
-  const { coverImages, listing } = useLoaderData<typeof loader>()
-  const [currentImage, setCurrentImage] = useState(coverImages[0] || "")
-  const handleImageChange = useCallback((image: string) => {
-    setCurrentImage(image)
-  }, [])
-  const [carouselRef] = useEmblaCarousel(
-    {
-      axis: "y",
-      loop: false,
-      slidesToScroll: 1,
-    },
-    [
-      WheelGesturesPlugin({
-        forceWheelAxis: "y",
-      }),
-    ],
-  )
+  const { coverImages, listing, theme } = useLoaderData<typeof loader>()
+  const [cover, setCover] = useState(coverImages[0])
 
-  const theme = ListingThemeSchema.parse(listing.theme)
+  function handleSectionChange(index: number) {
+    const newCover = coverImages.find((cover) => cover.index >= index)
+
+    if (!newCover) return
+
+    setCover(newCover)
+  }
 
   return (
     <ThemeProvider theme={theme}>
       <main className="flex flex-1">
         <div className="relative hidden w-0 flex-1 lg:block">
           <AnimatePresence>
-            <motion.img
-              alt={`Image ${currentImage}`}
-              animate={{ opacity: 1 }}
-              className="sticky inset-0 h-screen w-full object-cover object-center"
-              exit={{ opacity: 0 }}
-              initial={{ opacity: 0 }}
-              key={currentImage}
-              src={generateCloudflareImageUrl(currentImage, "display")}
-              transition={{ duration: 0.5 }}
-            />
+            {cover && (
+              <motion.img
+                alt={`Image ${cover.id}`}
+                animate={{ opacity: 1 }}
+                className="sticky inset-0 h-screen w-full object-cover object-center"
+                exit={{ opacity: 0 }}
+                initial={{ opacity: 0 }}
+                key={cover?.id}
+                src={generateCloudflareImageUrl(cover.id, "display")}
+                transition={{ duration: 0.5 }}
+              />
+            )}
           </AnimatePresence>
+
           <div
             aria-hidden="true"
             className={clsx("absolute inset-0 bg-gray-300", {
-              "mix-blend-multiply": !!currentImage,
+              "mix-blend-multiply": !!cover?.id,
             })}
           />
 
@@ -159,65 +159,59 @@ export default function ListingPage() {
         </div>
         <div
           className="z-10 overflow-hidden shadow-gray-700 lg:w-2/5 lg:flex-none lg:border-l-8"
-          ref={carouselRef}
           style={{
             backgroundColor: theme.colors?.background,
             borderColor: theme.colors?.secondary,
             color: theme.colors?.text,
           }}
         >
-          <div className="flex h-screen flex-col">
-            {listing.ribbons.map((ribbon) => {
-              const result = Ribbon.safeParse(ribbon)
+          {listing.ribbons.map((ribbon, index) => {
+            const result = Ribbon.safeParse(ribbon)
 
-              if (!result.success) return null
+            if (!result.success) return null
 
-              switch (result.data.type) {
-                case RibbonType.Banner: {
-                  return <Banner {...result.data.properties} key={ribbon.id} />
-                }
-                case RibbonType.Countdown: {
-                  return (
-                    <Countdown {...result.data.properties} key={ribbon.id} />
-                  )
-                }
-                case RibbonType.CoverImage: {
-                  return (
-                    <CoverImage
-                      {...result.data.properties}
-                      key={ribbon.id}
-                      onView={handleImageChange}
-                    />
-                  )
-                }
-                case RibbonType.ImageCarousel: {
-                  return (
-                    <ImageCarousel
-                      {...result.data.properties}
-                      key={ribbon.id}
-                    />
-                  )
-                }
-                case RibbonType.ImageGallery: {
-                  return (
-                    <ImageGallery {...result.data.properties} key={ribbon.id} />
-                  )
-                }
-                case RibbonType.Location: {
-                  return (
-                    <Location {...result.data.properties} key={ribbon.id} />
-                  )
-                }
-                case RibbonType.Text: {
-                  return <Text {...result.data.properties} key={ribbon.id} />
-                }
-                default:
-                  return null
-              }
-            })}
-          </div>
+            return (
+              <SectionWrapper
+                key={ribbon.id}
+                mobileOnly={ribbon.type === RibbonType.CoverImage}
+                onView={() => {
+                  handleSectionChange(index)
+                }}
+              >
+                <Ribbons ribbon={result.data} />
+              </SectionWrapper>
+            )
+          })}
         </div>
       </main>
     </ThemeProvider>
   )
+}
+
+export function Ribbons({ ribbon }: { ribbon: Ribbon }) {
+  switch (ribbon.type) {
+    case RibbonType.Banner: {
+      return <Banner {...ribbon.properties} />
+    }
+    case RibbonType.Countdown: {
+      return <Countdown {...ribbon.properties} />
+    }
+    case RibbonType.CoverImage: {
+      return <CoverImage {...ribbon.properties} />
+    }
+    case RibbonType.ImageCarousel: {
+      return <ImageCarousel {...ribbon.properties} />
+    }
+    case RibbonType.ImageGallery: {
+      return <ImageGallery {...ribbon.properties} />
+    }
+    case RibbonType.Location: {
+      return <Location {...ribbon.properties} />
+    }
+    case RibbonType.Text: {
+      return <Text {...ribbon.properties} />
+    }
+    default:
+      return null
+  }
 }
