@@ -35,6 +35,12 @@ export default function LocationRibbonForm({
       <input name="type" type="hidden" value={RibbonType.Location} />
       <input name="position" type="hidden" />
 
+      <Input
+        description="The name of the ribbon, as it will appear on the menu"
+        label="Name"
+        name="name"
+      />
+
       <Input label="Caption" name="properties.caption" />
       <TextArea label="Address" name="properties.address" rows={2} />
     </Form>
