@@ -126,8 +126,9 @@ function ImageGallery({
                   "image/gif": [".gif"],
                   "image/jpg": [".jpg", ".jpeg"],
                   "image/png": [".png"],
+                  "image/webp": [".webp"],
                 }}
-                fileUploadLimitDescription="JPG, PNG and GIF files up to 10MB"
+                fileUploadLimitDescription="JPG, PNG, GIF and WEBP files up to 10MB"
                 name="image-upload"
                 onDrop={(files) => {
                   if (!files[0]) throw new Error("No file was uploaded")
