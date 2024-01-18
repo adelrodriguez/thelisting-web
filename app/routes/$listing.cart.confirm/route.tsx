@@ -8,7 +8,7 @@ import { RouteParams, route } from "routes-gen"
 import { Button } from "~/components/common"
 import { Spinner } from "~/components/loading"
 import { useCart } from "~/utils/hooks"
-import { RouteHandle } from "~/utils/remix"
+import type { RouteHandle } from "~/utils/remix"
 
 export const handle: RouteHandle = {
   i18n: ["registry", "common"],

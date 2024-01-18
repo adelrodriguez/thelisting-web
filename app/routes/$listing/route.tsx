@@ -16,12 +16,12 @@ import { zx } from "zodix"
 import { THE_LISTING_LOGO_BLACK } from "~/config/consts"
 import { generateCloudflareImageUrl } from "~/utils/cloudflare"
 import { CartProvider } from "~/utils/hooks"
-import { notFound } from "~/utils/remix"
+import { notFound } from "~/utils/http"
 
 import Menu from "./Menu"
 import Registry from "./Registry"
 
-export async function loader({ params, context }: LoaderFunctionArgs) {
+export async function loader({ context, params }: LoaderFunctionArgs) {
   const db = context.db
   const { listing: path } = zx.parseParams(params, { listing: z.string() })
 
@@ -76,11 +76,11 @@ export default function ListingPage() {
 
   return (
     <CartProvider listing={listing}>
-      <main className="relative">
+      <main className="relative min-w-64">
         <div className="sticky top-0 z-20 h-16 w-full bg-white p-3 drop-shadow-md lg:h-20 lg:p-4">
           <img
             alt="The Listing"
-            className="mx-auto h-full"
+            className="mx-auto h-full w-full object-contain"
             src={THE_LISTING_LOGO_BLACK}
           />
           <div className="absolute right-0 top-0 flex h-16 w-16 items-center justify-center p-3 lg:h-20 lg:p-4">

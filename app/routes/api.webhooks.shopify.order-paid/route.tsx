@@ -14,7 +14,7 @@ import {
   internalServerError,
   notAllowed,
   unauthorized,
-} from "~/utils/remix"
+} from "~/utils/http"
 import {
   getShopifyWebhookHeaders,
   parseOrderPaymentWebhookPayload,
@@ -25,7 +25,7 @@ export function loader() {
   throw notAllowed()
 }
 
-export async function action({ request, context }: ActionFunctionArgs) {
+export async function action({ context, request }: ActionFunctionArgs) {
   const { db, logger } = context
 
   const clone = request.clone()
@@ -40,7 +40,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
     throw unauthorized({ message: "Webhook not verified" })
   }
 
-  const { webhookId, event } = getShopifyWebhookHeaders(headers)
+  const { event, webhookId } = getShopifyWebhookHeaders(headers)
   logger.info(`Received ${event} webhook`, { webhookId })
 
   const received = await checkWebhookLog(

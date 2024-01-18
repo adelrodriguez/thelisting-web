@@ -2,10 +2,6 @@ import type { Redis } from "ioredis"
 import { z } from "zod"
 
 import { GOOGLE_FONTS_CSS_API_URL, ONE_WEEK, REDIS_KEYS } from "~/config/consts"
-import {
-  GOOGLE_WEB_FONTS_DEVELOPER_API_KEY,
-  GOOGLE_WEB_FONTS_URL,
-} from "~/config/env.server"
 
 export function generateGoogleFontsUrl(fonts: (string | null | undefined)[]) {
   const values = fonts
@@ -19,21 +15,22 @@ export function generateGoogleFontsUrl(fonts: (string | null | undefined)[]) {
   return `${GOOGLE_FONTS_CSS_API_URL}?${families.join("&")}`
 }
 
-export async function getGoogleWebFontsList(cache: Redis) {
+export async function getGoogleWebFontsList(
+  cache: Redis,
+  url: string,
+  apiKey: string,
+): Promise<string[]> {
   const cachedFonts = await cache.get(REDIS_KEYS.GoogleFonts)
 
   if (cachedFonts) {
     return cachedFonts.split(",")
   }
 
-  const res = await fetch(
-    `${GOOGLE_WEB_FONTS_URL}?key=${GOOGLE_WEB_FONTS_DEVELOPER_API_KEY}`,
-    {
-      headers: {
-        Referer: "https://www.giftthelisting.com/",
-      },
+  const res = await fetch(`${url}?key=${apiKey}`, {
+    headers: {
+      Referer: "https://www.giftthelisting.com/",
     },
-  )
+  })
 
   const data = await res.json()
 

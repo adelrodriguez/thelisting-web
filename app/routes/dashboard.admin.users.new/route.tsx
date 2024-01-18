@@ -8,7 +8,8 @@ import { route } from "routes-gen"
 
 import { Form, Input, ListRadioGroup, SubmitButton } from "~/components/form"
 import { isUserAdmin } from "~/utils/auth.server"
-import { RouteHandle, unauthorized } from "~/utils/remix"
+import { unauthorized } from "~/utils/http"
+import type { RouteHandle } from "~/utils/remix"
 import { UserSchema } from "~/utils/user"
 
 const validator = withZod(UserSchema)
@@ -21,7 +22,7 @@ export const handle: RouteHandle = {
   id: "dashboard-admin-users-new",
 }
 
-export async function action({ request, context }: ActionFunctionArgs) {
+export async function action({ context, request }: ActionFunctionArgs) {
   const { db } = context
 
   const user = await isUserAdmin(request)

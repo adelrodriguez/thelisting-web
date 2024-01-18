@@ -22,7 +22,7 @@ import { zx } from "zodix"
 
 import { Button } from "~/components/common"
 import { useProduct } from "~/utils/hooks"
-import { RouteHandle } from "~/utils/remix"
+import type { RouteHandle } from "~/utils/remix"
 import { getShopifyIdNumber } from "~/utils/shopify"
 import { ArrayElement } from "~/utils/type"
 

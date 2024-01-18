@@ -10,13 +10,14 @@ import { zx } from "zodix"
 
 import { Form, Input, ListRadioGroup, SubmitButton } from "~/components/form"
 import { isUserAdmin } from "~/utils/auth.server"
-import { RouteHandle, notFound } from "~/utils/remix"
+import { notFound } from "~/utils/http"
+import type { RouteHandle } from "~/utils/remix"
 import { getFullName, UserSchema } from "~/utils/user"
 
 const validator = withZod(UserSchema)
 
 export const handle: RouteHandle<{ userId: string }, typeof loader> = {
-  crumb: ({ params, data }) => ({
+  crumb: ({ data, params }) => ({
     href: route("/dashboard/admin/users/:userId", {
       userId: params.userId,
     }),
@@ -25,7 +26,7 @@ export const handle: RouteHandle<{ userId: string }, typeof loader> = {
   id: "dashboard-admin-users-edit",
 }
 
-export async function loader({ params, context }: LoaderFunctionArgs) {
+export async function loader({ context, params }: LoaderFunctionArgs) {
   const { db } = context
   const { userId } = zx.parseParams(params, { userId: z.string() })
 
@@ -43,7 +44,7 @@ export async function loader({ params, context }: LoaderFunctionArgs) {
   return json({ ...setFormDefaults("edit-user", user), user })
 }
 
-export async function action({ request, params, context }: ActionFunctionArgs) {
+export async function action({ context, params, request }: ActionFunctionArgs) {
   const { db } = context
   const { userId } = zx.parseParams(params, { userId: z.string() })
 

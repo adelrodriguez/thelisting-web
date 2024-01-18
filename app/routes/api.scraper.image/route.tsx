@@ -3,7 +3,7 @@ import { z } from "zod"
 import { zx } from "zodix"
 
 import auth from "~/helpers/auth.server"
-import { badRequest, unauthorized } from "~/utils/remix"
+import { badRequest, unauthorized } from "~/utils/http"
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await auth.isAuthenticated(request)

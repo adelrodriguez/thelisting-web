@@ -10,10 +10,10 @@ import { zx } from "zodix"
 
 import { Button } from "~/components/common"
 import { useDialogPage } from "~/utils/hooks"
-import { badRequest } from "~/utils/remix"
+import { badRequest } from "~/utils/http"
 import { removeProductsFromCollection } from "~/utils/shopify.server"
 
-export async function loader({ params, context }: LoaderFunctionArgs) {
+export async function loader({ context, params }: LoaderFunctionArgs) {
   const { db } = context
   const { itemSku } = zx.parseParams(params, z.object({ itemSku: z.string() }))
 
@@ -64,7 +64,7 @@ export async function action({ context, params }: ActionFunctionArgs) {
 }
 
 export default function Page() {
-  const { open, close, leave } = useDialogPage()
+  const { close, leave, open } = useDialogPage()
 
   const cancelButtonRef = useRef(null)
 

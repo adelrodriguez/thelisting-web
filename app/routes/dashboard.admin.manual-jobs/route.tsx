@@ -4,7 +4,7 @@ import { z } from "zod"
 
 import { TextArea, SubmitButton, Form, Select } from "~/components/form"
 import { QUEUE_NAMES } from "~/config/consts"
-import { unprocessableEntity } from "~/utils/remix"
+import { unprocessableEntity } from "~/utils/http"
 
 // TODO(adelrodriguez): Improve this schema
 export const validator = withZod(

@@ -1,7 +1,7 @@
 export default function Logo({
+  className,
   height = 48,
   width = 48,
-  className,
 }: {
   height?: number
   width?: number

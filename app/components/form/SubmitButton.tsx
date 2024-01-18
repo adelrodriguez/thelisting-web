@@ -10,9 +10,9 @@ import { Spinner } from "~/components/loading"
  */
 export default function SubmitButton({
   children = `${i18next.t("common:submit")}`,
-  loadingText = `${i18next.t("common:submitting")}...`,
   disabled,
   formId,
+  loadingText = `${i18next.t("common:submitting")}...`,
   ...props
 }: {
   children?: React.ReactNode

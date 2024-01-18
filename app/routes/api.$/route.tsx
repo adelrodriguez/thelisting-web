@@ -1,4 +1,4 @@
-import { notFound } from "~/utils/remix"
+import { notFound } from "~/utils/http"
 
 export function loader() {
   return notFound({

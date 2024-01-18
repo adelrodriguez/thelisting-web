@@ -11,7 +11,8 @@ import { CardRadioGroup } from "~/components/common"
 import { SendWhatsAppTemplateMessageQueue } from "~/helpers/queues"
 import { WHATSAPP_MESSAGE_TEMPLATES } from "~/services/whatsapp/types"
 import { generateCloudflareImageUrl } from "~/utils/cloudflare"
-import { RouteHandle, unprocessableEntity } from "~/utils/remix"
+import { unprocessableEntity } from "~/utils/http"
+import type { RouteHandle } from "~/utils/remix"
 
 import BabyShowerGuestNotificationForm, {
   validator as BabyShowerGuestNotificationValidator,

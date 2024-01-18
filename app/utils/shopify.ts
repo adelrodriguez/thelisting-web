@@ -3,7 +3,7 @@ import { z } from "zod"
 
 import type { CustomAttribute } from "~/config/consts"
 import { CUSTOM_ATTRIBUTES } from "~/config/consts"
-import { badRequest } from "~/utils/remix"
+import { badRequest } from "~/utils/http"
 import { undefinedToNull } from "~/utils/undefined"
 import { isWindowDefined } from "~/utils/window"
 

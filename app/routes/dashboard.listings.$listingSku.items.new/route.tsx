@@ -3,14 +3,14 @@ import { redirect } from "@remix-run/node"
 import { useParams } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
 import { useSnackbar } from "notistack"
-import { ValidatedForm, validationError } from "remix-validated-form"
+import { validationError } from "remix-validated-form"
 import { RouteParams, route } from "routes-gen"
 import { z } from "zod"
 import { zx } from "zodix"
 
-import { FormInput, FormSubmit } from "~/components/form"
+import { Form, Input, InputWithAddOn, SubmitButton } from "~/components/form"
 import { isUserAdmin } from "~/utils/auth.server"
-import { RouteHandle } from "~/utils/remix"
+import type { RouteHandle } from "~/utils/remix"
 import { getShopifyId } from "~/utils/shopify"
 
 export const handle: RouteHandle<{ listingSku: string }> = {
@@ -32,7 +32,7 @@ const CreateItemSchema = z.object({
 
 const validator = withZod(CreateItemSchema)
 
-export async function action({ request, params, context }: ActionFunctionArgs) {
+export async function action({ context, params, request }: ActionFunctionArgs) {
   const { db } = context
 
   await isUserAdmin(request)
@@ -75,7 +75,7 @@ export default function CreateListingsPage() {
     useParams<RouteParams["/dashboard/listings/:listingSku/items/new"]>()
 
   return (
-    <ValidatedForm
+    <Form
       className="m-auto mt-8 flex w-full max-w-xl flex-col gap-y-6"
       defaultValues={{
         quantity: 1,
@@ -91,26 +91,26 @@ export default function CreateListingsPage() {
       resetAfterSubmit
       validator={validator}
     >
-      <FormInput
+      <Input
         description="This is a custom description for the item, provided by the client (optional)"
         label="Description"
         name="description"
       />
-      <FormInput
+      <InputWithAddOn
         addOn={`${listingSku}-`}
         description="The items unique SKU"
         label="SKU"
         name="sku"
         required
       />
-      <FormInput
+      <InputWithAddOn
         addOn="gid://shopify/Product/"
         description="The Shopify numeric ID for the product"
         label="Commerce ID"
         name="commerceId"
         required
       />
-      <FormInput
+      <Input
         description="The quantity of the item"
         label="Quantity"
         name="quantity"
@@ -118,7 +118,7 @@ export default function CreateListingsPage() {
         type="number"
       />
 
-      <FormSubmit loadingText="Creating..." text="Create" />
-    </ValidatedForm>
+      <SubmitButton loadingText="Creating...">Create</SubmitButton>
+    </Form>
   )
 }

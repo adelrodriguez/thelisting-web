@@ -25,13 +25,13 @@ export default function ListingCard({
   coverImage,
   eventDate,
   id,
-  path,
-  sku,
-  title,
-  purchaseTotal,
-  status,
-  owner,
   isInternal,
+  owner,
+  path,
+  purchaseTotal,
+  sku,
+  status,
+  title,
 }: Pick<
   Listing,
   | "commerceId"
@@ -88,11 +88,14 @@ export default function ListingCard({
               <Menu.Item>
                 <Link
                   className="block px-3 py-1 text-sm leading-6 text-gray-900 ui-active:bg-gray-50"
-                  to={`${sku}/edit`}
+                  to={route("/dashboard/listings/:listingSku/details", {
+                    listingSku: `${sku}`,
+                  })}
                 >
-                  Edit<span className="sr-only">, {title}</span>
+                  Details<span className="sr-only">, {title}</span>
                 </Link>
               </Menu.Item>
+
               <Menu.Item>
                 <Link
                   className="block px-3 py-1 text-sm leading-6 text-gray-900 ui-active:bg-gray-50"
@@ -102,6 +105,7 @@ export default function ListingCard({
                   View <span className="sr-only">{title}</span>
                 </Link>
               </Menu.Item>
+
               <Menu.Item>
                 <Link
                   className="block px-3 py-1 text-sm leading-6 text-gray-900 ui-active:bg-gray-50"
@@ -124,6 +128,7 @@ export default function ListingCard({
                   Download report
                 </a>
               </Menu.Item>
+
               <Menu.Item>
                 <Link
                   className="flex items-center px-3 py-1 text-sm leading-6 text-gray-900 ui-active:bg-gray-50"

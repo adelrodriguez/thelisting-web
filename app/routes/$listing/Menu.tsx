@@ -6,8 +6,8 @@ import { useTranslation } from "react-i18next"
 import { LanguageCurrencySelector } from "~/components/marketing"
 
 export default function Menu({
-  open,
   close,
+  open,
 }: {
   open: boolean
   close: () => void

@@ -5,7 +5,7 @@ import { route } from "routes-gen"
 
 import { Select } from "~/components/common"
 import { handle as detailsHandle } from "~/routes/dashboard.listings.$listingSku.details/route"
-import { handle as itemsHandle } from "~/routes/dashboard.listings.$listingSku.items/route"
+import { handle as itemsHandle } from "~/routes/dashboard.listings.$listingSku.items._index/route"
 import { handle as ribbonsHandle } from "~/routes/dashboard.listings.$listingSku.ribbons/route"
 import { handle as statsHandle } from "~/routes/dashboard.listings.$listingSku.stats/route"
 import type { RouteHandle } from "~/utils/remix"
@@ -21,7 +21,7 @@ export const handle: RouteHandle<{ listingSku: string }> = {
 }
 
 const tabs = [
-  { id: detailsHandle, label: "Details", value: "./details" },
+  { id: detailsHandle.id, label: "Details", value: "./details" },
   { id: statsHandle.id, label: "Stats", value: "./stats" },
   { id: itemsHandle.id, label: "Items", value: "./items" },
   { id: ribbonsHandle.id, label: "Ribbons", value: "./ribbons" },
@@ -33,8 +33,6 @@ export default function DashboardListingPage() {
   const currentTab = tabs.find(
     (tab) => matches[matches.length - 1]?.handle?.id === tab.id,
   )
-
-  console.log({ currentTab })
 
   return (
     <>

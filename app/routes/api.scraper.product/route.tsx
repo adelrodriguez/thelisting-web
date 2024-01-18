@@ -9,13 +9,13 @@ import { createScraper } from "~/helpers/scraper.server"
 import { getBrowserInstance } from "~/services/browserless.server"
 import Sentry from "~/services/sentry"
 import { UnknownError } from "~/utils/error"
+import { unauthorized } from "~/utils/http"
 import { generateKey } from "~/utils/redis"
-import { unauthorized } from "~/utils/remix"
 import { ScrapedProduct } from "~/utils/scraper"
 
-export async function loader({ request, context }: LoaderFunctionArgs) {
-  const { logger, cache, env } = context
-  const { BROWSERLESS_URL, BROWSERLESS_TOKEN } = env
+export async function loader({ context, request }: LoaderFunctionArgs) {
+  const { cache, env, logger } = context
+  const { BROWSERLESS_TOKEN, BROWSERLESS_URL } = env
   const user = await auth.isAuthenticated(request)
 
   if (!user) {

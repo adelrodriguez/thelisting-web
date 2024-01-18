@@ -3,20 +3,18 @@ import { json } from "@remix-run/node"
 import { useLoaderData, Outlet, Link } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
 import { useSnackbar } from "notistack"
-import {
-  setFormDefaults,
-  ValidatedForm,
-  validationError,
-} from "remix-validated-form"
+import { setFormDefaults, validationError } from "remix-validated-form"
 import { route } from "routes-gen"
 import { z } from "zod"
 import { zx } from "zodix"
 
 import { ViewOnShopify } from "~/components/admin"
-import { FormInput, SubmitButton, TextArea } from "~/components/form"
+import { Button } from "~/components/common"
+import { Form, Input, SubmitButton, TextArea } from "~/components/form"
 import { useProduct } from "~/utils/hooks"
+import { notFound } from "~/utils/http"
 import { formatPrice } from "~/utils/money"
-import { RouteHandle, notFound } from "~/utils/remix"
+import type { RouteHandle } from "~/utils/remix"
 
 export const handle: RouteHandle<{ listingSku: string; itemSku: string }> = {
   crumb: ({ params }) => ({
@@ -42,7 +40,7 @@ const validator = withZod(
     }),
 )
 
-export async function loader({ params, context }: LoaderFunctionArgs) {
+export async function loader({ context, params }: LoaderFunctionArgs) {
   const db = context.db
   const { itemSku } = zx.parseParams(params, {
     itemSku: z.string(),
@@ -77,7 +75,7 @@ export async function loader({ params, context }: LoaderFunctionArgs) {
   })
 }
 
-export async function action({ request, params, context }: ActionFunctionArgs) {
+export async function action({ context, params, request }: ActionFunctionArgs) {
   const { db } = context
   const { itemSku } = zx.parseParams(params, {
     itemSku: z.string(),
@@ -97,8 +95,8 @@ export async function action({ request, params, context }: ActionFunctionArgs) {
 }
 
 export default function DashboardListingItemDetailPage() {
-  const { item, stats, itemPurchaseCount } = useLoaderData<typeof loader>()
-  const { data, isPending, isError } = useProduct(item.commerceId || "")
+  const { item, itemPurchaseCount, stats } = useLoaderData<typeof loader>()
+  const { data, isError, isPending } = useProduct(item.commerceId || "")
   const { enqueueSnackbar } = useSnackbar()
 
   return (
@@ -163,7 +161,7 @@ export default function DashboardListingItemDetailPage() {
         <h3 className="text-lg font-medium leading-6 text-gray-900">
           Item Information
         </h3>
-        <ValidatedForm
+        <Form
           className="flex flex-col gap-y-6 pt-4"
           id="edit-item"
           method="POST"
@@ -180,35 +178,23 @@ export default function DashboardListingItemDetailPage() {
             label="Description"
             name="description"
           />
-          <FormInput
+          <Input
             label="Quantity"
             min={0}
             name="quantity"
             step="1"
             type="number"
           />
-          <FormInput
-            label="Stock"
-            min={0}
-            name="stock"
-            step="1"
-            type="number"
-          />
-          <div className="flex justify-end">
+          <Input label="Stock" min={0} name="stock" step="1" type="number" />
+          <div className="flex justify-end gap-x-4">
             {itemPurchaseCount === 0 && (
               <Link to="delete">
-                <button
-                  className="mr-4 rounded-md bg-red-50 px-3 py-2 text-sm font-semibold text-red-600 shadow-sm  ring-0 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-                  disabled={itemPurchaseCount > 0}
-                  type="button"
-                >
-                  Delete
-                </button>
+                <Button variant="danger">Delete</Button>
               </Link>
             )}
             <SubmitButton loadingText="Updating...">Update</SubmitButton>
           </div>
-        </ValidatedForm>
+        </Form>
       </div>
       <Outlet />
     </div>

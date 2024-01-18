@@ -1,7 +1,7 @@
 import { Outlet } from "@remix-run/react"
 import { route } from "routes-gen"
 
-import { RouteHandle } from "~/utils/remix"
+import type { RouteHandle } from "~/utils/remix"
 
 export const handle: RouteHandle = {
   crumb: () => ({

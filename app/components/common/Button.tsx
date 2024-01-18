@@ -5,10 +5,10 @@ import type { ReactNode, Ref, ComponentPropsWithRef } from "react"
 function Button(
   {
     children,
-    type,
     className,
-    size = "md",
     disabled,
+    size = "md",
+    type,
     variant = "primary",
     ...props
   }: {
@@ -34,9 +34,9 @@ function Button(
         {
           "border-slate-300 bg-white text-slate-700 ring-1 ring-inset ring-slate-300 hover:bg-slate-50":
             variant === "secondary",
-          "border-transparent bg-red-600 text-white hover:bg-red-500":
+          "border-transparent bg-red-50 text-red-600 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2":
             variant === "danger",
-          "border-transparent bg-slate-600 text-white hover:bg-slate-700 ":
+          "border-transparent bg-slate-600 text-white hover:bg-slate-700":
             variant === "primary",
         },
         { "cursor-not-allowed opacity-50": disabled },

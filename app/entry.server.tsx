@@ -1,4 +1,4 @@
-import type { DataFunctionArgs, EntryContext } from "@remix-run/node"
+import type { EntryContext, LoaderFunctionArgs } from "@remix-run/node"
 import { createReadableStreamFromReadable } from "@remix-run/node"
 import { RemixServer } from "@remix-run/react"
 import * as Sentry from "@sentry/remix"
@@ -29,7 +29,6 @@ export default async function handleRequest(
 
   const instance = createInstance()
   const lng = await i18next.getLocale(request)
-  // @ts-expect-error find out why the typing of this fails
   const ns = i18next.getRouteNamespaces(remixContext)
 
   await instance
@@ -45,7 +44,7 @@ export default async function handleRequest(
   return new Promise((resolve, reject) => {
     let didError = false
 
-    const { pipe, abort } = renderToPipeableStream(
+    const { abort, pipe } = renderToPipeableStream(
       <I18nextProvider i18n={instance}>
         <RemixServer context={remixContext} url={request.url} />
       </I18nextProvider>,
@@ -82,7 +81,7 @@ export default async function handleRequest(
 
 export function handleError(
   error: unknown,
-  { request, params, context }: DataFunctionArgs,
+  { context, params, request }: LoaderFunctionArgs,
 ) {
   void Sentry.captureRemixServerException(error, "remix.server", request)
 

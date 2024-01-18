@@ -10,7 +10,7 @@ export type ArrayElement<ArrayType extends readonly unknown[]> =
 export type Join<T extends string[], S extends string> = T extends []
   ? ""
   : T extends [infer F, ...infer R]
-  ? F extends string
-    ? `${F}${R extends [] ? "" : S}${Join<Extract<R, string[]>, S>}`
+    ? F extends string
+      ? `${F}${R extends [] ? "" : S}${Join<Extract<R, string[]>, S>}`
+      : ""
     : ""
-  : ""

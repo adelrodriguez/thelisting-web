@@ -21,6 +21,7 @@ import {
 } from "~/components/form"
 import auth from "~/helpers/auth.server"
 import { CreateListingCommerceEntityQueue } from "~/helpers/queues"
+import { unauthorized } from "~/utils/http"
 import {
   ListingEventDateSchema,
   ListingOwnerSchema,
@@ -28,14 +29,15 @@ import {
   ListingTitleSchema,
   ListingTypeSchema,
 } from "~/utils/listing"
-import { unauthorized } from "~/utils/remix"
+import type { RouteHandle } from "~/utils/remix"
 import { getFullName } from "~/utils/user"
 
-export const handle = {
+export const handle: RouteHandle = {
   crumb: () => ({
     href: route("/dashboard/listings/new"),
     name: "New Listing",
   }),
+  id: "dashboard-listings-new",
 }
 
 const clientValidator = withZod(
@@ -51,7 +53,7 @@ const clientValidator = withZod(
   }),
 )
 
-export async function loader({ request, context }: LoaderFunctionArgs) {
+export async function loader({ context, request }: LoaderFunctionArgs) {
   const { db } = context
   const user = await auth.isAuthenticated(request)
 
@@ -66,7 +68,7 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
   return json({ users })
 }
 
-export async function action({ request, context }: ActionFunctionArgs) {
+export async function action({ context, request }: ActionFunctionArgs) {
   const { db } = context
   const user = await auth.isAuthenticated(request)
 

@@ -3,7 +3,7 @@ import { UserRole } from "@prisma/client"
 import { redirect } from "@remix-run/node"
 
 import auth from "~/helpers/auth.server"
-import { forbidden } from "~/utils/remix"
+import { forbidden } from "~/utils/http"
 
 export async function isUserAdmin(request: Request): Promise<User> {
   const user = await auth.isAuthenticated(request)

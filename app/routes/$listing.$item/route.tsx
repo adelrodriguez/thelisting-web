@@ -15,14 +15,16 @@ import {
   useProduct,
 } from "~/utils/hooks"
 import { formatPrice } from "~/utils/money"
+import type { RouteHandle } from "~/utils/remix"
 
 import QuantityInput from "./QuantityInput"
 
-export const handle = {
+export const handle: RouteHandle = {
   i18n: "registry",
+  id: "listing-item-detail",
 }
 
-export async function loader({ params, context }: LoaderFunctionArgs) {
+export async function loader({ context, params }: LoaderFunctionArgs) {
   const db = context.db
   const sku = params.item
 
@@ -44,8 +46,8 @@ export async function loader({ params, context }: LoaderFunctionArgs) {
 export default function ListingItemDetailPage() {
   const cart = useCart()
   const { item } = useLoaderData<typeof loader>()
-  const { open, close, leave } = useDialogPage()
-  const { data, isPending, isError } = useProduct(item.commerceId ?? "")
+  const { close, leave, open } = useDialogPage()
+  const { data, isError, isPending } = useProduct(item.commerceId ?? "")
   const isAvailable = item.stock > 0
   const [quantity, setQuantity] = useState(Number(isAvailable))
   const { t } = useTranslation(handle.i18n)
@@ -55,10 +57,10 @@ export default function ListingItemDetailPage() {
   if (isPending) return null
   if (isError) return <div>Error!</div>
 
-  const { title, price, variantId, imageUrl } = data
+  const { imageUrl, price, title, variantId } = data
 
   function handleAddToCart() {
-    const { id, commerceId, sku } = item
+    const { commerceId, id, sku } = item
 
     if (!commerceId) throw new Error("Item must have a commerceId")
     if (!variantId) throw new Error("Item must have a variantId")
