@@ -183,6 +183,7 @@ model User {
 
   listings Listing[]
   images   Image[]
+  assets   Asset[]
 }
 
 enum UserRole {
@@ -199,6 +200,29 @@ model Image {
 
   user   User   @relation(fields: [userId], references: [id])
   userId String @db.Uuid
+}
+
+model Asset {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  service StorageService
+  bucket  String
+
+  name     String // The user defined name
+  mimeType String
+  filename String // The original filename
+  size     Int // In bytes
+
+  url String @unique
+
+  user    User   @relation(fields: [ownerId], references: [id])
+  ownerId String @db.Uuid
+}
+
+enum StorageService {
+  R2
 }
 
 model ScrapedProduct {
