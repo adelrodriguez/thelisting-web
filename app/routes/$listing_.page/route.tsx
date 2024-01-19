@@ -125,8 +125,8 @@ export default function ListingPage() {
 
   return (
     <ThemeProvider theme={theme}>
-      <main className="flex flex-1">
-        <div className="relative hidden w-0 flex-1 lg:block">
+      <main className="md:grid md:grid-cols-5">
+        <div className="relative hidden md:col-span-3 md:block">
           <AnimatePresence>
             {cover && (
               <motion.img
@@ -157,7 +157,7 @@ export default function ListingPage() {
           </div>
         </div>
         <div
-          className="z-10 overflow-hidden shadow-gray-700 lg:w-2/5 lg:flex-none lg:border-l-8"
+          className="z-10 w-full overflow-hidden shadow-gray-700 md:col-span-2 md:border-l-8"
           style={{
             backgroundColor: theme.colors?.background,
             borderColor: theme.colors?.secondary,

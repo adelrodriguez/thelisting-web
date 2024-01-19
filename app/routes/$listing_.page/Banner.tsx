@@ -20,10 +20,10 @@ export default function Banner({
 
   return (
     <>
-      <div className="flex h-full flex-col items-center justify-center">
-        <div className="relative z-10 px-4">
+      <div className="flex h-full items-center justify-center">
+        <div className="relative z-10 flex flex-col items-center gap-y-7 md:px-2">
           {decorationImage && (
-            <div className="absolute inset-0 -top-10 h-32 -translate-y-full lg:h-40">
+            <div className="absolute inset-0 top-0 h-32 -translate-y-full lg:h-40">
               <img
                 alt=""
                 className="h-full w-full object-contain"
@@ -32,29 +32,30 @@ export default function Banner({
             </div>
           )}
           <h1
-            className="text-center text-5xl font-bold tracking-wide lg:text-7xl"
+            className="text-center text-3xl font-bold tracking-wide lg:text-5xl"
             style={{ fontFamily: theme.fonts?.heading }}
           >
             {title}
           </h1>
           {subtitle && (
-            <p className="mt-2 text-center text-xl font-light tracking-tight md:text-3xl">
+            <p className="text-center text-xl font-light tracking-tight lg:text-2xl">
               {subtitle}
             </p>
           )}
+          <div>
+            <Link
+              className={clsx(
+                "right-1/2 z-10 mt-10 rounded-lg border-2 bg-transparent px-6 py-2.5 font-semibold tracking-wide shadow-sm outline-white transition-all ",
+                "hover:scale-125 hover:shadow-2xl",
+              )}
+              relative="path"
+              style={{ borderColor: theme.colors?.secondary }}
+              to="../"
+            >
+              {t("registry")}
+            </Link>
+          </div>
         </div>
-
-        <Link
-          className={clsx(
-            "right-1/2 z-10 mt-10 rounded-lg border-2 bg-transparent px-6 py-2.5 font-semibold tracking-wide shadow-sm outline-white transition-all ",
-            "hover:scale-125 hover:shadow-2xl",
-          )}
-          relative="path"
-          style={{ borderColor: theme.colors?.secondary }}
-          to="../"
-        >
-          {t("goToRegistry")}
-        </Link>
       </div>
       {backgroundImage && (
         <div className="absolute inset-0">

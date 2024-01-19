@@ -9,7 +9,7 @@ export const BannerProperties = z.object({
   imageFit: z.string().optional(),
   imagePosition: z.string().optional(),
   subtitle: z.string().optional(),
-  title: z.string().min(1, "You must provide a title for the banner"),
+  title: z.string().optional(),
 })
 export type BannerProperties = z.infer<typeof BannerProperties>
 

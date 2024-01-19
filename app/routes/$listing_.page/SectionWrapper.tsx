@@ -24,7 +24,7 @@ export default function SectionWrapper({
   return (
     <section
       className={clsx("relative flex h-screen min-h-0 min-w-0 flex-col", {
-        "sm:hidden": mobileOnly,
+        "md:hidden": mobileOnly,
       })}
       ref={ref}
     >

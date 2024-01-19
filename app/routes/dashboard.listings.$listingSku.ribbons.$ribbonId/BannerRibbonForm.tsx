@@ -41,7 +41,7 @@ export default function BannerRibbonFields({
       />
 
       <ImageInput label="Decoration Image" name="properties.decorationImage" />
-      <Input label="Title" name="properties.title" required type="text" />
+      <Input label="Title" name="properties.title" type="text" />
       <Input label="Subtitle" name="properties.subtitle" type="text" />
       <ImageInput label="Background Image" name="properties.backgroundImage" />
       <div className="flex gap-2">
