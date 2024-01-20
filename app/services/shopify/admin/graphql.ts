@@ -36759,7 +36759,7 @@ export type Return = Node & {
   status: ReturnStatus;
   /** A suggested refund for the return. */
   suggestedRefund?: Maybe<SuggestedReturnRefund>;
-  /** The sum of all line item quantities for the return. Includes the total quantity of both return line items and exchange line items. */
+  /** The sum of all return line item quantities for the return. */
   totalQuantity: Scalars['Int']['output'];
 };
 

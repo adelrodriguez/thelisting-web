@@ -2,7 +2,6 @@ import { Link } from "@remix-run/react"
 import clsx from "clsx"
 import { useTranslation } from "react-i18next"
 
-import { generateCloudflareImageUrl } from "~/utils/cloudflare"
 import type { BannerProperties } from "~/utils/ribbons"
 
 import useTheme from "./ThemeProvider"
@@ -27,7 +26,7 @@ export default function Banner({
               <img
                 alt=""
                 className="h-full w-full object-contain"
-                src={generateCloudflareImageUrl(decorationImage, "display")}
+                src={decorationImage}
               />
             </div>
           )}
@@ -62,7 +61,8 @@ export default function Banner({
           <img
             alt=""
             className={clsx("h-full w-full", imageFit, imagePosition)}
-            src={generateCloudflareImageUrl(backgroundImage, "display")}
+            loading="lazy"
+            src={backgroundImage}
           />
         </div>
       )}

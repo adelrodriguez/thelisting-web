@@ -14,7 +14,6 @@ import { z } from "zod"
 import { zx } from "zodix"
 
 import { THE_LISTING_LOGO_BLACK } from "~/config/consts"
-import { generateCloudflareImageUrl } from "~/utils/cloudflare"
 import { CartProvider } from "~/utils/hooks"
 import { notFound } from "~/utils/http"
 
@@ -60,9 +59,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
     { content: data.listing.subtitle, name: "og:description" },
     { charSet: "utf-8" },
     {
-      content: data.listing.coverImage
-        ? generateCloudflareImageUrl(data.listing.coverImage)
-        : "", // TODO(adelrodriguez): Add default image
+      content: data.listing.coverImage ?? "", // TODO(adelrodriguez): Add default image
       name: "og:image",
     },
     { content: `${data.listing.title} | The Listing`, name: "og:title" },
@@ -102,10 +99,7 @@ export default function ListingPage() {
                 <img
                   alt=""
                   className="h-full w-full object-cover object-center"
-                  src={generateCloudflareImageUrl(
-                    listing.coverImage,
-                    "display",
-                  )}
+                  src={listing.coverImage}
                 />
               )}
 

@@ -9,7 +9,6 @@ import { zx } from "zodix"
 import { OrderItem } from "~/components/registry"
 import posthog, { getDistinctId } from "~/services/posthog.server"
 import Sentry from "~/services/sentry"
-import { generateCloudflareImageUrl } from "~/utils/cloudflare"
 import { formatPrice } from "~/utils/money"
 import { getShopifyId } from "~/utils/shopify"
 import { getOrder } from "~/utils/shopify.server"
@@ -91,8 +90,8 @@ export default function ListingThankYouPage() {
           className="h-full w-full object-cover object-center"
           src={
             listing.thankYouImage
-              ? generateCloudflareImageUrl(listing.thankYouImage, "display")
-              : "https://imagedelivery.net/wHwwAqNxbuESOwdHNE6NsQ/2975847d-0983-43ab-7e0e-fb492e932700/display"
+              ? listing.thankYouImage
+              : "https://imagedelivery.net/wHwwAqNxbuESOwdHNE6NsQ/2975847d-0983-43ab-7e0e-fb492e932700/display" // TODO(adelrodriguez): Replace with image on public directory
           }
         />
       </div>

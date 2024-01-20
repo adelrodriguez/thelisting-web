@@ -10,7 +10,6 @@ import { zx } from "zodix"
 import { CardRadioGroup } from "~/components/common"
 import { SendWhatsAppTemplateMessageQueue } from "~/helpers/queues"
 import { WHATSAPP_MESSAGE_TEMPLATES } from "~/services/whatsapp/types"
-import { generateCloudflareImageUrl } from "~/utils/cloudflare"
 import { unprocessableEntity } from "~/utils/http"
 import type { RouteHandle } from "~/utils/remix"
 
@@ -70,7 +69,7 @@ export async function action({ request }: ActionFunctionArgs) {
           data: {
             locale: "ES",
             payload: {
-              imageUrl: generateCloudflareImageUrl(result.data.image, "public"),
+              imageUrl: result.data.image,
               path: result.data.path,
               recipient: result.data.customer,
             },
@@ -103,7 +102,7 @@ export async function action({ request }: ActionFunctionArgs) {
           data: {
             locale: "ES",
             payload: {
-              imageUrl: generateCloudflareImageUrl(result.data.image, "public"),
+              imageUrl: result.data.image,
               path: result.data.path,
               recipient: result.data.customer,
             },
@@ -138,7 +137,7 @@ export async function action({ request }: ActionFunctionArgs) {
             payload: {
               babyName: result.data.babyName,
               date: result.data.date,
-              imageUrl: generateCloudflareImageUrl(result.data.image, "public"),
+              imageUrl: result.data.image,
               message: result.data.message,
               path: result.data.path,
               place: result.data.place,
@@ -175,7 +174,7 @@ export async function action({ request }: ActionFunctionArgs) {
             payload: {
               coupleName: result.data.coupleName,
               date: result.data.date,
-              imageUrl: generateCloudflareImageUrl(result.data.image, "public"),
+              imageUrl: result.data.image,
               message: result.data.message,
               path: result.data.path,
               place: result.data.place,

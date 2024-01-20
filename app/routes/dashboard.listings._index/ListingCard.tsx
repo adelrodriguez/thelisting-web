@@ -10,7 +10,6 @@ import { format } from "date-fns"
 import { Fragment } from "react"
 import { route } from "routes-gen"
 
-import { generateCloudflareImageUrl } from "~/utils/cloudflare"
 import { formatPrice } from "~/utils/money"
 import { generateShopifyAdminUrl, getShopifyIdNumber } from "~/utils/shopify"
 
@@ -54,7 +53,7 @@ export default function ListingCard({
           <img
             alt={title}
             className="h-12 w-12 flex-none rounded-lg bg-white object-cover ring-1 ring-gray-900/10"
-            src={generateCloudflareImageUrl(coverImage, "thumbnail")}
+            src={coverImage}
           />
         ) : (
           <span className="inline-flex h-12 w-12 items-center justify-center rounded-lg bg-gray-500 ring-1 ring-gray-900/10">

@@ -1,4 +1,3 @@
-import { generateCloudflareImageUrl } from "~/utils/cloudflare"
 import type { ImageGalleryProperties } from "~/utils/ribbons"
 
 export default function ImageGallery({
@@ -25,7 +24,7 @@ export default function ImageGallery({
                 <img
                   alt=""
                   className="h-auto max-w-full rounded-md shadow-inner"
-                  src={generateCloudflareImageUrl(image, "public")}
+                  src={image}
                 />
               </div>
             ))}

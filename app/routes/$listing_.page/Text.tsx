@@ -1,7 +1,6 @@
 import { Link } from "@remix-run/react"
 import clsx from "clsx"
 
-import { generateCloudflareImageUrl } from "~/utils/cloudflare"
 import type { TextProperties } from "~/utils/ribbons"
 
 import useTheme from "./ThemeProvider"
@@ -25,7 +24,7 @@ export default function Text({
             <img
               alt=""
               className="h-full w-full object-contain"
-              src={generateCloudflareImageUrl(decorationImage, "display")}
+              src={decorationImage}
             />
           </div>
         )}

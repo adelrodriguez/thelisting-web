@@ -3,7 +3,6 @@ import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid"
 import clsx from "clsx"
 import { useEffect, useRef, useState } from "react"
 
-import { generateCloudflareImageUrl } from "~/utils/cloudflare"
 import type { ImageCarouselProperties } from "~/utils/ribbons"
 
 export default function ImageCarousel({
@@ -60,7 +59,7 @@ export default function ImageCarousel({
           <img
             alt=""
             className="absolute h-full w-full rounded-md object-cover"
-            src={generateCloudflareImageUrl(image, "public")}
+            src={image}
           />
         </Transition>
       ))}

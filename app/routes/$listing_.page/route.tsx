@@ -9,7 +9,6 @@ import { z } from "zod"
 import { zx } from "zodix"
 
 import { isProduction } from "~/config/vars"
-import { generateCloudflareImageUrl } from "~/utils/cloudflare"
 import { generateGoogleFontsUrl } from "~/utils/font"
 import { notFound } from "~/utils/http"
 import { ListingThemeSchema } from "~/utils/listing"
@@ -97,9 +96,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
       {
         // TODO(adelrodriguez): Generate OG images with
         // https://www.jacobparis.com/content/remix-og
-        content: data.listing.coverImage
-          ? generateCloudflareImageUrl(data.listing.coverImage)
-          : "", // TODO(adelrodriguez): Add default image
+        content: data.listing.coverImage ?? "", // TODO(adelrodriguez): Add default image
         name: "og:image",
       },
       { content: `${data.listing.title} | The Listing`, name: "og:title" },
@@ -135,8 +132,8 @@ export default function ListingPage() {
                 className="sticky inset-0 h-screen w-full object-cover object-center"
                 exit={{ opacity: 0 }}
                 initial={{ opacity: 0 }}
-                key={cover?.id}
-                src={generateCloudflareImageUrl(cover.id, "display")}
+                key={cover.id}
+                src={cover.id}
                 transition={{ duration: 0.5 }}
               />
             )}
