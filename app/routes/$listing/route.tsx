@@ -74,10 +74,11 @@ export default function ListingPage() {
   return (
     <CartProvider listing={listing}>
       <main className="relative min-w-64">
-        <div className="sticky top-0 z-20 h-16 w-full bg-white p-3 drop-shadow-md lg:h-20 lg:p-4">
+        <div className="sticky top-0 z-20 h-auto w-full bg-white p-3 drop-shadow-md lg:p-4">
           <img
             alt="The Listing"
-            className="mx-auto h-full w-full object-contain"
+            className="mx-auto h-10 w-full object-contain lg:h-12"
+            loading="eager"
             src={THE_LISTING_LOGO_BLACK}
           />
           <div className="absolute right-0 top-0 flex h-16 w-16 items-center justify-center p-3 lg:h-20 lg:p-4">
