@@ -199,14 +199,18 @@ export default function AddToListingPage() {
 
                         {products.map((product, index) => (
                           <div className="hidden" key={product.id}>
-                            {Object.keys(product).map((key) => (
-                              <Input
-                                key={key}
-                                label={key}
-                                name={`products[${index}].${key}`}
-                                type="hidden"
-                              />
-                            ))}
+                            {Object.keys(product)
+                              // We avoid mapping the hasError key since that
+                              // leads to it being formatted as a string
+                              .filter((key) => !["hasError"].includes(key))
+                              .map((key) => (
+                                <Input
+                                  key={key}
+                                  label={key}
+                                  name={`products[${index}].${key}`}
+                                  type="hidden"
+                                />
+                              ))}
                           </div>
                         ))}
                         <Alert type="info">
@@ -218,9 +222,13 @@ export default function AddToListingPage() {
                           <span className="font-bold">{`${margin}%`}</span>.
                         </Alert>
                         {Object.keys(fieldErrors).length > 0 && (
-                          <Alert type="error">
-                            Please fix the errors in the form.
-                            <pre>{JSON.stringify(fieldErrors)}</pre>
+                          <Alert
+                            title="Please fix the errors in the form"
+                            type="error"
+                          >
+                            <pre className="whitespace-pre-wrap text-wrap break-words">
+                              {JSON.stringify(fieldErrors)}
+                            </pre>
                           </Alert>
                         )}
                       </div>
