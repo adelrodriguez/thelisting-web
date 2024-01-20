@@ -3,11 +3,12 @@ import {
   XMarkIcon,
   CheckCircleIcon,
   InformationCircleIcon,
+  ExclamationTriangleIcon,
 } from "@heroicons/react/20/solid"
 import clsx from "clsx"
 import type { ReactNode } from "react"
 
-type AlertType = "error" | "success" | "info"
+type AlertType = "error" | "success" | "info" | "warning"
 
 function getIcon(type: AlertType) {
   switch (type) {
@@ -27,6 +28,13 @@ function getIcon(type: AlertType) {
           className="h-5 w-5 text-blue-400"
         />
       )
+    case "warning":
+      return (
+        <ExclamationTriangleIcon
+          aria-hidden="true"
+          className="h-5 w-5 text-yellow-400"
+        />
+      )
     default:
       return null
   }
@@ -35,9 +43,11 @@ function getIcon(type: AlertType) {
 export default function Alert({
   children,
   onClose,
+  title,
   type,
 }: {
   children: ReactNode
+  title?: string
   type: AlertType
   onClose?: () => void
 }) {
@@ -47,16 +57,31 @@ export default function Alert({
         "bg-blue-50": type === "info",
         "bg-green-50": type === "success",
         "bg-red-50": type === "error",
+        "bg-yellow-50": type === "warning",
       })}
     >
       <div className="flex">
         <div className="flex-shrink-0">{getIcon(type)}</div>
-        <div className="ml-3">
+        <div className="ml-3 min-w-0">
+          {title && (
+            <h3
+              className={clsx("text-sm font-medium", {
+                "text-blue-800": type === "info",
+                "text-green-800": type === "success",
+                "text-red-800": type === "error",
+                "text-yellow-800": type === "warning",
+              })}
+            >
+              {title}
+            </h3>
+          )}
           <div
             className={clsx("text-sm", {
-              "text-blue-800": type === "info",
-              "text-green-800": type === "success",
-              "text-red-800": type === "error",
+              "mt-2": !!title,
+              "text-blue-700": type === "info",
+              "text-green-700": type === "success",
+              "text-red-700": type === "error",
+              "text-yellow-700": type === "warning",
             })}
           >
             {children}
@@ -75,6 +100,8 @@ export default function Alert({
                       type === "success",
                     "bg-red-50 text-red-500 hover:bg-red-100 focus:ring-red-600 focus:ring-offset-red-50":
                       type === "error",
+                    "bg-yellow-50 text-yellow-500 hover:bg-yellow-100 focus:ring-yellow-600 focus:ring-offset-yellow-50":
+                      type === "warning",
                   },
                 )}
                 onClick={onClose}
