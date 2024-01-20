@@ -83,7 +83,9 @@ export default function ListingCartPage() {
                         </div>
                       </div>
 
-                      <Outlet />
+                      <div className="mb-2 mt-4">
+                        <Outlet />
+                      </div>
 
                       <div className="mt-8">
                         <div className="flow-root">

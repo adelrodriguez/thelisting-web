@@ -40,7 +40,7 @@ export function CartProvider({
   listing,
 }: {
   children: ReactNode
-  listing: Pick<Listing, "id" | "sku">
+  listing: Pick<Listing, "id" | "sku" | "path">
 }) {
   // We use a Map to store the carts for each listing
   const { data } = useQuery({
@@ -135,7 +135,7 @@ export function CartProvider({
 
     submit(formData, {
       action: route("/:listing/cart/checkout", {
-        listing: `${listing.sku}`,
+        listing: `${listing.path}`,
       }),
       method: "post",
       replace: true,
