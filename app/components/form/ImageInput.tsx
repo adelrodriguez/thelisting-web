@@ -1,6 +1,5 @@
 import { PhotoIcon, FolderOpenIcon, XMarkIcon } from "@heroicons/react/20/solid"
-import type { Image } from "@prisma/client"
-import { useQuery } from "@tanstack/react-query"
+import { CameraIcon } from "@heroicons/react/24/solid"
 import clsx from "clsx"
 import { useEffect, useRef, useState, type ComponentProps } from "react"
 import { useControlField, useField } from "remix-validated-form"
@@ -16,6 +15,7 @@ export default function ImageInput({
   description,
   label,
   name,
+  placeholder,
   required,
   ...props
 }: ComponentProps<typeof Input>) {
@@ -23,17 +23,6 @@ export default function ImageInput({
   const [value, setValue] = useControlField<string | null>(name)
   const $input = useRef<HTMLInputElement>(null)
   const [open, setOpen] = useState(false)
-  const { data } = useQuery({
-    enabled: !!value,
-    queryFn: async () => {
-      const res = await fetch(`/api/images/${value}`)
-      const data = await res.json()
-
-      return data as Image
-    },
-    queryKey: ["images", value],
-  })
-  const { placeholder } = props
 
   useEffect(() => {
     if (error) {
@@ -46,12 +35,12 @@ export default function ImageInput({
       <ImagePicker
         onClose={() => setOpen(false)}
         onSelect={(file) => {
-          setValue(file.id)
+          setValue(file.url)
           setOpen(false)
         }}
         open={open}
       />
-      <div className={className}>
+      <div className={clsx("flex flex-col gap-y-1", className)}>
         <div className="flex justify-between">
           <label
             className="block text-sm font-medium leading-6 text-gray-900"
@@ -63,6 +52,25 @@ export default function ImageInput({
             <span className="text-sm leading-6 text-gray-500">Required</span>
           )}
         </div>
+
+        <button
+          className="flex h-80 w-full items-center justify-center rounded-md border border-slate-200 bg-gray-100"
+          onClick={() => setOpen(true)}
+          type="button"
+        >
+          {value ? (
+            <img
+              className="h-80 w-full rounded-md border border-slate-200 object-cover"
+              loading="lazy"
+              src={value}
+            />
+          ) : (
+            <CameraIcon
+              aria-hidden="true"
+              className="h-20 w-20 text-gray-400"
+            />
+          )}
+        </button>
         <div className="group my-1 flex rounded-md shadow-sm">
           <div className="relative flex flex-grow items-stretch focus-within:z-10">
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
@@ -89,7 +97,7 @@ export default function ImageInput({
               placeholder={placeholder}
               readOnly
               type={props.type || "text"}
-              value={data?.filename || ""}
+              value={value || ""}
             />
             <input
               {...getInputProps({
@@ -99,28 +107,32 @@ export default function ImageInput({
               })}
             />
           </div>
-          {value ? (
-            <button
-              className="relative -ml-px inline-flex items-center gap-x-1.5 rounded-r-md px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-              onClick={() => setValue(null)}
-              type="button"
-            >
-              <XMarkIcon aria-hidden="true" className="h-5 w-5 text-gray-400" />
-              Remove
-            </button>
-          ) : (
-            <button
-              className="relative -ml-px inline-flex items-center gap-x-1.5 rounded-r-md px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-              onClick={() => setOpen(true)}
-              type="button"
-            >
-              <FolderOpenIcon
-                aria-hidden="true"
-                className="h-5 w-5 text-gray-400"
-              />
-              Select
-            </button>
-          )}
+
+          <button
+            className="relative -ml-px inline-flex items-center gap-x-1.5 rounded-r-md px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+            onClick={() => {
+              value ? setValue(null) : setOpen(true)
+            }}
+            type="button"
+          >
+            {value ? (
+              <>
+                <XMarkIcon
+                  aria-hidden="true"
+                  className="h-5 w-5 text-gray-400"
+                />
+                Remove
+              </>
+            ) : (
+              <>
+                <FolderOpenIcon
+                  aria-hidden="true"
+                  className="h-5 w-5 text-gray-400"
+                />
+                Select
+              </>
+            )}
+          </button>
         </div>
         {description && (
           <p

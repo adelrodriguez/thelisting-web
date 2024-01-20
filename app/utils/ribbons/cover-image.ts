@@ -9,7 +9,7 @@ export const CoverImageProperties = z.object({
     .min(0, "Height must be greater than 0")
     .int("Height must be an integer")
     .optional(),
-  image: z.string().uuid("You must provide an image for the cover"),
+  image: z.string().url("You must provide an image for the cover"),
 })
 
 export type CoverImageProperties = z.infer<typeof CoverImageProperties>

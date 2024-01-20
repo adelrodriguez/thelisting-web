@@ -16,9 +16,11 @@ declare module "routes-gen" {
     "/api/exchange-rates/:code": { "code": string };
     "/api/images": Record<string, never>;
     "/api/images/:image": { "image": string };
-    "/api/ribbons/:ribbonId": { "ribbonId": string };
     "/api/scraper/image": Record<string, never>;
     "/api/scraper/product": Record<string, never>;
+    "/api/storage": Record<string, never>;
+    "/api/storage/:assetId": { "assetId": string };
+    "/api/users/:userId/images": { "userId": string };
     "/api/webhooks/shopify/checkout-updated": Record<string, never>;
     "/api/webhooks/shopify/order-created": Record<string, never>;
     "/api/webhooks/shopify/order-paid": Record<string, never>;
@@ -75,9 +77,11 @@ declare module "routes-gen" {
       | ["/api/exchange-rates/:code", RouteParams["/api/exchange-rates/:code"]]
       | ["/api/images"]
       | ["/api/images/:image", RouteParams["/api/images/:image"]]
-      | ["/api/ribbons/:ribbonId", RouteParams["/api/ribbons/:ribbonId"]]
       | ["/api/scraper/image"]
       | ["/api/scraper/product"]
+      | ["/api/storage"]
+      | ["/api/storage/:assetId", RouteParams["/api/storage/:assetId"]]
+      | ["/api/users/:userId/images", RouteParams["/api/users/:userId/images"]]
       | ["/api/webhooks/shopify/checkout-updated"]
       | ["/api/webhooks/shopify/order-created"]
       | ["/api/webhooks/shopify/order-paid"]

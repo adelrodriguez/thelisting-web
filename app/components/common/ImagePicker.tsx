@@ -1,14 +1,21 @@
 import { Dialog, Transition } from "@headlessui/react"
 import { PhotoIcon } from "@heroicons/react/24/outline"
-import type { Image as UserImage } from "@prisma/client"
 import { useFetcher } from "@remix-run/react"
 import { useQuery } from "@tanstack/react-query"
 import type { FormEvent } from "react"
 import { Fragment, useState, useEffect } from "react"
+import { route } from "routes-gen"
 
 import { Button, Dropzone, Input } from "~/components/common"
 import { Spinner } from "~/components/loading"
-import { generateCloudflareImageUrl } from "~/utils/cloudflare"
+import { IMAGE_MIME_TYPES } from "~/config/consts"
+import { useUser } from "~/utils/hooks"
+
+type UserImage = {
+  id: string
+  url: string
+  name: string
+}
 
 export default function ImagePicker({
   onClose,
@@ -19,11 +26,15 @@ export default function ImagePicker({
   onClose: () => void
   onSelect: (image: UserImage) => void
 }) {
+  const user = useUser()
   const { data, isError, isPending, refetch } = useQuery({
     queryFn: async () => {
-      const res = await fetch("/api/images")
+      const res = await fetch(
+        route("/api/users/:userId/images", { userId: user.id }),
+      )
+
       const data = await res.json()
-      // TODO(adelrodriguez): Fix this type
+
       return data as UserImage[]
     },
     queryKey: ["images"],
@@ -122,12 +133,7 @@ function ImageGallery({
             <li>
               <Dropzone
                 Icon={PhotoIcon}
-                accept={{
-                  "image/gif": [".gif"],
-                  "image/jpg": [".jpg", ".jpeg"],
-                  "image/png": [".png"],
-                  "image/webp": [".webp"],
-                }}
+                accept={IMAGE_MIME_TYPES}
                 fileUploadLimitDescription="JPG, PNG, GIF and WEBP files up to 10MB"
                 name="image-upload"
                 onDrop={(files) => {
@@ -139,13 +145,13 @@ function ImageGallery({
               />
             </li>
             {images.map((image) => (
-              <li className="relative" key={image.id}>
+              <li className="relative" key={image.url}>
                 <div className="group aspect-h-7 aspect-w-10 block w-full overflow-hidden rounded-lg bg-gray-100 focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 focus-within:ring-offset-gray-100">
                   <img
                     alt=""
                     className="pointer-events-none object-cover group-hover:opacity-75"
                     loading="lazy"
-                    src={generateCloudflareImageUrl(image.id, "thumbnail")}
+                    src={image.url}
                   />
                   <button
                     className="absolute inset-0 focus:outline-none"
@@ -153,12 +159,12 @@ function ImageGallery({
                     type="button"
                   >
                     <span className="sr-only">
-                      View details for {image.filename}
+                      View details for {image.name}
                     </span>
                   </button>
                 </div>
                 <p className="pointer-events-none mt-2 block truncate text-sm font-medium text-gray-900">
-                  {image.filename}
+                  {image.name}
                 </p>
               </li>
             ))}
@@ -172,6 +178,7 @@ function ImageGallery({
 
               onSelect(selected)
             }}
+            type="button"
           >
             Select
           </Button>
@@ -201,11 +208,16 @@ function ImageSubmit({
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.stopPropagation()
     e.preventDefault()
+
     const data = new FormData(e.currentTarget)
+
     data.append("file", file)
+    data.append("size", `${file.size}`)
+    data.append("mimeType", file.type)
+    data.append("filename", file.name)
 
     fetcher.submit(data, {
-      action: "/api/images",
+      action: route("/api/storage"),
       encType: "multipart/form-data",
       method: "post",
     })
@@ -234,23 +246,23 @@ function ImageSubmit({
           <Input
             defaultValue={file.name}
             minLength={3}
-            name="filename"
+            name="name"
             placeholder={file.name}
           />
 
-          <div className="flex justify-end gap-x-2">
+          <div className="flex flex-row-reverse justify-start gap-x-2">
+            <Button disabled={fetcher.state === "submitting"} type="submit">
+              {fetcher.state === "submitting" && (
+                <Spinner className="mr-3 h-5 w-5" />
+              )}
+              {fetcher.state === "submitting" ? "Uploading..." : "Upload"}
+            </Button>
             <Button
               disabled={fetcher.state === "submitting"}
               onClick={onCancel}
               variant="secondary"
             >
               Cancel
-            </Button>
-            <Button disabled={fetcher.state === "submitting"} type="submit">
-              {fetcher.state === "submitting" && (
-                <Spinner className="mr-3 h-5 w-5" />
-              )}
-              {fetcher.state === "submitting" ? "Uploading..." : "Upload"}
             </Button>
           </div>
         </fetcher.Form>

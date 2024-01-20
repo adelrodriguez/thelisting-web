@@ -159,7 +159,7 @@ export function CartProvider({
   )
 }
 
-export function useCart(): Cart {
+export default function useCart(): Cart {
   const context = useContext(Context)
 
   if (context === undefined) {

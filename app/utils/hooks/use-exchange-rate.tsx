@@ -62,7 +62,7 @@ export function ExchangeRateProvider({ children }: { children: ReactNode }) {
   )
 }
 
-export function useExchangeRate() {
+export default function useExchangeRate() {
   const context = useContext(Context)
 
   if (context === undefined) {

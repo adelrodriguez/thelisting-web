@@ -3,8 +3,8 @@ require("dotenv").config()
 const z = require("zod")
 
 /**
- * We specify the server-side environment variables schema here.
- * This way we can ensure that the app is not built with invalid env vars.
+ * We specify the server-side environment variables schema here. This way we can
+ * ensure that the app is not built with invalid environment variables.
  */
 const schema = z.object({
   ADMIN_PHONE_NUMBER: z.string(),
@@ -28,6 +28,7 @@ const schema = z.object({
 
   CLOUDFLARE_ACCOUNT_ID: z.string(),
   CLOUDFLARE_IMAGES_API_TOKEN: z.string(),
+  CLOUDFLARE_R2_PUBLIC_URL: z.string().url(),
 
   COOKIE_SIGNING_SECRET: z.string(),
 
@@ -74,6 +75,10 @@ const schema = z.object({
   SHOPIFY_STORE_DOMAIN: z.string(),
 
   SLACK_WEB_TOKEN: z.string(),
+
+  STORAGE_ACCESS_KEY: z.string(),
+  STORAGE_BUCKET: z.string(),
+  STORAGE_SECRET: z.string(),
 
   TWILIO_ACCOUNT_SID: z.string(),
   TWILIO_AUTH_TOKEN: z.string(),

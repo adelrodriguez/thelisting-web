@@ -19,7 +19,8 @@ import { route } from "routes-gen"
 import { Logo } from "~/components/branding"
 import { Notification } from "~/components/common"
 import auth from "~/helpers/auth.server"
-import { getFullName } from "~/utils/user"
+import { UserProvider } from "~/utils/hooks"
+import { userTransformer } from "~/utils/transformers"
 
 import Breadcrumbs from "./Breadcrumbs"
 
@@ -54,7 +55,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
     failureRedirect: route("/login"),
   })
 
-  return json({ user })
+  return json({
+    user: userTransformer(user),
+  })
 }
 
 export const meta: MetaFunction = () => [
@@ -64,12 +67,11 @@ export const meta: MetaFunction = () => [
 
 export default function DashboardLayout() {
   const { user } = useLoaderData<typeof loader>()
-  const name = getFullName(user)
 
   useEffect(() => {
     // Identify the logged in user
-    posthog.identify(user.id, { email: user.email, name })
-  }, [user.id, user.email, name])
+    posthog.identify(user.id, { email: user.email, name: user.fullName })
+  }, [user.id, user.email, user.fullName])
 
   return (
     <div className="flex h-screen flex-col">
@@ -260,24 +262,26 @@ export default function DashboardLayout() {
         </div>
       </header>
       <main className="flex-grow overflow-auto bg-gray-50">
-        <SnackbarProvider
-          Components={{
-            error: Notification,
-            info: Notification,
-            success: Notification,
-            warning: Notification,
-          }}
-          anchorOrigin={{
-            horizontal: "right",
-            vertical: "top",
-          }}
-          autoHideDuration={5 * 1000}
-          maxSnack={7}
-        >
-          <div className="mx-auto h-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-            <Outlet />
-          </div>
-        </SnackbarProvider>
+        <UserProvider user={user}>
+          <SnackbarProvider
+            Components={{
+              error: Notification,
+              info: Notification,
+              success: Notification,
+              warning: Notification,
+            }}
+            anchorOrigin={{
+              horizontal: "right",
+              vertical: "top",
+            }}
+            autoHideDuration={5 * 1000}
+            maxSnack={7}
+          >
+            <div className="mx-auto h-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+              <Outlet />
+            </div>
+          </SnackbarProvider>
+        </UserProvider>
       </main>
     </div>
   )
