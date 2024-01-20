@@ -37,6 +37,7 @@ const client = new QueryClient()
 export const links: LinksFunction = () => [
   { href: stylesheet, rel: "stylesheet" },
   {
+    // Fonts from Adobe Typekit
     href: "https://use.typekit.net/vno7ewy.css",
     rel: "stylesheet",
   },
