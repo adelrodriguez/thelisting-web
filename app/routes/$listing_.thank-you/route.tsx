@@ -1,7 +1,6 @@
 import type { LoaderFunctionArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { Link, useLoaderData } from "@remix-run/react"
-import { ReasonPhrases, StatusCodes } from "http-status-codes"
 import { useTranslation } from "react-i18next"
 import { z } from "zod"
 import { zx } from "zodix"
@@ -9,6 +8,7 @@ import { zx } from "zodix"
 import { OrderItem } from "~/components/registry"
 import posthog, { getDistinctId } from "~/services/posthog.server"
 import Sentry from "~/services/sentry"
+import { notFound } from "~/utils/http"
 import { formatPrice } from "~/utils/money"
 import { getShopifyId } from "~/utils/shopify"
 import { getOrder } from "~/utils/shopify.server"
@@ -20,13 +20,22 @@ export const handle = {
 export async function loader({ context, params, request }: LoaderFunctionArgs) {
   const db = context.db
   const logger = context.logger
-  const requestUrl = new URL(request.url)
-  const orderId = requestUrl.searchParams.get("order_id")
+
+  const result = zx.parseQuerySafe(request, { order_id: z.string() })
+
+  if (!result.success) {
+    Sentry.captureMessage("No order id found in request")
+
+    throw notFound({
+      message: "Sorry, we couldn’t find the page you’re looking for.",
+      title: "Not Found",
+    })
+  }
+
+  const orderId = result.data.order_id
 
   try {
     const { listing: path } = zx.parseParams(params, { listing: z.string() })
-
-    if (!orderId) throw new Error("No order id found in request")
 
     const order = await getOrder(getShopifyId(orderId, "Order"))
 
@@ -59,20 +68,13 @@ export async function loader({ context, params, request }: LoaderFunctionArgs) {
     return json({ listing, order })
   } catch (error) {
     Sentry.captureException(error)
-    logger.error((error as Error).message, {
-      orderId,
-    })
 
-    throw json(
-      {
-        message: "Sorry, we couldn’t find the page you’re looking for.",
-        title: "Not Found",
-      },
-      {
-        status: StatusCodes.NOT_FOUND,
-        statusText: ReasonPhrases.NOT_FOUND,
-      },
-    )
+    logger.error((error as Error).message, { orderId })
+
+    throw notFound({
+      message: "Sorry, we couldn’t find the page you’re looking for.",
+      title: "Not Found",
+    })
   }
 }
 
