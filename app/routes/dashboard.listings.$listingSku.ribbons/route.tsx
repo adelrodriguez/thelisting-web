@@ -20,7 +20,7 @@ import { zx } from "zodix"
 
 import { Button } from "~/components/common"
 import { Autocomplete, Form, Input, SubmitButton } from "~/components/form"
-import { getGoogleWebFontsList } from "~/utils/font"
+import { getFontList } from "~/utils/font"
 import { badRequest } from "~/utils/http"
 import { ListingThemeSchema } from "~/utils/listing"
 import type { RouteHandle } from "~/utils/remix"
@@ -60,7 +60,7 @@ export async function loader({ context, params }: LoaderFunctionArgs) {
       where: { sku: listingSku },
     }),
 
-    getGoogleWebFontsList(
+    getFontList(
       cache,
       env.GOOGLE_WEB_FONTS_URL,
       env.GOOGLE_WEB_FONTS_DEVELOPER_API_KEY,
@@ -70,7 +70,7 @@ export async function loader({ context, params }: LoaderFunctionArgs) {
   const theme = ListingThemeSchema.parse(listing.theme)
 
   return json({
-    fonts,
+    fontFamilies: fonts.map((font) => font.family),
     listing,
     theme,
   })
@@ -153,7 +153,7 @@ export function ErrorBoundary() {
 
 export default function DashboardListingRibbonsPage() {
   const {
-    fonts,
+    fontFamilies,
     listing: { path, ribbons },
     theme,
   } = useLoaderData<typeof loader>()
@@ -246,7 +246,7 @@ export default function DashboardListingRibbonsPage() {
                     description="Used on headings"
                     label="Heading Font"
                     name="fonts.heading"
-                    options={fonts.map((font) => ({
+                    options={fontFamilies.map((font) => ({
                       label: font,
                       value: font,
                     }))}
@@ -255,7 +255,7 @@ export default function DashboardListingRibbonsPage() {
                     description="Used on body text"
                     label="Body Font"
                     name="fonts.body"
-                    options={fonts.map((font) => ({
+                    options={fontFamilies.map((font) => ({
                       label: font,
                       value: font,
                     }))}

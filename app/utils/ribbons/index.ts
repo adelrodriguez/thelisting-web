@@ -1,3 +1,4 @@
+import { Ribbon, RibbonType } from "@prisma/client"
 import { z } from "zod"
 
 import { BannerRibbon } from "./banner"
@@ -17,7 +18,7 @@ export * from "./image-carousel"
 export * from "./location"
 export * from "./text"
 
-export const Ribbon = z.discriminatedUnion("type", [
+export const RibbonSchema = z.discriminatedUnion("type", [
   BannerRibbon,
   CountdownRibbon,
   CoverImageRibbon,
@@ -27,4 +28,22 @@ export const Ribbon = z.discriminatedUnion("type", [
   TextRibbon,
 ])
 
-export type Ribbon = z.infer<typeof Ribbon>
+export function getCoverImages(ribbons: Ribbon[]): {
+  position: number
+  url: string
+}[] {
+  return ribbons.reduce((acc: { url: string; position: number }[], ribbon) => {
+    if (ribbon.type !== RibbonType.CoverImage) return acc
+
+    const result = CoverImageRibbon.safeParse(ribbon)
+
+    if (!result.success) return acc
+
+    acc.push({
+      position: ribbon.position,
+      url: result.data.properties.image,
+    })
+
+    return acc
+  }, [])
+}

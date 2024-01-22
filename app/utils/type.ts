@@ -14,3 +14,8 @@ export type Join<T extends string[], S extends string> = T extends []
       ? `${F}${R extends [] ? "" : S}${Join<Extract<R, string[]>, S>}`
       : ""
     : ""
+
+/**
+ * Make null and undefined values to the type
+ */
+export type Nullish<T> = T | null | undefined

@@ -9,10 +9,11 @@ import { z } from "zod"
 import { zx } from "zodix"
 
 import { isProduction } from "~/config/vars"
-import { generateGoogleFontsUrl } from "~/utils/font"
-import { notFound } from "~/utils/http"
+import auth from "~/helpers/auth.server"
+import { generateGoogleFontsUrl, getFont } from "~/utils/font"
+import { notFound, unauthorized } from "~/utils/http"
 import { ListingThemeSchema } from "~/utils/listing"
-import { CoverImageProperties, Ribbon } from "~/utils/ribbons"
+import { RibbonSchema, getCoverImages } from "~/utils/ribbons"
 
 import Banner from "./Banner"
 import Countdown from "./Countdown"
@@ -24,8 +25,10 @@ import SectionWrapper from "./SectionWrapper"
 import Text from "./Text"
 import { ThemeProvider } from "./ThemeProvider"
 
-export async function loader({ context, params }: LoaderFunctionArgs) {
+export async function loader({ context, params, request }: LoaderFunctionArgs) {
   const db = context.db
+  const cache = context.cache
+
   const { listing: path } = zx.parseParams(params, { listing: z.string() })
 
   const listing = await db.listing.findFirst({
@@ -37,7 +40,12 @@ export async function loader({ context, params }: LoaderFunctionArgs) {
         orderBy: { position: "asc" },
       },
     },
-    where: { path, status: "Published" },
+    where: {
+      path,
+      status: {
+        in: ["Draft", "Published"],
+      },
+    },
   })
 
   if (!listing) {
@@ -47,7 +55,13 @@ export async function loader({ context, params }: LoaderFunctionArgs) {
     })
   }
 
-  const theme = ListingThemeSchema.parse(listing.theme)
+  if (listing.status === "Draft") {
+    const user = await auth.isAuthenticated(request)
+
+    if (!user) {
+      throw unauthorized({ message: "You must be logged in to view this page" })
+    }
+  }
 
   // TODO(adelrodriguez): Remove this when ribbons are ready
   // Only see pages for internal pages in production
@@ -56,37 +70,22 @@ export async function loader({ context, params }: LoaderFunctionArgs) {
   }
 
   // Get all the cover images plus their index
-  const coverImages = listing.ribbons.reduce(
-    (acc: { id: string; index: number }[], ribbon, index) => {
-      if (ribbon.type === RibbonType.CoverImage) {
-        const result = CoverImageProperties.safeParse(ribbon.properties)
+  const coverImages = getCoverImages(listing.ribbons)
 
-        if (!result.success) return acc
+  const theme = ListingThemeSchema.parse(listing.theme)
+  const [headingFont, bodyFont] = await Promise.all([
+    theme.fonts?.heading ? getFont(cache, theme.fonts?.heading) : null,
+    theme.fonts?.body ? getFont(cache, theme.fonts?.body) : null,
+  ])
 
-        acc.push({ id: result.data.image, index })
-      }
+  const fontsUrl = generateGoogleFontsUrl([headingFont, bodyFont])
 
-      return acc
-    },
-    [],
-  )
-
-  return json({ coverImages, listing, theme })
+  return json({ coverImages, fontsUrl, listing, theme })
 }
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   try {
     if (!data) return []
-
-    const result = ListingThemeSchema.safeParse(data.listing.theme)
-    let fontURL = ""
-
-    if (result.success) {
-      fontURL = generateGoogleFontsUrl([
-        result.data.fonts?.heading,
-        result.data.fonts?.body,
-      ])
-    }
 
     return [
       { title: `${data.listing.title} | The Listing` },
@@ -101,7 +100,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
       },
       { content: `${data.listing.title} | The Listing`, name: "og:title" },
       { content: "width=device-width, initial-scale=1", name: "viewport" },
-      { href: fontURL, rel: "stylesheet", tagName: "link" },
+      { href: data.fontsUrl, rel: "stylesheet", tagName: "link" },
     ]
   } catch (error) {
     return []
@@ -112,8 +111,8 @@ export default function ListingPage() {
   const { coverImages, listing, theme } = useLoaderData<typeof loader>()
   const [cover, setCover] = useState(coverImages[0])
 
-  function handleSectionChange(index: number) {
-    const newCover = coverImages.find((cover) => cover.index >= index)
+  function handleSectionChange(position: number) {
+    const newCover = coverImages.find((cover) => cover.position >= position)
 
     if (!newCover) return
 
@@ -127,13 +126,13 @@ export default function ListingPage() {
           <AnimatePresence>
             {cover && (
               <motion.img
-                alt={`Image ${cover.id}`}
+                alt={`Image ${cover.url}`}
                 animate={{ opacity: 1 }}
                 className="sticky inset-0 h-screen w-full object-cover object-center"
                 exit={{ opacity: 0 }}
                 initial={{ opacity: 0 }}
-                key={cover.id}
-                src={cover.id}
+                key={cover.url}
+                src={cover.url}
                 transition={{ duration: 0.5 }}
               />
             )}
@@ -142,7 +141,7 @@ export default function ListingPage() {
           <div
             aria-hidden="true"
             className={clsx("absolute inset-0 bg-gray-300", {
-              "mix-blend-multiply": !!cover?.id,
+              "mix-blend-multiply": !!cover?.url,
             })}
           />
 
@@ -161,17 +160,20 @@ export default function ListingPage() {
             color: theme.colors?.text,
           }}
         >
-          {listing.ribbons.map((ribbon, index) => {
-            const result = Ribbon.safeParse(ribbon)
+          {listing.ribbons.map((ribbon) => {
+            const result = RibbonSchema.safeParse(ribbon)
 
-            if (!result.success) return null
+            if (!result.success) {
+              // TODO(adelrodriguez): Report to Sentry
+              return null
+            }
 
             return (
               <SectionWrapper
                 key={ribbon.id}
                 mobileOnly={ribbon.type === RibbonType.CoverImage}
                 onView={() => {
-                  handleSectionChange(index)
+                  handleSectionChange(ribbon.position)
                 }}
               >
                 <Ribbons ribbon={result.data} />
@@ -184,7 +186,7 @@ export default function ListingPage() {
   )
 }
 
-export function Ribbons({ ribbon }: { ribbon: Ribbon }) {
+export function Ribbons({ ribbon }: { ribbon: z.infer<typeof RibbonSchema> }) {
   switch (ribbon.type) {
     case RibbonType.Banner: {
       return <Banner {...ribbon.properties} />
