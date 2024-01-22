@@ -1,5 +1,6 @@
 import { Link } from "@remix-run/react"
 import clsx from "clsx"
+import { ElementRef, useLayoutEffect, useRef } from "react"
 
 import type { TextProperties } from "~/utils/ribbons"
 
@@ -15,11 +16,23 @@ export default function Text({
   urlLabel,
 }: TextProperties) {
   const { theme } = useTheme()
+  const ref = useRef<ElementRef<"div">>(null)
+
+  useLayoutEffect(() => {
+    if (!ref.current) return
+
+    if (ref.current.offsetHeight > window.innerHeight) {
+      ref.current.style.height = "auto"
+      ref.current.style.padding = "2rem 0"
+    } else {
+      ref.current.style.height = "100vh"
+    }
+  }, [ref])
 
   return (
     // TODO(adelrodriguez): Detect if the height of this component is larger
     // than the viewport and adjust the height and the min-height if so.
-    <div className="flex h-auto min-h-screen items-center">
+    <div className="flex items-center" ref={ref}>
       <div className="w-full px-4">
         {decorationImage && (
           <div className="h-32 lg:h-40">
