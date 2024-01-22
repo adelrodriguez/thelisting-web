@@ -112,7 +112,7 @@ export default function ListingPage() {
   const [cover, setCover] = useState(coverImages[0])
 
   function handleSectionChange(position: number) {
-    const newCover = coverImages.find((cover) => cover.position >= position)
+    const newCover = coverImages.find((cover) => cover.position === position)
 
     if (!newCover) return
 
@@ -126,7 +126,7 @@ export default function ListingPage() {
           <AnimatePresence>
             {cover && (
               <motion.img
-                alt={`Image ${cover.url}`}
+                alt={listing.title}
                 animate={{ opacity: 1 }}
                 className="sticky inset-0 h-screen w-full object-cover object-center"
                 exit={{ opacity: 0 }}
@@ -149,7 +149,6 @@ export default function ListingPage() {
             <h1 className="mb-4 font-headline text-6xl font-bold tracking-tight">
               {listing.title}
             </h1>
-            <h3 className="font-body text-2xl">{listing.subtitle}</h3>
           </div>
         </div>
         <div
@@ -169,15 +168,11 @@ export default function ListingPage() {
             }
 
             return (
-              <SectionWrapper
+              <Ribbons
                 key={ribbon.id}
-                mobileOnly={ribbon.type === RibbonType.CoverImage}
-                onView={() => {
-                  handleSectionChange(ribbon.position)
-                }}
-              >
-                <Ribbons ribbon={result.data} />
-              </SectionWrapper>
+                onView={handleSectionChange}
+                ribbon={result.data}
+              />
             )
           })}
         </div>
@@ -186,28 +181,69 @@ export default function ListingPage() {
   )
 }
 
-export function Ribbons({ ribbon }: { ribbon: z.infer<typeof RibbonSchema> }) {
+export function Ribbons({
+  onView,
+  ribbon,
+}: {
+  ribbon: z.infer<typeof RibbonSchema>
+  onView?: (position: number) => void
+}) {
   switch (ribbon.type) {
     case RibbonType.Banner: {
-      return <Banner {...ribbon.properties} />
-    }
-    case RibbonType.Countdown: {
-      return <Countdown {...ribbon.properties} />
+      return (
+        <SectionWrapper>
+          <Banner {...ribbon.properties} />
+        </SectionWrapper>
+      )
     }
     case RibbonType.CoverImage: {
-      return <CoverImage {...ribbon.properties} />
+      return (
+        <SectionWrapper
+          className="h-screen md:h-0"
+          onView={() => {
+            if (ribbon.type !== RibbonType.CoverImage) return
+
+            onView?.(ribbon.position)
+          }}
+        >
+          <CoverImage {...ribbon.properties} />
+        </SectionWrapper>
+      )
+    }
+    case RibbonType.Countdown: {
+      return (
+        <SectionWrapper>
+          <Countdown {...ribbon.properties} />
+        </SectionWrapper>
+      )
     }
     case RibbonType.ImageCarousel: {
-      return <ImageCarousel {...ribbon.properties} />
+      return (
+        <SectionWrapper>
+          <ImageCarousel {...ribbon.properties} />
+        </SectionWrapper>
+      )
     }
     case RibbonType.ImageGallery: {
-      return <ImageGallery {...ribbon.properties} />
+      return (
+        <SectionWrapper>
+          <ImageGallery {...ribbon.properties} />
+        </SectionWrapper>
+      )
     }
     case RibbonType.Location: {
-      return <Location {...ribbon.properties} />
+      return (
+        <SectionWrapper>
+          <Location {...ribbon.properties} />
+        </SectionWrapper>
+      )
     }
     case RibbonType.Text: {
-      return <Text {...ribbon.properties} />
+      return (
+        <SectionWrapper className="h-auto min-h-screen">
+          <Text {...ribbon.properties} />
+        </SectionWrapper>
+      )
     }
     default:
       return null

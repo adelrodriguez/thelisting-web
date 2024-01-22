@@ -17,7 +17,9 @@ export default function Text({
   const { theme } = useTheme()
 
   return (
-    <div className="flex h-full items-center">
+    // TODO(adelrodriguez): Detect if the height of this component is larger
+    // than the viewport and adjust the height and the min-height if so.
+    <div className="flex h-auto min-h-screen items-center">
       <div className="w-full px-4">
         {decorationImage && (
           <div className="h-32 lg:h-40">
