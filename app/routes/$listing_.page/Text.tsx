@@ -35,7 +35,12 @@ export default function Text({
           >
             {title}
           </h3>
-          <p className="mt-4 whitespace-pre-wrap text-lg leading-7">{body}</p>
+          <p
+            className="mt-4 whitespace-pre-wrap text-lg leading-7"
+            style={{ fontFamily: theme.fonts?.body }}
+          >
+            {body}
+          </p>
           {hasUrl && url && (
             <div className="mt-8">
               <Link
@@ -43,6 +48,7 @@ export default function Text({
                   "mt-4 rounded-full border-2 border-white bg-transparent px-6 py-2.5 font-semibold tracking-wide text-white transition-all",
                   "hover:bg-white hover:text-black hover:mix-blend-screen",
                 )}
+                style={{ fontFamily: theme.fonts?.body }}
                 to={url}
               >
                 {urlLabel}

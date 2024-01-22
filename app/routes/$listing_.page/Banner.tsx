@@ -32,23 +32,36 @@ export default function Banner({
           )}
           <h1
             className="text-center text-3xl font-bold tracking-wide lg:text-5xl"
-            style={{ fontFamily: theme.fonts?.heading }}
+            style={{
+              color: theme.colors?.primary,
+              fontFamily: theme.fonts?.heading,
+            }}
           >
             {title}
           </h1>
           {subtitle && (
-            <p className="text-center text-xl font-light tracking-tight lg:text-2xl">
+            <p
+              className="text-center text-xl font-light tracking-tight lg:text-2xl"
+              style={{
+                color: theme.colors?.primary,
+                fontFamily: theme.fonts?.body,
+              }}
+            >
               {subtitle}
             </p>
           )}
           <div>
             <Link
               className={clsx(
-                "right-1/2 z-10 mt-10 rounded-lg border-2 bg-transparent px-6 py-2.5 font-semibold tracking-wide shadow-sm outline-white transition-all ",
+                "right-1/2 z-10 mt-10 rounded-lg border-2 bg-transparent px-6 py-2.5 tracking-wide shadow-sm outline-white transition-all",
                 "hover:scale-125 hover:shadow-2xl",
               )}
               relative="path"
-              style={{ borderColor: theme.colors?.secondary }}
+              style={{
+                borderColor: theme.colors?.primary,
+                color: theme.colors?.primary,
+                fontFamily: theme.fonts?.body,
+              }}
               to="../"
             >
               {t("registry")}
