@@ -240,7 +240,7 @@ export function Ribbons({
     }
     case RibbonType.Text: {
       return (
-        <SectionWrapper className="!h-auto !min-h-screen">
+        <SectionWrapper className="!h-auto min-h-screen">
           <Text {...ribbon.properties} />
         </SectionWrapper>
       )

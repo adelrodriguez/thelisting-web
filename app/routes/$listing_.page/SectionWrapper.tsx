@@ -27,7 +27,7 @@ export default function SectionWrapper({
   return (
     <section
       className={clsx(
-        "relative flex h-screen min-h-0 min-w-0 flex-col",
+        "relative flex h-screen min-h-0 min-w-0 flex-col items-center justify-center",
         className,
       )}
       ref={ref}

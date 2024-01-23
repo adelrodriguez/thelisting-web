@@ -6,7 +6,7 @@ export default function CoverImage({ height, image }: CoverImageProperties) {
   const { theme } = useTheme()
 
   return (
-    <div className="relative block md:h-0">
+    <div className="relative block w-full md:h-0">
       <div className="md:hidden" style={{ height: height ? height : "100vh" }}>
         {image && (
           <img
