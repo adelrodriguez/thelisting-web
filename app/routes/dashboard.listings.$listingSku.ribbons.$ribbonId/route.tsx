@@ -138,7 +138,11 @@ export async function action({ context, params, request }: ActionFunctionArgs) {
       }
 
       const updatedRibbon = await db.ribbon.update({
-        data: { name: result.data.name, properties: result.data.properties },
+        data: {
+          name: result.data.name,
+          properties: result.data.properties,
+          styles: result.data.styles,
+        },
         where: { id: ribbonId },
       })
 

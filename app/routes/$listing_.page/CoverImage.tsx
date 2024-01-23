@@ -2,12 +2,12 @@ import type { CoverImageProperties } from "~/utils/ribbons"
 
 import useTheme from "./ThemeProvider"
 
-export default function CoverImage({ height, image }: CoverImageProperties) {
+export default function CoverImage({ image }: CoverImageProperties) {
   const { theme } = useTheme()
 
   return (
-    <div className="relative block w-full md:h-0">
-      <div className="md:hidden" style={{ height: height ? height : "100vh" }}>
+    <div className="relative block h-full w-full md:h-0">
+      <div className="h-full md:hidden">
         {image && (
           <img
             alt=""

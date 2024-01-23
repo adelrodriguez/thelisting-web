@@ -20,7 +20,7 @@ export default function Banner({
   return (
     <>
       <div className="flex h-full items-center justify-center">
-        <div className="relative z-10 flex flex-col items-center gap-y-7 md:px-2">
+        <div className="relative z-10 flex flex-col items-center gap-y-7 px-2 md:px-4">
           {decorationImage && (
             <div className="absolute inset-0 top-0 h-32 -translate-y-full lg:h-40">
               <img
@@ -50,23 +50,21 @@ export default function Banner({
               {subtitle}
             </p>
           )}
-          <div>
-            <Link
-              className={clsx(
-                "right-1/2 z-10 mt-10 rounded-lg border-2 bg-transparent px-6 py-2.5 tracking-wide shadow-sm outline-white transition-all",
-                "hover:scale-125 hover:shadow-2xl",
-              )}
-              relative="path"
-              style={{
-                borderColor: theme.colors?.primary,
-                color: theme.colors?.primary,
-                fontFamily: theme.fonts?.body,
-              }}
-              to="../"
-            >
-              {t("registry")}
-            </Link>
-          </div>
+          <Link
+            className={clsx(
+              "rounded-lg border-2 bg-transparent px-6 py-2.5 tracking-wide shadow-sm outline-white transition-all",
+              "hover:scale-110 hover:shadow-2xl",
+            )}
+            relative="path"
+            style={{
+              borderColor: theme.colors?.primary,
+              color: theme.colors?.primary,
+              fontFamily: theme.fonts?.body,
+            }}
+            to="../"
+          >
+            {t("registry")}
+          </Link>
         </div>
       </div>
       {backgroundImage && (

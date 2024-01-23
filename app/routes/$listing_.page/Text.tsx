@@ -1,6 +1,5 @@
 import { Link } from "@remix-run/react"
 import clsx from "clsx"
-import { ElementRef, useLayoutEffect, useRef } from "react"
 
 import type { TextProperties } from "~/utils/ribbons"
 
@@ -16,62 +15,49 @@ export default function Text({
   urlLabel,
 }: TextProperties) {
   const { theme } = useTheme()
-  const ref = useRef<ElementRef<"div">>(null)
-
-  useLayoutEffect(() => {
-    if (!ref.current) return
-
-    if (ref.current.offsetHeight > window.innerHeight) {
-      ref.current.style.height = "auto"
-      ref.current.style.padding = "2rem 0"
-    } else {
-      ref.current.style.height = "100vh"
-    }
-  }, [ref])
 
   return (
-    // TODO(adelrodriguez): Detect if the height of this component is larger
-    // than the viewport and adjust the height and the min-height if so.
-    <div className="flex items-center" ref={ref}>
-      <div className="w-full px-4">
-        {decorationImage && (
-          <div className="h-32 lg:h-40">
-            <img
-              alt=""
-              className="h-full w-full object-contain"
-              src={decorationImage}
-            />
-          </div>
-        )}
-        <div className={clsx("pt-10", textAlignment)}>
-          <h3
-            className="text-2xl font-semibold tracking-wide md:text-3xl"
-            style={{ fontFamily: theme.fonts?.heading }}
-          >
-            {title}
-          </h3>
-          <p
-            className="mt-4 whitespace-pre-wrap text-lg leading-7"
-            style={{ fontFamily: theme.fonts?.body }}
-          >
-            {body}
-          </p>
-          {hasUrl && url && (
-            <div className="mt-8">
-              <Link
-                className={clsx(
-                  "mt-4 rounded-full border-2 border-white bg-transparent px-6 py-2.5 font-semibold tracking-wide text-white transition-all",
-                  "hover:bg-white hover:text-black hover:mix-blend-screen",
-                )}
-                style={{ fontFamily: theme.fonts?.body }}
-                to={url}
-              >
-                {urlLabel}
-              </Link>
-            </div>
-          )}
+    <div className="flex w-full flex-col items-center gap-y-4 px-6 md:px-8">
+      {decorationImage && (
+        <div className="h-32 lg:h-40">
+          <img
+            alt=""
+            className="h-full w-full object-contain"
+            src={decorationImage}
+          />
         </div>
-      </div>
+      )}
+      {title && (
+        <h3
+          className="pb-4 text-center text-2xl font-semibold tracking-wide md:text-3xl"
+          style={{ fontFamily: theme.fonts?.heading }}
+        >
+          {title}
+        </h3>
+      )}
+      <p
+        className={clsx(
+          "whitespace-pre-wrap font-light leading-7",
+          textAlignment,
+        )}
+        style={{ fontFamily: theme.fonts?.body }}
+      >
+        {body}
+      </p>
+      {hasUrl && url && (
+        <Link
+          className={clsx(
+            "block w-auto rounded-lg border-2 bg-transparent px-6 py-2.5 text-center transition-all",
+            "hover:scale-110 hover:shadow-2xl",
+          )}
+          style={{
+            borderColor: theme.colors?.primary,
+          }}
+          to={url}
+        >
+          {urlLabel}
+        </Link>
+      )}
     </div>
   )
 }

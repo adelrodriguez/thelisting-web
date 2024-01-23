@@ -18,7 +18,7 @@ export default function ImageCarouselRibbonForm({
   formId: string
 }) {
   const result = ImageCarouselRibbon.safeParse(ribbon)
-  const [inputs, { push, remove }] = useFieldArray("images", {
+  const [inputs, { push, remove }] = useFieldArray("properties.images", {
     formId,
   })
 
@@ -80,13 +80,14 @@ export default function ImageCarouselRibbonForm({
         </Button>
       </div>
 
-      <div className="flex flex-col-reverse">
+      <div className="grid grid-cols-2 gap-x-2">
         {inputs.map((_, index) => (
           <div className="flex w-full items-end" key={`inputs${index}`}>
             <ImageInput
               className="mr-2 w-full"
               label={`Image ${index + 1}`}
               name={`properties.images[${index}]`}
+              previewHeight="h-40"
             />
             <Button
               className="my-1"
@@ -98,6 +99,36 @@ export default function ImageCarouselRibbonForm({
             </Button>
           </div>
         ))}
+      </div>
+
+      <div className="mt-4 flex flex-col gap-y-2">
+        <h4 className="text-md font-semibold">Custom Styles</h4>
+        <div className="flex gap-2">
+          <Input
+            className="flex-1"
+            description="The height of the ribbon"
+            label="Height"
+            min={0}
+            name="styles.height"
+            step={1}
+            trailing="px"
+            type="number"
+          />
+          <Input
+            className="flex-1"
+            description="Background color for the ribbon"
+            label="Background Color"
+            name="styles.backgroundColor"
+            type="color"
+          />
+          <Input
+            className="flex-1"
+            description="Text color for the ribbon"
+            label="Text Color"
+            name="styles.color"
+            type="color"
+          />
+        </div>
       </div>
     </Form>
   )

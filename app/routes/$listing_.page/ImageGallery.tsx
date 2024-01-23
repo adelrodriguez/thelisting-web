@@ -9,28 +9,32 @@ export default function ImageGallery({
       acc.push([])
     }
 
-    acc[acc.length - 1]!.push(image)
+    const arr = acc[acc.length - 1]
+
+    if (!arr) {
+      return acc
+    }
+
+    arr.push(image)
 
     return acc
   }, [])
 
   return (
-    <div className="px-4 py-20">
-      <div className="grid grid-cols-2 gap-2">
-        {groupedImages.map((images, index) => (
-          <div className="flex flex-col gap-2" key={`group${index}`}>
-            {images.map((image, index) => (
-              <div key={`image${index}`}>
-                <img
-                  alt=""
-                  className="h-auto max-w-full rounded-md shadow-inner"
-                  src={image}
-                />
-              </div>
-            ))}
-          </div>
-        ))}
-      </div>
+    <div className="grid grid-cols-2 gap-2 px-4 lg:px-6">
+      {groupedImages.map((images, index) => (
+        <div className="flex flex-col gap-2" key={`group${index}`}>
+          {images.map((image, index) => (
+            <div key={`image${index}`}>
+              <img
+                alt=""
+                className="h-auto max-w-full rounded-md shadow-inner"
+                src={image}
+              />
+            </div>
+          ))}
+        </div>
+      ))}
     </div>
   )
 }

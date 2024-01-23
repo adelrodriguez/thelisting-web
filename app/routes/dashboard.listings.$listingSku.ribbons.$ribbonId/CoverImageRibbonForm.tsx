@@ -42,14 +42,36 @@ export default function CoverImageRibbonForm({
       />
 
       <ImageInput label="Cover Image" name="properties.image" />
-      <Input
-        description="The height of the cover image (in mobile view). Provide 0 to cover the whole screen"
-        label="Height"
-        min={0}
-        name="properties.height"
-        step={1}
-        type="number"
-      />
+
+      <div className="mt-4 flex flex-col gap-y-2">
+        <h4 className="text-md font-semibold">Custom Styles</h4>
+        <div className="flex gap-2">
+          <Input
+            className="flex-1"
+            description="The height of the ribbon"
+            label="Height"
+            min={0}
+            name="styles.height"
+            step={1}
+            trailing="px"
+            type="number"
+          />
+          <Input
+            className="flex-1"
+            description="Background color for the ribbon"
+            label="Background Color"
+            name="styles.backgroundColor"
+            type="color"
+          />
+          <Input
+            className="flex-1"
+            description="Text color for the ribbon"
+            label="Text Color"
+            name="styles.color"
+            type="color"
+          />
+        </div>
+      </div>
     </Form>
   )
 }

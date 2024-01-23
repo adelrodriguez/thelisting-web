@@ -4,11 +4,6 @@ import { z } from "zod"
 import { RibbonBase } from "./base"
 
 export const CoverImageProperties = z.object({
-  height: z.coerce
-    .number()
-    .min(0, "Height must be greater than 0")
-    .int("Height must be an integer")
-    .optional(),
   image: z.string().url("You must provide an image for the cover"),
 })
 

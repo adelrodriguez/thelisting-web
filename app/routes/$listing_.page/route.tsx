@@ -4,7 +4,7 @@ import { json, redirect } from "@remix-run/node"
 import { useLoaderData } from "@remix-run/react"
 import clsx from "clsx"
 import { AnimatePresence, motion } from "framer-motion"
-import { useState } from "react"
+import { ReactNode, useState } from "react"
 import { z } from "zod"
 import { zx } from "zodix"
 
@@ -23,7 +23,7 @@ import ImageGallery from "./ImageGallery"
 import Location from "./Location"
 import SectionWrapper from "./SectionWrapper"
 import Text from "./Text"
-import { ThemeProvider } from "./ThemeProvider"
+import useTheme, { ThemeProvider } from "./ThemeProvider"
 
 export async function loader({ context, params, request }: LoaderFunctionArgs) {
   const db = context.db
@@ -111,7 +111,7 @@ export default function ListingPage() {
   const { coverImages, listing, theme } = useLoaderData<typeof loader>()
   const [cover, setCover] = useState(coverImages[0])
 
-  function handleSectionChange(position: number) {
+  function handleCoverChange(position: number) {
     const newCover = coverImages.find((cover) => cover.position === position)
 
     if (!newCover) return
@@ -151,14 +151,7 @@ export default function ListingPage() {
             </h1>
           </div>
         </div>
-        <div
-          className="z-10 w-full overflow-hidden shadow-gray-700 md:col-span-2 md:border-l-8"
-          style={{
-            backgroundColor: theme.colors?.background,
-            borderColor: theme.colors?.secondary,
-            color: theme.colors?.text,
-          }}
-        >
+        <RibbonsContainer>
           {listing.ribbons.map((ribbon) => {
             const result = RibbonSchema.safeParse(ribbon)
 
@@ -167,85 +160,88 @@ export default function ListingPage() {
               return null
             }
 
-            return (
-              <Ribbons
-                key={ribbon.id}
-                onView={handleSectionChange}
-                ribbon={result.data}
-              />
-            )
+            const props = {
+              styles: result.data.styles,
+            }
+
+            switch (result.data.type) {
+              case RibbonType.Banner: {
+                return (
+                  <SectionWrapper {...props} key={ribbon.id}>
+                    <Banner {...result.data.properties} />
+                  </SectionWrapper>
+                )
+              }
+              case RibbonType.CoverImage: {
+                return (
+                  <SectionWrapper
+                    {...props}
+                    className="h-screen md:h-0"
+                    key={ribbon.id}
+                    onView={() => {
+                      if (ribbon.type !== RibbonType.CoverImage) return
+
+                      handleCoverChange(ribbon.position)
+                    }}
+                  >
+                    <CoverImage {...result.data.properties} />
+                  </SectionWrapper>
+                )
+              }
+              case RibbonType.Countdown: {
+                return (
+                  <SectionWrapper {...props} key={ribbon.id}>
+                    <Countdown {...result.data.properties} />
+                  </SectionWrapper>
+                )
+              }
+              case RibbonType.ImageCarousel: {
+                return (
+                  <SectionWrapper {...props} key={ribbon.id}>
+                    <ImageCarousel {...result.data.properties} />
+                  </SectionWrapper>
+                )
+              }
+              case RibbonType.ImageGallery: {
+                return (
+                  <SectionWrapper {...props} key={ribbon.id}>
+                    <ImageGallery {...result.data.properties} />
+                  </SectionWrapper>
+                )
+              }
+              case RibbonType.Location: {
+                return (
+                  <SectionWrapper {...props} key={ribbon.id}>
+                    <Location {...result.data.properties} />
+                  </SectionWrapper>
+                )
+              }
+              case RibbonType.Text: {
+                return (
+                  <SectionWrapper {...props} key={ribbon.id}>
+                    <Text {...result.data.properties} />
+                  </SectionWrapper>
+                )
+              }
+              default:
+                return null
+            }
           })}
-        </div>
+        </RibbonsContainer>
       </main>
     </ThemeProvider>
   )
 }
 
-export function Ribbons({
-  onView,
-  ribbon,
-}: {
-  ribbon: z.infer<typeof RibbonSchema>
-  onView?: (position: number) => void
-}) {
-  switch (ribbon.type) {
-    case RibbonType.Banner: {
-      return (
-        <SectionWrapper>
-          <Banner {...ribbon.properties} />
-        </SectionWrapper>
-      )
-    }
-    case RibbonType.CoverImage: {
-      return (
-        <SectionWrapper
-          className="h-screen md:h-0"
-          onView={() => {
-            if (ribbon.type !== RibbonType.CoverImage) return
+function RibbonsContainer({ children }: { children: ReactNode }) {
+  const { styles } = useTheme()
 
-            onView?.(ribbon.position)
-          }}
-        >
-          <CoverImage {...ribbon.properties} />
-        </SectionWrapper>
-      )
-    }
-    case RibbonType.Countdown: {
-      return (
-        <SectionWrapper>
-          <Countdown {...ribbon.properties} />
-        </SectionWrapper>
-      )
-    }
-    case RibbonType.ImageCarousel: {
-      return (
-        <SectionWrapper>
-          <ImageCarousel {...ribbon.properties} />
-        </SectionWrapper>
-      )
-    }
-    case RibbonType.ImageGallery: {
-      return (
-        <SectionWrapper>
-          <ImageGallery {...ribbon.properties} />
-        </SectionWrapper>
-      )
-    }
-    case RibbonType.Location: {
-      return (
-        <SectionWrapper>
-          <Location {...ribbon.properties} />
-        </SectionWrapper>
-      )
-    }
-    case RibbonType.Text: {
-      return (
-        <SectionWrapper className="!h-auto min-h-screen">
-          <Text {...ribbon.properties} />
-        </SectionWrapper>
-      )
-    }
-    default:
-      return null
-  }
+  return (
+    <div
+      className="z-10 w-full overflow-hidden shadow-gray-700 md:col-span-2 md:border-l-8"
+      style={styles}
+    >
+      {children}
+    </div>
+  )
 }

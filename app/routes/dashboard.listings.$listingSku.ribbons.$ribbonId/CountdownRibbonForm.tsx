@@ -49,6 +49,36 @@ export default function CountdownRibbonForm({
         required
         type="datetime-local"
       />
+
+      <div className="mt-4 flex flex-col gap-y-2">
+        <h4 className="text-md font-semibold">Custom Styles</h4>
+        <div className="flex gap-2">
+          <Input
+            className="flex-1"
+            description="The height of the ribbon"
+            label="Height"
+            min={0}
+            name="styles.height"
+            step={1}
+            trailing="px"
+            type="number"
+          />
+          <Input
+            className="flex-1"
+            description="Background color for the ribbon"
+            label="Background Color"
+            name="styles.backgroundColor"
+            type="color"
+          />
+          <Input
+            className="flex-1"
+            description="Text color for the ribbon"
+            label="Text Color"
+            name="styles.color"
+            type="color"
+          />
+        </div>
+      </div>
     </Form>
   )
 }
