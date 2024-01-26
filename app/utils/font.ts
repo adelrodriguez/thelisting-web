@@ -16,7 +16,7 @@ const FontSchema = z.object({
 })
 type Font = z.infer<typeof FontSchema>
 
-export function generateGoogleFontsUrl(fonts: Nullish<Font>[]): string {
+export function generateGoogleFontsUrl(fonts: Nullish<Font>[]): string | null {
   const families: { [key: string]: true | { wght: number[]; ital: number[] } } =
     {}
 
@@ -64,7 +64,7 @@ export function generateGoogleFontsUrl(fonts: Nullish<Font>[]): string {
   const url = constructURL({ display: "swap", families })
 
   if (!url) {
-    throw new Error("Could not construct Google Fonts URL")
+    return null
   }
 
   return url

@@ -100,7 +100,9 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
       },
       { content: `${data.listing.title} | The Listing`, name: "og:title" },
       { content: "width=device-width, initial-scale=1", name: "viewport" },
-      { href: data.fontsUrl, rel: "stylesheet", tagName: "link" },
+      ...(data.fontsUrl
+        ? [{ href: data.fontsUrl, rel: "stylesheet", tagName: "link" }]
+        : []),
     ]
   } catch (error) {
     return []
