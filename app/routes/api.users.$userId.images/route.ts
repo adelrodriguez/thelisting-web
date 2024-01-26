@@ -14,6 +14,9 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
   }
 
   const assets = await db.asset.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
     select: {
       filename: true,
       id: true,
