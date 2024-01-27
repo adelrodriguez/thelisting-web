@@ -12,6 +12,14 @@ export const RibbonType = z.enum([
 ])
 export type RibbonType = z.infer<typeof RibbonType>
 
+export const HeightSchema = z.coerce
+  .number()
+  .int("Height must be an integer")
+  .min(0, "Height must be equal to or greater than 0")
+  .optional()
+  // If the value is 0, we want to remove the property
+  .transform((val) => (val === 0 ? undefined : val))
+
 export const RibbonBase = z.object({
   name: z
     .string()
@@ -30,13 +38,8 @@ export const RibbonBase = z.object({
         .optional()
         // Same as above
         .transform((val) => (val === "#000000" ? undefined : val)),
-      height: z.coerce
-        .number()
-        .min(0, "Height must be equal to or greater than 0")
-        .int("Height must be an integer")
-        .optional()
-        // If the value is 0, we want to remove the height property
-        .transform((val) => (val === 0 ? undefined : val)),
+      paddingBottom: HeightSchema,
+      paddingTop: HeightSchema,
     })
     .default({}),
 })

@@ -20,6 +20,10 @@ export default function ImageGallery({
     return acc
   }, [])
 
+  if (images.length === 0) {
+    return null
+  }
+
   return (
     <div className="grid grid-cols-2 gap-2 px-4 lg:px-6">
       {groupedImages.map((images, index) => (

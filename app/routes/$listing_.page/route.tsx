@@ -99,7 +99,12 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
         name: "og:image",
       },
       { content: `${data.listing.title} | The Listing`, name: "og:title" },
-      { content: "width=device-width, initial-scale=1", name: "viewport" },
+      {
+        script: {
+          // async: true,
+          url: "https://tally.so/widgets/embed.js",
+        },
+      },
       ...(data.fontsUrl
         ? [{ href: data.fontsUrl, rel: "stylesheet", tagName: "link" }]
         : []),
@@ -169,7 +174,11 @@ export default function ListingPage() {
             switch (result.data.type) {
               case RibbonType.Banner: {
                 return (
-                  <SectionWrapper {...props} key={ribbon.id}>
+                  <SectionWrapper
+                    {...props}
+                    className="h-screen"
+                    key={ribbon.id}
+                  >
                     <Banner {...result.data.properties} />
                   </SectionWrapper>
                 )

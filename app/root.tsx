@@ -1,8 +1,4 @@
-import type {
-  LinksFunction,
-  LoaderFunctionArgs,
-  MetaFunction,
-} from "@remix-run/node"
+import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import {
   useLoaderData,
@@ -102,17 +98,6 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
   )
 }
 
-export const meta: MetaFunction<typeof loader> = () => [
-  { title: "The Listing" },
-  {
-    content:
-      "Listas de regalo personalizadas para todo tipo de eventos. Te permitimos elegir artículos de cualquier tienda que desees; logistica de compra y entrega incluida.",
-    name: "description",
-  },
-  { charSet: "utf-8" },
-  { content: "width=device-width, initial-scale=1", name: "viewport" },
-]
-
 function App() {
   const { env, locale } = useLoaderData<typeof loader>()
   const { i18n } = useTranslation()
@@ -138,6 +123,13 @@ function App() {
   return (
     <html className="h-full" dir={i18n.dir()} lang={locale}>
       <head>
+        <meta content="width=device-width, initial-scale=1" name="viewport" />
+        <meta charSet="utf-8" />
+        <title>The Listing</title>
+        <meta
+          content="Listas de regalo personalizadas para todo tipo de eventos. Te permitimos elegir artículos de cualquier tienda que desees; logistica de compra y entrega incluida."
+          name="description"
+        />
         <Meta />
         <Links />
       </head>

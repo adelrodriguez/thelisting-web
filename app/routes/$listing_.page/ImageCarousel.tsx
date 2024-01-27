@@ -10,6 +10,7 @@ import type { ImageCarouselProperties } from "~/utils/ribbons"
 
 export default function ImageCarousel({
   duration,
+  height,
   images,
 }: ImageCarouselProperties) {
   const [selectedIndex, setSelectedIndex] = useState(0)
@@ -18,7 +19,11 @@ export default function ImageCarousel({
   ])
 
   return (
-    <div className="h-full w-full overflow-hidden" ref={emblaRef}>
+    <div
+      className="relative h-full w-full overflow-hidden"
+      ref={emblaRef}
+      style={{ height }}
+    >
       <div className="flex h-full">
         {images.map((image) => (
           <div className="min-w-0 shrink-0 grow-0 basis-full" key={image}>

@@ -83,26 +83,30 @@ export default function TextRibbonForm({
 
       <div className="mt-4 flex flex-col gap-y-2">
         <h4 className="text-md font-semibold">Custom Styles</h4>
-        <div className="flex gap-2">
+        <div className="grid grid-cols-2 gap-2">
           <Input
-            className="flex-1"
-            description="The height of the ribbon"
-            label="Height"
+            label="Top Padding"
             min={0}
-            name="styles.height"
+            name="styles.paddingTop"
             step={1}
             trailing="px"
             type="number"
           />
           <Input
-            className="flex-1"
+            label="Bottom Padding"
+            min={0}
+            name="styles.paddingBottom"
+            step={1}
+            trailing="px"
+            type="number"
+          />
+          <Input
             description="Background color for the ribbon"
             label="Background Color"
             name="styles.backgroundColor"
             type="color"
           />
           <Input
-            className="flex-1"
             description="Text color for the ribbon"
             label="Text Color"
             name="styles.color"

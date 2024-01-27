@@ -1,12 +1,13 @@
 import { RibbonType } from "@prisma/client"
 import { z } from "zod"
 
-import { RibbonBase } from "./base"
+import { HeightSchema, RibbonBase } from "./base"
 
 export const ImageGalleryProperties = z.object({
   groupSize: z.coerce
     .number()
     .min(1, "You must provide a group size of at least 1"),
+  height: HeightSchema,
   images: z
     .array(z.string())
     .min(1, "You must provide at least one image")

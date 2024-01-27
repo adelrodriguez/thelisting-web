@@ -48,16 +48,6 @@ export default function CoverImageRibbonForm({
         <div className="flex gap-2">
           <Input
             className="flex-1"
-            description="The height of the ribbon"
-            label="Height"
-            min={0}
-            name="styles.height"
-            step={1}
-            trailing="px"
-            type="number"
-          />
-          <Input
-            className="flex-1"
             description="Background color for the ribbon"
             label="Background Color"
             name="styles.backgroundColor"

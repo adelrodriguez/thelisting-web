@@ -1,11 +1,12 @@
 import { RibbonType } from "@prisma/client"
 import { z } from "zod"
 
-import { RibbonBase } from "./base"
+import { HeightSchema, RibbonBase } from "./base"
 
 export const LocationProperties = z.object({
   address: z.string(),
   caption: z.string().optional(),
+  height: HeightSchema.default(300),
   zoom: z.coerce.number().optional().default(17),
 })
 
