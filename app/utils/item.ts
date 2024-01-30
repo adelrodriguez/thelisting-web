@@ -4,9 +4,9 @@ import Redis from "ioredis"
 import { z } from "zod"
 
 import { ONE_DAY } from "~/config/consts"
-
-import { generateKey } from "./redis"
-import { getProduct } from "./shopify.server"
+import Sentry from "~/services/sentry"
+import { generateKey } from "~/utils/redis"
+import { getProduct } from "~/utils/shopify.server"
 
 /**
  * This functions sorts the given list of items by stock. Items that are being
@@ -50,27 +50,33 @@ export async function getItemWithData(
     if (cachedResult.success) return { ...item, data: cachedResult.data }
   }
 
-  const product = await getProduct(item.commerceId)
-  const variant = flattenConnection(product.variants)[0]
+  try {
+    const product = await getProduct(item.commerceId)
+    const variant = flattenConnection(product.variants)[0]
 
-  if (!variant) return null
+    if (!variant) return null
 
-  const result = ItemWithDataSchema.safeParse({
-    id: item.id,
-    imageUrl: flattenConnection(product.images)[0]?.url,
-    price: variant.price,
-    title: product.title,
-    variantId: variant.id,
-  })
+    const result = ItemWithDataSchema.safeParse({
+      id: item.id,
+      imageUrl: flattenConnection(product.images)[0]?.url,
+      price: variant.price,
+      title: product.title,
+      variantId: variant.id,
+    })
 
-  if (!result.success) return null
+    if (!result.success) return null
 
-  await cache.set(
-    generateKey("shopify:product", item.commerceId),
-    JSON.stringify(result.data),
-    "EX",
-    ONE_DAY.inSeconds,
-  )
+    await cache.set(
+      generateKey("shopify:product", item.commerceId),
+      JSON.stringify(result.data),
+      "EX",
+      ONE_DAY.inSeconds,
+    )
 
-  return { ...item, data: result.data }
+    return { ...item, data: result.data }
+  } catch (error) {
+    Sentry.captureException(error)
+
+    return null
+  }
 }
