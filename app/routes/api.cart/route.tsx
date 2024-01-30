@@ -4,7 +4,7 @@ import { nanoid } from "nanoid"
 import { z } from "zod"
 import { zx } from "zodix"
 
-import { ONE_MONTH } from "~/config/consts"
+import { ONE_WEEK } from "~/config/consts"
 import { commitSession, getSession } from "~/helpers/session.server"
 import { generateKey } from "~/utils/redis"
 
@@ -54,7 +54,7 @@ export async function action({ context, request }: ActionFunctionArgs) {
     generateKey("cart", cartId, listingId),
     text,
     "EX",
-    ONE_MONTH.inSeconds,
+    ONE_WEEK.inSeconds,
   )
 
   return json(response)
