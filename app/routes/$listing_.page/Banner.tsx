@@ -41,7 +41,7 @@ export default function Banner({
           </h1>
           {subtitle && (
             <p
-              className="text-center text-xl font-light tracking-tight lg:text-2xl"
+              className="text-center text-sm font-light tracking-tight md:text-base lg:text-lg"
               style={{
                 color: theme.colors?.primary,
                 fontFamily: theme.fonts?.body,
