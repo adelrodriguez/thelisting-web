@@ -6,14 +6,13 @@ import { useLoaderData } from "@remix-run/react"
 import posthog from "posthog-js"
 import { Fragment, useState } from "react"
 import { useTranslation } from "react-i18next"
+import { route } from "routes-gen"
+import { z } from "zod"
+import { zx } from "zodix"
 
 import { Button } from "~/components/common"
-import {
-  useCart,
-  useDialogPage,
-  useExchangeRate,
-  useProduct,
-} from "~/utils/hooks"
+import { useCart, useDialogPage, useExchangeRate } from "~/utils/hooks"
+import { getItemWithData } from "~/utils/item"
 import { formatPrice } from "~/utils/money"
 import type { RouteHandle } from "~/utils/remix"
 
@@ -26,44 +25,54 @@ export const handle: RouteHandle = {
 
 export async function loader({ context, params }: LoaderFunctionArgs) {
   const db = context.db
-  const sku = params.item
+  const cache = context.cache
 
-  try {
-    const item = await db.item.findFirst({
-      where: { sku },
-    })
+  const { itemSku, listing } = zx.parseParams(
+    params,
+    z.object({ itemSku: z.string(), listing: z.string() }),
+  )
 
-    if (!item) {
-      throw redirect("..")
-    }
+  const item = await db.item.findFirst({
+    where: {
+      commerceId: { not: null },
+      listing: {
+        path: listing,
+      },
+      sku: itemSku,
+    },
+  })
 
-    return json({ item })
-  } catch (error) {
-    throw redirect("..")
+  if (!item) {
+    throw redirect(route("/:listing", { listing }))
   }
+
+  const itemWithData = await getItemWithData(cache, item)
+
+  if (!itemWithData) {
+    throw redirect(route("/:listing", { listing }))
+  }
+
+  return json({ item: itemWithData })
 }
 
-export default function ListingItemDetailPage() {
+export default function Page() {
   const cart = useCart()
   const { item } = useLoaderData<typeof loader>()
-  const { close, leave, open } = useDialogPage()
-  const { data, isError, isPending } = useProduct(item.commerceId ?? "")
   const isAvailable = item.stock > 0
+  const { close, leave, open } = useDialogPage()
   const [quantity, setQuantity] = useState(Number(isAvailable))
   const { t } = useTranslation(handle.i18n)
   const { currency, exchangeRate } = useExchangeRate()
 
-  // TODO(adelrodriguez): Handle loading and error states
-  if (isPending) return null
-  if (isError) return <div>Error!</div>
-
-  const { imageUrl, price, title, variantId } = data
+  const {
+    commerceId,
+    data: { imageUrl, price, title, variantId },
+    id,
+    sku,
+  } = item
 
   function handleAddToCart() {
-    const { commerceId, id, sku } = item
-
     if (!commerceId) throw new Error("Item must have a commerceId")
-    if (!variantId) throw new Error("Item must have a variantId")
 
     cart.add({ commerceId, id, price, quantity, sku, variantId })
 

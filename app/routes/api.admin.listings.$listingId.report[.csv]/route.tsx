@@ -6,7 +6,7 @@ import { zx } from "zodix"
 
 import { PRODUCT_METAFIELDS } from "~/config/consts"
 import { round } from "~/utils/number"
-import { getProduct } from "~/utils/shopify.server"
+import { getProductWithMetafields } from "~/utils/shopify.server"
 
 export async function loader({ context, params }: LoaderFunctionArgs) {
   const db = context.db
@@ -29,25 +29,25 @@ export async function loader({ context, params }: LoaderFunctionArgs) {
 
         if (!item.commerceId) return null
 
-        const product = await getProduct(item.commerceId)
-        const price = Number(flattenConnection(product?.variants)[0]?.price)
+        const product = await getProductWithMetafields(item.commerceId)
+        const price = Number(flattenConnection(product.variants)[0]?.price)
         const cost = Number(
-          flattenConnection(product?.variants)[0]?.inventoryItem.unitCost
+          flattenConnection(product.variants)[0]?.inventoryItem.unitCost
             ?.amount,
         )
-        const url = flattenConnection(product?.metafields).find(
+        const url = flattenConnection(product.metafields).find(
           (field) => field.key === PRODUCT_METAFIELDS.OriginalUrl,
         )?.value
 
         return {
           cost: round(isNaN(cost) ? 0 : cost),
-          name: product?.title,
+          name: product.title,
           numberPurchased,
           price: round(isNaN(price) ? 0 : price),
           totalCost: numberPurchased * cost,
           totalPrice: numberPurchased * price,
           url,
-          vendor: product?.vendor,
+          vendor: product.vendor,
         }
       }),
     )

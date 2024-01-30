@@ -1,69 +1,48 @@
 import type { Item } from "@prisma/client"
-import { Link } from "@remix-run/react"
+import { Link, useLocation } from "@remix-run/react"
 import clsx from "clsx"
-import { useEffect } from "react"
 import { useTranslation } from "react-i18next"
 
-import Sentry from "~/services/sentry"
-import { useExchangeRate, useProduct } from "~/utils/hooks"
+import { useExchangeRate } from "~/utils/hooks"
 import { formatPrice } from "~/utils/money"
 
 export default function RegistryItem({
-  available,
-  commerceId,
+  imageUrl,
+  price,
   sku,
+  stock,
+  title,
 }: {
-  available: boolean
-  commerceId: string
   sku: Item["sku"]
+  stock: number
+  title: string
+  imageUrl: string
+  price: number
 }) {
-  const { data, error, isError, isPending } = useProduct(commerceId)
   const { t } = useTranslation("registry")
+  const location = useLocation()
   const { currency, exchangeRate } = useExchangeRate()
-
-  useEffect(() => {
-    if (isError) {
-      Sentry.captureException(error)
-    }
-  }, [isError, error])
-
-  if (isPending) {
-    return (
-      <div className="animate-pulse">
-        <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden xl:aspect-h-8 xl:aspect-w-7 sm:rounded-lg">
-          <div className="h-full w-full bg-gray-200" />
-        </div>
-        <div className="mt-4 space-y-4">
-          <div className="h-4 rounded bg-gray-200" />
-          <div className="space-y-2">
-            <div className="h-4 w-1/4 rounded bg-gray-200" />
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  if (isError) {
-    return null
-  }
-
-  const { imageUrl, price, title } = data
+  const isAvailable = stock > 0
 
   return (
-    <Link className="group text-center font-body" preventScrollReset to={sku}>
+    <Link
+      className="group text-center font-body"
+      preventScrollReset
+      to={sku + location.search}
+    >
       <div className="relative">
         <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-sm xl:aspect-h-8 xl:aspect-w-7 sm:rounded-md">
           <img
             alt={title}
             className={clsx("h-full w-full object-cover object-center", {
-              "group-hover:opacity-75": available,
-              "opacity-50": !available,
+              "group-hover:opacity-75": isAvailable,
+              "opacity-50": !isAvailable,
             })}
             loading="lazy"
             src={imageUrl}
           />
         </div>
-        {!available && (
+        {!isAvailable && (
           <span className="absolute bottom-0 left-0 z-10 mb-4 ml-4 inline-flex items-center rounded-full bg-gray-700 px-3 py-0.5 text-sm font-medium text-white lg:px-4 lg:py-1 lg:text-base">
             {t("outOfStock")}
           </span>

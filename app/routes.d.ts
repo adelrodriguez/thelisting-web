@@ -2,7 +2,7 @@ declare module "routes-gen" {
   export type RouteParams = {
     "/": Record<string, never>;
     "/:listing": { "listing": string };
-    "/:listing/:item": { "listing": string, "item": string };
+    "/:listing/:itemSku": { "listing": string, "itemSku": string };
     "/:listing/cart": { "listing": string };
     "/:listing/cart/checkout": { "listing": string };
     "/:listing/cart/confirm": { "listing": string };
@@ -63,7 +63,7 @@ declare module "routes-gen" {
     T extends
       | ["/"]
       | ["/:listing", RouteParams["/:listing"]]
-      | ["/:listing/:item", RouteParams["/:listing/:item"]]
+      | ["/:listing/:itemSku", RouteParams["/:listing/:itemSku"]]
       | ["/:listing/cart", RouteParams["/:listing/cart"]]
       | ["/:listing/cart/checkout", RouteParams["/:listing/cart/checkout"]]
       | ["/:listing/cart/confirm", RouteParams["/:listing/cart/confirm"]]

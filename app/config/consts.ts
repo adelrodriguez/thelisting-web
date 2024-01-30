@@ -16,6 +16,7 @@ export const REDIS_KEYS = {
   Currency: "currency",
   GoogleFonts: "google-fonts",
   ProductScraper: "scraper:product",
+  ShopifyProduct: "shopify:product",
 } as const
 export type RedisKey = (typeof REDIS_KEYS)[keyof typeof REDIS_KEYS]
 

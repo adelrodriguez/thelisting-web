@@ -90,8 +90,8 @@ export const getProductsByTagQuery = graphql(`
   }
 `)
 
-export const getProductQuery = graphql(`
-  query getProduct($id: ID!) {
+export const getProductWithMetafieldsQuery = graphql(`
+  query getProductWithMetafields($id: ID!) {
     product(id: $id) {
       title
       vendor
@@ -111,6 +111,25 @@ export const getProductQuery = graphql(`
           namespace
           value
           type
+        }
+      }
+    }
+  }
+`)
+
+export const getProductQuery = graphql(`
+  query getProduct($id: ID!) {
+    product(id: $id) {
+      title
+      images(first: 1) {
+        nodes {
+          url
+        }
+      }
+      variants(first: 1) {
+        nodes {
+          id
+          price
         }
       }
     }

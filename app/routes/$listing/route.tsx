@@ -4,32 +4,32 @@ import type {
   LoaderFunctionArgs,
   MetaFunction,
 } from "@remix-run/node"
-import { json } from "@remix-run/node"
-import { Outlet, useLoaderData } from "@remix-run/react"
+import { defer } from "@remix-run/node"
+import { Await, Outlet, useLoaderData } from "@remix-run/react"
 import * as Sentry from "@sentry/remix"
 import clsx from "clsx"
 import { cacheHeader } from "pretty-cache-header"
-import { useState } from "react"
+import { Suspense, useState } from "react"
 import { z } from "zod"
 import { zx } from "zodix"
 
 import { THE_LISTING_LOGO_BLACK } from "~/config/consts"
 import { CartProvider } from "~/utils/hooks"
 import { notFound } from "~/utils/http"
+import { getItemWithData, sortByQuantity } from "~/utils/item"
 
 import Menu from "./Menu"
 import Registry from "./Registry"
+import RegistryItem from "./RegistryItem"
+import RegistryItemSkeleton from "./RegistryItemSkeleton"
 
 export async function loader({ context, params }: LoaderFunctionArgs) {
   const db = context.db
+  const cache = context.cache
+
   const { listing: path } = zx.parseParams(params, { listing: z.string() })
 
   const listing = await db.listing.findFirst({
-    include: {
-      items: {
-        orderBy: { sku: "asc" },
-      },
-    },
     where: { path, status: "Published" },
   })
 
@@ -40,7 +40,18 @@ export async function loader({ context, params }: LoaderFunctionArgs) {
     })
   }
 
-  return json({ listing })
+  const items = db.item
+    .findMany({
+      where: { commerceId: { not: null }, listingId: listing.id },
+    })
+    .then((_items) =>
+      Promise.all(_items.map(async (item) => getItemWithData(cache, item)))
+        .then((_items) => _items.filter(Boolean))
+        // TODO(adelrodriguez): Sort by filter
+        .then((_items) => _items.sort(sortByQuantity)),
+    )
+
+  return defer({ items, listing })
 }
 
 export const headers: HeadersFunction = () => ({
@@ -68,7 +79,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 }
 
 export default function ListingPage() {
-  const { listing } = useLoaderData<typeof loader>()
+  const { items, listing } = useLoaderData<typeof loader>()
   const [menuOpen, setMenuOpen] = useState(false)
 
   return (
@@ -123,9 +134,36 @@ export default function ListingPage() {
             </div>
           </div>
         </section>
-        <div className="mx-4 py-16 sm:mx-12 xl:px-32 2xl:px-64">
-          <Registry items={listing.items} />
-        </div>
+
+        <section className="mx-4 py-16 sm:mx-12 xl:px-32 2xl:px-64">
+          <Suspense
+            fallback={
+              <div className="grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-3 md:gap-x-8 xl:grid-cols-4 xl:gap-x-10">
+                <RegistryItemSkeleton />
+                <RegistryItemSkeleton />
+                <RegistryItemSkeleton />
+                <RegistryItemSkeleton />
+              </div>
+            }
+          >
+            <Await resolve={items}>
+              {(items) => (
+                <Registry>
+                  {items.map((item) => (
+                    <RegistryItem
+                      imageUrl={item.data.imageUrl}
+                      key={item.id}
+                      price={item.data.price}
+                      sku={item.sku}
+                      stock={item.stock}
+                      title={item.data.title}
+                    />
+                  ))}
+                </Registry>
+              )}
+            </Await>
+          </Suspense>
+        </section>
         <Outlet context={listing} />
       </main>
     </CartProvider>

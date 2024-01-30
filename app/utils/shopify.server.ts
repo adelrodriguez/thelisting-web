@@ -18,13 +18,14 @@ import {
   publishToCurrentChannelMutation,
   createCollectionMutation,
   addProductsToCollectionMutation,
-  getProductQuery,
   addTagsMutation,
   removeProductsFromCollectionMutation,
   getOrderQuery,
   createProductMediaMutation,
   MediaContentType,
   getCollectionQuery,
+  getProductWithMetafieldsQuery,
+  getProductQuery,
 } from "~/services/shopify/admin"
 import { createCheckoutMutation } from "~/services/shopify/storefront"
 import type { CartItem } from "~/utils/cart"
@@ -253,10 +254,10 @@ export async function createProduct({
   return productCreate.product
 }
 
-export async function getProduct(id: string) {
+export async function getProductWithMetafields(id: string) {
   const { product } = await request(
     shopifyAdminAPIEndpoint,
-    getProductQuery,
+    getProductWithMetafieldsQuery,
     {
       id,
     },
@@ -264,7 +265,14 @@ export async function getProduct(id: string) {
   )
 
   if (!product) {
-    throw new ShopifyError("Unable to get product", "product_get_error")
+    logger.error("Unable to get product", {
+      code: "product_with_metafields_get_error",
+      id,
+    })
+    throw new ShopifyError(
+      "Unable to get product",
+      "product_with_metafields_get_error",
+    )
   }
 
   return product
@@ -417,4 +425,25 @@ export async function getCollection(id: string) {
   }
 
   return collection
+}
+
+export async function getProduct(id: string) {
+  const { product } = await request(
+    shopifyAdminAPIEndpoint,
+    getProductQuery,
+    {
+      id,
+    },
+    shopifyAdminAPIHeaders,
+  )
+
+  if (!product) {
+    logger.error("Unable to get product", {
+      code: "product_get_error",
+      id,
+    })
+    throw new ShopifyError("Unable to get product", "product_get_error")
+  }
+
+  return product
 }

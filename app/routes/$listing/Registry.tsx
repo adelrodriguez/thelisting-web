@@ -1,20 +1,12 @@
 import { ShoppingBagIcon } from "@heroicons/react/24/outline"
-import type { Item } from "@prisma/client"
 import { Link } from "@remix-run/react"
 import { useAnimate } from "framer-motion"
-import { useCallback, useEffect } from "react"
+import { ReactNode, useCallback, useEffect } from "react"
 
 import { calculateItemCount } from "~/utils/cart"
 import { useCart } from "~/utils/hooks"
-import { sortByQuantity } from "~/utils/item"
 
-import RegistryItem from "./RegistryItem"
-
-export default function Registry({
-  items,
-}: {
-  items: Pick<Item, "id" | "sku" | "commerceId" | "stock" | "quantity">[]
-}) {
+export default function Registry({ children }: { children: ReactNode }) {
   const cart = useCart()
   const [scope, animate] = useAnimate()
   const shake = useCallback(() => {
@@ -37,20 +29,7 @@ export default function Registry({
 
   return (
     <div className="grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-3 md:gap-x-8 xl:grid-cols-4 xl:gap-x-10">
-      {items.sort(sortByQuantity).map((item) => {
-        if (!item.commerceId) return null
-
-        const isAvailable = item.stock > 0
-
-        return (
-          <RegistryItem
-            available={isAvailable}
-            commerceId={item.commerceId}
-            key={item.id}
-            sku={item.sku}
-          />
-        )
-      })}
+      {children}
       <div className="group fixed bottom-8 right-8 z-10" ref={scope}>
         <Link prefetch="intent" preventScrollReset relative="path" to="cart">
           {!!itemCount && (

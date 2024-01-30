@@ -135,6 +135,7 @@ export type ShopifyErrorCode =
   | "product_get_error"
   | "product_media_create_error"
   | "product_publish_error"
+  | "product_with_metafields_get_error"
   | "remove_products_from_collection_error"
   | "tags_add_error"
 

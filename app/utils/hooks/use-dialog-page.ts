@@ -1,4 +1,4 @@
-import { useNavigate } from "@remix-run/react"
+import { useLocation, useNavigate } from "@remix-run/react"
 import { useCallback, useState } from "react"
 
 /**
@@ -10,10 +10,11 @@ import { useCallback, useState } from "react"
 export default function useDialogPage() {
   const [open, setOpen] = useState(true)
   const navigate = useNavigate()
+  const location = useLocation()
   const close = useCallback(() => setOpen(false), [])
   const leave = useCallback(
-    () => navigate("../", { preventScrollReset: true }),
-    [navigate],
+    () => navigate("../" + location.search, { preventScrollReset: true }),
+    [navigate, location.search],
   )
 
   return { close, leave, open }

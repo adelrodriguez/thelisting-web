@@ -1,6 +1,6 @@
 import { useSearchParams } from "@remix-run/react"
 import { useQuery } from "@tanstack/react-query"
-import { type ReactNode, createContext, useState, useContext } from "react"
+import { type ReactNode, createContext, useContext } from "react"
 
 import type { Currency } from "~/config/consts"
 import { CURRENCIES, ONE_HOUR, ONE_MINUTE } from "~/config/consts"
@@ -16,11 +16,12 @@ const Context = createContext<
 
 Context.displayName = "ExchangeRate"
 
+// TODO(adelrodriguez): Add initial currency to prevent flash of content
 export function ExchangeRateProvider({ children }: { children: ReactNode }) {
   const [searchParams, setSearchParams] = useSearchParams()
-  const [currency, setCurrency] = useState<Currency>(
-    (searchParams.get("currency") as Currency) ?? CURRENCIES.DOP,
-  )
+  const currency =
+    (searchParams.get("currency") as Currency | null) ?? CURRENCIES.DOP
+
   const { data } = useQuery({
     queryFn: async () => {
       const res = await fetch("/api/exchange-rates/" + currency)
@@ -46,7 +47,6 @@ export function ExchangeRateProvider({ children }: { children: ReactNode }) {
       },
       { preventScrollReset: true },
     )
-    setCurrency(currency)
   }
 
   return (
