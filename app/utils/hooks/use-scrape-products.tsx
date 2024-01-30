@@ -58,15 +58,11 @@ export default function useScrapeProducts<T extends { url: string }>(
       return
     }
 
-    if (options.mode === "sequential") {
-      for (const index of indexes) {
-        await queries[index]?.refetch()
-      }
-
-      return
+    for (const index of indexes) {
+      await queries[index]?.refetch()
     }
 
-    throw new Error("Invalid order")
+    return
   }
 
   async function cancel() {

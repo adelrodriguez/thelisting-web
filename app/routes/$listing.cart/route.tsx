@@ -4,6 +4,7 @@ import type { Listing } from "@prisma/client"
 import {
   Link,
   Outlet,
+  useLocation,
   useNavigate,
   useNavigation,
   useOutletContext,
@@ -25,7 +26,7 @@ export const handle = {
   i18n: ["registry", "common"],
 }
 
-export default function ListingCartPage() {
+export default function Page() {
   const { close, leave, open } = useDialogPage()
   const cart = useCart()
   const listing = useOutletContext<Listing>()
@@ -33,6 +34,7 @@ export default function ListingCartPage() {
   const navigation = useNavigation()
   const { t } = useTranslation(handle.i18n)
   const { currency, exchangeRate } = useExchangeRate()
+  const location = useLocation()
   const subtotal = calculateSubtotal([...cart.items.values()])
   const shipping = calculateShipping(subtotal)
   const total = subtotal + shipping
@@ -132,10 +134,12 @@ export default function ListingCartPage() {
                           className="font-medium text-gray-600 hover:text-gray-500"
                           preventScrollReset
                           relative="route"
-                          to={
-                            "note" +
-                            (cart.noteId ? "?note_id=" + cart.noteId : "")
-                          }
+                          to={{
+                            pathname: route("/:listing/cart/note", {
+                              listing: listing.path,
+                            }),
+                            search: location.search,
+                          }}
                         >
                           {cart.noteId ? t("messageAdded") : t("addAMessage")}
                         </Link>
@@ -154,7 +158,7 @@ export default function ListingCartPage() {
                               navigate(
                                 route("/:listing/cart/confirm", {
                                   listing: listing.path,
-                                }),
+                                }) + location.search,
                               )
                             }
                           }}

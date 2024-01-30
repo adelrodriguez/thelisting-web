@@ -9,13 +9,17 @@ import { StatusCodes } from "http-status-codes"
 import { Fragment, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import { setFormDefaults } from "remix-validated-form"
+import SuperJSON from "superjson"
 import { z } from "zod"
 import { zfd } from "zod-form-data"
 import { zx } from "zodix"
 
 import { Alert, Button } from "~/components/common"
 import { Form, SubmitButton, TextArea } from "~/components/form"
+import { getSession } from "~/helpers/session.server"
+import Sentry from "~/services/sentry"
 import { useCart, useDialogPage } from "~/utils/hooks"
+import { generateKey } from "~/utils/redis"
 import type { RouteHandle } from "~/utils/remix"
 
 export const handle: RouteHandle = {
@@ -23,33 +27,59 @@ export const handle: RouteHandle = {
   id: "listing-cart-note",
 }
 
-export async function loader({ context, request }: LoaderFunctionArgs) {
+export async function loader({ context, params, request }: LoaderFunctionArgs) {
   const db = context.db
-  const query = zx.parseQuerySafe(request, z.object({ note_id: z.string() }))
+  const cache = context.cache
 
-  if (!query.success) {
+  try {
+    const { listing: listingPath } = zx.parseParams(
+      params,
+      z.object({ listing: z.string() }),
+    )
+
+    const { id: listingId } = await db.listing.findFirstOrThrow({
+      where: { path: listingPath },
+    })
+
+    const session = await getSession(request.headers.get("cookie"))
+    const cartId = session.get("cartsKey")
+
+    if (!cartId) {
+      throw new Error("No cart ID found")
+    }
+
+    const cart = await cache.get(generateKey("cart", cartId, listingId))
+
+    if (!cart) {
+      throw new Error("No cart found")
+    }
+
+    const { noteId } = SuperJSON.parse<{ noteId: string | null }>(cart)
+
+    if (!noteId) {
+      return json({ note: null })
+    }
+
+    const note = await db.note.findUnique({
+      where: { id: noteId },
+    })
+
+    return json({
+      note,
+      ...setFormDefaults("add-note", {
+        id: note?.id ?? "",
+        text: note?.text ?? "",
+      }),
+    })
+  } catch (error) {
+    Sentry.captureException(error)
+
     return json({ note: null })
   }
-
-  const note = await db.note.findUnique({
-    select: { text: true },
-    where: { id: query.data.note_id },
-  })
-
-  return json({
-    note,
-    ...setFormDefaults("add-note", {
-      text: note?.text ?? "",
-    }),
-  })
 }
 
 export async function action({ context, params, request }: ActionFunctionArgs) {
   const db = context.db
-  const parsedQuery = zx.parseQuerySafe(
-    request,
-    z.object({ note_id: z.string() }),
-  )
 
   const { listing: listingPath } = zx.parseParams(
     params,
@@ -58,6 +88,7 @@ export async function action({ context, params, request }: ActionFunctionArgs) {
 
   const serverValidator = withZod(
     z.object({
+      id: z.string().optional(),
       text: zfd.text(z.string().max(500, "The note is too long").optional()),
     }),
   )
@@ -76,11 +107,7 @@ export async function action({ context, params, request }: ActionFunctionArgs) {
     )
   }
 
-  if (!result.data.text) {
-    return json({ note: null, success: true })
-  }
-
-  if (!parsedQuery.success) {
+  if (!result.data.id && result.data.text) {
     const listing = await db.listing.findUniqueOrThrow({
       select: { id: true },
       where: { path: listingPath },
@@ -97,15 +124,23 @@ export async function action({ context, params, request }: ActionFunctionArgs) {
     return json({ note, success: true })
   }
 
+  if (!result.data.text) {
+    await db.note.delete({
+      where: { id: result.data.id },
+    })
+
+    return json({ note: null, success: true })
+  }
+
   const note = await db.note.update({
     data: { text: result.data.text, type: NoteType.Text },
-    where: { id: parsedQuery.data.note_id },
+    where: { id: result.data.id },
   })
 
   return json({ note, success: true })
 }
 
-export default function ListingCartNotePage() {
+export default function Page() {
   const { note } = useLoaderData<typeof loader>()
   const { close, leave, open } = useDialogPage()
 
@@ -182,6 +217,11 @@ export default function ListingCartNotePage() {
                       <div className="flex flex-1 flex-col justify-between">
                         <div className="divide-y divide-gray-200 px-4 sm:px-6">
                           <div className="space-y-6 pb-5 pt-6">
+                            <input
+                              defaultValue={note?.id || ""}
+                              name="id"
+                              type="hidden"
+                            />
                             <TextArea
                               defaultValue={note?.text || ""}
                               label="Nota"

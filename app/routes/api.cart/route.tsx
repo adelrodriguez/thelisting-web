@@ -4,7 +4,7 @@ import { nanoid } from "nanoid"
 import { z } from "zod"
 import { zx } from "zodix"
 
-import { ONE_DAY, REDIS_KEYS } from "~/config/consts"
+import { ONE_MONTH } from "~/config/consts"
 import { commitSession, getSession } from "~/helpers/session.server"
 import { generateKey } from "~/utils/redis"
 
@@ -13,6 +13,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
 
   if (!result.success) return json({ cart: null })
 
+  const { listingId } = result.data
   const session = await getSession(request.headers.get("cookie"))
   const cartId = session.get("cartsKey")
 
@@ -31,9 +32,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
   const cache = context.cache
 
   return json({
-    cart: await cache.get(
-      generateKey(REDIS_KEYS.Cart, cartId, result.data.listingId),
-    ),
+    cart: await cache.get(generateKey("cart", cartId, listingId)),
   })
 }
 
@@ -48,12 +47,14 @@ export async function action({ context, request }: ActionFunctionArgs) {
 
   if (!cartId) return null
 
+  const { listingId } = result.data
+
   const text = await request.text()
   const response = await cache.set(
-    generateKey(REDIS_KEYS.Cart, cartId, result.data.listingId),
+    generateKey("cart", cartId, listingId),
     text,
     "EX",
-    ONE_DAY.inSeconds * 30,
+    ONE_MONTH.inSeconds,
   )
 
   return json(response)
