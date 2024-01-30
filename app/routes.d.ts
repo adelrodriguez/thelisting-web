@@ -42,6 +42,7 @@ declare module "routes-gen" {
     "/dashboard/listings/:listingSku/details/edit": { "listingSku": string };
     "/dashboard/listings/:listingSku/items": { "listingSku": string };
     "/dashboard/listings/:listingSku/items/:itemSku": { "listingSku": string, "itemSku": string };
+    "/dashboard/listings/:listingSku/items/:itemSku/cache": { "listingSku": string, "itemSku": string };
     "/dashboard/listings/:listingSku/items/:itemSku/delete": { "listingSku": string, "itemSku": string };
     "/dashboard/listings/:listingSku/items/new": { "listingSku": string };
     "/dashboard/listings/:listingSku/ribbons": { "listingSku": string };
@@ -103,6 +104,7 @@ declare module "routes-gen" {
       | ["/dashboard/listings/:listingSku/details/edit", RouteParams["/dashboard/listings/:listingSku/details/edit"]]
       | ["/dashboard/listings/:listingSku/items", RouteParams["/dashboard/listings/:listingSku/items"]]
       | ["/dashboard/listings/:listingSku/items/:itemSku", RouteParams["/dashboard/listings/:listingSku/items/:itemSku"]]
+      | ["/dashboard/listings/:listingSku/items/:itemSku/cache", RouteParams["/dashboard/listings/:listingSku/items/:itemSku/cache"]]
       | ["/dashboard/listings/:listingSku/items/:itemSku/delete", RouteParams["/dashboard/listings/:listingSku/items/:itemSku/delete"]]
       | ["/dashboard/listings/:listingSku/items/new", RouteParams["/dashboard/listings/:listingSku/items/new"]]
       | ["/dashboard/listings/:listingSku/ribbons", RouteParams["/dashboard/listings/:listingSku/ribbons"]]

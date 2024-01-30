@@ -1,18 +1,23 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
-import { useLoaderData, Outlet, Link } from "@remix-run/react"
+import { useLoaderData, Outlet, Link, Form } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
 import { useSnackbar } from "notistack"
-import { setFormDefaults, validationError } from "remix-validated-form"
+import {
+  ValidatedForm,
+  setFormDefaults,
+  validationError,
+} from "remix-validated-form"
 import { route } from "routes-gen"
 import { z } from "zod"
 import { zx } from "zodix"
 
 import { ViewOnShopify } from "~/components/admin"
 import { Button } from "~/components/common"
-import { Form, Input, SubmitButton, TextArea } from "~/components/form"
-import { useProduct } from "~/utils/hooks"
+import { Input, SubmitButton, TextArea } from "~/components/form"
+import { useExchangeRate } from "~/utils/hooks"
 import { notFound } from "~/utils/http"
+import { getItemWithData } from "~/utils/item"
 import { formatPrice } from "~/utils/money"
 import type { RouteHandle } from "~/utils/remix"
 
@@ -42,6 +47,8 @@ const validator = withZod(
 
 export async function loader({ context, params }: LoaderFunctionArgs) {
   const db = context.db
+  const cache = context.cache
+
   const { itemSku } = zx.parseParams(params, {
     itemSku: z.string(),
   })
@@ -55,6 +62,15 @@ export async function loader({ context, params }: LoaderFunctionArgs) {
     })
   }
 
+  const itemWithData = await getItemWithData(cache, item)
+
+  if (!itemWithData) {
+    throw notFound({
+      message: "The item you are looking for does not exist.",
+      title: "Item not found",
+    })
+  }
+
   const itemPurchases = await db.itemPurchase.findMany({
     where: { itemId: item.id },
   })
@@ -62,7 +78,7 @@ export async function loader({ context, params }: LoaderFunctionArgs) {
   const itemPurchaseCount = itemPurchases.length
 
   return json({
-    item,
+    item: itemWithData,
     itemPurchaseCount,
     stats: [
       { name: "Total Times Ordered", stat: itemPurchaseCount },
@@ -96,8 +112,8 @@ export async function action({ context, params, request }: ActionFunctionArgs) {
 
 export default function DashboardListingItemDetailPage() {
   const { item, itemPurchaseCount, stats } = useLoaderData<typeof loader>()
-  const { data, isError, isPending } = useProduct(item.commerceId || "")
   const { enqueueSnackbar } = useSnackbar()
+  const { currency } = useExchangeRate()
 
   return (
     <div className="mt-4 grid gap-x-6 sm:grid-cols-2">
@@ -110,29 +126,28 @@ export default function DashboardListingItemDetailPage() {
             <p className="mt-1 text-sm text-gray-500">
               This is the product information available on Shopify.
             </p>
-            {!isPending && !isError ? (
-              <div className="mt-4 flex flex-col md:flex-row">
-                <div className="mr-4 flex-shrink-0">
-                  <img
-                    alt={data.title}
-                    className="h-full w-64 rounded-sm"
-                    src={data.imageUrl}
-                  />
-                </div>
-                <div className="mt-2 md:mt-0">
-                  <h4 className="text-lg font-bold">{data.title}</h4>
-                  <p className="mt-1">
-                    {formatPrice(data.price, data.currencyCode)}
-                  </p>
-                </div>
+            <div className="mt-4 flex flex-col md:flex-row">
+              <div className="mr-4 flex-shrink-0">
+                <img
+                  alt={item.data.title}
+                  className="h-full w-64 rounded-sm"
+                  src={item.data.imageUrl}
+                />
               </div>
-            ) : (
-              <div>Loading...</div>
-            )}
+              <div className="mt-2 md:mt-0">
+                <h4 className="text-lg font-bold">{item.data.title}</h4>
+                <p className="mt-1">{formatPrice(item.data.price, currency)}</p>
+              </div>
+            </div>
           </div>
 
-          <div className="bg-gray-50 px-4 py-4 sm:px-6">
+          <div className="flex items-center justify-between bg-gray-50 px-4 py-4 sm:px-6">
             {item.commerceId && <ViewOnShopify gid={item.commerceId} />}
+            <Form action="cache" method="POST">
+              <Button type="submit" variant="secondary">
+                Clear Cache
+              </Button>
+            </Form>
           </div>
         </div>
         <div className="mt-4">
@@ -140,16 +155,16 @@ export default function DashboardListingItemDetailPage() {
             Purchases
           </h3>
           <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
-            {stats.map((item) => (
+            {stats.map((s) => (
               <div
                 className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6"
-                key={item.name}
+                key={s.name}
               >
                 <dt className="truncate text-sm font-medium text-gray-500">
-                  {item.name}
+                  {s.name}
                 </dt>
                 <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
-                  {item.stat}
+                  {s.stat}
                 </dd>
               </div>
             ))}
@@ -161,7 +176,7 @@ export default function DashboardListingItemDetailPage() {
         <h3 className="text-lg font-medium leading-6 text-gray-900">
           Item Information
         </h3>
-        <Form
+        <ValidatedForm
           className="flex flex-col gap-y-6 pt-4"
           id="edit-item"
           method="POST"
@@ -194,7 +209,7 @@ export default function DashboardListingItemDetailPage() {
             )}
             <SubmitButton loadingText="Updating...">Update</SubmitButton>
           </div>
-        </Form>
+        </ValidatedForm>
       </div>
       <Outlet />
     </div>

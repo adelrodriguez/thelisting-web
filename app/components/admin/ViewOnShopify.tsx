@@ -1,15 +1,20 @@
 import { ArrowTopRightOnSquareIcon } from "@heroicons/react/20/solid"
 import { Link } from "@remix-run/react"
 import { parseGid } from "@shopify/hydrogen-react"
+import { useEffect, useState } from "react"
 
 import { Spinner } from "~/components/loading"
-import { isWindowDefined } from "~/utils/window"
 
 export default function ViewOnShopify({ gid }: { gid: string }) {
   const { id, resource } = parseGid(gid)
+  const [isMounted, setIsMounted] = useState(false)
 
-  if (!isWindowDefined()) {
-    return <Spinner />
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
+  if (!isMounted) {
+    return <Spinner className="slate-700 h-4 w-4" />
   }
 
   return (

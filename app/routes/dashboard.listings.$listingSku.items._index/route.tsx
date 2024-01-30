@@ -7,14 +7,13 @@ import { ExclamationTriangleIcon } from "@heroicons/react/24/outline"
 import type { Item } from "@prisma/client"
 import type { LoaderFunctionArgs, SerializeFrom } from "@remix-run/node"
 import { json } from "@remix-run/node"
-import { Link, useLoaderData } from "@remix-run/react"
+import { Form, Link, useLoaderData } from "@remix-run/react"
 import {
   createColumnHelper,
   flexRender,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import clsx from "clsx"
 import { Fragment } from "react"
 import { route } from "routes-gen"
 import { z } from "zod"
@@ -102,45 +101,45 @@ const columns = [
             <Menu.Items className="absolute right-0 z-10 mt-0.5 w-40 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none">
               {item.commerceId && (
                 <Menu.Item>
-                  {({ active }) => (
-                    <Link
-                      className={clsx(
-                        active ? "bg-gray-50" : "",
-                        "flex items-center px-3 py-1 text-sm leading-6 text-gray-900",
-                      )}
-                      target="_blank"
-                      to={
-                        item.commerceId
-                          ? `https://admin.shopify.com/store/${
-                              window.env.shopifyStore
-                            }/products/${getShopifyIdNumber(item.commerceId)}`
-                          : "#"
-                      }
-                    >
-                      View on Shopify
-                      <ArrowTopRightOnSquareIcon className="ml-1 inline-block h-4 w-4" />
-                    </Link>
-                  )}
+                  <Link
+                    className="flex items-center px-3 py-1 text-sm leading-6 text-gray-900 ui-active:bg-gray-50"
+                    target="_blank"
+                    to={
+                      item.commerceId
+                        ? `https://admin.shopify.com/store/${
+                            window.env.shopifyStore
+                          }/products/${getShopifyIdNumber(item.commerceId)}`
+                        : "#"
+                    }
+                  >
+                    View on Shopify
+                    <ArrowTopRightOnSquareIcon className="ml-1 inline-block h-4 w-4" />
+                  </Link>
                 </Menu.Item>
               )}
               <Menu.Item>
-                {({ active }) => (
-                  <Link
-                    className={clsx(
-                      active ? "bg-red-50" : "",
-                      "block px-3 py-1 text-sm leading-6 text-red-500",
-                    )}
-                    to={route(
-                      "/dashboard/listings/:listingSku/items/:itemSku/delete",
-                      {
-                        itemSku: item.sku,
-                        listingSku: `${item.listing.sku}`,
-                      },
-                    )}
+                <Form action={`${item.sku}/cache`} method="POST">
+                  <button
+                    className="block w-full px-3 py-1 text-left text-sm leading-6 text-gray-900 ui-active:bg-gray-50"
+                    type="submit"
                   >
-                    Delete
-                  </Link>
-                )}
+                    Clear Cache
+                  </button>
+                </Form>
+              </Menu.Item>
+              <Menu.Item>
+                <Link
+                  className="block px-3 py-1 text-sm leading-6 text-red-500 ui-active:bg-red-50"
+                  to={route(
+                    "/dashboard/listings/:listingSku/items/:itemSku/delete",
+                    {
+                      itemSku: item.sku,
+                      listingSku: `${item.listing.sku}`,
+                    },
+                  )}
+                >
+                  Delete
+                </Link>
               </Menu.Item>
             </Menu.Items>
           </Transition>
