@@ -5,6 +5,7 @@ import {
   EllipsisVerticalIcon,
   GiftIcon,
   MapIcon,
+  PaperClipIcon,
   PhotoIcon,
   RectangleGroupIcon,
   RectangleStackIcon,
@@ -52,6 +53,15 @@ const RIBBON_CARD = {
     bgColor: "bg-gray-500",
     icon: <Bars3CenterLeftIcon aria-hidden="true" className="h-6 w-6" />,
   },
+  [RibbonType.Embedded]: {
+    bgColor: "bg-indigo-500",
+    icon: <PaperClipIcon aria-hidden="true" className="h-6 w-6" />,
+  },
+} satisfies {
+  [key in RibbonType]: {
+    bgColor: string
+    icon: JSX.Element
+  }
 }
 
 export default function RibbonCard({

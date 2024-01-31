@@ -21,6 +21,7 @@ declare module "routes-gen" {
     "/api/storage": Record<string, never>;
     "/api/storage/:assetId": { "assetId": string };
     "/api/users/:userId/images": { "userId": string };
+    "/api/webhooks/meta/whatsapp-bot": Record<string, never>;
     "/api/webhooks/shopify/checkout-updated": Record<string, never>;
     "/api/webhooks/shopify/order-created": Record<string, never>;
     "/api/webhooks/shopify/order-paid": Record<string, never>;
@@ -83,6 +84,7 @@ declare module "routes-gen" {
       | ["/api/storage"]
       | ["/api/storage/:assetId", RouteParams["/api/storage/:assetId"]]
       | ["/api/users/:userId/images", RouteParams["/api/users/:userId/images"]]
+      | ["/api/webhooks/meta/whatsapp-bot"]
       | ["/api/webhooks/shopify/checkout-updated"]
       | ["/api/webhooks/shopify/order-created"]
       | ["/api/webhooks/shopify/order-paid"]

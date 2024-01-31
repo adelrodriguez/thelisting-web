@@ -76,6 +76,7 @@ enum RibbonType {
   Banner
   Countdown
   CoverImage
+  Embedded
   ImageCarousel
   ImageGallery
   Location

@@ -27,6 +27,7 @@ import {
   BannerRibbon,
   CountdownRibbon,
   CoverImageRibbon,
+  EmbeddedRibbon,
   ImageCarouselRibbon,
   ImageGalleryRibbon,
   LocationRibbon,
@@ -37,6 +38,7 @@ import {
 import BannerRibbonForm from "./BannerRibbonForm"
 import CountdownRibbonForm from "./CountdownRibbonForm"
 import CoverImageRibbonForm from "./CoverImageRibbonForm"
+import EmbeddedRibbonForm from "./EmbeddedRibbonForm"
 import ImageCarouselRibbonForm from "./ImageCarouselRibbonForm"
 import ImageGalleryRibbonForm from "./ImageGalleryRibbonForm"
 import LocationRibbonForm from "./LocationRibbonForm"
@@ -125,6 +127,9 @@ export async function action({ context, params, request }: ActionFunctionArgs) {
           break
         case RibbonType.CoverImage:
           schema = CoverImageRibbon
+          break
+        case RibbonType.Embedded:
+          schema = EmbeddedRibbon
           break
         case RibbonType.ImageCarousel:
           schema = ImageCarouselRibbon
@@ -248,6 +253,9 @@ export default function DashboardListingRibbonsEditPage() {
                 )}
                 {ribbon.type === RibbonType.CoverImage && (
                   <CoverImageRibbonForm formId={formId} ribbon={ribbon} />
+                )}
+                {ribbon.type === RibbonType.Embedded && (
+                  <EmbeddedRibbonForm formId={formId} ribbon={ribbon} />
                 )}
                 {ribbon.type === RibbonType.ImageCarousel && (
                   <ImageCarouselRibbonForm formId={formId} ribbon={ribbon} />

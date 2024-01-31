@@ -4,6 +4,7 @@ import { z } from "zod"
 import { BannerRibbon } from "./banner"
 import { CountdownRibbon } from "./countdown"
 import { CoverImageRibbon } from "./cover-image"
+import { EmbeddedRibbon } from "./embedded"
 import { ImageCarouselRibbon } from "./image-carousel"
 import { ImageGalleryRibbon } from "./image-gallery"
 import { LocationRibbon } from "./location"
@@ -14,8 +15,9 @@ export * from "./banner"
 export * from "./base"
 export * from "./countdown"
 export * from "./cover-image"
-export * from "./image-gallery"
+export * from "./embedded"
 export * from "./image-carousel"
+export * from "./image-gallery"
 export * from "./location"
 export * from "./registry-showcase"
 export * from "./text"
@@ -24,6 +26,7 @@ export const RibbonSchema = z.discriminatedUnion("type", [
   BannerRibbon,
   CountdownRibbon,
   CoverImageRibbon,
+  EmbeddedRibbon,
   ImageCarouselRibbon,
   ImageGalleryRibbon,
   LocationRibbon,

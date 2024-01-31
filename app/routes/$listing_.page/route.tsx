@@ -19,6 +19,7 @@ import { RibbonSchema, getCoverImages, getRibbonFonts } from "~/utils/ribbons"
 import Banner from "./Banner"
 import Countdown from "./Countdown"
 import CoverImage from "./CoverImage"
+import Embedded from "./Embedded"
 import ImageCarousel from "./ImageCarousel"
 import ImageGallery from "./ImageGallery"
 import Location from "./Location"
@@ -217,6 +218,13 @@ export default function ListingPage() {
                 return (
                   <SectionWrapper {...props} key={ribbon.id}>
                     <Countdown {...result.data.properties} />
+                  </SectionWrapper>
+                )
+              }
+              case RibbonType.Embedded: {
+                return (
+                  <SectionWrapper {...props} key={ribbon.id}>
+                    <Embedded {...result.data.properties} />
                   </SectionWrapper>
                 )
               }

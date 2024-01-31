@@ -134,7 +134,7 @@ export function ErrorBoundary() {
         <h1>
           {error.status} {error.statusText}
         </h1>
-        <p>{error.data}</p>
+        <pre>{JSON.stringify(error.data, null, 2)}</pre>
       </div>
     )
   } else if (error instanceof Error) {

@@ -5,6 +5,7 @@ export const RibbonType = z.enum([
   Type.Banner,
   Type.Countdown,
   Type.CoverImage,
+  Type.Embedded,
   Type.ImageCarousel,
   Type.ImageGallery,
   Type.Location,
