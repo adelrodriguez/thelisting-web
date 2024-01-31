@@ -43,6 +43,7 @@ export default function WeddingGuestNotificationForm() {
       id="weddingGuestNotification"
       method="POST"
       onReset={reset}
+      resetAfterSubmit
       validator={validator}
     >
       <InputWithAddOn addOn={HOMEPAGE_URL + "/"} label="Path" name="path" />
