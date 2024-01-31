@@ -13,7 +13,14 @@ import {
 import { CLOUDFLARE_R2_ENDPOINT } from "~/config/vars"
 import { parseFilename } from "~/utils/file"
 
-const uploadStream = ({ Key }: Pick<PutObjectCommandInput, "Key">) => {
+const uploadStream = ({
+  ContentDisposition,
+  ContentType,
+  Key,
+}: Pick<
+  PutObjectCommandInput,
+  "Key" | "ContentDisposition" | "ContentType"
+>) => {
   const s3 = new S3Client({
     credentials: {
       accessKeyId: STORAGE_ACCESS_KEY,
@@ -30,6 +37,8 @@ const uploadStream = ({ Key }: Pick<PutObjectCommandInput, "Key">) => {
       params: {
         Body: pass,
         Bucket: STORAGE_BUCKET,
+        ContentDisposition,
+        ContentType,
         Key,
       },
     }).done(),
@@ -38,9 +47,13 @@ const uploadStream = ({ Key }: Pick<PutObjectCommandInput, "Key">) => {
 }
 
 export function createS3UploadHandler({
+  contentDisposition,
+  contentType,
   key,
 }: {
   key?: string
+  contentDisposition?: PutObjectCommandInput["ContentDisposition"]
+  contentType?: PutObjectCommandInput["ContentType"]
 } = {}): UploadHandler {
   return async ({ data, filename, name }) => {
     if (name !== "file") {
@@ -50,6 +63,8 @@ export function createS3UploadHandler({
     if (!filename) throw new Error("No filename provided")
 
     const stream = uploadStream({
+      ContentDisposition: contentDisposition,
+      ContentType: contentType,
       Key: key || parseFilename(filename),
     })
 

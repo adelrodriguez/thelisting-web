@@ -49,11 +49,18 @@ export async function action({ context, request }: ActionFunctionArgs) {
     })
   }
 
-  // We generate a new filename to avoid collisions.
-  const filename = uuid()
+  // Extract the file extension from the filename
+  const re = /(?:\.([^.]+))?$/
+  const ext = re.exec(result.data.filename)?.[1]
+
+  // We generate a new filename to avoid collisions
+  const filename = uuid() + (ext ? `.${ext}` : "")
 
   const uploadHandler = composeUploadHandlers(
-    createS3UploadHandler({ key: `${user.id}/${filename}` }),
+    createS3UploadHandler({
+      contentType: result.data.mimeType,
+      key: `${user.id}/${filename}`,
+    }),
     createMemoryUploadHandler(),
   )
 
