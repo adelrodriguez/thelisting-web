@@ -10,6 +10,7 @@ export type QueueData = {
     | "alerts-jobs"
     | "notifications-abandoned-checkouts"
     | "notifications-orders"
+    | "notifications-whatsapp-bot"
   /**
    * Always requires text since it's used as a fallback in places where blocks
    * can't be rendered.

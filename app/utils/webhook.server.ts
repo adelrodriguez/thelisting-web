@@ -4,12 +4,18 @@ import crypto from "node:crypto"
 import { HOOKDECK_SIGNING_SECRET } from "~/config/env.server"
 
 /**
- * Verify that the webhook is originating from Hookdeck.
+ * Verify that the webhook is originating from Hookdeck. Ideally all webhooks
+ * should be verified by Hookdeck before hand, but we add shouldHookdeckVerify
+ * to allow for sources not supported by them.
  */
-export function verifyWebhook(headers: Headers, requestText: string): boolean {
+export function verifyWebhook(
+  headers: Headers,
+  requestText: string,
+  shouldHookdeckVerify = true,
+): boolean {
   const isHookdeckVerified = headers.get("x-hookdeck-verified") === "true"
 
-  if (!isHookdeckVerified) return false
+  if (!isHookdeckVerified && shouldHookdeckVerify) return false
 
   const hmacHeader = headers.get("x-hookdeck-signature")
   const hmacHeader2 = headers.get("x-hookdeck-signature-2")
