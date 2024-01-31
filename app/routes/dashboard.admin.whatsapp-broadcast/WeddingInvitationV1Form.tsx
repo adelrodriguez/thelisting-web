@@ -113,7 +113,7 @@ export default function WeddingInvitationV1Form() {
       ) : (
         <Dropzone
           accept={{ "text/csv": [".csv"] }}
-          fileUploadLimitDescription="First column must be recipient name, second column must be phone number. CSV files up to 10MB"
+          fileUploadLimitDescription="First column must be the phone number, second column must be the recipient name. CSV files up to 10MB"
           name="data-upload"
           onDrop={(files) => {
             if (files[0]) {
