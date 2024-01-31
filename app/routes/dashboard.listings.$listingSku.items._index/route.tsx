@@ -1,8 +1,5 @@
 import { Menu, Transition } from "@headlessui/react"
-import {
-  ArrowTopRightOnSquareIcon,
-  EllipsisVerticalIcon,
-} from "@heroicons/react/20/solid"
+import { EllipsisVerticalIcon } from "@heroicons/react/20/solid"
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline"
 import type { Item } from "@prisma/client"
 import type { LoaderFunctionArgs, SerializeFrom } from "@remix-run/node"
@@ -19,10 +16,10 @@ import { route } from "routes-gen"
 import { z } from "zod"
 import { zx } from "zodix"
 
+import { ViewOnShopify } from "~/components/admin"
 import { Button } from "~/components/common"
 import { useProduct } from "~/utils/hooks"
 import type { RouteHandle } from "~/utils/remix"
-import { getShopifyIdNumber } from "~/utils/shopify"
 import { ArrayElement } from "~/utils/type"
 
 export const handle: RouteHandle<{ listingSku: string }> = {
@@ -101,20 +98,9 @@ const columns = [
             <Menu.Items className="absolute right-0 z-10 mt-0.5 w-40 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none">
               {item.commerceId && (
                 <Menu.Item>
-                  <Link
-                    className="flex items-center px-3 py-1 text-sm leading-6 text-gray-900 ui-active:bg-gray-50"
-                    target="_blank"
-                    to={
-                      item.commerceId
-                        ? `https://admin.shopify.com/store/${
-                            window.env.shopifyStore
-                          }/products/${getShopifyIdNumber(item.commerceId)}`
-                        : "#"
-                    }
-                  >
-                    View on Shopify
-                    <ArrowTopRightOnSquareIcon className="ml-1 inline-block h-4 w-4" />
-                  </Link>
+                  <div className="flex items-center px-3 py-1 text-sm leading-6 text-gray-900 ui-active:bg-gray-50">
+                    <ViewOnShopify gid={item.commerceId} />
+                  </div>
                 </Menu.Item>
               )}
               <Menu.Item>
