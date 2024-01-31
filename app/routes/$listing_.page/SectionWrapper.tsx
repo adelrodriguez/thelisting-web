@@ -16,7 +16,10 @@ export default function SectionWrapper({
   styles?: RibbonBase["styles"]
 }) {
   const ref = useRef<ElementRef<"section">>(null)
+  // We run the `useInView` hook twice to get two different thresholds. One is
+  // for triggering the callback function, the other for showing the component.
   const isInView = useInView(ref, { amount: 1 })
+  const show = useInView(ref, { amount: 0.75, once: true })
 
   useEffect(() => {
     if (isInView && onView) {
@@ -27,7 +30,8 @@ export default function SectionWrapper({
   return (
     <section
       className={clsx(
-        "relative flex min-h-0 min-w-0 flex-col items-center justify-center",
+        "relative flex min-h-0 min-w-0 flex-col items-center justify-center transition-opacity duration-1000 ease-in-out",
+        show ? "opacity-100" : "opacity-0",
         className,
       )}
       ref={ref}

@@ -8,6 +8,7 @@ export const RibbonType = z.enum([
   Type.ImageCarousel,
   Type.ImageGallery,
   Type.Location,
+  Type.RegistryShowcase,
   Type.Text,
 ])
 export type RibbonType = z.infer<typeof RibbonType>

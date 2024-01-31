@@ -7,6 +7,7 @@ import { CoverImageRibbon } from "./cover-image"
 import { ImageCarouselRibbon } from "./image-carousel"
 import { ImageGalleryRibbon } from "./image-gallery"
 import { LocationRibbon } from "./location"
+import { RegistryShowcaseRibbon } from "./registry-showcase"
 import { TextRibbon } from "./text"
 
 export * from "./banner"
@@ -16,6 +17,7 @@ export * from "./cover-image"
 export * from "./image-gallery"
 export * from "./image-carousel"
 export * from "./location"
+export * from "./registry-showcase"
 export * from "./text"
 
 export const RibbonSchema = z.discriminatedUnion("type", [
@@ -25,6 +27,7 @@ export const RibbonSchema = z.discriminatedUnion("type", [
   ImageCarouselRibbon,
   ImageGalleryRibbon,
   LocationRibbon,
+  RegistryShowcaseRibbon,
   TextRibbon,
 ])
 

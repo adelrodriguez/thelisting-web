@@ -79,6 +79,7 @@ enum RibbonType {
   ImageCarousel
   ImageGallery
   Location
+  RegistryShowcase
   Text
 }
 

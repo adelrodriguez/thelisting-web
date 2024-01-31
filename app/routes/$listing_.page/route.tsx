@@ -1,10 +1,10 @@
 import { RibbonType } from "@prisma/client"
 import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node"
-import { json, redirect } from "@remix-run/node"
-import { useLoaderData } from "@remix-run/react"
+import { defer, redirect } from "@remix-run/node"
+import { Await, useLoaderData } from "@remix-run/react"
 import clsx from "clsx"
 import { AnimatePresence, motion } from "framer-motion"
-import { ReactNode, useState } from "react"
+import { ReactNode, Suspense, useState } from "react"
 import { z } from "zod"
 import { zx } from "zodix"
 
@@ -12,8 +12,9 @@ import { isProduction } from "~/config/vars"
 import auth from "~/helpers/auth.server"
 import { generateGoogleFontsUrl, getFont } from "~/utils/font"
 import { notFound, unauthorized } from "~/utils/http"
+import { getItemWithData } from "~/utils/item"
 import { ListingThemeSchema } from "~/utils/listing"
-import { RibbonSchema, getCoverImages } from "~/utils/ribbons"
+import { RibbonSchema, getCoverImages, getRibbonFonts } from "~/utils/ribbons"
 
 import Banner from "./Banner"
 import Countdown from "./Countdown"
@@ -21,6 +22,7 @@ import CoverImage from "./CoverImage"
 import ImageCarousel from "./ImageCarousel"
 import ImageGallery from "./ImageGallery"
 import Location from "./Location"
+import RegistryShowcase from "./RegistryShowcase"
 import SectionWrapper from "./SectionWrapper"
 import Text from "./Text"
 import useTheme, { ThemeProvider } from "./ThemeProvider"
@@ -71,16 +73,28 @@ export async function loader({ context, params, request }: LoaderFunctionArgs) {
 
   // Get all the cover images plus their index
   const coverImages = getCoverImages(listing.ribbons)
+  const ribbonFonts = getRibbonFonts(listing.ribbons)
 
   const theme = ListingThemeSchema.parse(listing.theme)
   const [headingFont, bodyFont] = await Promise.all([
-    theme.fonts?.heading ? getFont(cache, theme.fonts?.heading) : null,
-    theme.fonts?.body ? getFont(cache, theme.fonts?.body) : null,
+    theme.fonts?.heading ? getFont(cache, theme.fonts.heading) : null,
+    theme.fonts?.body ? getFont(cache, theme.fonts.body) : null,
   ])
+  const fonts = await Promise.all(
+    ribbonFonts.map((font) => getFont(cache, font)),
+  )
 
-  const fontsUrl = generateGoogleFontsUrl([headingFont, bodyFont])
+  const items = await db.item.findMany({
+    where: { commerceId: { not: null }, listingId: listing.id },
+  })
 
-  return json({ coverImages, fontsUrl, listing, theme })
+  const itemsPromise = Promise.all(
+    items.map((item) => getItemWithData(cache, item)),
+  ).then((items) => items.filter(Boolean))
+
+  const fontsUrl = generateGoogleFontsUrl([headingFont, bodyFont, ...fonts])
+
+  return defer({ coverImages, fontsUrl, items: itemsPromise, listing, theme })
 }
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
@@ -115,7 +129,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 }
 
 export default function ListingPage() {
-  const { coverImages, listing, theme } = useLoaderData<typeof loader>()
+  const { coverImages, items, listing, theme } = useLoaderData<typeof loader>()
   const [cover, setCover] = useState(coverImages[0])
 
   function handleCoverChange(position: number) {
@@ -232,6 +246,22 @@ export default function ListingPage() {
                   <SectionWrapper {...props} key={ribbon.id}>
                     <Text {...result.data.properties} />
                   </SectionWrapper>
+                )
+              }
+              case RibbonType.RegistryShowcase: {
+                return (
+                  <Suspense fallback={null}>
+                    <Await resolve={items}>
+                      {(items) => (
+                        <SectionWrapper {...props} key={ribbon.id}>
+                          <RegistryShowcase
+                            {...result.data.properties}
+                            items={items}
+                          />
+                        </SectionWrapper>
+                      )}
+                    </Await>
+                  </Suspense>
                 )
               }
               default:

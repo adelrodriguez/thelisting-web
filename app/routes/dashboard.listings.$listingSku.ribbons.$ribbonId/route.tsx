@@ -30,6 +30,7 @@ import {
   ImageCarouselRibbon,
   ImageGalleryRibbon,
   LocationRibbon,
+  RegistryShowcaseRibbon,
   TextRibbon,
 } from "~/utils/ribbons"
 
@@ -39,6 +40,7 @@ import CoverImageRibbonForm from "./CoverImageRibbonForm"
 import ImageCarouselRibbonForm from "./ImageCarouselRibbonForm"
 import ImageGalleryRibbonForm from "./ImageGalleryRibbonForm"
 import LocationRibbonForm from "./LocationRibbonForm"
+import RegistryShowcaseRibbonForm from "./RegistryShowcaseRibbonForm"
 import TextRibbonForm from "./TextRibbonForm"
 
 export async function loader({ context, params }: LoaderFunctionArgs) {
@@ -132,6 +134,9 @@ export async function action({ context, params, request }: ActionFunctionArgs) {
           break
         case RibbonType.Location:
           schema = LocationRibbon
+          break
+        case RibbonType.RegistryShowcase:
+          schema = RegistryShowcaseRibbon
           break
         case RibbonType.Text:
           schema = TextRibbon
@@ -252,6 +257,9 @@ export default function DashboardListingRibbonsEditPage() {
                 )}
                 {ribbon.type === RibbonType.Location && (
                   <LocationRibbonForm formId={formId} ribbon={ribbon} />
+                )}
+                {ribbon.type === RibbonType.RegistryShowcase && (
+                  <RegistryShowcaseRibbonForm formId={formId} ribbon={ribbon} />
                 )}
                 {ribbon.type === RibbonType.Text && (
                   <TextRibbonForm formId={formId} ribbon={ribbon} />

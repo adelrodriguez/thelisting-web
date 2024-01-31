@@ -4,7 +4,6 @@ import Autoplay from "embla-carousel-autoplay"
 import useEmblaCarousel from "embla-carousel-react"
 import { useState } from "react"
 
-// import { useCallback } from "react"
 import { ONE_SECOND } from "~/config/consts"
 import type { ImageCarouselProperties } from "~/utils/ribbons"
 

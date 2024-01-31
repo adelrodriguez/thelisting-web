@@ -78,7 +78,7 @@ export default function ImageGalleryRibbonForm({
               className="mr-2 w-full"
               label={`Image ${index + 1}`}
               name={`properties.images[${index}]`}
-              previewHeight="h-40"
+              previewClasses="h-40"
             />
             <Button
               className="my-1"
