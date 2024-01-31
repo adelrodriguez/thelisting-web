@@ -2,17 +2,25 @@ import { Ribbon, RibbonType } from "@prisma/client"
 import { SerializeFrom } from "@remix-run/node"
 import { withZod } from "@remix-validated-form/with-zod"
 
-import { Form, ImageInput, Input, Select } from "~/components/form"
+import {
+  Autocomplete,
+  Form,
+  ImageInput,
+  Input,
+  Select,
+} from "~/components/form"
 import { BannerRibbon } from "~/utils/ribbons"
 
 const validator = withZod(BannerRibbon)
 
 export default function BannerRibbonFields({
+  fontFamilies,
   formId,
   ribbon,
 }: {
   ribbon: SerializeFrom<Ribbon> // Serialized ribbon coming from loader
   formId: string
+  fontFamilies: string[]
 }) {
   const result = BannerRibbon.safeParse(ribbon)
   let defaultValues
@@ -42,8 +50,16 @@ export default function BannerRibbonFields({
 
       <ImageInput label="Decoration Image" name="properties.decorationImage" />
       <Input label="Title" name="properties.title" type="text" />
+      <Autocomplete
+        label="Title Font"
+        name="properties.titleFont"
+        options={fontFamilies.map((font) => ({ label: font, value: font }))}
+      />
+
       <Input label="Subtitle" name="properties.subtitle" type="text" />
+
       <ImageInput label="Background Image" name="properties.backgroundImage" />
+
       <div className="flex gap-2">
         <Select
           className="flex-1"

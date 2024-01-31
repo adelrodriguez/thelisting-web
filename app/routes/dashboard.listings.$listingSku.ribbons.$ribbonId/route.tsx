@@ -20,6 +20,7 @@ import { zx } from "zodix"
 
 import { SubmitButton } from "~/components/form"
 import { isUserAdmin } from "~/utils/auth.server"
+import { getFontList } from "~/utils/font"
 import { useDialogPage } from "~/utils/hooks"
 import { notFound } from "~/utils/http"
 import {
@@ -42,6 +43,9 @@ import TextRibbonForm from "./TextRibbonForm"
 
 export async function loader({ context, params }: LoaderFunctionArgs) {
   const db = context.db
+  const cache = context.cache
+  const env = context.env
+
   const { ribbonId } = zx.parseParams(params, {
     ribbonId: z.string(),
   })
@@ -50,7 +54,13 @@ export async function loader({ context, params }: LoaderFunctionArgs) {
     where: { id: ribbonId },
   })
 
-  return json({ ribbon })
+  const fonts = await getFontList(
+    cache,
+    env.GOOGLE_WEB_FONTS_URL,
+    env.GOOGLE_WEB_FONTS_DEVELOPER_API_KEY,
+  )
+
+  return json({ fontFamilies: fonts.map((font) => font.family), ribbon })
 }
 
 export async function action({ context, params, request }: ActionFunctionArgs) {
@@ -155,7 +165,7 @@ export async function action({ context, params, request }: ActionFunctionArgs) {
 }
 
 export default function DashboardListingRibbonsEditPage() {
-  const { ribbon } = useLoaderData<typeof loader>()
+  const { fontFamilies, ribbon } = useLoaderData<typeof loader>()
   const actionData = useActionData<typeof action>()
   const { close, leave, open } = useDialogPage()
   const formId = `form-${ribbon.id}`
@@ -222,7 +232,11 @@ export default function DashboardListingRibbonsEditPage() {
                 </Dialog.Title>
 
                 {ribbon.type === RibbonType.Banner && (
-                  <BannerRibbonForm formId={formId} ribbon={ribbon} />
+                  <BannerRibbonForm
+                    fontFamilies={fontFamilies}
+                    formId={formId}
+                    ribbon={ribbon}
+                  />
                 )}
                 {ribbon.type === RibbonType.Countdown && (
                   <CountdownRibbonForm formId={formId} ribbon={ribbon} />

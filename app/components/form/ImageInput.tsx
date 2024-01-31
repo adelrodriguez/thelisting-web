@@ -16,10 +16,10 @@ export default function ImageInput({
   label,
   name,
   placeholder,
-  previewHeight = "h-80",
+  previewClasses = "h-80",
   required,
   ...props
-}: ComponentProps<typeof Input> & { previewHeight?: string }) {
+}: ComponentProps<typeof Input> & { previewClasses?: string }) {
   const { error, getInputProps } = useField(name)
   const [value, setValue] = useControlField<string | null>(name)
   const $input = useRef<HTMLInputElement>(null)
@@ -57,14 +57,14 @@ export default function ImageInput({
         <button
           className={clsx(
             "flex w-full items-center justify-center rounded-md border border-slate-200 bg-gray-100",
-            previewHeight,
+            previewClasses,
           )}
           onClick={() => setOpen(true)}
           type="button"
         >
           {value ? (
             <img
-              className="h-full w-full rounded-md border border-slate-200 object-cover"
+              className="h-full w-full rounded-md border border-slate-200 object-scale-down"
               loading="lazy"
               src={value}
             />

@@ -47,3 +47,19 @@ export function getCoverImages(ribbons: Ribbon[]): {
     return acc
   }, [])
 }
+
+export function getRibbonFonts(ribbons: Ribbon[]) {
+  const fonts: string[] = []
+
+  ribbons.forEach((ribbon) => {
+    if (ribbon.type === RibbonType.Banner) {
+      const result = BannerRibbon.safeParse(ribbon)
+
+      if (result.success && result.data.properties.titleFont) {
+        fonts.push(result.data.properties.titleFont)
+      }
+    }
+  })
+
+  return fonts
+}
