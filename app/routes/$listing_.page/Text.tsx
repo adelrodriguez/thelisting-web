@@ -1,5 +1,6 @@
 import { Link } from "@remix-run/react"
 import clsx from "clsx"
+import { useState } from "react"
 
 import type { TextProperties } from "~/utils/ribbons"
 
@@ -7,14 +8,17 @@ import useTheme from "./ThemeProvider"
 
 export default function Text({
   body,
+  characterCount,
   decorationImage,
   hasUrl,
+  isCollapsible,
   textAlignment,
   title,
   url,
   urlLabel,
 }: TextProperties) {
   const { theme } = useTheme()
+  const [collapsed, setCollapsed] = useState(isCollapsible)
 
   return (
     <div className="flex w-full flex-col items-center gap-y-4 px-6 md:px-8">
@@ -42,8 +46,20 @@ export default function Text({
         )}
         style={{ fontFamily: theme.fonts?.body }}
       >
-        {body}
+        {collapsed ? body.slice(0, characterCount) + "..." : body}
       </p>
+      {isCollapsible && collapsed && (
+        <button
+          onClick={() => setCollapsed(false)}
+          style={{
+            color: theme.colors?.text,
+            fontFamily: theme.fonts?.body,
+          }}
+          type="button"
+        >
+          Leer más
+        </button>
+      )}
       {hasUrl && url && (
         <Link
           className={clsx(

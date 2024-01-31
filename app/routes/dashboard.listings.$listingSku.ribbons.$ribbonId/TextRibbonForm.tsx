@@ -30,7 +30,10 @@ export default function TextRibbonForm({
     defaultValues = result.data
   }
 
-  const [hasUrl, setHasUrl] = useState(defaultValues?.properties?.hasUrl)
+  const [hasUrl, setHasUrl] = useState(defaultValues?.properties.hasUrl)
+  const [isCollapsible, setIsCollapsible] = useState(
+    defaultValues?.properties.isCollapsible,
+  )
 
   return (
     <Form
@@ -65,6 +68,27 @@ export default function TextRibbonForm({
           { label: "Justify", value: "text-justify" },
         ]}
       />
+      <div className="grid grid-cols-2 gap-x-2">
+        <Checkbox
+          description="Collapse the text"
+          label="Collapsible"
+          name="properties.isCollapsible"
+          onChange={(e) => {
+            setIsCollapsible(e.target.checked)
+          }}
+          value="true"
+        />
+        {isCollapsible && (
+          <>
+            <Input
+              description="Number of characters to show on the collapsed text"
+              label="Character Count"
+              name="properties.characterCount"
+              type="number"
+            />
+          </>
+        )}
+      </div>
       <Checkbox
         description="Show a clickable button with a link"
         label="Has URL"
@@ -75,10 +99,10 @@ export default function TextRibbonForm({
         value="true"
       />
       {hasUrl && (
-        <>
+        <div className="grid grid-cols-2 gap-x-2">
           <Input label="URL" name="properties.url" />
           <Input label="Label" name="properties.urlLabel" />
-        </>
+        </div>
       )}
 
       <div className="mt-4 flex flex-col gap-y-2">

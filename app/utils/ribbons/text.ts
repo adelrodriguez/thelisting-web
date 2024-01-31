@@ -6,6 +6,7 @@ import { RibbonBase } from "./base"
 export const TextProperties = z
   .object({
     body: z.string().min(1, "You must provide a body for the text"),
+    characterCount: z.coerce.number().int().optional(),
     decorationImage: z.string().optional(),
     hasUrl: z.preprocess(
       // Since this is coming from a checkbox, we both need to check for the
@@ -16,18 +17,21 @@ export const TextProperties = z
       (val) => val === "true" || val,
       z.boolean().optional(),
     ),
+    isCollapsible: z.preprocess(
+      // Same as above
+      (val) => val === "true" || val,
+      z.boolean().optional(),
+    ),
     textAlignment: z.string().optional(),
     title: z.string().optional(),
     url: z.string().optional(),
     urlLabel: z.string().optional(),
   })
   .refine(
-    (data) => {
-      if (data.hasUrl) {
-        return !!data.url
-      }
+    ({ hasUrl, url }) => {
+      if (!hasUrl) return true
 
-      return true
+      return !!url
     },
     {
       message: "You must provide a URL",
@@ -35,16 +39,25 @@ export const TextProperties = z
     },
   )
   .refine(
-    (data) => {
-      if (data.hasUrl) {
-        return !!data.urlLabel
-      }
+    ({ hasUrl, urlLabel }) => {
+      if (!hasUrl) return true
 
-      return true
+      return !!urlLabel
     },
     {
       message: "You must provide a URL label",
       path: ["urlLabel"],
+    },
+  )
+  .refine(
+    ({ characterCount, isCollapsible }) => {
+      if (!isCollapsible) return true
+
+      return !!characterCount && characterCount > 0
+    },
+    {
+      message: "Character count must be greater than 0",
+      path: ["characterCount"],
     },
   )
 
