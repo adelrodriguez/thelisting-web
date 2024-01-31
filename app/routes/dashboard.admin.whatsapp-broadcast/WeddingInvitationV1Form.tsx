@@ -18,7 +18,7 @@ export const validator = withZod(
   z.object({
     coupleName: z.string().min(1),
     date: z.string().min(1),
-    image: z.string().uuid("You must provide an image"),
+    image: z.string().url("You must provide an image"),
     message: z.string().min(1).max(1024),
     path: z.string().min(1),
     place: z.string().min(1),
@@ -97,7 +97,7 @@ export default function WeddingInvitationV1Form() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 bg-white">
-              {result?.data.map((row) => (
+              {result.data.map((row) => (
                 <tr key={row.phoneNumber}>
                   <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-gray-900 sm:pl-6">
                     {row.phoneNumber}
