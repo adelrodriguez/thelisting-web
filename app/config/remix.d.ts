@@ -1,6 +1,7 @@
 /// <reference types="@remix-run/node" />
 import type { PrismaClient } from "@prisma/client"
 import type { Redis } from "ioredis"
+import type { RemixI18Next } from "remix-i18next"
 import type { Logger } from "winston"
 
 declare module "@remix-run/node" {
@@ -9,5 +10,6 @@ declare module "@remix-run/node" {
     db: PrismaClient
     logger: Logger
     env: typeof import("~/config/env.server")
+    i18n: RemixI18Next
   }
 }

@@ -19,11 +19,12 @@ import { Spinner } from "~/components/loading"
 import { calculateShipping, calculateSubtotal } from "~/utils/cart"
 import { useCart, useDialogPage, useExchangeRate } from "~/utils/hooks"
 import { formatPrice } from "~/utils/money"
+import { RouteHandle } from "~/utils/remix"
 
 import CartItem from "./CartItem"
 
-export const handle = {
-  i18n: ["registry", "common"],
+export const handle: RouteHandle = {
+  id: "listing-registry-cart",
 }
 
 export default function Page() {
@@ -32,7 +33,7 @@ export default function Page() {
   const listing = useOutletContext<Listing>()
   const navigate = useNavigate()
   const navigation = useNavigation()
-  const { t } = useTranslation(handle.i18n)
+  const { t } = useTranslation(["common", "registry"])
   const { currency, exchangeRate } = useExchangeRate()
   const location = useLocation()
   const subtotal = calculateSubtotal([...cart.items.values()])
@@ -71,7 +72,7 @@ export default function Page() {
                     <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
                       <div className="flex items-start justify-between">
                         <Dialog.Title className="font-heading text-2xl font-bold text-gray-900">
-                          {t("cart")}
+                          {t("registry:cart")}
                         </Dialog.Title>
                         <div className="ml-3 flex h-7 items-center">
                           <button
@@ -113,8 +114,8 @@ export default function Page() {
 
                         <div className="flex justify-between">
                           <dt className="flex items-center">
-                            {t("common:shipping")}
-                            <Tooltip text={t("shippingNote")}>
+                            {t("registry:shipping_and_handling")}
+                            <Tooltip text={t("registry:shipping_note")}>
                               <InformationCircleIcon className="ml-0.5 h-4 w-4" />
                             </Tooltip>
                           </dt>
@@ -141,7 +142,9 @@ export default function Page() {
                             search: location.search,
                           }}
                         >
-                          {cart.noteId ? t("messageAdded") : t("addAMessage")}
+                          {cart.noteId
+                            ? t("registry:note.added")
+                            : t("registry:note.add")}
                         </Link>
                       </div>
                       <div className="mt-6">
@@ -165,14 +168,14 @@ export default function Page() {
                           size="xl"
                         >
                           {cart.items.size === 0 ? (
-                            t("checkout.empty")
+                            t("registry:checkout.empty")
                           ) : navigation.state === "submitting" ? (
                             <>
                               <Spinner />
-                              {t("checkout.submitting")}
+                              {t("registry:checkout.submitting")}
                             </>
                           ) : (
-                            t("checkout.ready")
+                            t("registry:checkout.ready")
                           )}
                         </Button>
                       </div>

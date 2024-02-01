@@ -18,6 +18,7 @@ import env from "~/config/env.server"
 import { isDevelopment } from "~/config/vars"
 import cache from "~/helpers/cache.server"
 import db from "~/helpers/db.server"
+import i18n from "~/helpers/i18next.server"
 import logger from "~/helpers/logger.server"
 import { getLocalNetworkIP } from "~/utils/network"
 
@@ -37,7 +38,7 @@ async function run() {
     ? await createDevRequestHandler(initialBuild)
     : createRequestHandler({
         build: initialBuild,
-        getLoadContext: () => ({ cache, db, env, logger }),
+        getLoadContext: () => ({ cache, db, env, i18n, logger }),
         mode: initialBuild.mode,
       })
 
@@ -126,7 +127,7 @@ async function run() {
       try {
         return createRequestHandler({
           build,
-          getLoadContext: () => ({ cache, db, env, logger }),
+          getLoadContext: () => ({ cache, db, env, i18n, logger }),
           mode: "development",
         })(req, res, next)
       } catch (error) {

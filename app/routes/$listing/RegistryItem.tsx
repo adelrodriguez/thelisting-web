@@ -44,7 +44,7 @@ export default function RegistryItem({
         </div>
         {!isAvailable && (
           <span className="absolute bottom-0 left-0 z-10 mb-4 ml-4 inline-flex items-center rounded-full bg-gray-700 px-3 py-0.5 text-sm font-medium text-white lg:px-4 lg:py-1 lg:text-base">
-            {t("outOfStock")}
+            {t("out_of_stock")}
           </span>
         )}
       </div>

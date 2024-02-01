@@ -13,17 +13,19 @@ import { zx } from "zodix"
 
 import { Button } from "~/components/common"
 import { OrderItem } from "~/components/registry"
-import i18next from "~/helpers/i18next.server"
 import { formatPrice, getPriceSymbol } from "~/utils/money"
+import { RouteHandle } from "~/utils/remix"
 
-export const handle = {
-  i18n: ["common", "registry"],
+export const handle: RouteHandle = {
+  id: "listing-review",
 }
 
 export async function loader({ context, params, request }: LoaderFunctionArgs) {
   const db = context.db
+  const i18n = context.i18n
+
   const { listing: path } = zx.parseParams(params, { listing: z.string() })
-  const t = await i18next.getFixedT(request, "registry")
+  const t = await i18n.getFixedT(request, "review")
 
   const listing = await db.listing.findFirst({
     select: {
@@ -76,10 +78,10 @@ export async function loader({ context, params, request }: LoaderFunctionArgs) {
   return json({
     listing,
     stats: [
-      { icon: "gift", name: t("itemsGifted"), stat: itemsPurchased },
+      { icon: "gift", name: t("items_gifted"), stat: itemsPurchased },
       {
         icon: "currency",
-        name: t("totalGifted"),
+        name: t("total_gifted"),
         stat: currency(totalPurchased)
           .format({ symbol: getPriceSymbol() })
           .toString(),
@@ -90,7 +92,7 @@ export async function loader({ context, params, request }: LoaderFunctionArgs) {
 
 export default function ListingReviewPage() {
   const { listing, stats } = useLoaderData<typeof loader>()
-  const { i18n, t } = useTranslation(handle.i18n)
+  const { i18n, t } = useTranslation(["common", "registry", "review"])
 
   return (
     <main className="relative lg:min-h-full">
@@ -110,7 +112,7 @@ export default function ListingReviewPage() {
                   {listing.title}
                 </h1>
                 <p className="text-md mt-2 font-body text-gray-500">
-                  {t("registry:yourGiftsDescription")}
+                  {t("review:description")}
                 </p>
               </div>
 
@@ -152,7 +154,7 @@ export default function ListingReviewPage() {
                 <div className="mx-auto max-w-2xl space-y-8 sm:px-4 lg:max-w-4xl lg:px-0">
                   {listing.purchases.length === 0 && (
                     <h2 className="px-4 py-5 text-center font-body text-lg font-medium text-gray-500 sm:px-6">
-                      {t("registry:yourGiftsEmpty")}
+                      {t("review:empty")}
                     </h2>
                   )}
                   {listing.purchases.map((purchase, index) => (
@@ -163,7 +165,7 @@ export default function ListingReviewPage() {
                             <dl className="grid w-full grid-cols-3 gap-x-6 gap-y-2 text-sm sm:w-3/4">
                               <div>
                                 <dt className="font-medium text-gray-900">
-                                  {t("registry:giftedBy")}
+                                  {t("review:gifted_by")}
                                 </dt>
                                 <dd className="mt-1 max-w-[200px] text-gray-500">
                                   {purchase.customer?.name}
@@ -171,7 +173,7 @@ export default function ListingReviewPage() {
                               </div>
                               <div>
                                 <dt className="font-medium text-gray-900">
-                                  {t("registry:giftedOn")}
+                                  {t("review:gifted_on")}
                                 </dt>
                                 <dd className="mt-1 text-gray-500">
                                   <time dateTime={purchase.createdAt}>
@@ -189,7 +191,7 @@ export default function ListingReviewPage() {
                               </div>
                               <div>
                                 <dt className="font-medium text-gray-900">
-                                  {t("registry:totalGifted")}
+                                  {t("review:total_gifted")}
                                 </dt>
                                 <dd className="mt-1 text-gray-500">
                                   {formatPrice(purchase.cost, "DOP")}
@@ -207,7 +209,7 @@ export default function ListingReviewPage() {
                               >
                                 {open
                                   ? t("common:close")
-                                  : t("common:viewDetails")}
+                                  : t("review:view_details")}
                               </Button>
                             </Disclosure.Button>
                           </div>
@@ -222,7 +224,9 @@ export default function ListingReviewPage() {
                                   key={itemPurchase.itemId}
                                 >
                                   <OrderItem
-                                    commerceId={itemPurchase.item.commerceId}
+                                    commerceId={
+                                      itemPurchase.item.commerceId as string
+                                    }
                                     cost={itemPurchase.cost}
                                     quantity={itemPurchase.quantity}
                                   />
@@ -233,13 +237,13 @@ export default function ListingReviewPage() {
                               <div className="p-4">
                                 <div className="text-sm font-medium text-gray-900">
                                   ✨{" "}
-                                  {t("registry:leftYouANote", {
+                                  {t("review:left_you_a_note", {
                                     name: purchase.customer?.name,
                                   })}
                                 </div>
                                 <blockquote>
                                   <p className="mt-1 text-sm text-gray-500">
-                                    {purchase.note?.text}
+                                    {purchase.note.text}
                                   </p>
                                 </blockquote>
                               </div>

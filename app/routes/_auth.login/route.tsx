@@ -18,9 +18,10 @@ import { Alert, Button } from "~/components/common"
 import { Spinner } from "~/components/loading"
 import auth from "~/helpers/auth.server"
 import sessionStorage from "~/helpers/session.server"
+import { RouteHandle } from "~/utils/remix"
 
-export const handle = {
-  i18n: ["login", "common"],
+export const handle: RouteHandle = {
+  id: "login",
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -70,7 +71,7 @@ export default function LoginPage() {
   const { success } = useLoaderData<typeof loader>()
   const navigate = useNavigate()
   const navigation = useNavigation()
-  const { t } = useTranslation(handle.i18n)
+  const { t } = useTranslation(["dashboard", "common"])
 
   const isSubmitting = navigation.state === "submitting"
   const show = typeof success === "boolean"
@@ -81,7 +82,7 @@ export default function LoginPage() {
         <main className="mx-auto w-full max-w-sm lg:w-96">
           <Logo />
           <h2 className="my-6 font-heading text-3xl font-bold tracking-tight text-gray-900">
-            {t("welcome")}
+            {t("dashboard:login.welcome")}
           </h2>
 
           <Transition
@@ -97,7 +98,7 @@ export default function LoginPage() {
               onClose={() => navigate("/login", { replace: true })}
               type="success"
             >
-              {t("magicLinkSent")}
+              {t("login.magic_link_sent")}
             </Alert>
           </Transition>
           <Transition
@@ -113,7 +114,7 @@ export default function LoginPage() {
               onClose={() => navigate("/login", { replace: true })}
               type="error"
             >
-              {t("magicLinkError")}
+              {t("login.magic_link_sent")}
             </Alert>
           </Transition>
 
@@ -127,7 +128,7 @@ export default function LoginPage() {
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
                   id="email"
                   name="email"
-                  placeholder={t("enterYourEmail") ?? ""}
+                  placeholder={t("login.enter_email")}
                   type="email"
                 />
               </div>
@@ -135,10 +136,10 @@ export default function LoginPage() {
                 {isSubmitting ? (
                   <>
                     <Spinner />
-                    {t("common:loggingIn") ?? ""}
+                    {t("common:logging_in")}
                   </>
                 ) : (
-                  t("common:login") ?? ""
+                  t("common:login")
                 )}
               </Button>
             </Form>

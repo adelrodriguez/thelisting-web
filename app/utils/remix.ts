@@ -1,7 +1,5 @@
 import { SerializeFrom } from "@remix-run/node"
 
-import type { LocaleFile } from "./i18n"
-
 /**
  * Used to define the handle for a route.
  */
@@ -17,8 +15,4 @@ export type RouteHandle<Params = unknown, LoaderData = unknown> = {
    * A unique identifier for the route.
    */
   id: string
-  /**
-   * Used for internationalization.
-   */
-  i18n?: LocaleFile | LocaleFile[]
 }

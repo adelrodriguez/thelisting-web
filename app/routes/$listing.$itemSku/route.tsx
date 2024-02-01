@@ -19,7 +19,6 @@ import type { RouteHandle } from "~/utils/remix"
 import QuantityInput from "./QuantityInput"
 
 export const handle: RouteHandle = {
-  i18n: "registry",
   id: "listing-item-detail",
 }
 
@@ -61,7 +60,7 @@ export default function Page() {
   const isAvailable = item.stock > 0
   const { close, leave, open } = useDialogPage()
   const [quantity, setQuantity] = useState(Number(isAvailable))
-  const { t } = useTranslation(handle.i18n)
+  const { t } = useTranslation("registry")
   const { currency, exchangeRate } = useExchangeRate()
 
   const {
@@ -140,7 +139,7 @@ export default function Page() {
                         className="mt-3"
                       >
                         <h3 className="sr-only" id="information-heading">
-                          {t("itemInformation")}
+                          {t("item.title")}
                         </h3>
 
                         <p className="font-body text-2xl text-gray-900">
@@ -148,7 +147,7 @@ export default function Page() {
                         </p>
 
                         <div className="mt-6">
-                          <h4 className="sr-only">{t("itemDescription")}</h4>
+                          <h4 className="sr-only">{t("item.description")}</h4>
 
                           <p className="text-sm text-gray-700">
                             {item.description}
@@ -173,7 +172,9 @@ export default function Page() {
                         onClick={handleAddToCart}
                         size="lg"
                       >
-                        {item.stock === 0 ? t("outOfStock") : t("addToCart")}
+                        {item.stock === 0
+                          ? t("out_of_stock")
+                          : t("add_to_cart")}
                       </Button>
                     </div>
                   </div>

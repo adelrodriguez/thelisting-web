@@ -1,12 +1,14 @@
 import { redirect, json } from "@remix-run/node"
-import type { ActionFunctionArgs } from "@remix-run/node"
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node"
 import {
   isRouteErrorResponse,
   useNavigate,
   useRouteError,
 } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
+import { route } from "routes-gen"
 import { z } from "zod"
+import { zx } from "zodix"
 
 import { Alert } from "~/components/common"
 import { getSession } from "~/helpers/session.server"
@@ -17,8 +19,14 @@ import { checkStock } from "~/utils/checkout.server"
 import { badRequest, internalServerError, notFound } from "~/utils/http"
 import { createCheckout } from "~/utils/shopify.server"
 
-export function loader() {
-  return redirect("..")
+export function loader({ params }: LoaderFunctionArgs) {
+  const { listing } = zx.parseParams(params, z.object({ listing: z.string() }))
+
+  return redirect(
+    route("/:listing/cart", {
+      listing,
+    }),
+  )
 }
 
 const validator = withZod(

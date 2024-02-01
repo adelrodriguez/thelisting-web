@@ -23,7 +23,6 @@ import { generateKey } from "~/utils/redis"
 import type { RouteHandle } from "~/utils/remix"
 
 export const handle: RouteHandle = {
-  i18n: ["registry", "common"],
   id: "listing-cart-note",
 }
 
@@ -80,6 +79,9 @@ export async function loader({ context, params, request }: LoaderFunctionArgs) {
 
 export async function action({ context, params, request }: ActionFunctionArgs) {
   const db = context.db
+  const i18n = context.i18n
+
+  const t = await i18n.getFixedT(request, "registry")
 
   const { listing: listingPath } = zx.parseParams(
     params,
@@ -89,7 +91,7 @@ export async function action({ context, params, request }: ActionFunctionArgs) {
   const serverValidator = withZod(
     z.object({
       id: z.string().optional(),
-      text: zfd.text(z.string().max(500, "The note is too long").optional()),
+      text: zfd.text(z.string().max(500, t("note.error.length")).optional()),
     }),
   )
 
@@ -144,10 +146,10 @@ export default function Page() {
   const { note } = useLoaderData<typeof loader>()
   const { close, leave, open } = useDialogPage()
 
-  const { t } = useTranslation(handle.i18n)
+  const { t } = useTranslation(["registry", "common"])
   const cart = useCart()
   const actionData = useActionData<typeof action>()
-  const lengthError = t("registry:note.lengthError")
+  const lengthError = t("registry:note.error.length")
   const clientValidator = withZod(
     z.object({
       text: zfd.text(z.string().max(500, lengthError).optional()),
@@ -200,7 +202,9 @@ export default function Page() {
                               onClick={close}
                               type="button"
                             >
-                              <span className="sr-only">{t("close")}</span>
+                              <span className="sr-only">
+                                {t("common:cancel")}
+                              </span>
                               <XMarkIcon
                                 aria-hidden="true"
                                 className="h-6 w-6"
@@ -210,7 +214,7 @@ export default function Page() {
                         </div>
                         <div className="mt-1">
                           <p className="text-sm text-gray-300">
-                            {t("note.subtitle")}
+                            {t("registry:note.subtitle")}
                           </p>
                         </div>
                       </div>
@@ -226,7 +230,7 @@ export default function Page() {
                               defaultValue={note?.text || ""}
                               label="Nota"
                               name="text"
-                              placeholder={`${t("note.placeholder")}`}
+                              placeholder={`${t("registry:note.placeholder")}`}
                               rows={20}
                             />
                           </div>

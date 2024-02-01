@@ -3,9 +3,7 @@ import { createReadableStreamFromReadable } from "@remix-run/node"
 import { RemixServer } from "@remix-run/react"
 import * as Sentry from "@sentry/remix"
 import { createInstance } from "i18next"
-import Backend from "i18next-fs-backend"
 import isbot from "isbot"
-import { resolve } from "node:path"
 import { renderToPipeableStream } from "react-dom/server"
 import { I18nextProvider, initReactI18next } from "react-i18next"
 import { PassThrough } from "stream"
@@ -33,12 +31,10 @@ export default async function handleRequest(
 
   await instance
     .use(initReactI18next) // Tell our instance to use react-i18next
-    .use(Backend) // Setup our backend
     .init({
-      ...i18n, // spread the configuration
-      backend: { loadPath: resolve("./public/locales/{{lng}}/{{ns}}.json") },
-      lng, // The locale we detected above
-      ns, // The namespaces the routes about to render wants to use
+      ...i18n,
+      lng,
+      ns,
     })
 
   return new Promise((resolve, reject) => {

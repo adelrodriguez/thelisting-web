@@ -11,7 +11,6 @@ import { useCart } from "~/utils/hooks"
 import type { RouteHandle } from "~/utils/remix"
 
 export const handle: RouteHandle = {
-  i18n: ["registry", "common"],
   id: "listing-cart-confirm",
 }
 
@@ -72,11 +71,11 @@ export default function Page() {
                       as="h3"
                       className="text-base font-semibold leading-6 text-slate-900"
                     >
-                      {t("addNoteReminder.title")}
+                      {t("add_note_reminder.title")}
                     </Dialog.Title>
                     <div className="mt-2">
                       <p className="text-sm text-slate-500">
-                        {t("addNoteReminder.description")}
+                        {t("add_note_reminder.description")}
                       </p>
                     </div>
                   </div>
@@ -93,7 +92,7 @@ export default function Page() {
                     type="button"
                     variant="secondary"
                   >
-                    {t("addNoteReminder.confirm")}
+                    {t("add_note_reminder.confirm")}
                   </Button>
                   <Button
                     disabled={isSubmitting}
@@ -103,10 +102,10 @@ export default function Page() {
                     {isSubmitting ? (
                       <>
                         <Spinner className="h-5 w-5 text-slate-900" />
-                        {t("addNoteReminder.loading")}
+                        {t("add_note_reminder.loading")}
                       </>
                     ) : (
-                      t("addNoteReminder.cancel")
+                      t("add_note_reminder.cancel")
                     )}
                   </Button>
                 </div>

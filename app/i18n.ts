@@ -1,3 +1,5 @@
+import { en, es } from "~/helpers/i18n"
+
 export default {
   // The default namespace of i18next is "translation", but you can customize it here
   defaultNS: "common",
@@ -6,6 +8,8 @@ export default {
   fallbackLng: "es",
   // Disabling suspense is recommended
   react: { useSuspense: false },
+
+  resources: { en, es },
   // This is the list of languages your application supports
   supportedLngs: ["es", "en"],
 }

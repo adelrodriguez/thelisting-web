@@ -14,7 +14,7 @@ import { getShopifyId } from "~/utils/shopify"
 import { getOrder } from "~/utils/shopify.server"
 
 export const handle = {
-  i18n: ["registry", "common"],
+  id: "listing-thank-you",
 }
 
 export async function loader({ context, params, request }: LoaderFunctionArgs) {
@@ -79,7 +79,7 @@ export async function loader({ context, params, request }: LoaderFunctionArgs) {
 }
 
 export default function ListingThankYouPage() {
-  const { t } = useTranslation(handle.i18n)
+  const { t } = useTranslation(["thank_you", "common"])
   const { listing, order } = useLoaderData<typeof loader>()
 
   const total = order.totalPriceSet.presentmentMoney
@@ -102,22 +102,22 @@ export default function ListingThankYouPage() {
         <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:grid lg:max-w-7xl lg:grid-cols-2 lg:gap-x-8 lg:px-8 lg:py-32 xl:gap-x-24">
           <div className="lg:col-start-2">
             <h1 className="font-body text-sm font-medium text-gray-600">
-              {t("giftSent")}
+              {t("thank_you:gift_sent")}
             </h1>
             <p className="mt-2 font-headline text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
-              {t("thankYou", { name: order.customer?.firstName })}
+              {t("thank_you:thank_you", { name: order.customer?.firstName })}
             </p>
             <p className="mt-4 font-body text-base text-gray-500">
-              {t("orderConfirmation")}
+              {t("thank_you:confirmation")}
             </p>
 
             <ul className="mt-6 divide-y divide-gray-200 border-t border-gray-200 text-sm font-medium text-gray-500">
-              {order.lineItems?.nodes.map(
+              {order.lineItems.nodes.map(
                 (lineItem) =>
                   lineItem.product?.id && (
-                    <li className="py-6" key={lineItem.product?.id}>
+                    <li className="py-6" key={lineItem.product.id}>
                       <OrderItem
-                        commerceId={lineItem.product?.id}
+                        commerceId={lineItem.product.id}
                         quantity={lineItem.quantity}
                       />
                     </li>
@@ -134,7 +134,7 @@ export default function ListingThankYouPage() {
 
             <div className="mt-16 text-sm text-gray-600">
               <dt className="font-medium text-gray-900">
-                {t("common:billingAddress")}
+                {t("thank_you:billing_address")}
               </dt>
               <dd className="mt-2">
                 <address className="not-italic">
@@ -155,7 +155,7 @@ export default function ListingThankYouPage() {
                 className="text-sm font-medium text-gray-600 hover:text-gray-500"
                 to={"/" + listing.path}
               >
-                {t("goBack")}
+                {t("thank_you:go_back")}
                 <span aria-hidden="true"> &rarr;</span>
               </Link>
             </div>
