@@ -42,13 +42,13 @@ export async function loader({ context, params }: LoaderFunctionArgs) {
   })
 
   if (!item) {
-    throw redirect(route("/:listingPath", { listingPath }))
+    throw redirect(route("/:listingPath/registry", { listingPath }))
   }
 
   const itemWithData = await getItemWithData(cache, item)
 
   if (!itemWithData) {
-    throw redirect(route("/:listingPath", { listingPath }))
+    throw redirect(route("/:listingPath/registry", { listingPath }))
   }
 
   return json({ item: itemWithData })

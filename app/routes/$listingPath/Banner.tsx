@@ -3,6 +3,7 @@ import clsx from "clsx"
 import { useInView } from "framer-motion"
 import { ElementRef, useRef } from "react"
 import { useTranslation } from "react-i18next"
+import { route } from "routes-gen"
 
 import type { BannerProperties } from "~/utils/ribbons"
 
@@ -13,10 +14,11 @@ export default function Banner({
   decorationImage,
   imageFit,
   imagePosition,
+  path,
   subtitle,
   title,
   titleFont,
-}: BannerProperties) {
+}: BannerProperties & { path: string }) {
   const { theme } = useTheme()
   const ref = useRef<ElementRef<"div">>(null)
 
@@ -72,7 +74,7 @@ export default function Banner({
             color: theme.colors?.primary,
             fontFamily: theme.fonts?.body,
           }}
-          to="../"
+          to={route("/:listingPath/registry", { listingPath: path })}
         >
           {t("registry")}
         </Link>

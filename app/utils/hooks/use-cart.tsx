@@ -129,7 +129,7 @@ export function CartProvider({
     }
 
     submit(formData, {
-      action: route("/:listingPath/cart/checkout", {
+      action: route("/:listingPath/registry/cart/checkout", {
         listingPath: listing.path,
       }),
       method: "post",

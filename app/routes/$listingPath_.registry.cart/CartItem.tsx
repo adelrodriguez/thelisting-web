@@ -15,7 +15,8 @@ export default function CartItem({
   quantity,
   sku,
 }: Pick<Item, "id" | "quantity" | "sku"> & { commerceId: string }) {
-  const { listingPath } = useParams<RouteParams["/:listingPath/cart"]>()
+  const { listingPath } =
+    useParams<RouteParams["/:listingPath/registry/cart"]>()
   const { data, isError, isPending } = useProduct(commerceId)
   const cart = useCart()
   const { t } = useTranslation("registry")
@@ -50,7 +51,7 @@ export default function CartItem({
           <div className="flex justify-between text-base font-medium text-gray-900">
             <h3>
               <Link
-                to={route("/:listingPath/:itemSku", {
+                to={route("/:listingPath/registry/:itemSku", {
                   itemSku: sku,
                   listingPath,
                 })}

@@ -26,7 +26,7 @@ export function loader({ params }: LoaderFunctionArgs) {
   )
 
   return redirect(
-    route("/:listingPath/cart", {
+    route("/:listingPath/registry/cart", {
       listingPath,
     }),
   )

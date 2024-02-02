@@ -3,6 +3,7 @@ import clsx from "clsx"
 import Autoplay from "embla-carousel-autoplay"
 import useEmblaCarousel from "embla-carousel-react"
 import { useTranslation } from "react-i18next"
+import { route } from "routes-gen"
 
 import { ONE_SECOND } from "~/config/consts"
 import { RegistryShowcaseProperties } from "~/utils/ribbons"
@@ -16,10 +17,12 @@ export default function RegistryShowcase({
   imagePosition,
   itemCount,
   items,
+  path,
   subtitle,
   title,
 }: {
   items: { id: string; data: { title: string; imageUrl: string } }[]
+  path: string
 } & RegistryShowcaseProperties) {
   const { theme } = useTheme()
   const { t } = useTranslation("listing", { useSuspense: true })
@@ -94,7 +97,7 @@ export default function RegistryShowcase({
             color: theme.colors?.primary,
             fontFamily: theme.fonts?.body,
           }}
-          to="../"
+          to={route("/:listingPath/registry", { listingPath: path })}
         >
           {t("registry")}
         </Link>

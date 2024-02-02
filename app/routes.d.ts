@@ -2,12 +2,12 @@ declare module "routes-gen" {
   export type RouteParams = {
     "/": Record<string, never>;
     "/:listingPath": { "listingPath": string };
-    "/:listingPath/:itemSku": { "listingPath": string, "itemSku": string };
-    "/:listingPath/cart": { "listingPath": string };
-    "/:listingPath/cart/checkout": { "listingPath": string };
-    "/:listingPath/cart/confirm": { "listingPath": string };
-    "/:listingPath/cart/note": { "listingPath": string };
-    "/:listingPath/page": { "listingPath": string };
+    "/:listingPath/registry": { "listingPath": string };
+    "/:listingPath/registry/:itemSku": { "listingPath": string, "itemSku": string };
+    "/:listingPath/registry/cart": { "listingPath": string };
+    "/:listingPath/registry/cart/checkout": { "listingPath": string };
+    "/:listingPath/registry/cart/confirm": { "listingPath": string };
+    "/:listingPath/registry/cart/note": { "listingPath": string };
     "/:listingPath/review": { "listingPath": string };
     "/:listingPath/thank-you": { "listingPath": string };
     "/about": Record<string, never>;
@@ -65,12 +65,12 @@ declare module "routes-gen" {
     T extends
       | ["/"]
       | ["/:listingPath", RouteParams["/:listingPath"]]
-      | ["/:listingPath/:itemSku", RouteParams["/:listingPath/:itemSku"]]
-      | ["/:listingPath/cart", RouteParams["/:listingPath/cart"]]
-      | ["/:listingPath/cart/checkout", RouteParams["/:listingPath/cart/checkout"]]
-      | ["/:listingPath/cart/confirm", RouteParams["/:listingPath/cart/confirm"]]
-      | ["/:listingPath/cart/note", RouteParams["/:listingPath/cart/note"]]
-      | ["/:listingPath/page", RouteParams["/:listingPath/page"]]
+      | ["/:listingPath/registry", RouteParams["/:listingPath/registry"]]
+      | ["/:listingPath/registry/:itemSku", RouteParams["/:listingPath/registry/:itemSku"]]
+      | ["/:listingPath/registry/cart", RouteParams["/:listingPath/registry/cart"]]
+      | ["/:listingPath/registry/cart/checkout", RouteParams["/:listingPath/registry/cart/checkout"]]
+      | ["/:listingPath/registry/cart/confirm", RouteParams["/:listingPath/registry/cart/confirm"]]
+      | ["/:listingPath/registry/cart/note", RouteParams["/:listingPath/registry/cart/note"]]
       | ["/:listingPath/review", RouteParams["/:listingPath/review"]]
       | ["/:listingPath/thank-you", RouteParams["/:listingPath/thank-you"]]
       | ["/about"]
