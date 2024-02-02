@@ -19,7 +19,13 @@ import { z } from "zod"
 import { zx } from "zodix"
 
 import { Button } from "~/components/common"
-import { Autocomplete, Form, Input, SubmitButton } from "~/components/form"
+import {
+  Autocomplete,
+  Form,
+  Input,
+  SubmitButton,
+  Switch,
+} from "~/components/form"
 import { getFontList } from "~/utils/font"
 import { badRequest } from "~/utils/http"
 import { ListingThemeSchema } from "~/utils/listing"
@@ -260,7 +266,11 @@ export default function DashboardListingRibbonsPage() {
                       value: font,
                     }))}
                   />
-
+                  <Switch
+                    description="Use the dark logo in the footer"
+                    label="Dark Logo"
+                    name="darkLogo"
+                  />
                   <SubmitButton className="col-span-2" loadingText="Saving...">
                     Save
                   </SubmitButton>

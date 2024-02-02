@@ -49,6 +49,7 @@ export const ListingThemeSchema = z.object({
       text: z.string().optional(),
     })
     .optional(),
+  darkLogo: z.coerce.boolean().optional(),
   fonts: z
     .object({
       body: z.string().optional(),

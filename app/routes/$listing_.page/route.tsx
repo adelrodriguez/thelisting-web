@@ -1,13 +1,18 @@
 import { RibbonType } from "@prisma/client"
 import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node"
 import { defer, redirect } from "@remix-run/node"
-import { Await, useLoaderData } from "@remix-run/react"
+import { Await, Link, useLoaderData } from "@remix-run/react"
 import clsx from "clsx"
 import { AnimatePresence, motion } from "framer-motion"
 import { ReactNode, Suspense, useState } from "react"
 import { z } from "zod"
 import { zx } from "zodix"
 
+import {
+  HOMEPAGE_URL,
+  THE_LISTING_LOGO_BLACK,
+  THE_LISTING_LOGO_WHITE,
+} from "~/config/consts"
 import { isProduction } from "~/config/vars"
 import auth from "~/helpers/auth.server"
 import { generateGoogleFontsUrl, getFont } from "~/utils/font"
@@ -258,10 +263,10 @@ export default function ListingPage() {
               }
               case RibbonType.RegistryShowcase: {
                 return (
-                  <Suspense fallback={null}>
+                  <Suspense fallback={null} key={ribbon.id}>
                     <Await resolve={items}>
                       {(items) => (
-                        <SectionWrapper {...props} key={ribbon.id}>
+                        <SectionWrapper {...props}>
                           <RegistryShowcase
                             {...result.data.properties}
                             items={items}
@@ -276,6 +281,20 @@ export default function ListingPage() {
                 return null
             }
           })}
+          <footer className="py-10">
+            <Link target="_blank" to={HOMEPAGE_URL}>
+              <img
+                alt="The Listing"
+                className="mx-auto h-10 w-full object-contain"
+                loading="eager"
+                src={
+                  theme.darkLogo
+                    ? THE_LISTING_LOGO_BLACK
+                    : THE_LISTING_LOGO_WHITE
+                }
+              />
+            </Link>
+          </footer>
         </RibbonsContainer>
       </main>
     </ThemeProvider>

@@ -7,7 +7,7 @@ import { useField } from "remix-validated-form"
 /**
  * This component should only be used within a Form component.
  */
-export default function Input({
+export default function FormInput({
   className,
   description,
   label,
