@@ -33,7 +33,7 @@ export default function RegistryShowcase({
 
   return (
     <>
-      <div className="relative z-10 flex h-screen flex-col items-center justify-center gap-y-7 px-2 md:px-4">
+      <div className="relative z-10 flex h-screen w-full flex-col items-center justify-center gap-y-7">
         {decorationImage && (
           <div className="h-32 lg:h-40">
             <img
@@ -63,16 +63,20 @@ export default function RegistryShowcase({
             {subtitle}
           </p>
         )}
-        <div className="relative w-full overflow-hidden" ref={emblaRef}>
+        <div className="w-full overflow-hidden" ref={emblaRef}>
           <div className="flex">
-            {items.slice(0, itemCount).map((item) => (
+            {items.slice(0, itemCount).map((item, index) => (
               <div
-                className="mx-4 min-w-0 shrink-0 grow-0 basis-24 lg:basis-32"
+                className="relative mx-4 flex h-40 min-w-0 shrink-0 grow-0 basis-24 items-center lg:h-64 lg:basis-32"
                 key={item.id}
               >
                 <img
                   alt={item.data.title}
-                  className="h-24 w-24 rounded-full object-cover lg:h-32 lg:w-32"
+                  className={clsx(
+                    "absolute h-24 w-full rounded-2xl object-cover shadow-lg lg:h-32",
+                    "transition-transform duration-300 hover:scale-125",
+                    index % 2 === 0 ? "-rotate-3" : "rotate-3",
+                  )}
                   src={item.data.imageUrl}
                 />
               </div>
