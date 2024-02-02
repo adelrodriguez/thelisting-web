@@ -136,8 +136,8 @@ export default function Page() {
                           preventScrollReset
                           relative="route"
                           to={{
-                            pathname: route("/:listing/cart/note", {
-                              listing: listing.path,
+                            pathname: route("/:listingPath/cart/note", {
+                              listingPath: listing.path,
                             }),
                             search: location.search,
                           }}
@@ -159,8 +159,8 @@ export default function Page() {
                               cart.checkout()
                             } else {
                               navigate(
-                                route("/:listing/cart/confirm", {
-                                  listing: listing.path,
+                                route("/:listingPath/cart/confirm", {
+                                  listingPath: listing.path,
                                 }) + location.search,
                               )
                             }

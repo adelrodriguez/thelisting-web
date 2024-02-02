@@ -15,7 +15,7 @@ export default function CartItem({
   quantity,
   sku,
 }: Pick<Item, "id" | "quantity" | "sku"> & { commerceId: string }) {
-  const { listing } = useParams<RouteParams["/:listing/cart"]>()
+  const { listingPath } = useParams<RouteParams["/:listingPath/cart"]>()
   const { data, isError, isPending } = useProduct(commerceId)
   const cart = useCart()
   const { t } = useTranslation("registry")
@@ -24,7 +24,7 @@ export default function CartItem({
   // TODO(adelrodriguez): Handle loading and error states
   if (isPending) return <div>Loading...</div>
 
-  if (isError || !listing)
+  if (isError || !listingPath)
     return (
       <div className="w-full">
         <Alert onClose={() => cart.remove(id)} type="error">
@@ -50,9 +50,9 @@ export default function CartItem({
           <div className="flex justify-between text-base font-medium text-gray-900">
             <h3>
               <Link
-                to={route("/:listing/:itemSku", {
+                to={route("/:listingPath/:itemSku", {
                   itemSku: sku,
-                  listing,
+                  listingPath,
                 })}
               >
                 {title}

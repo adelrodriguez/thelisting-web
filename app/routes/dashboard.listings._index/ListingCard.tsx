@@ -99,7 +99,7 @@ export default function ListingCard({
                 <Link
                   className="block px-3 py-1 text-sm leading-6 text-gray-900 ui-active:bg-gray-50"
                   target="_blank"
-                  to={route("/:listing", { listing: path })}
+                  to={route("/:listingPath", { listingPath: path })}
                 >
                   View <span className="sr-only">{title}</span>
                 </Link>
@@ -109,8 +109,8 @@ export default function ListingCard({
                 <Link
                   className="block px-3 py-1 text-sm leading-6 text-gray-900 ui-active:bg-gray-50"
                   target="_blank"
-                  to={route("/:listing/review", {
-                    listing: path,
+                  to={route("/:listingPath/review", {
+                    listingPath: path,
                   })}
                 >
                   Review <span className="sr-only">{title}</span>

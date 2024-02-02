@@ -21,10 +21,10 @@ export default function Page() {
   const { t } = useTranslation("registry")
   const confirmButtonRef = useRef(null)
   const [open, isOpen] = useState(true)
-  const { listing } = useParams<RouteParams["/:listing/cart/confirm"]>()
+  const { listingPath } = useParams<RouteParams["/:listingPath/cart/confirm"]>()
   const isSubmitting = navigation.state === "submitting"
 
-  if (!listing) return null
+  if (!listingPath) return null
 
   return (
     <Transition.Root appear as={Fragment} show={open}>
@@ -35,7 +35,9 @@ export default function Page() {
         onClose={() => isOpen(false)}
       >
         <Transition.Child
-          afterLeave={() => navigate(route("/:listing/cart", { listing }))}
+          afterLeave={() =>
+            navigate(route("/:listingPath/cart", { listingPath }))
+          }
           as={Fragment}
           enter="ease-out duration-300"
           enterFrom="opacity-0"
@@ -84,9 +86,12 @@ export default function Page() {
                   <Button
                     disabled={isSubmitting}
                     onClick={() => {
-                      navigate(route("/:listing/cart/note", { listing }), {
-                        replace: true,
-                      })
+                      navigate(
+                        route("/:listingPath/cart/note", { listingPath }),
+                        {
+                          replace: true,
+                        },
+                      )
                     }}
                     ref={confirmButtonRef}
                     type="button"

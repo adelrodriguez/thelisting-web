@@ -59,8 +59,6 @@ export function CartProvider({
   })
   const submit = useSubmit()
 
-  const currentCart = data || createDefaultCart(listing.id)
-
   const queryClient = useQueryClient()
   const storeCarts = useMutation({
     mutationFn: (cart: BaseCart) =>
@@ -86,7 +84,7 @@ export function CartProvider({
     sku,
     variantId,
   }: CartItem) {
-    const newItems = new Map(currentCart.items)
+    const newItems = new Map(data.items)
 
     newItems.set(id, {
       commerceId,
@@ -101,7 +99,7 @@ export function CartProvider({
   }
 
   function removeItemFromCart(id: string) {
-    const newItems = new Map(currentCart.items)
+    const newItems = new Map(data.items)
 
     newItems.delete(id)
 
@@ -113,29 +111,26 @@ export function CartProvider({
   }
 
   function saveCart<T extends keyof BaseCart>(key: T, value: BaseCart[T]) {
-    const newCart = {
-      ...currentCart,
-      [key]: value,
-    }
+    const newCart = { ...data, [key]: value }
 
     storeCarts.mutate(newCart)
   }
 
   function checkout() {
     const formData = new FormData()
-    const cartItems = JSON.stringify([...currentCart.items.values()])
+    const cartItems = JSON.stringify([...data.items.values()])
 
     formData.append("cartItems", cartItems)
     formData.append("listingId", listing.id)
     formData.append("sku", `${listing.sku}`)
 
-    if (currentCart.noteId) {
-      formData.append("noteId", currentCart.noteId)
+    if (data.noteId) {
+      formData.append("noteId", data.noteId)
     }
 
     submit(formData, {
-      action: route("/:listing/cart/checkout", {
-        listing: `${listing.path}`,
+      action: route("/:listingPath/cart/checkout", {
+        listingPath: listing.path,
       }),
       method: "post",
       replace: true,
@@ -148,9 +143,9 @@ export function CartProvider({
         add: addItemToCart,
         attachNoteId: attachNoteIdToCart,
         checkout,
-        items: currentCart.items,
+        items: data.items,
         listingId: listing.id,
-        noteId: currentCart.noteId,
+        noteId: data.noteId,
         remove: removeItemFromCart,
       }}
     >

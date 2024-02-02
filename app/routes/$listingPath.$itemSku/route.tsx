@@ -26,29 +26,29 @@ export async function loader({ context, params }: LoaderFunctionArgs) {
   const db = context.db
   const cache = context.cache
 
-  const { itemSku, listing } = zx.parseParams(
+  const { itemSku, listingPath } = zx.parseParams(
     params,
-    z.object({ itemSku: z.string(), listing: z.string() }),
+    z.object({ itemSku: z.string(), listingPath: z.string() }),
   )
 
   const item = await db.item.findFirst({
     where: {
       commerceId: { not: null },
       listing: {
-        path: listing,
+        path: listingPath,
       },
       sku: itemSku,
     },
   })
 
   if (!item) {
-    throw redirect(route("/:listing", { listing }))
+    throw redirect(route("/:listingPath", { listingPath }))
   }
 
   const itemWithData = await getItemWithData(cache, item)
 
   if (!itemWithData) {
-    throw redirect(route("/:listing", { listing }))
+    throw redirect(route("/:listingPath", { listingPath }))
   }
 
   return json({ item: itemWithData })

@@ -20,11 +20,14 @@ import { badRequest, internalServerError, notFound } from "~/utils/http"
 import { createCheckout } from "~/utils/shopify.server"
 
 export function loader({ params }: LoaderFunctionArgs) {
-  const { listing } = zx.parseParams(params, z.object({ listing: z.string() }))
+  const { listingPath } = zx.parseParams(
+    params,
+    z.object({ listingPath: z.string() }),
+  )
 
   return redirect(
-    route("/:listing/cart", {
-      listing,
+    route("/:listingPath/cart", {
+      listingPath,
     }),
   )
 }

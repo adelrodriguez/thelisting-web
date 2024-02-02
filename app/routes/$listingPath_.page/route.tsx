@@ -36,7 +36,7 @@ export async function loader({ context, params, request }: LoaderFunctionArgs) {
   const db = context.db
   const cache = context.cache
 
-  const { listing: path } = zx.parseParams(params, { listing: z.string() })
+  const { listingPath } = zx.parseParams(params, { listingPath: z.string() })
 
   const listing = await db.listing.findFirst({
     include: {
@@ -48,7 +48,7 @@ export async function loader({ context, params, request }: LoaderFunctionArgs) {
       },
     },
     where: {
-      path,
+      path: listingPath,
       status: {
         in: ["Draft", "Published"],
       },

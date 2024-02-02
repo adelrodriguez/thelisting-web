@@ -27,14 +27,14 @@ export async function loader({ context, params }: LoaderFunctionArgs) {
   const db = context.db
   const cache = context.cache
 
-  const { listing: path } = zx.parseParams(params, { listing: z.string() })
+  const { listingPath } = zx.parseParams(params, { listingPath: z.string() })
 
   const listing = await db.listing.findFirst({
-    where: { path, status: "Published" },
+    where: { path: listingPath, status: "Published" },
   })
 
   if (!listing) {
-    Sentry.captureMessage(`Listing not found: ${path}`)
+    Sentry.captureMessage(`Listing not found: ${listingPath}`)
     throw notFound({
       message: "Sorry, we couldn’t find the page you’re looking for.",
     })

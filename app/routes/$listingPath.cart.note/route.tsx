@@ -31,9 +31,9 @@ export async function loader({ context, params, request }: LoaderFunctionArgs) {
   const cache = context.cache
 
   try {
-    const { listing: listingPath } = zx.parseParams(
+    const { listingPath } = zx.parseParams(
       params,
-      z.object({ listing: z.string() }),
+      z.object({ listingPath: z.string() }),
     )
 
     const { id: listingId } = await db.listing.findFirstOrThrow({
@@ -83,9 +83,9 @@ export async function action({ context, params, request }: ActionFunctionArgs) {
 
   const t = await i18n.getFixedT(request, "registry")
 
-  const { listing: listingPath } = zx.parseParams(
+  const { listingPath } = zx.parseParams(
     params,
-    z.object({ listing: z.string() }),
+    z.object({ listingPath: z.string() }),
   )
 
   const serverValidator = withZod(

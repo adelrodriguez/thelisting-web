@@ -24,7 +24,7 @@ export async function loader({ context, params, request }: LoaderFunctionArgs) {
   const db = context.db
   const i18n = context.i18n
 
-  const { listing: path } = zx.parseParams(params, { listing: z.string() })
+  const { listingPath } = zx.parseParams(params, { listingPath: z.string() })
   const t = await i18n.getFixedT(request, "review")
 
   const listing = await db.listing.findFirst({
@@ -50,7 +50,7 @@ export async function loader({ context, params, request }: LoaderFunctionArgs) {
       status: true,
       title: true,
     },
-    where: { path, status: ListingStatus.Published },
+    where: { path: listingPath, status: ListingStatus.Published },
   })
 
   if (!listing) {

@@ -119,7 +119,7 @@ export default function RibbonsPreview({
         <Link
           className="absolute right-0"
           target="_blank"
-          to={route("/:listing/page", { listing: path })}
+          to={route("/:listingPath/page", { listingPath: path })}
         >
           <CircularButton size="lg">
             <ArrowTopRightOnSquareIcon className="h-5 w-5" />

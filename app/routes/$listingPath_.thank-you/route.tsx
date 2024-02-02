@@ -35,12 +35,12 @@ export async function loader({ context, params, request }: LoaderFunctionArgs) {
   const orderId = result.data.order_id
 
   try {
-    const { listing: path } = zx.parseParams(params, { listing: z.string() })
+    const { listingPath } = zx.parseParams(params, { listingPath: z.string() })
 
     const order = await getOrder(getShopifyId(orderId, "Order"))
 
     const listing = await db.listing.findFirstOrThrow({
-      where: { path, status: "Published" },
+      where: { path: listingPath, status: "Published" },
     })
 
     const distinctId = getDistinctId(request.headers)
@@ -104,7 +104,7 @@ export default function ListingThankYouPage() {
             <h1 className="font-body text-sm font-medium text-gray-600">
               {t("thank_you:gift_sent")}
             </h1>
-            <p className="mt-2 font-headline text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
+            <p className="mt-2 font-headline text-4xl font-bold text-gray-900 sm:text-5xl">
               {t("thank_you:thank_you", { name: order.customer?.firstName })}
             </p>
             <p className="mt-4 font-body text-base text-gray-500">

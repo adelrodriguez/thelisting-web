@@ -1,15 +1,15 @@
 declare module "routes-gen" {
   export type RouteParams = {
     "/": Record<string, never>;
-    "/:listing": { "listing": string };
-    "/:listing/:itemSku": { "listing": string, "itemSku": string };
-    "/:listing/cart": { "listing": string };
-    "/:listing/cart/checkout": { "listing": string };
-    "/:listing/cart/confirm": { "listing": string };
-    "/:listing/cart/note": { "listing": string };
-    "/:listing/page": { "listing": string };
-    "/:listing/review": { "listing": string };
-    "/:listing/thank-you": { "listing": string };
+    "/:listingPath": { "listingPath": string };
+    "/:listingPath/:itemSku": { "listingPath": string, "itemSku": string };
+    "/:listingPath/cart": { "listingPath": string };
+    "/:listingPath/cart/checkout": { "listingPath": string };
+    "/:listingPath/cart/confirm": { "listingPath": string };
+    "/:listingPath/cart/note": { "listingPath": string };
+    "/:listingPath/page": { "listingPath": string };
+    "/:listingPath/review": { "listingPath": string };
+    "/:listingPath/thank-you": { "listingPath": string };
     "/about": Record<string, never>;
     "/api/admin/listings/:listingId/report.csv": { "listingId": string };
     "/api/cart": Record<string, never>;
@@ -64,15 +64,15 @@ declare module "routes-gen" {
   export function route<
     T extends
       | ["/"]
-      | ["/:listing", RouteParams["/:listing"]]
-      | ["/:listing/:itemSku", RouteParams["/:listing/:itemSku"]]
-      | ["/:listing/cart", RouteParams["/:listing/cart"]]
-      | ["/:listing/cart/checkout", RouteParams["/:listing/cart/checkout"]]
-      | ["/:listing/cart/confirm", RouteParams["/:listing/cart/confirm"]]
-      | ["/:listing/cart/note", RouteParams["/:listing/cart/note"]]
-      | ["/:listing/page", RouteParams["/:listing/page"]]
-      | ["/:listing/review", RouteParams["/:listing/review"]]
-      | ["/:listing/thank-you", RouteParams["/:listing/thank-you"]]
+      | ["/:listingPath", RouteParams["/:listingPath"]]
+      | ["/:listingPath/:itemSku", RouteParams["/:listingPath/:itemSku"]]
+      | ["/:listingPath/cart", RouteParams["/:listingPath/cart"]]
+      | ["/:listingPath/cart/checkout", RouteParams["/:listingPath/cart/checkout"]]
+      | ["/:listingPath/cart/confirm", RouteParams["/:listingPath/cart/confirm"]]
+      | ["/:listingPath/cart/note", RouteParams["/:listingPath/cart/note"]]
+      | ["/:listingPath/page", RouteParams["/:listingPath/page"]]
+      | ["/:listingPath/review", RouteParams["/:listingPath/review"]]
+      | ["/:listingPath/thank-you", RouteParams["/:listingPath/thank-you"]]
       | ["/about"]
       | ["/api/admin/listings/:listingId/report.csv", RouteParams["/api/admin/listings/:listingId/report.csv"]]
       | ["/api/cart"]
