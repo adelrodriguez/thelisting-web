@@ -54,6 +54,10 @@ const es: I18nBase = {
       title: "Todo lo que deseas, en una sola lista",
     },
   },
+  meta: {
+    description:
+      "Listas de regalo y experiencias personalizadas para todo tipo de eventos. Te permitimos elegir artículos de cualquier tienda que desees.",
+  },
   registry: {
     add_note_reminder: {
       cancel: "Ir a pagar 🎁",

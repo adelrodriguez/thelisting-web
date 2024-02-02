@@ -1,4 +1,7 @@
 export type I18nBase = {
+  meta: {
+    description: string
+  }
   common: {
     cancel: string
     close: string

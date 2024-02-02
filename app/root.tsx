@@ -1,4 +1,8 @@
-import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node"
+import type {
+  LinksFunction,
+  LoaderFunctionArgs,
+  MetaFunction,
+} from "@remix-run/node"
 import { json } from "@remix-run/node"
 import {
   useLoaderData,
@@ -23,7 +27,6 @@ import { NotFound } from "~/components/error"
 import { PublicEnv } from "~/components/utils"
 import { isProduction } from "~/config/vars"
 import { shopifyStorefrontAPIEndpoint } from "~/config/vars.server"
-import i18next from "~/helpers/i18next.server"
 import stylesheet from "~/styles/app.css"
 import { ExchangeRateProvider, useChangeLanguage } from "~/utils/hooks"
 import { i18nCookie } from "~/utils/i18n"
@@ -71,8 +74,11 @@ export function ErrorBoundary() {
 }
 
 export async function loader({ context, request }: LoaderFunctionArgs) {
-  const locale = await i18next.getLocale(request)
+  const i18n = context.i18n
   const env = context.env
+
+  const locale = await i18n.getLocale(request)
+  const t = await i18n.getFixedT(request, "meta")
 
   const publicEnv: ComponentProps<typeof PublicEnv> = {
     environment: env.NODE_ENV,
@@ -87,6 +93,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
 
   return json(
     {
+      description: t("description"),
       env: publicEnv,
       locale,
     },
@@ -97,6 +104,14 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
     },
   )
 }
+
+export const meta: MetaFunction<typeof loader> = ({ data }) => [
+  { title: "The Listing" },
+  {
+    content: data?.description,
+    name: "description",
+  },
+]
 
 function App() {
   const { env, locale } = useLoaderData<typeof loader>()
@@ -125,11 +140,6 @@ function App() {
       <head>
         <meta content="width=device-width, initial-scale=1" name="viewport" />
         <meta charSet="utf-8" />
-        <title>The Listing</title>
-        <meta
-          content="Listas de regalo personalizadas para todo tipo de eventos. Te permitimos elegir artículos de cualquier tienda que desees; logistica de compra y entrega incluida."
-          name="description"
-        />
         <Meta />
         <Links />
       </head>

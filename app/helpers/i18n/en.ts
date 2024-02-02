@@ -54,6 +54,10 @@ const en: I18nBase = {
       title: "Everything you want, in one list",
     },
   },
+  meta: {
+    description:
+      "Gift lists and personalized experiences for all kinds of events. We allow you to choose items from any store you want.",
+  },
   registry: {
     add_note_reminder: {
       cancel: "Go to checkout 🎁",
