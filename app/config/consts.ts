@@ -110,3 +110,16 @@ export const IMAGE_MIME_TYPES = {
   "image/png": [".png"],
   "image/webp": [".webp"],
 }
+
+export const FORBIDDEN_PATHS = [
+  "about",
+  "contact",
+  "dashboard",
+  "login",
+  "logout",
+  "privacy-policy",
+  "privacy",
+  "register",
+  "terms-of-service",
+  "terms",
+]

@@ -31,6 +31,8 @@ model Listing {
   coverImage    String?
   thankYouImage String?
 
+  redirectUrl String?
+
   theme Json @default("{}") @db.Json
 
   items     Item[]

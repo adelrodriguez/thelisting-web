@@ -4,7 +4,7 @@ import clsx from "clsx"
 import { route } from "routes-gen"
 
 import { Select } from "~/components/common"
-import { handle as detailsHandle } from "~/routes/dashboard.listings.$listingSku.details/route"
+import { handle as detailsEditHandle } from "~/routes/dashboard.listings.$listingSku.details.edit/route"
 import { handle as itemsHandle } from "~/routes/dashboard.listings.$listingSku.items._index/route"
 import { handle as ribbonsHandle } from "~/routes/dashboard.listings.$listingSku.ribbons/route"
 import { handle as statsHandle } from "~/routes/dashboard.listings.$listingSku.stats/route"
@@ -21,7 +21,7 @@ export const handle: RouteHandle<{ listingSku: string }> = {
 }
 
 const tabs = [
-  { id: detailsHandle.id, label: "Details", value: "./details" },
+  { id: detailsEditHandle.id, label: "Edit", value: "./details/edit" },
   { id: statsHandle.id, label: "Stats", value: "./stats" },
   { id: itemsHandle.id, label: "Items", value: "./items" },
   { id: ribbonsHandle.id, label: "Ribbons", value: "./ribbons" },

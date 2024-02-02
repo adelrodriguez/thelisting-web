@@ -24,6 +24,7 @@ import {
   Select,
   SubmitButton,
 } from "~/components/form"
+import { FORBIDDEN_PATHS } from "~/config/consts"
 import auth from "~/helpers/auth.server"
 import {
   forbidden,
@@ -50,7 +51,7 @@ export const handle: RouteHandle<{ listingSku: string }> = {
     href: route("/dashboard/listings/:listingSku/details/edit", {
       listingSku: params.listingSku,
     }),
-    name: "Edit Listing",
+    name: "Edit",
   }),
   id: "dashboard-listings-listing-edit",
 }
@@ -62,6 +63,7 @@ const clientValidator = withZod(
     isInternal: zfd.checkbox({ trueValue: "internal" }),
     ownerId: ListingOwnerSchema,
     path: ListingPathSchema,
+    redirectUrl: z.string().optional(),
     status: ListingStatusSchema,
     subtitle: z.string().optional(),
     thankYouImage: ListingThankYouImageSchema,
@@ -152,7 +154,11 @@ export async function action({ context, params, request }: ActionFunctionArgs) {
             return existingListing.id === listing.id
           },
           { message: "The path you have entered is already in use." },
-        ),
+        )
+        .refine((path) => !FORBIDDEN_PATHS.includes(path), {
+          message: "You cannot use this path. Please choose another one.",
+        }),
+      redirectUrl: z.string().optional(),
       status: ListingStatusSchema,
       subtitle: ListingSubtitleSchema,
       thankYouImage: ListingThankYouImageSchema,
@@ -356,6 +362,11 @@ export default function DashboardListingPage() {
         disabled
         label="Commerce ID"
         name="commerceId"
+      />
+      <Input
+        description="Redirect from the page to another URL. Useful if the Listing does not have a display page but has a registry."
+        label="Redirect URL"
+        name="redirectUrl"
       />
       <Checkbox
         description="Internal listings are used for showcase purposes. Purchases are disabled."

@@ -62,7 +62,7 @@ export default function ListingCard({
             </span>
           </span>
         )}
-        <Link className="flex flex-col" to={`${sku}/details`}>
+        <Link className="flex flex-col" to={`${sku}/details/edit`}>
           <h3 className="text-sm font-medium leading-6 text-gray-900">
             {title}
           </h3>
@@ -87,7 +87,7 @@ export default function ListingCard({
               <Menu.Item>
                 <Link
                   className="block px-3 py-1 text-sm leading-6 text-gray-900 ui-active:bg-gray-50"
-                  to={route("/dashboard/listings/:listingSku/details", {
+                  to={route("/dashboard/listings/:listingSku/details/edit", {
                     listingSku: `${sku}`,
                   })}
                 >

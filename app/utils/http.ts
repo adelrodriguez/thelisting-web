@@ -1,5 +1,27 @@
-import { json } from "@remix-run/node"
+import { json, redirect } from "@remix-run/node"
 import { ReasonPhrases, StatusCodes } from "http-status-codes"
+
+/**
+ * 307 Temporary Redirect
+ */
+export function temporaryRedirect(location: string) {
+  return redirect(location, {
+    headers: { Location: location },
+    status: StatusCodes.TEMPORARY_REDIRECT,
+    statusText: ReasonPhrases.TEMPORARY_REDIRECT,
+  })
+}
+
+/**
+ * 308 Permanent Redirect
+ */
+export function permanentRedirect(location: string) {
+  return redirect(location, {
+    headers: { Location: location },
+    status: StatusCodes.PERMANENT_REDIRECT,
+    statusText: ReasonPhrases.PERMANENT_REDIRECT,
+  })
+}
 
 /**
  * 400 Bad Request

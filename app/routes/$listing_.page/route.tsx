@@ -1,6 +1,6 @@
 import { RibbonType } from "@prisma/client"
 import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node"
-import { defer, redirect } from "@remix-run/node"
+import { defer } from "@remix-run/node"
 import { Await, Link, useLoaderData } from "@remix-run/react"
 import clsx from "clsx"
 import { AnimatePresence, motion } from "framer-motion"
@@ -13,10 +13,9 @@ import {
   THE_LISTING_LOGO_BLACK,
   THE_LISTING_LOGO_WHITE,
 } from "~/config/consts"
-import { isProduction } from "~/config/vars"
 import auth from "~/helpers/auth.server"
 import { generateGoogleFontsUrl, getFont } from "~/utils/font"
-import { notFound, unauthorized } from "~/utils/http"
+import { notFound, temporaryRedirect, unauthorized } from "~/utils/http"
 import { getItemWithData } from "~/utils/item"
 import { ListingThemeSchema } from "~/utils/listing"
 import { RibbonSchema, getCoverImages, getRibbonFonts } from "~/utils/ribbons"
@@ -63,18 +62,16 @@ export async function loader({ context, params, request }: LoaderFunctionArgs) {
     })
   }
 
+  if (listing.redirectUrl) {
+    return temporaryRedirect(listing.redirectUrl)
+  }
+
   if (listing.status === "Draft") {
     const user = await auth.isAuthenticated(request)
 
     if (!user) {
       throw unauthorized({ message: "You must be logged in to view this page" })
     }
-  }
-
-  // TODO(adelrodriguez): Remove this when ribbons are ready
-  // Only see pages for internal pages in production
-  if (isProduction && !listing.isInternal) {
-    throw redirect(`/${path}`, { status: 302 })
   }
 
   // Get all the cover images plus their index
