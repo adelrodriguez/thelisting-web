@@ -104,6 +104,8 @@ export const HOMEPAGE_URL = "https://thelisting.do"
 
 export const REDIRECT_URL = "https://somos.thelisting.do"
 
+export const REGISTRATION_TYPEFORM_ID = "qN3Covsa"
+
 export const IMAGE_MIME_TYPES = {
   "image/gif": [".gif"],
   "image/jpg": [".jpg", ".jpeg"],
