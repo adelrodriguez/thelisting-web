@@ -7,10 +7,10 @@ import { THE_LISTING_LOGO_WHITE } from "~/config/consts"
 
 const navigation = {
   legal: [
-    { href: "/policies#terms", key: "marketing:footer.legal.terms" },
-    { href: "/policies#privacy", key: "marketing:footer.legal.privacy" },
-    { href: "/policies#security", key: "marketing:footer.legal.security" },
-    { href: "/policies#refunds", key: "marketing:footer.legal.refunds" },
+    { href: "/legal#terms", key: "marketing:footer.legal.terms" },
+    { href: "/legal#privacy", key: "marketing:footer.legal.privacy" },
+    { href: "/legal#security", key: "marketing:footer.legal.security" },
+    { href: "/legal#refunds", key: "marketing:footer.legal.refunds" },
   ] as const,
   social: [
     {

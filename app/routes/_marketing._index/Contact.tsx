@@ -15,7 +15,7 @@ export default function Contact() {
         <div className="mt-8 flex justify-center">
           <div className="inline-flex rounded-md shadow">
             <Link
-              className="inline-flex items-center justify-center rounded-md border border-transparent bg-gray-600 px-5 py-3 text-base font-medium text-white hover:bg-gray-700"
+              className="inline-flex items-center justify-center rounded-md border border-transparent bg-slate-600 px-5 py-3 text-base font-medium text-white hover:bg-slate-700"
               to={route("/register")}
             >
               {t("landing.contact.register")}
@@ -23,7 +23,7 @@ export default function Contact() {
           </div>
           <div className="ml-3 inline-flex">
             <Link
-              className="inline-flex items-center justify-center rounded-md border border-transparent bg-gray-100 px-5 py-3 text-base font-medium text-gray-700 hover:bg-gray-200"
+              className="inline-flex items-center justify-center rounded-md border border-transparent bg-gray-100 px-5 py-3 text-base font-medium text-slate-700 hover:bg-gray-200"
               to="mailto:hola@thelisting.do"
             >
               {t("landing.contact.contact_us")}

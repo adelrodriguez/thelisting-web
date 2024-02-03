@@ -27,8 +27,8 @@ export default function Page() {
         </div>
       </section>
 
-      <section className="flex flex-col gap-y-8">
-        <h2 className="text-center font-heading text-3xl font-bold" id="#terms">
+      <section className="flex flex-col gap-y-8" id="#terms">
+        <h2 className="text-center font-heading text-3xl font-bold">
           Términos y Condiciones
         </h2>
         <div className="grid grid-cols-1 gap-x-4 md:grid-cols-4">
@@ -268,11 +268,8 @@ export default function Page() {
         </div>
       </section>
 
-      <section className="flex flex-col gap-y-8">
-        <h2
-          className="text-center font-heading text-3xl font-bold"
-          id="refunds"
-        >
+      <section className="flex flex-col gap-y-8" id="refunds">
+        <h2 className="text-center font-heading text-3xl font-bold">
           Política de Reembolso y Cancelación
         </h2>
         <div className="grid grid-cols-1 gap-x-4 md:grid-cols-4">
@@ -294,11 +291,8 @@ export default function Page() {
         </div>
       </section>
 
-      <section className="flex flex-col gap-y-8">
-        <h2
-          className="text-center font-heading text-3xl font-bold"
-          id="security"
-        >
+      <section className="flex flex-col gap-y-8" id="security">
+        <h2 className="text-center font-heading text-3xl font-bold">
           Política de la Seguridad de la Transmisión de Datos
         </h2>
 
@@ -334,11 +328,8 @@ export default function Page() {
         </div>
       </section>
 
-      <section className="flex flex-col gap-y-8">
-        <h2
-          className="text-center font-heading text-3xl font-bold"
-          id="privacy"
-        >
+      <section className="flex flex-col gap-y-8" id="privacy">
+        <h2 className="text-center font-heading text-3xl font-bold">
           Política de Privacidad
         </h2>
 

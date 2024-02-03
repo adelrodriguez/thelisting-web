@@ -9,11 +9,11 @@ import { LanguageCurrencySelector } from "~/components/marketing"
 import { THE_LISTING_LOGO_BLACK, THE_LISTING_LOGO_WHITE } from "~/config/consts"
 
 const navigationItems = [
-  { href: "#examples", key: "marketing:header.examples" },
-  { href: "#pricing", key: "marketing:header.pricing" },
-  { href: "#faq", key: "marketing:header.faq" },
-  { href: "#about", key: "marketing:header.about" },
-  { href: "#contact", key: "marketing:header.contact" },
+  { href: "/#examples", key: "marketing:header.examples" },
+  { href: "/#pricing", key: "marketing:header.pricing" },
+  { href: "/#faq", key: "marketing:header.faq" },
+  { href: "/#about", key: "marketing:header.about" },
+  { href: "/#contact", key: "marketing:header.contact" },
 ] as const
 
 export default function Header() {

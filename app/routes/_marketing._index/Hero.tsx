@@ -2,8 +2,6 @@ import { Link } from "@remix-run/react"
 import { useTranslation } from "react-i18next"
 import { route } from "routes-gen"
 
-import { Button } from "~/components/common"
-
 export default function Hero() {
   const { t } = useTranslation("marketing")
 
@@ -15,6 +13,7 @@ export default function Hero() {
       <img
         alt=""
         className="absolute inset-0 -z-20 h-full w-full object-cover"
+        // TODO(adelrodriguez): Replace this image with a real one
         src="https://images.unsplash.com/photo-1520854221256-17451cc331bf?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80"
       />
       <div className="absolute inset-0 -z-20 h-full w-full bg-gray-600 object-cover mix-blend-multiply" />
@@ -29,8 +28,11 @@ export default function Hero() {
               {t("landing.hero.subtitle")}
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
-              <Link to={route("/register")}>
-                <Button size="xl">{t("landing.hero.cta")}</Button>
+              <Link
+                className="inline-flex items-center justify-center rounded-md border border-transparent bg-slate-600 px-5 py-3 text-base font-medium text-white hover:bg-slate-700"
+                to={route("/register")}
+              >
+                {t("landing.hero.cta")}{" "}
               </Link>
 
               <Link

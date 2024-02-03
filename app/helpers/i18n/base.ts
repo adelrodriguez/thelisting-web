@@ -125,8 +125,47 @@ export type I18nBase = {
         cta: string
         find: string
       }
+      highlight: {
+        title: string
+        subtitle: string
+        description: string
+        features: [
+          {
+            title: string
+            description: string
+          },
+          {
+            title: string
+            description: string
+          },
+          {
+            title: string
+            description: string
+          },
+        ]
+      }
       features: {
         title: string
+        subtitle: string
+        description: string
+        list: [
+          {
+            title: string
+            description: string
+          },
+          {
+            title: string
+            description: string
+          },
+          {
+            title: string
+            description: string
+          },
+          {
+            title: string
+            description: string
+          },
+        ]
       }
       contact: {
         title1: string

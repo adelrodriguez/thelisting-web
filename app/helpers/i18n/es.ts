@@ -68,8 +68,33 @@ const es: I18nBase = {
         title1: "¿Tienes alguna pregunta?",
         title2: "¡Contáctanos!",
       },
+
       features: {
-        title: "Características",
+        description: "Además de tu lista de regalos, te ofrecemos:",
+        list: [
+          {
+            description:
+              "Recibe notificaciones por WhatsApp cuando te realicen un regalo.",
+            title: "Notificaciones en tiempo real",
+          },
+          {
+            description:
+              "Sigue el estado de tus regalos, los mensajes que te han dejado y el monto total de tu lista en una página única para ti.",
+            title: "Seguimiento de regalos",
+          },
+          {
+            description:
+              "Recibe el valor de tus regalos en tu cuenta bancaria. No más crédito en tiendas que no necesitas.",
+            title: "Recibe el valor de tus regalos",
+          },
+          {
+            description:
+              "Ofrecemos invitaciones digitales, recordatorios para tus invitados, URL personalizadas, y más.",
+            title: "Agregar servicios adicionales",
+          },
+        ],
+        subtitle: "Más que una lista de regalos",
+        title: "Enamórate de nuestro servicio",
       },
       hero: {
         cta: "Crea tu lista",
@@ -77,6 +102,29 @@ const es: I18nBase = {
         subtitle:
           "Crea tu lista de regalos con artículos de diferentes tiendas para tu momento más importante",
         title: "Todo lo que deseas, en una sola lista",
+      },
+      highlight: {
+        description:
+          "No importa cual sea la ocasión, tenemos la lista para ti.",
+        features: [
+          {
+            description:
+              "Elige los artículos de las tiendas que desees, locales o internacioneles, sin limite alguno.",
+            title: "Tantas tiendas como quieras.",
+          },
+          {
+            description:
+              "Totalmente personalizada, con la información de tu evento y agregamos los artículos seleccionados.",
+            title: "Creamos tu página web.",
+          },
+          {
+            description:
+              "Puedes agregar lo que quieras a tu lista: fondos para viajes, experiencias en tu luna de miel, y más.",
+            title: "No te limites.",
+          },
+        ],
+        subtitle: "Somos tu nueva lista de regalos",
+        title: "Enamórate de nuestro servicio", // TODO(adelrodriguez): Change this title
       },
     },
     search: {

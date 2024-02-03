@@ -37,7 +37,10 @@ const plans = [
 
 export default function Pricing() {
   return (
-    <div className="relative isolate mt-32 bg-white px-6 sm:mt-56 lg:px-8">
+    <section
+      className="relative isolate mt-32 bg-white px-6 sm:mt-56 lg:px-8"
+      id="pricing"
+    >
       <div
         aria-hidden="true"
         className="absolute inset-x-0 -top-3 -z-10 transform-gpu overflow-hidden px-36 blur-3xl"
@@ -148,6 +151,6 @@ export default function Pricing() {
           </div>
         ))}
       </div>
-    </div>
+    </section>
   )
 }
