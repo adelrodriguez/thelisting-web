@@ -98,6 +98,9 @@ dependencies:
   '@tanstack/react-virtual':
     specifier: 3.0.1
     version: 3.0.1(react-dom@18.3.0-canary-e1d20fc0c-20240122)(react@18.3.0-canary-e1d20fc0c-20240122)
+  '@typeform/embed-react':
+    specifier: ^3.11.0
+    version: 3.11.0(react@18.3.0-canary-e1d20fc0c-20240122)
   bullmq:
     specifier: 4.2.0
     version: 4.2.0
@@ -5364,6 +5367,22 @@ packages:
 
   /@tsconfig/node16@1.0.4:
     resolution: {integrity: sha512-vxhUy4J8lyeyinH7Azl1pdd43GJhZH/tP2weN8TntQblOY+A0XbT8DJk1/oCPuOOyg/Ja757rG0CgHcWC8OfMA==}
+
+  /@typeform/embed-react@3.11.0(react@18.3.0-canary-e1d20fc0c-20240122):
+    resolution: {integrity: sha512-FRCtoKoMLvvWxfMmGVtjQVqljPex5K0bw//+fGaR+TrexZgn2ydgj9KNdVhIhTeauwslknxoJ2/ptjpT9NiREA==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      react: '>=16.8.0'
+    dependencies:
+      '@typeform/embed': 4.5.0
+      fast-deep-equal: 3.1.3
+      react: 18.3.0-canary-e1d20fc0c-20240122
+    dev: false
+
+  /@typeform/embed@4.5.0:
+    resolution: {integrity: sha512-k6lLxxOxu+QcWqXkMgsxo2HA2KRyF3gpXEZzN+16LjeyHih8YzY6K7g3w+RPtHBKaV4ld8+7lS9yipaM4etriw==}
+    engines: {node: '>=10'}
+    dev: false
 
   /@types/acorn@4.0.6:
     resolution: {integrity: sha512-veQTnWP+1D/xbxVrPC3zHnCZRjSrKfhbMUlEA43iMZLu7EsnTtkJklIuwrCPbOi8YkvDQAiW05VQQFvvz9oieQ==}

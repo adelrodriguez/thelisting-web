@@ -1,19 +1,23 @@
-import CallToAction from "./CallToAction"
+import Contact from "./Contact"
+import Examples from "./Examples"
+import FAQ from "./FAQ"
 import Features from "./Features"
 import Hero from "./Hero"
-import Highlights from "./Highlights"
+import Highlight from "./Highlight"
+import Pricing from "./Pricing"
 import Testimonials from "./Testimonials"
 
-export const handle = { i18n: "home" }
-
-export default function MarketingIndex() {
+export default function Page() {
   return (
     <>
       <Hero />
+      <Highlight />
       <Features />
-      <Highlights />
       <Testimonials />
-      <CallToAction />
+      <Examples />
+      <Pricing />
+      <FAQ />
+      <Contact />
     </>
   )
 }

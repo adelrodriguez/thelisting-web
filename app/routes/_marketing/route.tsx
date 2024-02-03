@@ -1,47 +1,25 @@
-import { redirect } from "@remix-run/node"
 import { Outlet } from "@remix-run/react"
-import { StatusCodes } from "http-status-codes"
-import { useTranslation } from "react-i18next"
 
 import { HOMEPAGE_URL } from "~/config/consts"
 import { isProduction } from "~/config/vars"
+import { temporaryRedirect } from "~/utils/http"
 
 import Footer from "./Footer"
-import MarketingHeader from "./MarketingHeader"
-
-const headerNavigation = [
-  { href: "/pricing", key: "navigation.pricing" },
-  { href: "/about", key: "navigation.about" },
-  { href: "#", key: "navigation.examples" },
-  { href: "#", key: "navigation.faq" },
-  { href: "#", key: "navigation.contact" },
-]
-
-export const handle = { i18n: "common" }
+import Header from "./Header"
 
 export function loader() {
   // TODO: remove this once we're live
   if (isProduction) {
-    return redirect(HOMEPAGE_URL, {
-      status: StatusCodes.TEMPORARY_REDIRECT,
-    })
+    return temporaryRedirect(HOMEPAGE_URL)
   }
 
   return null
 }
 
 export default function MarketingLayout() {
-  const { t } = useTranslation(handle.i18n)
-
   return (
     <>
-      <MarketingHeader
-        loginText={t("login")}
-        navigationItems={headerNavigation.map((item) => ({
-          ...item,
-          key: t(item.key),
-        }))}
-      />
+      <Header />
       <main className="flex-1">
         <Outlet />
       </main>

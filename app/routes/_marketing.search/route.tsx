@@ -30,7 +30,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
       path: true,
       title: true,
     },
-    take: 5,
+    take: 10,
     where: {
       AND: [
         {
@@ -74,7 +74,7 @@ export default function Page() {
   const { i18n, t } = useTranslation("marketing")
 
   return (
-    <div className="flex h-[700px] w-full flex-col items-center px-8 py-32 md:mx-auto md:w-1/2 md:min-w-[400px] xl:w-1/3">
+    <div className="flex min-h-screen w-full flex-col items-center px-8 py-32 md:mx-auto md:w-1/2 md:min-w-[400px] xl:w-1/3">
       <Combobox>
         <div className="relative w-full">
           <MagnifyingGlassIcon
@@ -82,7 +82,7 @@ export default function Page() {
             className="pointer-events-none absolute left-4 top-3.5 h-5 w-5 text-gray-400"
           />
           <Combobox.Input
-            className="block h-12 w-full rounded-md border-0 bg-transparent py-1.5 pl-11 pr-4 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 focus:drop-shadow-2xl sm:text-sm sm:leading-6"
+            className="block h-12 w-full rounded-md border-0 bg-transparent py-1.5 pl-11 pr-4 text-gray-900 shadow-2xl ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 focus:drop-shadow-2xl sm:text-sm sm:leading-6"
             onChange={(event) => setQuery(event.target.value)}
             placeholder={t("search.placeholder")}
           />
@@ -95,7 +95,7 @@ export default function Page() {
           >
             {listings.map((listing) => (
               <Combobox.Option
-                className="flex cursor-default select-none rounded-xl p-4 ui-active:bg-gray-100"
+                className="flex cursor-default select-none rounded-xl p-4 ui-active:bg-gray-300"
                 key={listing.id}
                 value={listing}
               >

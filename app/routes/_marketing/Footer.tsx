@@ -1,37 +1,33 @@
 import { Link } from "@remix-run/react"
 import type { SVGProps } from "react"
+import { useTranslation } from "react-i18next"
 
 import { LanguageCurrencySelector } from "~/components/marketing"
+import { THE_LISTING_LOGO_WHITE } from "~/config/consts"
 
 const navigation = {
-  company: [
-    { href: "#", name: "About" },
-    { href: "#", name: "Blog" },
-    { href: "#", name: "Jobs" },
-    { href: "#", name: "Press" },
-    { href: "#", name: "Partners" },
-  ],
   legal: [
-    { href: "#", name: "Claim" },
-    { href: "#", name: "Privacy" },
-    { href: "#", name: "Terms" },
-  ],
+    { href: "/policies#terms", key: "marketing:footer.legal.terms" },
+    { href: "/policies#privacy", key: "marketing:footer.legal.privacy" },
+    { href: "/policies#security", key: "marketing:footer.legal.security" },
+    { href: "/policies#refunds", key: "marketing:footer.legal.refunds" },
+  ] as const,
   social: [
     {
-      href: "#",
+      href: "https://wa.me/18093304425",
       icon: (props: SVGProps<SVGSVGElement>) => (
         <svg fill="currentColor" viewBox="0 0 24 24" {...props}>
           <path
             clipRule="evenodd"
-            d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"
+            d="m.057 24 1.687-6.163a11.867 11.867 0 0 1-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 0 1 8.413 3.488 11.824 11.824 0 0 1 3.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 0 1-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"
             fillRule="evenodd"
           />
         </svg>
       ),
-      name: "Facebook",
+      name: "WhatsApp",
     },
     {
-      href: "#",
+      href: "https://instagram.com/thelisting.do",
       icon: (props: SVGProps<SVGSVGElement>) => (
         <svg fill="currentColor" viewBox="0 0 24 24" {...props}>
           <path
@@ -44,168 +40,125 @@ const navigation = {
       name: "Instagram",
     },
     {
-      href: "#",
-      icon: (props: SVGProps<SVGSVGElement>) => (
-        <svg fill="currentColor" viewBox="0 0 24 24" {...props}>
-          <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
-        </svg>
-      ),
-      name: "Twitter",
-    },
-    {
-      href: "#",
+      href: "https://www.facebook.com/thelisting.do/",
       icon: (props: SVGProps<SVGSVGElement>) => (
         <svg fill="currentColor" viewBox="0 0 24 24" {...props}>
           <path
             clipRule="evenodd"
-            d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+            d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"
             fillRule="evenodd"
           />
         </svg>
       ),
-      name: "GitHub",
+      name: "Facebook",
     },
     {
-      href: "#",
+      href: "https://www.pinterest.com/giftthelisting/",
       icon: (props: SVGProps<SVGSVGElement>) => (
-        <svg fill="currentColor" viewBox="0 0 24 24" {...props}>
-          <path
-            clipRule="evenodd"
-            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10c5.51 0 10-4.48 10-10S17.51 2 12 2zm6.605 4.61a8.502 8.502 0 011.93 5.314c-.281-.054-3.101-.629-5.943-.271-.065-.141-.12-.293-.184-.445a25.416 25.416 0 00-.564-1.236c3.145-1.28 4.577-3.124 4.761-3.362zM12 3.475c2.17 0 4.154.813 5.662 2.148-.152.216-1.443 1.941-4.48 3.08-1.399-2.57-2.95-4.675-3.189-5A8.687 8.687 0 0112 3.475zm-3.633.803a53.896 53.896 0 013.167 4.935c-3.992 1.063-7.517 1.04-7.896 1.04a8.581 8.581 0 014.729-5.975zM3.453 12.01v-.26c.37.01 4.512.065 8.775-1.215.25.477.477.965.694 1.453-.109.033-.228.065-.336.098-4.404 1.42-6.747 5.303-6.942 5.629a8.522 8.522 0 01-2.19-5.705zM12 20.547a8.482 8.482 0 01-5.239-1.8c.152-.315 1.888-3.656 6.703-5.337.022-.01.033-.01.054-.022a35.318 35.318 0 011.823 6.475 8.4 8.4 0 01-3.341.684zm4.761-1.465c-.086-.52-.542-3.015-1.659-6.084 2.679-.423 5.022.271 5.314.369a8.468 8.468 0 01-3.655 5.715z"
-            fillRule="evenodd"
-          />
+        <svg fill="currentColor" viewBox="0 0 54 54" {...props}>
+          <path d="M-.2.1h53.8v53.4H-.2z" fill="none" />
+          <path d="M45.2 15.5c1.9 3.3 2.9 6.9 2.9 10.8s-1 7.5-2.9 10.8c-1.9 3.3-4.5 5.9-7.8 7.8-3.3 1.9-6.9 2.9-10.8 2.9-2.1 0-4.1-.3-6.1-.9 1.1-1.7 1.8-3.3 2.2-4.6.2-.6.7-2.6 1.5-5.9.4.7 1.1 1.4 2 1.9 1 .5 2 .8 3.2.8 2.3 0 4.3-.6 6-1.9 1.8-1.3 3.1-3 4.1-5.3 1-2.2 1.5-4.7 1.5-7.5 0-2.1-.6-4.1-1.7-6-1.1-1.9-2.7-3.4-4.8-4.5s-4.4-1.9-7-1.9c-2 0-3.8.3-5.5.8-1.7.5-3.1 1.3-4.3 2.1-1.2.9-2.2 1.9-3 3.1-.8 1.2-1.5 2.4-1.9 3.6-.4 1.2-.6 2.5-.6 3.7 0 1.9.4 3.6 1.1 5.1.7 1.5 1.8 2.5 3.3 3.1.6.2.9 0 1.1-.6 0-.1.1-.4.2-.9.1-.4.2-.7.2-.8.1-.4 0-.8-.3-1.2-.9-1.1-1.4-2.5-1.4-4.2 0-2.8 1-5.2 2.9-7.2s4.5-3 7.6-3c2.8 0 5 .8 6.6 2.3 1.6 1.5 2.4 3.5 2.4 5.9 0 3.2-.6 5.9-1.9 8.1-1.3 2.2-2.9 3.3-4.9 3.3-1.1 0-2-.4-2.7-1.2-.7-.8-.9-1.8-.6-2.9.1-.7.4-1.5.7-2.6.3-1.1.6-2 .8-2.9.2-.8.3-1.5.3-2.1 0-.9-.3-1.7-.8-2.3-.5-.6-1.2-.9-2.1-.9-1.2 0-2.1.5-2.9 1.6-.8 1.1-1.2 2.4-1.2 4 0 1.4.2 2.5.7 3.4L18.4 41c-.3 1.3-.4 2.9-.4 4.9-3.8-1.7-6.9-4.3-9.3-7.8s-3.5-7.5-3.5-11.8c0-3.9 1-7.5 2.9-10.8 1.9-3.3 4.5-5.9 7.8-7.8 3.3-1.9 6.9-2.9 10.8-2.9 3.9 0 7.5 1 10.8 2.9s5.8 4.5 7.7 7.8z" />
         </svg>
       ),
-      name: "Dribbble",
+      name: "Pinterest",
     },
-  ],
-  solutions: [
-    { href: "#", name: "Marketing" },
-    { href: "#", name: "Analytics" },
-    { href: "#", name: "Commerce" },
-    { href: "#", name: "Insights" },
-  ],
-  support: [
-    { href: "#", name: "Pricing" },
-    { href: "#", name: "Documentation" },
-    { href: "#", name: "Guides" },
-    { href: "#", name: "API Status" },
   ],
 }
 
-export default function MarketingFooter() {
+export default function Footer() {
+  const { t } = useTranslation(["marketing", "common"])
+
   return (
-    <footer className="bg-gray-800">
+    <footer className="bg-slate-800">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
         <h2 className="sr-only">Footer</h2>
-        <div className="pb-8 xl:grid xl:grid-cols-5 xl:gap-8">
-          <div className="grid grid-cols-2 gap-8 xl:col-span-4">
-            <div className="md:grid md:grid-cols-2 md:gap-8">
-              <div>
-                <h3 className="text-base font-medium text-white">Solutions</h3>
-                <ul className="mt-4 space-y-4">
-                  {navigation.solutions.map((item) => (
-                    <li key={item.name}>
-                      <a
-                        className="text-base text-gray-300 hover:text-white"
-                        href={item.href}
-                      >
-                        {item.name}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div className="mt-12 md:mt-0">
-                <h3 className="text-base font-medium text-white">Support</h3>
-                <ul className="mt-4 space-y-4">
-                  {navigation.support.map((item) => (
-                    <li key={item.name}>
-                      <a
-                        className="text-base text-gray-300 hover:text-white"
-                        href={item.href}
-                      >
-                        {item.name}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-            <div className="md:grid md:grid-cols-2 md:gap-8">
-              <div>
-                <h3 className="text-base font-medium text-white">Company</h3>
-                <ul className="mt-4 space-y-4">
-                  {navigation.company.map((item) => (
-                    <li key={item.name}>
-                      <a
-                        className="text-base text-gray-300 hover:text-white"
-                        href={item.href}
-                      >
-                        {item.name}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div className="mt-12 md:mt-0">
-                <h3 className="text-base font-medium text-white">Legal</h3>
-                <ul className="mt-4 space-y-4">
-                  {navigation.legal.map((item) => (
-                    <li key={item.name}>
-                      <a
-                        className="text-base text-gray-300 hover:text-white"
-                        href={item.href}
-                      >
-                        {item.name}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+        <div className="pb-8 md:grid md:grid-cols-2 lg:grid-cols-4 lg:gap-8">
+          <div className="mt-12 flex items-center justify-center md:mt-0">
+            <div className="flex flex-col items-center justify-center gap-y-1 text-center">
+              <img
+                alt=""
+                className="mb-4 h-16 object-contain"
+                src={THE_LISTING_LOGO_WHITE}
+              />
+              <p className="text-xs text-gray-300">
+                Calle 11 #12, Sector Julieta
+              </p>
+              <p className="text-xs text-gray-300">
+                Santo Domingo, República Dominicana
+              </p>
+              <Link
+                className="text-xs text-gray-300"
+                to="mailto:hola@thelisting.do"
+              >
+                hola@thelisting.do
+              </Link>
+              <Link className="text-xs text-gray-300" to="tel:18093304425">
+                +1 (809) 330-4425
+              </Link>
             </div>
           </div>
-          <div className="mt-12 sm:max-w-xs xl:mt-0">
+          <div className="mt-12 md:mt-0">
+            <div className="flex flex-col items-center justify-around">
+              <svg
+                className="h-20 w-20"
+                viewBox="0 0 152.4 108"
+                xmlSpace="preserve"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M0 0h152.4v108H0z" fill="none" />
+                <path d="M60.4 25.7h31.5v56.6H60.4z" fill="#ff5f00" />
+                <path
+                  d="M62.4 54c0-11 5.1-21.5 13.7-28.3-15.6-12.3-38.3-9.6-50.6 6.1C13.3 47.4 16 70 31.7 82.3c13.1 10.3 31.4 10.3 44.5 0C67.5 75.5 62.4 65 62.4 54z"
+                  fill="#eb001b"
+                />
+                <path
+                  d="M134.4 54c0 19.9-16.1 36-36 36-8.1 0-15.9-2.7-22.2-7.7 15.6-12.3 18.3-34.9 6-50.6-1.8-2.2-3.8-4.3-6-6 15.6-12.3 38.3-9.6 50.5 6.1 5 6.3 7.7 14.1 7.7 22.2z"
+                  fill="#f79e1b"
+                />
+              </svg>
+              <svg
+                className="h-20 w-20"
+                viewBox="0 0 1000.046 323.653"
+                xmlSpace="preserve"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M433.352 318.984h-81.01l50.67-313.305h81.006zM727.023 13.339c-15.978-6.34-41.322-13.34-72.66-13.34-80 0-136.336 42.661-136.682 103.653-.664 45 40.335 69.994 71 84.998 31.341 15.332 41.995 25.34 41.995 39.006-.319 20.989-25.326 30.664-48.65 30.664-32.343 0-49.673-4.988-76.009-16.666l-10.667-5.005-11.337 70.33c19 8.656 54.006 16.337 90.35 16.674 85.002 0 140.34-42 140.996-106.997.324-35.666-21.326-62.994-68-85.325-28.334-14.336-45.686-24.002-45.686-38.67.332-13.334 14.677-26.991 46.661-26.991 26.336-.67 45.686 5.661 60.345 11.996l7.327 3.327 11.017-67.654zM834.694 207.991c6.671-17.999 32.343-87.66 32.343-87.66-.337.669 6.658-18.331 10.658-29.995l5.662 26.996s15.34 74.995 18.672 90.66h-67.335zM934.69 5.68H872.03c-19.323 0-34.004 5.662-42.341 25.995L709.357 318.98h85.002s13.994-38.669 17.002-46.997h104.011c2.326 11 9.666 46.997 9.666 46.997h75.008L934.691 5.68zM284.678 5.68l-79.336 213.643-8.67-43.33C182.006 125.997 136.005 71.677 84.67 44.667l72.669 273.985h85.667L370.34 5.679h-85.662z"
+                  fill="#00579f"
+                />
+                <path
+                  d="M131.672 5.68H1.333L0 12.01c101.672 25.999 169.008 88.67 196.673 163.997L168.339 32.015c-4.665-20.01-19-25.676-36.667-26.336z"
+                  fill="#faa61a"
+                />
+              </svg>
+            </div>
+          </div>
+          <div className="mt-12 md:mt-0">
             <h3 className="text-base font-medium text-white">
-              Language &amp; Currency
+              {t("marketing:footer.legal.title")}
+            </h3>
+            <ul className="mt-4 space-y-4">
+              {navigation.legal.map((item) => (
+                <li key={item.key}>
+                  <Link
+                    className="text-base text-gray-300 hover:text-white"
+                    to={item.href}
+                  >
+                    {t(item.key)}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="mt-12 sm:max-w-xs lg:mt-0">
+            <h3 className="text-base font-medium text-white">
+              {t("common:language_currency")}
             </h3>
             <LanguageCurrencySelector />
           </div>
         </div>
-        <div className="space-y-4 border-t border-gray-700 pt-8 lg:flex lg:items-center lg:justify-between lg:space-y-0 xl:mt-0">
-          <div className="space-y-2">
-            <h3 className="text-base font-medium text-white">
-              Subscribe to our newsletter
-            </h3>
-            <p className="text-base text-gray-300">
-              The latest news, articles, and resources, sent to your inbox
-              weekly.
-            </p>
-          </div>
-          <form className="sm:flex sm:max-w-md">
-            <label className="sr-only" htmlFor="email-address">
-              Email address
-            </label>
-            <input
-              autoComplete="email"
-              className="w-full min-w-0 rounded-md border border-transparent bg-white px-4 py-2 placeholder-gray-500 focus:border-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 sm:max-w-xs"
-              id="email-address"
-              name="email-address"
-              placeholder="Enter your email"
-              required
-              type="email"
-            />
-            <div className="mt-3 rounded-md sm:ml-3 sm:mt-0 sm:flex-shrink-0">
-              <button
-                className="flex w-full items-center justify-center rounded-md border border-transparent bg-gray-600 px-4 py-2 text-base font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-800"
-                type="submit"
-              >
-                Subscribe
-              </button>
-            </div>
-          </form>
-        </div>
-        <div className="mt-8 border-t border-gray-700 pt-8 md:flex md:items-center md:justify-between">
+
+        <div className="mt-8 border-t border-slate-700 pt-8 md:flex md:items-center md:justify-between">
           <div className="flex space-x-6 md:order-2">
             {navigation.social.map((item) => (
               <Link
@@ -219,7 +172,7 @@ export default function MarketingFooter() {
             ))}
           </div>
           <p className="mt-8 text-base text-gray-400 md:order-1 md:mt-0">
-            &copy; 2020 Your Company, Inc. All rights reserved.
+            &copy; {new Date().getFullYear()} The Listing SRL
           </p>
         </div>
       </div>

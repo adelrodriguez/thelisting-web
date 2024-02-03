@@ -1,13 +1,14 @@
 import { Link } from "@remix-run/react"
 import { useTranslation } from "react-i18next"
+import { route } from "routes-gen"
 
 import { Button } from "~/components/common"
 
 export default function Hero() {
-  const { t } = useTranslation("home")
+  const { t } = useTranslation("marketing")
 
   return (
-    <div className="relative isolate overflow-hidden bg-white">
+    <section className="relative isolate overflow-hidden bg-white">
       {/* We're adding an extra pixel due to a bug in Safari */}
       <div className="position absolute -z-10 h-[calc(100%+1px)] w-full bg-[url('/assets/images/bottom-curve.svg')] bg-contain bg-bottom bg-no-repeat" />
 
@@ -22,24 +23,26 @@ export default function Hero() {
         <div className="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
           <div className="text-center">
             <h1 className="font-heading text-6xl font-bold tracking-tight text-white sm:text-6xl">
-              {t("hero.h1")}
+              {t("landing.hero.title")}
             </h1>
             <p className="mt-6 font-body text-xl font-light leading-8 text-gray-300">
-              {t("hero.h2")}
+              {t("landing.hero.subtitle")}
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
-              <Button size="xl">{t("hero.cta")}</Button>
+              <Link to={route("/register")}>
+                <Button size="xl">{t("landing.hero.cta")}</Button>
+              </Link>
 
               <Link
                 className="text-base font-semibold leading-7 text-white "
-                to="#"
+                to={route("/search")}
               >
-                {t("hero.findARegistry")} <span aria-hidden="true">→</span>
+                {t("landing.hero.find")} <span aria-hidden="true">→</span>
               </Link>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </section>
   )
 }

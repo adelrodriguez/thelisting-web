@@ -9,11 +9,15 @@ const es: I18nBase = {
     date: "Fecha",
     error: "Error",
     language: "Idioma",
-    language_and_currency: "Idioma y moneda",
+    language_currency: "Idioma y moneda",
     loading: "Cargando...",
     logging_in: "Iniciando sesión...",
     login: "Iniciar sesión",
     logout: "Cerrar sesión",
+    menu: {
+      close: "Cerrar menú",
+      open: "Abrir menú",
+    },
     options: "Opciones",
     panel: {
       close: "Cerrar panel",
@@ -40,18 +44,48 @@ const es: I18nBase = {
     registry: "Lista de regalos",
   },
   marketing: {
-    features: {
-      title: "Características",
+    footer: {
+      legal: {
+        privacy: "Política de privacidad",
+        refunds: "Política de reembolso",
+        security: "Política de seguridad",
+        terms: "Términos y condiciones",
+        title: "Legal",
+      },
     },
     header: {
+      about: "Nosotros",
+      contact: "Contacto",
       examples: "Ejemplos",
+      faq: "Preguntas",
+      features: "Características",
+      pricing: "Planes",
     },
-    hero: {
-      cta: "Crea tu lista",
-      find: "Encuentra una lista",
-      subtitle:
-        "Crea tu lista de regalos con artículos de diferentes tiendas para tu momento más importante",
-      title: "Todo lo que deseas, en una sola lista",
+    landing: {
+      contact: {
+        contact_us: "Contáctanos",
+        register: "Regístrate",
+        title1: "¿Tienes alguna pregunta?",
+        title2: "¡Contáctanos!",
+      },
+      features: {
+        title: "Características",
+      },
+      hero: {
+        cta: "Crea tu lista",
+        find: "Busca una lista",
+        subtitle:
+          "Crea tu lista de regalos con artículos de diferentes tiendas para tu momento más importante",
+        title: "Todo lo que deseas, en una sola lista",
+      },
+    },
+    search: {
+      no_results: {
+        subtitle:
+          "Parece que no hay listas con ese nombre. Intenta buscar con otro nombre o contacta al dueño de la lista.",
+        title: "No encontramos resultados",
+      },
+      placeholder: "Busca una lista",
     },
   },
   meta: {

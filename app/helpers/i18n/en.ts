@@ -9,11 +9,15 @@ const en: I18nBase = {
     date: "Date",
     error: "Error",
     language: "Language",
-    language_and_currency: "Language and Currency",
+    language_currency: "Language and Currency",
     loading: "Loading...",
     logging_in: "Logging in...",
     login: "Log in",
     logout: "Log out",
+    menu: {
+      close: "Close menu",
+      open: "Open menu",
+    },
     options: "Options",
     panel: {
       close: "Close panel",
@@ -40,18 +44,48 @@ const en: I18nBase = {
     registry: "Gift List",
   },
   marketing: {
-    features: {
-      title: "Features",
+    footer: {
+      legal: {
+        privacy: "Privacy Policy",
+        refunds: "Refund Policy",
+        security: "Security Policy",
+        terms: "Terms and Conditions",
+        title: "Legal",
+      },
     },
     header: {
+      about: "About",
+      contact: "Contact",
       examples: "Examples",
+      faq: "FAQ",
+      features: "Features",
+      pricing: "Pricing",
     },
-    hero: {
-      cta: "Create your list",
-      find: "Find a list",
-      subtitle:
-        "Create your gift list with items from different stores for your most important moment",
-      title: "Everything you want, in one list",
+    landing: {
+      contact: {
+        contact_us: "Contact us",
+        register: "Register",
+        title1: "Do you have any questions?",
+        title2: "Contact us!",
+      },
+      features: {
+        title: "Features",
+      },
+      hero: {
+        cta: "Create your list",
+        find: "Find a list",
+        subtitle:
+          "Create your gift list with items from different stores for your most important moment",
+        title: "Everything you want, in one list",
+      },
+    },
+    search: {
+      no_results: {
+        subtitle:
+          "TThere seem to be no lists with that name. Try searching with a different name or contact the owner of the listing.",
+        title: "We couldn't find any lists",
+      },
+      placeholder: "Search for a list",
     },
   },
   meta: {

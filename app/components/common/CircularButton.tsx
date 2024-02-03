@@ -1,7 +1,7 @@
 import clsx from "clsx"
 import { ComponentPropsWithoutRef, ReactNode } from "react"
 
-export default function Example({
+export default function CircularButton({
   children,
   size = "md",
   ...props

@@ -10,7 +10,6 @@ declare module "routes-gen" {
     "/:listingPath/registry/cart/note": { "listingPath": string };
     "/:listingPath/review": { "listingPath": string };
     "/:listingPath/thank-you": { "listingPath": string };
-    "/about": Record<string, never>;
     "/api/admin/listings/:listingId/report.csv": { "listingId": string };
     "/api/cart": Record<string, never>;
     "/api/exchange-rates/:code": { "code": string };
@@ -56,8 +55,8 @@ declare module "routes-gen" {
     "/login": Record<string, never>;
     "/logout": Record<string, never>;
     "/magic": Record<string, never>;
-    "/pricing": Record<string, never>;
     "/register": Record<string, never>;
+    "/search": Record<string, never>;
     "/thank-you": Record<string, never>;
   };
 
@@ -73,7 +72,6 @@ declare module "routes-gen" {
       | ["/:listingPath/registry/cart/note", RouteParams["/:listingPath/registry/cart/note"]]
       | ["/:listingPath/review", RouteParams["/:listingPath/review"]]
       | ["/:listingPath/thank-you", RouteParams["/:listingPath/thank-you"]]
-      | ["/about"]
       | ["/api/admin/listings/:listingId/report.csv", RouteParams["/api/admin/listings/:listingId/report.csv"]]
       | ["/api/cart"]
       | ["/api/exchange-rates/:code", RouteParams["/api/exchange-rates/:code"]]
@@ -119,8 +117,8 @@ declare module "routes-gen" {
       | ["/login"]
       | ["/logout"]
       | ["/magic"]
-      | ["/pricing"]
       | ["/register"]
+      | ["/search"]
       | ["/thank-you"]
   >(...args: T): typeof args[0];
 }

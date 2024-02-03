@@ -19,7 +19,7 @@ export default function Breadcrumbs() {
     .filter(hasCrumb)
     // Now map them into an array of elements, passing the route match to the
     // crumb function
-    .map((match) => match.handle?.crumb(match))
+    .map((match) => match.handle.crumb(match))
 
   return (
     <nav aria-label="Breadcrumb" className="flex">

@@ -1,102 +1,75 @@
 import {
   ArrowPathIcon,
   CloudArrowUpIcon,
-  Cog6ToothIcon,
   FingerPrintIcon,
   LockClosedIcon,
-  ServerIcon,
 } from "@heroicons/react/24/outline"
-import { useTranslation } from "react-i18next"
 
 const features = [
   {
     description:
-      "Lorem ipsum, dolor sit amet consectetur adipisicing elit aute id magna.",
+      "Morbi viverra dui mi arcu sed. Tellus semper adipiscing suspendisse semper morbi. Odio urna massa nunc massa.",
     icon: CloudArrowUpIcon,
-    name: "Push to deploy.",
+    name: "Push to deploy",
   },
   {
     description:
-      "Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo.",
+      "Sit quis amet rutrum tellus ullamcorper ultricies libero dolor eget. Sem sodales gravida quam turpis enim lacus amet.",
     icon: LockClosedIcon,
-    name: "SSL certificates.",
+    name: "SSL certificates",
   },
   {
     description:
-      "Ac tincidunt sapien vehicula erat auctor pellentesque rhoncus.",
+      "Quisque est vel vulputate cursus. Risus proin diam nunc commodo. Lobortis auctor congue commodo diam neque.",
     icon: ArrowPathIcon,
-    name: "Simple queues.",
+    name: "Simple queues",
   },
   {
     description:
-      "Lorem ipsum, dolor sit amet consectetur adipisicing elit aute id magna.",
+      "Arcu egestas dolor vel iaculis in ipsum mauris. Tincidunt mattis aliquet hac quis. Id hac maecenas ac donec pharetra eget.",
     icon: FingerPrintIcon,
-    name: "Advanced security.",
-  },
-  {
-    description:
-      "Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo.",
-    icon: Cog6ToothIcon,
-    name: "Powerful API.",
-  },
-  {
-    description:
-      "Ac tincidunt sapien vehicula erat auctor pellentesque rhoncus. ",
-    icon: ServerIcon,
-    name: "Database backups.",
+    name: "Advanced security",
   },
 ]
 
-export default function Features() {
-  const { t } = useTranslation("home")
-
+export default function Example() {
   return (
-    <section className="mt-16 sm:mt-32">
+    <div className="bg-white py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="mx-auto max-w-2xl sm:text-center">
+        <div className="mx-auto max-w-2xl lg:text-center">
           <h2 className="text-base font-semibold leading-7 text-indigo-600">
-            {t("features.h2")}
+            Deploy faster
           </h2>
           <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-            {t("features.title")}
+            Everything you need to deploy your app
           </p>
           <p className="mt-6 text-lg leading-8 text-gray-600">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores
-            impedit perferendis suscipit eaque, iste dolor cupiditate
-            blanditiis.
+            Quis tellus eget adipiscing convallis sit sit eget aliquet quis.
+            Suspendisse eget egestas a elementum pulvinar et feugiat blandit at.
+            In mi viverra elit nunc.
           </p>
         </div>
-      </div>
-      <div className="relative overflow-hidden pt-16">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <img
-            alt="App screenshot"
-            className="mb-[-12%] rounded-xl shadow-2xl ring-1 ring-gray-900/10"
-            height={1442}
-            src="https://tailwindui.com/img/component-images/project-app-screenshot.png"
-            width={2432}
-          />
-          <div aria-hidden="true" className="relative">
-            <div className="absolute -inset-x-20 bottom-0 bg-gradient-to-t from-white pt-[7%]" />
-          </div>
+        <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-4xl">
+          <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-10 lg:max-w-none lg:grid-cols-2 lg:gap-y-16">
+            {features.map((feature) => (
+              <div className="relative pl-16" key={feature.name}>
+                <dt className="text-base font-semibold leading-7 text-gray-900">
+                  <div className="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-600">
+                    <feature.icon
+                      aria-hidden="true"
+                      className="h-6 w-6 text-white"
+                    />
+                  </div>
+                  {feature.name}
+                </dt>
+                <dd className="mt-2 text-base leading-7 text-gray-600">
+                  {feature.description}
+                </dd>
+              </div>
+            ))}
+          </dl>
         </div>
       </div>
-      <div className="mx-auto mt-16 max-w-7xl px-6 sm:mt-20 md:mt-24 lg:px-8">
-        <dl className="mx-auto grid max-w-2xl grid-cols-1 gap-x-6 gap-y-10 text-base leading-7 text-gray-600 sm:grid-cols-2 lg:mx-0 lg:max-w-none lg:grid-cols-3 lg:gap-x-8 lg:gap-y-16">
-          {features.map((feature) => (
-            <div className="relative pl-9" key={feature.name}>
-              <dt className="inline font-semibold text-gray-900">
-                <feature.icon
-                  aria-hidden="true"
-                  className="absolute left-1 top-1 h-5 w-5 text-indigo-600"
-                />
-                {feature.name}
-              </dt>{" "}
-              <dd className="inline">{feature.description}</dd>
-            </div>
-          ))}
-        </dl>
-      </div>
-    </section>
+    </div>
   )
 }

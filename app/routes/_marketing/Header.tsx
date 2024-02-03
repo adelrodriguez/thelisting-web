@@ -3,17 +3,21 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline"
 import { Link, useLocation } from "@remix-run/react"
 import clsx from "clsx"
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 
 import { LanguageCurrencySelector } from "~/components/marketing"
 import { THE_LISTING_LOGO_BLACK, THE_LISTING_LOGO_WHITE } from "~/config/consts"
 
-export default function MarketingHeader({
-  loginText,
-  navigationItems,
-}: {
-  navigationItems: Array<{ href: string; key: string }>
-  loginText: string
-}) {
+const navigationItems = [
+  { href: "#examples", key: "marketing:header.examples" },
+  { href: "#pricing", key: "marketing:header.pricing" },
+  { href: "#faq", key: "marketing:header.faq" },
+  { href: "#about", key: "marketing:header.about" },
+  { href: "#contact", key: "marketing:header.contact" },
+] as const
+
+export default function Header() {
+  const { t } = useTranslation(["marketing", "common"])
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const location = useLocation()
   const isIndex = location.pathname === "/"
@@ -38,7 +42,7 @@ export default function MarketingHeader({
                   key={item.key}
                   to={item.href}
                 >
-                  {item.key}
+                  {t(item.key)}
                 </Link>
               ))}
             </div>
@@ -72,7 +76,7 @@ export default function MarketingHeader({
             className="bg-transparent text-base font-semibold leading-6 text-white"
             to="/login"
           >
-            {loginText} <span aria-hidden="true">&rarr;</span>
+            {t("common:login")} <span aria-hidden="true">&rarr;</span>
           </Link>
         </div>
       </nav>
@@ -95,7 +99,7 @@ export default function MarketingHeader({
               onClick={() => setMobileMenuOpen(false)}
               type="button"
             >
-              <span className="sr-only">Close menu</span>
+              <span className="sr-only">{t("common:menu.close")}</span>
               <XMarkIcon aria-hidden="true" className="h-6 w-6" />
             </button>
           </div>
@@ -103,13 +107,14 @@ export default function MarketingHeader({
             <div className="-my-6 divide-y divide-gray-500/10">
               <div className="space-y-2 py-6">
                 {navigationItems.map((item) => (
-                  <a
+                  <Link
                     className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-400/10"
-                    href={item.href}
                     key={item.key}
+                    onClick={() => setMobileMenuOpen(false)}
+                    to={item.href}
                   >
-                    {item.key}
-                  </a>
+                    {t(item.key)}
+                  </Link>
                 ))}
               </div>
               <div className="py-6">
@@ -117,12 +122,12 @@ export default function MarketingHeader({
                   className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-6 text-gray-900 hover:bg-gray-400/10"
                   to="/login"
                 >
-                  {loginText} <span aria-hidden="true">&rarr;</span>
+                  {t("common:login")} <span aria-hidden="true">&rarr;</span>
                 </Link>
               </div>
               <div className="py-6">
                 <h3 className="text-base font-medium text-gray-700">
-                  Language &amp; Currency
+                  {t("common:language_currency")}
                 </h3>
                 <LanguageCurrencySelector />
               </div>

@@ -12,6 +12,10 @@ export type I18nBase = {
       close: string
       open: string
     }
+    menu: {
+      close: string
+      open: string
+    }
     save: string
     saving: string
     submit: string
@@ -24,7 +28,7 @@ export type I18nBase = {
     login: string
     logging_in: string
     logout: string
-    language_and_currency: string
+    language_currency: string
     loading: string
   }
   dashboard: {
@@ -97,21 +101,46 @@ export type I18nBase = {
     gifted_on: string
   }
   marketing: {
-    // about: string
-    // contact: string
-    // examples: string
-    // faq: string
     header: {
+      about: string
+      contact: string
       examples: string
+      faq: string
+      pricing: string
+      features: string
     }
-    hero: {
-      title: string
-      subtitle: string
-      cta: string
-      find: string
+    footer: {
+      legal: {
+        terms: string
+        privacy: string
+        refunds: string
+        title: string
+        security: string
+      }
     }
-    features: {
-      title: string
+    landing: {
+      hero: {
+        title: string
+        subtitle: string
+        cta: string
+        find: string
+      }
+      features: {
+        title: string
+      }
+      contact: {
+        title1: string
+        title2: string
+        contact_us: string
+        register: string
+      }
+    }
+    search: {
+      placeholder: string
+      no_results: {
+        title: string
+        subtitle: string
+      }
     }
   }
 }

@@ -7,14 +7,17 @@ import { useCallback, useState } from "react"
  * previous page. We don't need a function to open the dialog since it should be
  * open when you navigate to the page.
  */
-export default function useDialogPage() {
+export default function useDialogPage(navigateTo?: string) {
   const [open, setOpen] = useState(true)
   const navigate = useNavigate()
   const location = useLocation()
   const close = useCallback(() => setOpen(false), [])
   const leave = useCallback(
-    () => navigate("../" + location.search, { preventScrollReset: true }),
-    [navigate, location.search],
+    () =>
+      navigate(navigateTo || "../" + location.search, {
+        preventScrollReset: true,
+      }),
+    [navigate, navigateTo, location.search],
   )
 
   return { close, leave, open }

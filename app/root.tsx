@@ -136,7 +136,7 @@ function App() {
   }, [location])
 
   return (
-    <html className="h-full" dir={i18n.dir()} lang={locale}>
+    <html className="h-full scroll-smooth" dir={i18n.dir()} lang={locale}>
       <head>
         <meta content="width=device-width, initial-scale=1" name="viewport" />
         <meta charSet="utf-8" />
