@@ -5,6 +5,10 @@ import { cleanAmount, cleanText } from "~/utils/scraper"
 export default class LeTavole extends BaseScraper {
   static domain = "letavole.com"
 
+  protected async waitFor(): Promise<void> {
+    await this.page.waitForSelector(".shopengine-product-price")
+  }
+
   public get store(): string | null {
     return "Le Tavole"
   }
