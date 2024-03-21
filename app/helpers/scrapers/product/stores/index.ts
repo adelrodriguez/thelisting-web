@@ -1,5 +1,3 @@
-// and also add them to this file
-// TODO(adelrodriguez): Use codegen to generate the scrapers in this directory
 export { default as AlissScraper } from "./aliss"
 export { default as AmazonScraper } from "./amazon"
 export { default as BabylistScraper } from "./babylist"
@@ -32,6 +30,7 @@ export { default as PotteryBarnScraper } from "./pottery-barn"
 export { default as PricesmartScraper } from "./pricesmart"
 export { default as SirenaScraper } from "./sirena"
 export { default as TargetScraper } from "./target"
+export { default as TiendaMaryScraper } from "./tienda-mary"
 export { default as TwinkleRDScraper } from "./twinklerd"
 export { default as WayfairScraper } from "./wayfair"
 export { default as ZaraHomeScraper } from "./zara-home"
