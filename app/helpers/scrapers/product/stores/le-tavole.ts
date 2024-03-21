@@ -24,10 +24,7 @@ export default class LeTavole extends BaseScraper {
 
   public get amount() {
     return this.page
-      .$eval(
-        ".elementor-widget-container > p.price",
-        (element) => element.textContent,
-      )
+      .$eval(".shopengine-product-price", (element) => element.textContent)
       .then(cleanAmount)
       .catch((err) => this.logError("amount: " + err.message))
   }
