@@ -26,7 +26,20 @@ export const CreateContactRequestSchema = z.object({
   }),
   email: z.string().email(),
   name: z.string().max(90),
-  phonePrimary: z.string().nullable(),
+  phonePrimary: z
+    .string()
+    .nullable()
+    .transform((v) => {
+      if (!v) return v
+
+      // Transform number into format xxx-xxx-xxxx
+      const cleaned = v.replace(/\D/g, "")
+      const match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/)
+
+      if (!match) return v
+
+      return `${match[1]}-${match[2]}-${match[3]}`
+    }),
   type: z.enum(["client", "provider"]),
 })
 export type CreateContactRequest = z.infer<typeof CreateContactRequestSchema>
