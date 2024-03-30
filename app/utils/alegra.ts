@@ -34,7 +34,9 @@ export const CreateContactRequestSchema = z.object({
 
       // Transform number into format xxx-xxx-xxxx
       const cleaned = v.replace(/\D/g, "")
-      const match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/)
+      const match = cleaned
+        .substring(cleaned.length - 10) // Only pick the last 10 digits (avoid area code)
+        .match(/^(\d{3})(\d{3})(\d{4})$/)
 
       if (!match) return v
 
