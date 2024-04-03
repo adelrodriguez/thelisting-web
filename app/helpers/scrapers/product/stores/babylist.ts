@@ -11,13 +11,13 @@ export default class BabylistScraper extends BaseScraper {
 
   public get title(): Promise<string | null> {
     return this.page
-      .$eval('span[itemprop="name"]', (element) => element.textContent)
+      .$eval("h1", (element) => element.textContent)
       .catch((err) => this.logError("title: " + err.message))
   }
 
   public get amount(): Promise<number | null> {
     return this.page
-      .$eval('span[itemprop="price"]', (element) => element.textContent)
+      .$eval(".mvs > .h4", (element) => element.textContent)
       .then(cleanAmount)
       .catch((err) => this.logError("amount: " + err.message))
   }
