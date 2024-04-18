@@ -52,6 +52,7 @@ declare module "routes-gen" {
     "/dashboard/listings/new": Record<string, never>;
     "/dashboard/settings": Record<string, never>;
     "/health": Record<string, never>;
+    "/legal": Record<string, never>;
     "/login": Record<string, never>;
     "/logout": Record<string, never>;
     "/magic": Record<string, never>;
@@ -114,6 +115,7 @@ declare module "routes-gen" {
       | ["/dashboard/listings/new"]
       | ["/dashboard/settings"]
       | ["/health"]
+      | ["/legal"]
       | ["/login"]
       | ["/logout"]
       | ["/magic"]

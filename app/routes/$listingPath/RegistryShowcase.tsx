@@ -1,11 +1,10 @@
 import { Link } from "@remix-run/react"
 import clsx from "clsx"
-import Autoplay from "embla-carousel-autoplay"
+import Autoscroll from "embla-carousel-auto-scroll"
 import useEmblaCarousel from "embla-carousel-react"
 import { useTranslation } from "react-i18next"
 import { route } from "routes-gen"
 
-import { ONE_SECOND } from "~/config/consts"
 import { RegistryShowcaseProperties } from "~/utils/ribbons"
 
 import useTheme from "./ThemeProvider"
@@ -27,11 +26,7 @@ export default function RegistryShowcase({
   const { theme } = useTheme()
   const { t } = useTranslation("listing", { useSuspense: true })
   const [emblaRef] = useEmblaCarousel({ loop: true }, [
-    Autoplay({
-      delay: ONE_SECOND.inMilliseconds * 2,
-      stopOnInteraction: false,
-      stopOnMouseEnter: false,
-    }),
+    Autoscroll({ speed: 1, startDelay: 0 }),
   ])
 
   return (

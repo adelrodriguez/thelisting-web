@@ -9147,7 +9147,7 @@ export type DeliveryMethodDefinition = Node & {
   __typename?: 'DeliveryMethodDefinition';
   /** Whether this method definition is active. */
   active: Scalars['Boolean']['output'];
-  /** The description of the method definition. */
+  /** The description of the method definition. Only available on shipping rates that are custom. */
   description?: Maybe<Scalars['String']['output']>;
   /** A globally-unique ID. */
   id: Scalars['ID']['output'];
@@ -11612,7 +11612,7 @@ export enum DiscountStatus {
   Active = 'ACTIVE',
   /** The discount is expired. */
   Expired = 'EXPIRED',
-  /** The discount is scheduled. */
+  /** The discount is scheduled when it has a start date in the future. */
   Scheduled = 'SCHEDULED'
 }
 
@@ -11692,6 +11692,10 @@ export enum DisputeEvidenceUpdateUserErrorCode {
 /** The possible statuses of a dispute. */
 export enum DisputeStatus {
   Accepted = 'ACCEPTED',
+  /**
+   * Status previously used by Stripe to indicate that a dispute led to a refund.
+   * @deprecated CHARGE_REFUNDED is no longer supported.
+   */
   ChargeRefunded = 'CHARGE_REFUNDED',
   Lost = 'LOST',
   NeedsResponse = 'NEEDS_RESPONSE',
@@ -15796,6 +15800,11 @@ export type FulfillmentService = {
   /**
    * Whether the fulfillment service uses the [fulfillment order based workflow](https://shopify.dev/apps/fulfillment/fulfillment-service-apps/manage-fulfillments) for managing fulfillments.
    *
+   * As the migration is now finished, the `fulfillmentOrdersOptIn` property is [deprecated](
+   * https://shopify.dev/changelog/deprecation-of-the-fulfillmentservice-fulfillmentordersoptin-field)
+   * and is always set to `true` on correctly functioning fulfillment services.
+   *
+   * @deprecated Migration period ended. All correctly functioning fulfillment services have `fulfillmentOrdersOptIn` set to `true`.
    */
   fulfillmentOrdersOptIn: Scalars['Boolean']['output'];
   /** Human-readable unique identifier for this fulfillment service. */
@@ -17918,25 +17927,25 @@ export type LineItem = Node & {
   canRestock: Scalars['Boolean']['output'];
   /** The subscription contract associated with this line item. */
   contract?: Maybe<SubscriptionContract>;
-  /** The line item's quantity, minus the removed quantity. */
+  /** The number of units ordered, excluding refunded and removed units. */
   currentQuantity: Scalars['Int']['output'];
   /** A list of attributes that represent custom features or special requests. */
   customAttributes: Array<Attribute>;
-  /** The discounts that have been allocated onto the line item by discount applications, not including order edits and refunds. */
+  /** The discounts that have been allocated to the line item by discount applications, including discounts allocated to refunded and removed quantities. */
   discountAllocations: Array<DiscountAllocation>;
   /**
-   * The total line price after discounts are applied, in shop currency.
+   * The total discounted price of the line item in shop currency, including refunded and removed quantities. This value doesn't include order-level discounts.
    * @deprecated Use `discountedTotalSet` instead.
    */
   discountedTotal: Scalars['Money']['output'];
-  /** The total line price after discounts are applied, in shop and presentment currencies. */
+  /** The total discounted price of the line item in shop and presentment currencies, including refunded and removed quantities. This value doesn't include order-level discounts. Code-based discounts aren't included by default. */
   discountedTotalSet: MoneyBag;
   /**
-   * The approximate split price of a line item unit, in shop currency. This value doesn't include discounts applied to the entire order.
+   * The approximate unit price of the line item in shop currency. This value includes line-level discounts and discounts applied to refunded and removed quantities. It doesn't include order-level discounts.
    * @deprecated Use `discountedUnitPriceSet` instead.
    */
   discountedUnitPrice: Scalars['Money']['output'];
-  /** The approximate split price of a line item unit, in shop and presentment currencies. This value doesn't include discounts applied to the entire order. */
+  /** The approximate unit price of the line item in shop and presentment currencies. This value includes line-level discounts and discounts applied to refunded and removed quantities. It doesn't include order-level discounts. */
   discountedUnitPriceSet: MoneyBag;
   /** The duties associated with the line item. */
   duties: Array<Duty>;
@@ -17991,26 +18000,30 @@ export type LineItem = Node & {
   /** The total number of units that can't be fulfilled. For example, if items have been refunded, or the item is not something that can be fulfilled, like a tip. Please see the [FulfillmentOrder](https://shopify.dev/api/admin-graphql/latest/objects/FulfillmentOrder) object for more fulfillment details. */
   nonFulfillableQuantity: Scalars['Int']['output'];
   /**
-   * The total price without discounts applied, in shop currency.
-   * This value is based on the unit price of the variant x quantity.
+   * In shop currency, the total price of the line item when the order was created.
+   * This value doesn't include discounts.
    *
    * @deprecated Use `originalTotalSet` instead.
    */
   originalTotal: Scalars['Money']['output'];
-  /** The total price in shop and presentment currencies, without discounts applied. This value is based on the unit price of the variant x quantity. */
+  /**
+   * In shop and presentment currencies, the total price of the line item when the order was created.
+   * This value doesn't include discounts.
+   *
+   */
   originalTotalSet: MoneyBag;
   /**
-   * The variant unit price without discounts applied, in shop currency.
+   * In shop currency, the unit price of the line item when the order was created. This value doesn't include discounts.
    * @deprecated Use `originalUnitPriceSet` instead.
    */
   originalUnitPrice: Scalars['Money']['output'];
-  /** The variant unit price without discounts applied, in shop and presentment currencies. */
+  /** In shop and presentment currencies, the unit price of the line item when the order was created. This value doesn't include discounts. */
   originalUnitPriceSet: MoneyBag;
   /** The Product object associated with this line item's variant. */
   product?: Maybe<Product>;
-  /** The number of variant units ordered. */
+  /** The number of units ordered, including refunded and removed units. */
   quantity: Scalars['Int']['output'];
-  /** The line item's quantity, minus the refunded quantity. */
+  /** The number of units ordered, excluding refunded units. */
   refundableQuantity: Scalars['Int']['output'];
   /** Whether physical shipping is required for the variant. */
   requiresShipping: Scalars['Boolean']['output'];
@@ -18022,32 +18035,32 @@ export type LineItem = Node & {
   sku?: Maybe<Scalars['String']['output']>;
   /** Staff attributed to the line item. */
   staffMember?: Maybe<StaffMember>;
-  /** The taxes charged for this line item. */
+  /** The taxes charged for the line item, including taxes charged for refunded and removed quantities. */
   taxLines: Array<TaxLine>;
   /** Whether the variant is taxable. */
   taxable: Scalars['Boolean']['output'];
   /** The title of the product at time of order creation. */
   title: Scalars['String']['output'];
   /**
-   * The total amount of the discount allocated to the line item in the shop currency.
+   * The total discount allocated to the line item in shop currency, including the total allocated to refunded and removed quantities. This value doesn't include order-level discounts.
    * @deprecated Use `totalDiscountSet` instead.
    */
   totalDiscount: Scalars['Money']['output'];
-  /** The total amount of the discount that's allocated to the line item, in the shop and presentment currencies. This field must be explicitly set using draft orders, Shopify scripts, or the API. */
+  /** The total discount allocated to the line item in shop and presentment currencies, including the total allocated to refunded and removed quantities. This value doesn't include order-level discounts. */
   totalDiscountSet: MoneyBag;
   /**
-   * The total discounted value of unfulfilled units, in shop currency.
+   * In shop currency, the total discounted price of the unfulfilled quantity for the line item.
    * @deprecated Use `unfulfilledDiscountedTotalSet` instead.
    */
   unfulfilledDiscountedTotal: Scalars['Money']['output'];
-  /** The total discounted value of unfulfilled units, in shop and presentment currencies. */
+  /** In shop and presentment currencies, the total discounted price of the unfulfilled quantity for the line item. */
   unfulfilledDiscountedTotalSet: MoneyBag;
   /**
-   * The total price, without any discounts applied. This value is based on the unit price of the variant x quantity of all unfulfilled units, in shop currency.
+   * In shop currency, the total price of the unfulfilled quantity for the line item. This value doesn't include discounts.
    * @deprecated Use `unfulfilledOriginalTotalSet` instead.
    */
   unfulfilledOriginalTotal: Scalars['Money']['output'];
-  /** The total price, without any discounts applied. This value is based on the unit price of the variant x quantity of all unfulfilled units, in shop and presentment currencies. */
+  /** In shop and presentment currencies, the total price of the unfulfilled quantity for the line item. This value doesn't include discounts. */
   unfulfilledOriginalTotalSet: MoneyBag;
   /** The number of units not yet fulfilled. */
   unfulfilledQuantity: Scalars['Int']['output'];
@@ -21761,6 +21774,8 @@ export enum MetafieldOwnerType {
   Article = 'ARTICLE',
   /** The Blog metafield owner type. */
   Blog = 'BLOG',
+  /** The Cart Transform metafield owner type. */
+  Carttransform = 'CARTTRANSFORM',
   /** The Collection metafield owner type. */
   Collection = 'COLLECTION',
   /** The Company metafield owner type. */
@@ -23596,7 +23611,10 @@ export type Mutation = {
    *
    */
   orderEditCommit?: Maybe<OrderEditCommitPayload>;
-  /** Removes a line item discount that was applied as part of an order edit. */
+  /**
+   * Removes a line item discount that was applied as part of an order edit.
+   * @deprecated Use generic OrderEditRemoveDiscount mutation instead.
+   */
   orderEditRemoveLineItemDiscount?: Maybe<OrderEditRemoveLineItemDiscountPayload>;
   /** Sets the quantity of a line item on an order that is being edited. For more information on how to use the GraphQL Admin API to edit an existing order, refer to [Edit existing orders](https://shopify.dev/apps/fulfillment/order-management-apps/order-editing). */
   orderEditSetQuantity?: Maybe<OrderEditSetQuantityPayload>;
@@ -25406,7 +25424,6 @@ export type MutationFulfillmentServiceDeleteArgs = {
 /** The schema's entry point for all mutation operations. */
 export type MutationFulfillmentServiceUpdateArgs = {
   callbackUrl?: InputMaybe<Scalars['URL']['input']>;
-  fulfillmentOrdersOptIn?: InputMaybe<Scalars['Boolean']['input']>;
   id: Scalars['ID']['input'];
   name?: InputMaybe<Scalars['String']['input']>;
   permitsSkuSharing?: InputMaybe<Scalars['Boolean']['input']>;
@@ -27404,6 +27421,7 @@ export type Order = CommentEventSubject & HasEvents & HasLocalizationExtensions 
    * Use the [`FulfillmentOrder`](https://shopify.dev/api/admin-graphql/latest/objects/fulfillmentorder)
    * object for up to date fulfillment location information.
    *
+   * @deprecated Use `fulfillmentOrders` to get the fulfillment location for the order
    */
   physicalLocation?: Maybe<Location>;
   /** The PO number associated with the order. */
@@ -27479,9 +27497,15 @@ export type Order = CommentEventSubject & HasEvents & HasLocalizationExtensions 
   returnStatus: OrderReturnStatus;
   /** A list of returns for the order. */
   returns: ReturnConnection;
-  /** The fraud risk level of the order. */
+  /**
+   * The fraud risk level of the order.
+   * @deprecated This field is deprecated in version 2024-04. Please use OrderRiskAssessment.riskLevel
+   */
   riskLevel: OrderRiskLevel;
-  /** A list of risks associated with the order. */
+  /**
+   * A list of risks associated with the order.
+   * @deprecated This field is deprecated in version 2024-04. Please use OrderRiskAssessment
+   */
   risks: Array<OrderRisk>;
   /** The mailing address of the customer. */
   shippingAddress?: Maybe<MailingAddress>;
@@ -28573,19 +28597,31 @@ export enum OrderReturnStatus {
   ReturnRequested = 'RETURN_REQUESTED'
 }
 
-/** Represents a fraud check on an order. */
+/**
+ * Represents a fraud check on an order.
+ * As of version 2024-04 this resource is deprecated. Risk Assessments can be queried via the
+ * [OrderRisk Assessments API](https://shopify.dev/api/admin-graphql/2024-04/objects/OrderRiskAssessment).
+ *
+ */
 export type OrderRisk = {
   __typename?: 'OrderRisk';
-  /** Whether the risk level is shown in the Shopify admin. If false, then this order risk is ignored when Shopify determines the overall risk level for the order. */
+  /**
+   * Whether the risk level is shown in the Shopify admin. If false, then this order risk is ignored when Shopify determines the overall risk level for the order.
+   * @deprecated This field is deprecated in version 2024-04
+   */
   display: Scalars['Boolean']['output'];
   /**
    * The likelihood that an order is fraudulent, based on this order risk.
    *
    * The level can be set by Shopify risk analysis or by an app.
    *
+   * @deprecated This field is deprecated in version 2024-04. Please use OrderRiskAssessment.riskLevel
    */
   level?: Maybe<OrderRiskLevel>;
-  /** The risk message that's shown to the merchant in the Shopify admin. */
+  /**
+   * The risk message that's shown to the merchant in the Shopify admin.
+   * @deprecated This field is deprecated in version 2024-04
+   */
   message?: Maybe<Scalars['String']['output']>;
 };
 
@@ -34130,8 +34166,6 @@ export type QuantityRuleConnection = {
   nodes: Array<QuantityRule>;
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
-  /** The total count of QuantityRules. */
-  totalCount: Scalars['UnsignedInt64']['output'];
 };
 
 /**
@@ -39706,7 +39740,10 @@ export type ShippingLine = {
    * @deprecated Use `discountedPriceSet` instead.
    */
   discountedPrice: MoneyV2;
-  /** The pre-tax shipping price with discounts applied. */
+  /**
+   * The shipping price after applying discounts. If the parent order.taxesIncluded field is true, then this price includes taxes. If not, it's the pre-tax price.
+   *
+   */
   discountedPriceSet: MoneyBag;
   /** A globally-unique ID. */
   id?: Maybe<Scalars['ID']['output']>;
@@ -40125,7 +40162,10 @@ export type Shop = HasMetafields & HasPublishedTranslations & Node & {
    * @deprecated Use `QueryRoot.productByHandle` instead.
    */
   productByHandle?: Maybe<Product>;
-  /** The list of all images of all products for the shop. */
+  /**
+   * The list of all images of all products for the shop.
+   * @deprecated Use `files` instead. See [filesQuery](https://shopify.dev/docs/api/admin-graphql/latest/queries/files) and its [query](https://shopify.dev/docs/api/admin-graphql/2024-01/queries/files#argument-query) argument for more information.
+   */
   productImages: ImageConnection;
   /**
    * List of the shop's product saved searches.
@@ -45948,9 +45988,10 @@ export enum WebhookSubscriptionSortKeys {
  * The supported topics for webhook subscriptions. You can use webhook subscriptions to receive
  * notifications about particular events in a shop.
  *
- * You don't create webhook subscriptions to
- * [mandatory webhooks](https://shopify.dev/apps/webhooks/configuration/mandatory-webhooks).
- * Instead, you configure mandatory webhooks in your Partner Dashboard as part of your app setup.
+ * You create mandatory webhooks either via the
+ * [Partner Dashboard](https://shopify.dev/apps/webhooks/configuration/mandatory-webhooks#subscribe-to-privacy-webhooks)
+ * or by updating the
+ * [app configuration TOML](https://shopify.dev/apps/tools/cli/configuration#app-configuration-file-example).
  *
  */
 export enum WebhookSubscriptionTopic {
@@ -46078,27 +46119,27 @@ export enum WebhookSubscriptionTopic {
   FulfillmentEventsCreate = 'FULFILLMENT_EVENTS_CREATE',
   /** The webhook topic for `fulfillment_events/delete` events. Occurs whenever a fulfillment event is deleted. Requires the `read_fulfillments` scope. */
   FulfillmentEventsDelete = 'FULFILLMENT_EVENTS_DELETE',
-  /** The webhook topic for `fulfillment_orders/cancellation_request_accepted` events. Occurs when a 3PL accepts a fulfillment cancellation request, received from a merchant. Requires at least one of the following scopes: read_merchant_managed_fulfillment_orders, read_assigned_fulfillment_orders, read_third_party_fulfillment_orders. */
+  /** The webhook topic for `fulfillment_orders/cancellation_request_accepted` events. Occurs when a 3PL accepts a fulfillment cancellation request, received from a merchant. Requires at least one of the following scopes: read_merchant_managed_fulfillment_orders, read_assigned_fulfillment_orders, read_third_party_fulfillment_orders, read_marketplace_fulfillment_orders. */
   FulfillmentOrdersCancellationRequestAccepted = 'FULFILLMENT_ORDERS_CANCELLATION_REQUEST_ACCEPTED',
-  /** The webhook topic for `fulfillment_orders/cancellation_request_rejected` events. Occurs when a 3PL rejects a fulfillment cancellation request, received from a merchant. Requires at least one of the following scopes: read_merchant_managed_fulfillment_orders, read_assigned_fulfillment_orders, read_third_party_fulfillment_orders. */
+  /** The webhook topic for `fulfillment_orders/cancellation_request_rejected` events. Occurs when a 3PL rejects a fulfillment cancellation request, received from a merchant. Requires at least one of the following scopes: read_merchant_managed_fulfillment_orders, read_assigned_fulfillment_orders, read_third_party_fulfillment_orders, read_marketplace_fulfillment_orders. */
   FulfillmentOrdersCancellationRequestRejected = 'FULFILLMENT_ORDERS_CANCELLATION_REQUEST_REJECTED',
-  /** The webhook topic for `fulfillment_orders/cancellation_request_submitted` events. Occurs when a merchant requests a fulfillment request to be cancelled after that request was approved by a 3PL. Requires at least one of the following scopes: read_merchant_managed_fulfillment_orders, read_assigned_fulfillment_orders, read_third_party_fulfillment_orders. */
+  /** The webhook topic for `fulfillment_orders/cancellation_request_submitted` events. Occurs when a merchant requests a fulfillment request to be cancelled after that request was approved by a 3PL. Requires at least one of the following scopes: read_merchant_managed_fulfillment_orders, read_assigned_fulfillment_orders, read_third_party_fulfillment_orders, read_marketplace_fulfillment_orders. */
   FulfillmentOrdersCancellationRequestSubmitted = 'FULFILLMENT_ORDERS_CANCELLATION_REQUEST_SUBMITTED',
-  /** The webhook topic for `fulfillment_orders/cancelled` events. Occurs when a fulfillment order is cancelled. Requires at least one of the following scopes: read_merchant_managed_fulfillment_orders, read_assigned_fulfillment_orders, read_third_party_fulfillment_orders. */
+  /** The webhook topic for `fulfillment_orders/cancelled` events. Occurs when a fulfillment order is cancelled. Requires at least one of the following scopes: read_merchant_managed_fulfillment_orders, read_assigned_fulfillment_orders, read_third_party_fulfillment_orders, read_marketplace_fulfillment_orders. */
   FulfillmentOrdersCancelled = 'FULFILLMENT_ORDERS_CANCELLED',
-  /** The webhook topic for `fulfillment_orders/fulfillment_request_accepted` events. Occurs when a fulfillment service accepts a request to fulfill a fulfillment order. Requires at least one of the following scopes: read_merchant_managed_fulfillment_orders, read_assigned_fulfillment_orders, read_third_party_fulfillment_orders. */
+  /** The webhook topic for `fulfillment_orders/fulfillment_request_accepted` events. Occurs when a fulfillment service accepts a request to fulfill a fulfillment order. Requires at least one of the following scopes: read_merchant_managed_fulfillment_orders, read_assigned_fulfillment_orders, read_third_party_fulfillment_orders, read_marketplace_fulfillment_orders. */
   FulfillmentOrdersFulfillmentRequestAccepted = 'FULFILLMENT_ORDERS_FULFILLMENT_REQUEST_ACCEPTED',
-  /** The webhook topic for `fulfillment_orders/fulfillment_request_rejected` events. Occurs when a 3PL rejects a fulfillment request that was sent by a merchant. Requires at least one of the following scopes: read_merchant_managed_fulfillment_orders, read_assigned_fulfillment_orders, read_third_party_fulfillment_orders. */
+  /** The webhook topic for `fulfillment_orders/fulfillment_request_rejected` events. Occurs when a 3PL rejects a fulfillment request that was sent by a merchant. Requires at least one of the following scopes: read_merchant_managed_fulfillment_orders, read_assigned_fulfillment_orders, read_third_party_fulfillment_orders, read_marketplace_fulfillment_orders. */
   FulfillmentOrdersFulfillmentRequestRejected = 'FULFILLMENT_ORDERS_FULFILLMENT_REQUEST_REJECTED',
-  /** The webhook topic for `fulfillment_orders/fulfillment_request_submitted` events. Occurs when a merchant submits a fulfillment request to a 3PL. Requires at least one of the following scopes: read_merchant_managed_fulfillment_orders, read_assigned_fulfillment_orders, read_third_party_fulfillment_orders, read_buyer_membership_orders. */
+  /** The webhook topic for `fulfillment_orders/fulfillment_request_submitted` events. Occurs when a merchant submits a fulfillment request to a 3PL. Requires at least one of the following scopes: read_merchant_managed_fulfillment_orders, read_assigned_fulfillment_orders, read_third_party_fulfillment_orders, read_buyer_membership_orders, read_marketplace_fulfillment_orders. */
   FulfillmentOrdersFulfillmentRequestSubmitted = 'FULFILLMENT_ORDERS_FULFILLMENT_REQUEST_SUBMITTED',
-  /** The webhook topic for `fulfillment_orders/fulfillment_service_failed_to_complete` events. Occurs when a fulfillment service intends to close an in_progress fulfillment order. Requires at least one of the following scopes: read_merchant_managed_fulfillment_orders, read_assigned_fulfillment_orders, read_third_party_fulfillment_orders. */
+  /** The webhook topic for `fulfillment_orders/fulfillment_service_failed_to_complete` events. Occurs when a fulfillment service intends to close an in_progress fulfillment order. Requires at least one of the following scopes: read_merchant_managed_fulfillment_orders, read_assigned_fulfillment_orders, read_third_party_fulfillment_orders, read_marketplace_fulfillment_orders. */
   FulfillmentOrdersFulfillmentServiceFailedToComplete = 'FULFILLMENT_ORDERS_FULFILLMENT_SERVICE_FAILED_TO_COMPLETE',
-  /** The webhook topic for `fulfillment_orders/hold_released` events. Occurs whenever a fulfillment order hold is released. Requires at least one of the following scopes: read_merchant_managed_fulfillment_orders, read_assigned_fulfillment_orders, read_third_party_fulfillment_orders. */
+  /** The webhook topic for `fulfillment_orders/hold_released` events. Occurs whenever a fulfillment order hold is released. Requires at least one of the following scopes: read_merchant_managed_fulfillment_orders, read_assigned_fulfillment_orders, read_third_party_fulfillment_orders, read_marketplace_fulfillment_orders. */
   FulfillmentOrdersHoldReleased = 'FULFILLMENT_ORDERS_HOLD_RELEASED',
-  /** The webhook topic for `fulfillment_orders/line_items_prepared_for_local_delivery` events. Occurs whenever a fulfillment order's line items are prepared for local delivery. Requires at least one of the following scopes: read_merchant_managed_fulfillment_orders, read_assigned_fulfillment_orders, read_third_party_fulfillment_orders. */
+  /** The webhook topic for `fulfillment_orders/line_items_prepared_for_local_delivery` events. Occurs whenever a fulfillment order's line items are prepared for local delivery. Requires at least one of the following scopes: read_merchant_managed_fulfillment_orders, read_assigned_fulfillment_orders, read_third_party_fulfillment_orders, read_marketplace_fulfillment_orders. */
   FulfillmentOrdersLineItemsPreparedForLocalDelivery = 'FULFILLMENT_ORDERS_LINE_ITEMS_PREPARED_FOR_LOCAL_DELIVERY',
-  /** The webhook topic for `fulfillment_orders/line_items_prepared_for_pickup` events. Triggers when one or more of the line items for a fulfillment order are prepared for pickup Requires at least one of the following scopes: read_merchant_managed_fulfillment_orders, read_assigned_fulfillment_orders, read_third_party_fulfillment_orders. */
+  /** The webhook topic for `fulfillment_orders/line_items_prepared_for_pickup` events. Triggers when one or more of the line items for a fulfillment order are prepared for pickup Requires at least one of the following scopes: read_merchant_managed_fulfillment_orders, read_assigned_fulfillment_orders, read_third_party_fulfillment_orders, read_marketplace_fulfillment_orders. */
   FulfillmentOrdersLineItemsPreparedForPickup = 'FULFILLMENT_ORDERS_LINE_ITEMS_PREPARED_FOR_PICKUP',
   /**
    * The webhook topic for `fulfillment_orders/moved` events. Occurs whenever the location which is assigned to fulfill one or more fulfillment order line items is changed.
@@ -46113,12 +46154,12 @@ export enum WebhookSubscriptionTopic {
    * If you need to determine the originally assigned location, then you should refer to the `source_location`.
    *
    * [Learn more about moving line items](https://shopify.dev/docs/api/admin-graphql/latest/mutations/fulfillmentOrderMove).
-   *  Requires at least one of the following scopes: read_merchant_managed_fulfillment_orders, read_assigned_fulfillment_orders, read_third_party_fulfillment_orders.
+   *  Requires at least one of the following scopes: read_merchant_managed_fulfillment_orders, read_assigned_fulfillment_orders, read_third_party_fulfillment_orders, read_marketplace_fulfillment_orders.
    */
   FulfillmentOrdersMoved = 'FULFILLMENT_ORDERS_MOVED',
-  /** The webhook topic for `fulfillment_orders/order_routing_complete` events. Occurs when an order has finished being routed and it's fulfillment orders assigned to a fulfillment service's location. Requires at least one of the following scopes: read_merchant_managed_fulfillment_orders, read_assigned_fulfillment_orders, read_third_party_fulfillment_orders, read_buyer_membership_orders. */
+  /** The webhook topic for `fulfillment_orders/order_routing_complete` events. Occurs when an order has finished being routed and it's fulfillment orders assigned to a fulfillment service's location. Requires at least one of the following scopes: read_merchant_managed_fulfillment_orders, read_assigned_fulfillment_orders, read_third_party_fulfillment_orders, read_buyer_membership_orders, read_marketplace_fulfillment_orders. */
   FulfillmentOrdersOrderRoutingComplete = 'FULFILLMENT_ORDERS_ORDER_ROUTING_COMPLETE',
-  /** The webhook topic for `fulfillment_orders/placed_on_hold` events. Occurs when a fulfillment order is placed on hold. Requires at least one of the following scopes: read_merchant_managed_fulfillment_orders, read_assigned_fulfillment_orders, read_third_party_fulfillment_orders. */
+  /** The webhook topic for `fulfillment_orders/placed_on_hold` events. Occurs when a fulfillment order is placed on hold. Requires at least one of the following scopes: read_merchant_managed_fulfillment_orders, read_assigned_fulfillment_orders, read_third_party_fulfillment_orders, read_marketplace_fulfillment_orders. */
   FulfillmentOrdersPlacedOnHold = 'FULFILLMENT_ORDERS_PLACED_ON_HOLD',
   /**
    * The webhook topic for `fulfillment_orders/rescheduled` events. Triggers when a fulfillment order is rescheduled.
@@ -46126,10 +46167,10 @@ export enum WebhookSubscriptionTopic {
    * Fulfillment orders may be merged if they have the same `fulfillAt` datetime.
    * If the fulfillment order is merged then the resulting fulfillment order will be indicated in the webhook body.
    * Otherwise it will be the original fulfillment order with an updated `fulfill_at` datetime.
-   *  Requires at least one of the following scopes: read_merchant_managed_fulfillment_orders, read_assigned_fulfillment_orders, read_third_party_fulfillment_orders.
+   *  Requires at least one of the following scopes: read_merchant_managed_fulfillment_orders, read_assigned_fulfillment_orders, read_third_party_fulfillment_orders, read_marketplace_fulfillment_orders.
    */
   FulfillmentOrdersRescheduled = 'FULFILLMENT_ORDERS_RESCHEDULED',
-  /** The webhook topic for `fulfillment_orders/scheduled_fulfillment_order_ready` events. Occurs whenever a fulfillment order which was scheduled becomes due. Requires at least one of the following scopes: read_merchant_managed_fulfillment_orders, read_assigned_fulfillment_orders, read_third_party_fulfillment_orders. */
+  /** The webhook topic for `fulfillment_orders/scheduled_fulfillment_order_ready` events. Occurs whenever a fulfillment order which was scheduled becomes due. Requires at least one of the following scopes: read_merchant_managed_fulfillment_orders, read_assigned_fulfillment_orders, read_third_party_fulfillment_orders, read_marketplace_fulfillment_orders. */
   FulfillmentOrdersScheduledFulfillmentOrderReady = 'FULFILLMENT_ORDERS_SCHEDULED_FULFILLMENT_ORDER_READY',
   /** The webhook topic for `inventory_items/create` events. Occurs whenever an inventory item is created. Requires the `read_inventory` scope. */
   InventoryItemsCreate = 'INVENTORY_ITEMS_CREATE',
