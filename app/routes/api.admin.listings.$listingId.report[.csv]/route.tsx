@@ -34,10 +34,10 @@ export async function loader({ context, params }: LoaderFunctionArgs) {
         )?.value
 
         return {
-          cost: round(isNaN(cost) ? 0 : cost),
+          cost: round(Number.isNaN(cost) ? 0 : cost),
           name: product.title,
           numberPurchased,
-          price: round(isNaN(price) ? 0 : price),
+          price: round(Number.isNaN(price) ? 0 : price),
           totalCost: numberPurchased * cost,
           totalPrice: numberPurchased * price,
           url,
