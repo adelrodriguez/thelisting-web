@@ -1,9 +1,26 @@
-import { useQueries, useQueryClient } from "@tanstack/react-query"
+import {
+  QueryFunctionContext,
+  useQueries,
+  useQueryClient,
+} from "@tanstack/react-query"
 import { route } from "routes-gen"
 
-import { ScrapedProduct } from "~/utils/scraper"
-
 const QUERY_KEY = "scrape-product"
+
+type ScrapedProduct = {
+  title: string | null
+  image: string | null
+  amount: number | null
+  currency: string | null
+  store: string | null
+  _meta: {
+    duration: number
+    timestamp: number
+    errors: string[]
+    url: string | null
+  }
+}
+type Signal = QueryFunctionContext["signal"]
 
 export default function useScrapeProducts<T extends { url: string }>(
   options: {
@@ -16,16 +33,14 @@ export default function useScrapeProducts<T extends { url: string }>(
   const queries = useQueries({
     queries: options.data.map((item, index) => ({
       enabled: false,
-      // @ts-expect-error Seems this is a bug in the useQueries types. See:
-      // https://github.com/TanStack/query/discussions/4785
-      queryFn: async ({ signal }) => {
+      queryFn: async ({ signal }: { signal: Signal }) => {
         const response = await fetch(
           route("/api/scraper/product") + `?url=${item.url}`,
           { signal },
         )
         const json = await response.json()
 
-        const product = ScrapedProduct.parse(json)
+        const product = json as ScrapedProduct
 
         if (options.onSuccess) {
           options.onSuccess(product, index)

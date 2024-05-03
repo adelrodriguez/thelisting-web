@@ -61,6 +61,9 @@ const schema = z.object({
 
   RESEND_API_KEY: z.string(),
 
+  SCRAPER_TOKEN: z.string(),
+  SCRAPER_URL: z.string(),
+
   SENDGRID_API_KEY: z.string(),
   SENDGRID_SENDER_EMAIL: z.string(),
 

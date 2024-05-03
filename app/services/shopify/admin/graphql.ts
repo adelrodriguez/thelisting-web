@@ -5303,7 +5303,7 @@ export type CompanyUpdatePayload = {
   userErrors: Array<BusinessCustomerUserError>;
 };
 
-/** The input fields for the context data that determines the pricing of a variant. */
+/** The input fields for the context data that determines the pricing of a variant. Refer to [Product](https://shopify.dev/docs/api/admin-graphql/latest/queries/product?example=Get+the+price+range+for+a+product+for+buyers+from+Canada)for more information on how to use this input object. */
 export type ContextualPricingContext = {
   /**
    * The CompanyLocation ID used to fetch company location specific prices.
@@ -8621,7 +8621,163 @@ export type DeliveryBrandedPromise = {
   name: Scalars['String']['output'];
 };
 
-/** A shipping service provider or a carrier account. */
+/**
+ * A carrier service (also known as a carrier calculated service or shipping service) provides real-time shipping rates to Shopify. Some common carrier services include Canada Post, FedEx, UPS, and USPS. The term **carrier** is often used interchangeably with the terms **shipping company** and **rate provider**.
+ *
+ * Using the CarrierService resource, you can add a carrier service to a shop and then provide a list of applicable shipping rates at checkout. You can even use the cart data to adjust shipping rates and offer shipping discounts based on what is in the customer's cart.
+ *
+ * ## Requirements for accessing the CarrierService resource
+ * To access the CarrierService resource, add the `write_shipping` permission to your app's requested scopes. For more information, see [API access scopes](https://shopify.dev/docs/admin-api/access-scopes).
+ *
+ * Your app's request to create a carrier service will fail unless the store installing your carrier service meets one of the following requirements:
+ * * It's on the Advanced Shopify plan or higher.
+ * * It's on the Shopify plan with yearly billing, or the carrier service feature has been added to the store for a monthly fee. For more information, contact [Shopify Support](https://help.shopify.com/questions).
+ * * It's a development store.
+ *
+ * > Note:
+ * > If a store changes its Shopify plan, then the store's association with a carrier service is deactivated if the store no long meets one of the requirements above.
+ *
+ * ## Providing shipping rates to Shopify
+ * When adding a carrier service to a store, you need to provide a POST endpoint rooted in the `callbackUrl` property where Shopify can retrieve applicable shipping rates. The callback URL should be a public endpoint that expects these requests from Shopify.
+ *
+ * ### Example shipping rate request sent to a carrier service
+ *
+ * ```json
+ * {
+ *   "rate": {
+ *     "origin": {
+ *       "country": "CA",
+ *       "postal_code": "K2P1L4",
+ *       "province": "ON",
+ *       "city": "Ottawa",
+ *       "name": null,
+ *       "address1": "150 Elgin St.",
+ *       "address2": "",
+ *       "address3": null,
+ *       "phone": null,
+ *       "fax": null,
+ *       "email": null,
+ *       "address_type": null,
+ *       "company_name": "Jamie D's Emporium"
+ *     },
+ *     "destination": {
+ *       "country": "CA",
+ *       "postal_code": "K1M1M4",
+ *       "province": "ON",
+ *       "city": "Ottawa",
+ *       "name": "Bob Norman",
+ *       "address1": "24 Sussex Dr.",
+ *       "address2": "",
+ *       "address3": null,
+ *       "phone": null,
+ *       "fax": null,
+ *       "email": null,
+ *       "address_type": null,
+ *       "company_name": null
+ *     },
+ *     "items": [{
+ *       "name": "Short Sleeve T-Shirt",
+ *       "sku": "",
+ *       "quantity": 1,
+ *       "grams": 1000,
+ *       "price": 1999,
+ *       "vendor": "Jamie D's Emporium",
+ *       "requires_shipping": true,
+ *       "taxable": true,
+ *       "fulfillment_service": "manual",
+ *       "properties": null,
+ *       "product_id": 48447225880,
+ *       "variant_id": 258644705304
+ *     }],
+ *     "currency": "USD",
+ *     "locale": "en"
+ *   }
+ * }
+ * ```
+ *
+ * ### Example response
+ * ```json
+ * {
+ *    "rates": [
+ *        {
+ *            "service_name": "canadapost-overnight",
+ *            "service_code": "ON",
+ *            "total_price": "1295",
+ *            "description": "This is the fastest option by far",
+ *            "currency": "CAD",
+ *            "min_delivery_date": "2013-04-12 14:48:45 -0400",
+ *            "max_delivery_date": "2013-04-12 14:48:45 -0400"
+ *        },
+ *        {
+ *            "service_name": "fedex-2dayground",
+ *            "service_code": "2D",
+ *            "total_price": "2934",
+ *            "currency": "USD",
+ *            "min_delivery_date": "2013-04-12 14:48:45 -0400",
+ *            "max_delivery_date": "2013-04-12 14:48:45 -0400"
+ *        },
+ *        {
+ *            "service_name": "fedex-priorityovernight",
+ *            "service_code": "1D",
+ *            "total_price": "3587",
+ *            "currency": "USD",
+ *            "min_delivery_date": "2013-04-12 14:48:45 -0400",
+ *            "max_delivery_date": "2013-04-12 14:48:45 -0400"
+ *        }
+ *    ]
+ * }
+ * ```
+ *
+ * The `address3`, `fax`, `address_type`, and `company_name` fields are returned by specific [ActiveShipping](https://github.com/Shopify/active_shipping) providers. For API-created carrier services, you should use only the following shipping address fields:
+ * * `address1`
+ * * `address2`
+ * * `city`
+ * * `zip`
+ * * `province`
+ * * `country`
+ *
+ * Other values remain as `null` and are not sent to the callback URL.
+ *
+ * ### Response fields
+ *
+ * When Shopify requests shipping rates using your callback URL, the response object `rates` must be a JSON array of objects with the following fields.  Required fields must be included in the response for the carrier service integration to work properly.
+ *
+ * | Field                   | Required | Description                                                                                                                                                                                                  |
+ * | ----------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+ * | `service_name`          | Yes      | The name of the rate, which customers see at checkout. For example: `Expedited Mail`.                                                                                                                        |
+ * | `description`           | Yes      | A description of the rate, which customers see at checkout. For example: `Includes tracking and insurance`.                                                                                                  |
+ * | `service_code`          | Yes      | A unique code associated with the rate. For example: `expedited_mail`.                                                                                                                                       |
+ * | `currency`              | Yes      | The currency of the shipping rate.                                                                                                                                                                           |
+ * | `total_price`           | Yes      | The total price expressed in subunits. If the currency doesn't use subunits, then the value must be multiplied by 100. For example: `"total_price": 500` for 5.00 CAD, `"total_price": 100000` for 1000 JPY. |
+ * | `phone_required`        | No       | Whether the customer must provide a phone number at checkout.                                                                                                                                                |
+ * | `min_delivery_date`     | No       | The earliest delivery date for the displayed rate.                                                                                                                                                           |
+ * | `max_delivery_date`     | No       | The latest delivery date for the displayed rate to still be valid.                                                                                                                                           |
+ *
+ * ## Response Timeouts
+ * The read timeout for rate requests are dynamic, based on the number of requests per minute (RPM). These limits are applied to each shop-app pair. The timeout values are as follows.
+ *
+ * | RPM Range     | Timeout    |
+ * | ------------- | ---------- |
+ * | Under 1500    | 10s        |
+ * | 1500 to 3000  | 5s         |
+ * | Over 3000     | 3s         |
+ *
+ * > Note:
+ * > These values are upper limits and should not be interpretted as a goal to develop towards. Shopify is constantly evaluating the performance of the platform and working towards improving resilience as well as app capabilities. As such, these numbers may be adjusted outside of our normal versioning timelines.
+ *
+ * ## Server-side caching of requests
+ * Shopify provides server-side caching to reduce the number of requests it makes. Any shipping rate request that identically matches the following fields will be retrieved from Shopify's cache of the initial response:
+ * * variant IDs
+ * * default shipping box weight and dimensions
+ * * variant quantities
+ * * carrier service ID
+ * * origin address
+ * * destination address
+ * * item weights and signatures
+ *
+ * If any of these fields differ, or if the cache has expired since the original request, then new shipping rates are requested. The cache expires 15 minutes after rates are successfully returned. If an error occurs, then the cache expires after 30 seconds.
+ *
+ */
 export type DeliveryCarrierService = Node & {
   __typename?: 'DeliveryCarrierService';
   /** The list of services offered for given destinations. */
@@ -8637,7 +8793,163 @@ export type DeliveryCarrierService = Node & {
 };
 
 
-/** A shipping service provider or a carrier account. */
+/**
+ * A carrier service (also known as a carrier calculated service or shipping service) provides real-time shipping rates to Shopify. Some common carrier services include Canada Post, FedEx, UPS, and USPS. The term **carrier** is often used interchangeably with the terms **shipping company** and **rate provider**.
+ *
+ * Using the CarrierService resource, you can add a carrier service to a shop and then provide a list of applicable shipping rates at checkout. You can even use the cart data to adjust shipping rates and offer shipping discounts based on what is in the customer's cart.
+ *
+ * ## Requirements for accessing the CarrierService resource
+ * To access the CarrierService resource, add the `write_shipping` permission to your app's requested scopes. For more information, see [API access scopes](https://shopify.dev/docs/admin-api/access-scopes).
+ *
+ * Your app's request to create a carrier service will fail unless the store installing your carrier service meets one of the following requirements:
+ * * It's on the Advanced Shopify plan or higher.
+ * * It's on the Shopify plan with yearly billing, or the carrier service feature has been added to the store for a monthly fee. For more information, contact [Shopify Support](https://help.shopify.com/questions).
+ * * It's a development store.
+ *
+ * > Note:
+ * > If a store changes its Shopify plan, then the store's association with a carrier service is deactivated if the store no long meets one of the requirements above.
+ *
+ * ## Providing shipping rates to Shopify
+ * When adding a carrier service to a store, you need to provide a POST endpoint rooted in the `callbackUrl` property where Shopify can retrieve applicable shipping rates. The callback URL should be a public endpoint that expects these requests from Shopify.
+ *
+ * ### Example shipping rate request sent to a carrier service
+ *
+ * ```json
+ * {
+ *   "rate": {
+ *     "origin": {
+ *       "country": "CA",
+ *       "postal_code": "K2P1L4",
+ *       "province": "ON",
+ *       "city": "Ottawa",
+ *       "name": null,
+ *       "address1": "150 Elgin St.",
+ *       "address2": "",
+ *       "address3": null,
+ *       "phone": null,
+ *       "fax": null,
+ *       "email": null,
+ *       "address_type": null,
+ *       "company_name": "Jamie D's Emporium"
+ *     },
+ *     "destination": {
+ *       "country": "CA",
+ *       "postal_code": "K1M1M4",
+ *       "province": "ON",
+ *       "city": "Ottawa",
+ *       "name": "Bob Norman",
+ *       "address1": "24 Sussex Dr.",
+ *       "address2": "",
+ *       "address3": null,
+ *       "phone": null,
+ *       "fax": null,
+ *       "email": null,
+ *       "address_type": null,
+ *       "company_name": null
+ *     },
+ *     "items": [{
+ *       "name": "Short Sleeve T-Shirt",
+ *       "sku": "",
+ *       "quantity": 1,
+ *       "grams": 1000,
+ *       "price": 1999,
+ *       "vendor": "Jamie D's Emporium",
+ *       "requires_shipping": true,
+ *       "taxable": true,
+ *       "fulfillment_service": "manual",
+ *       "properties": null,
+ *       "product_id": 48447225880,
+ *       "variant_id": 258644705304
+ *     }],
+ *     "currency": "USD",
+ *     "locale": "en"
+ *   }
+ * }
+ * ```
+ *
+ * ### Example response
+ * ```json
+ * {
+ *    "rates": [
+ *        {
+ *            "service_name": "canadapost-overnight",
+ *            "service_code": "ON",
+ *            "total_price": "1295",
+ *            "description": "This is the fastest option by far",
+ *            "currency": "CAD",
+ *            "min_delivery_date": "2013-04-12 14:48:45 -0400",
+ *            "max_delivery_date": "2013-04-12 14:48:45 -0400"
+ *        },
+ *        {
+ *            "service_name": "fedex-2dayground",
+ *            "service_code": "2D",
+ *            "total_price": "2934",
+ *            "currency": "USD",
+ *            "min_delivery_date": "2013-04-12 14:48:45 -0400",
+ *            "max_delivery_date": "2013-04-12 14:48:45 -0400"
+ *        },
+ *        {
+ *            "service_name": "fedex-priorityovernight",
+ *            "service_code": "1D",
+ *            "total_price": "3587",
+ *            "currency": "USD",
+ *            "min_delivery_date": "2013-04-12 14:48:45 -0400",
+ *            "max_delivery_date": "2013-04-12 14:48:45 -0400"
+ *        }
+ *    ]
+ * }
+ * ```
+ *
+ * The `address3`, `fax`, `address_type`, and `company_name` fields are returned by specific [ActiveShipping](https://github.com/Shopify/active_shipping) providers. For API-created carrier services, you should use only the following shipping address fields:
+ * * `address1`
+ * * `address2`
+ * * `city`
+ * * `zip`
+ * * `province`
+ * * `country`
+ *
+ * Other values remain as `null` and are not sent to the callback URL.
+ *
+ * ### Response fields
+ *
+ * When Shopify requests shipping rates using your callback URL, the response object `rates` must be a JSON array of objects with the following fields.  Required fields must be included in the response for the carrier service integration to work properly.
+ *
+ * | Field                   | Required | Description                                                                                                                                                                                                  |
+ * | ----------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+ * | `service_name`          | Yes      | The name of the rate, which customers see at checkout. For example: `Expedited Mail`.                                                                                                                        |
+ * | `description`           | Yes      | A description of the rate, which customers see at checkout. For example: `Includes tracking and insurance`.                                                                                                  |
+ * | `service_code`          | Yes      | A unique code associated with the rate. For example: `expedited_mail`.                                                                                                                                       |
+ * | `currency`              | Yes      | The currency of the shipping rate.                                                                                                                                                                           |
+ * | `total_price`           | Yes      | The total price expressed in subunits. If the currency doesn't use subunits, then the value must be multiplied by 100. For example: `"total_price": 500` for 5.00 CAD, `"total_price": 100000` for 1000 JPY. |
+ * | `phone_required`        | No       | Whether the customer must provide a phone number at checkout.                                                                                                                                                |
+ * | `min_delivery_date`     | No       | The earliest delivery date for the displayed rate.                                                                                                                                                           |
+ * | `max_delivery_date`     | No       | The latest delivery date for the displayed rate to still be valid.                                                                                                                                           |
+ *
+ * ## Response Timeouts
+ * The read timeout for rate requests are dynamic, based on the number of requests per minute (RPM). These limits are applied to each shop-app pair. The timeout values are as follows.
+ *
+ * | RPM Range     | Timeout    |
+ * | ------------- | ---------- |
+ * | Under 1500    | 10s        |
+ * | 1500 to 3000  | 5s         |
+ * | Over 3000     | 3s         |
+ *
+ * > Note:
+ * > These values are upper limits and should not be interpretted as a goal to develop towards. Shopify is constantly evaluating the performance of the platform and working towards improving resilience as well as app capabilities. As such, these numbers may be adjusted outside of our normal versioning timelines.
+ *
+ * ## Server-side caching of requests
+ * Shopify provides server-side caching to reduce the number of requests it makes. Any shipping rate request that identically matches the following fields will be retrieved from Shopify's cache of the initial response:
+ * * variant IDs
+ * * default shipping box weight and dimensions
+ * * variant quantities
+ * * carrier service ID
+ * * origin address
+ * * destination address
+ * * item weights and signatures
+ *
+ * If any of these fields differ, or if the cache has expired since the original request, then new shipping rates are requested. The cache expires 15 minutes after rates are successfully returned. If an error occurs, then the cache expires after 30 seconds.
+ *
+ */
 export type DeliveryCarrierServiceAvailableServicesForCountriesArgs = {
   countryCodes?: InputMaybe<Array<CountryCode>>;
   origins?: InputMaybe<Array<Scalars['ID']['input']>>;
@@ -12312,6 +12624,8 @@ export type DraftOrderInput = {
    * Product variant line item or custom line item associated to the draft order.
    * Each draft order must include at least one line item.
    *
+   * NOTE: Draft orders don't currently support subscriptions.
+   *
    */
   lineItems?: InputMaybe<Array<DraftOrderLineItemInput>>;
   /** The localization extensions attached to the draft order. For example, Tax IDs. */
@@ -12319,7 +12633,7 @@ export type DraftOrderInput = {
   /** The selected country code that determines the pricing of the draft order. */
   marketRegionCountryCode?: InputMaybe<CountryCode>;
   /**
-   * Metafields attached to the draft order.
+   * Metafields attached to the draft order. An existing metafield can not be used when creating a draft order.
    *
    */
   metafields?: InputMaybe<Array<MetafieldInput>>;
@@ -13447,6 +13761,8 @@ export type Fulfillment = LegacyInteroperability & Node & {
   requiresShipping: Scalars['Boolean']['output'];
   /** Fulfillment service associated with the fulfillment. */
   service?: Maybe<FulfillmentService>;
+  /** The optional shipping label for this fulfillment. */
+  shippingLabel?: Maybe<ShippingLabel>;
   /** The status of the fulfillment. */
   status: FulfillmentStatus;
   /** Sum of all line item quantities for the fulfillment. */
@@ -15326,15 +15642,8 @@ export type FulfillmentOrderMovePayload = {
   /**
    * The fulfillment order which now contains the moved line items and is assigned to the destination location.
    *
-   * **First scenario:** All line items belonging to the original fulfillment order are re-assigned.
-   *
-   * In this case, this will be the original fulfillment order.
-   *
-   * **Second scenario:** A subset of the line items belonging to the original fulfillment order are re-assigned.
-   *
-   * If the new location is already assigned to fulfill line items on the order, then
-   * this will be an existing active fulfillment order.
-   * Otherwise, this will be a new fulfillment order with the moved line items assigned.
+   * If the original fulfillment order doesn't have any line items which are fully or partially fulfilled, the original fulfillment order will be moved to the new location.
+   * However if this isn't the case, the moved fulfillment order will differ from the original one.
    *
    */
   movedFulfillmentOrder?: Maybe<FulfillmentOrder>;
@@ -15940,7 +16249,6 @@ export type FulfillmentTrackingInfo = {
    *   * DHL eCommerce
    *   * DHL eCommerce Asia
    *   * DHL Express
-   *   * DoorDash
    *   * DPD
    *   * DPD Local
    *   * DPD UK
@@ -16952,7 +17260,7 @@ export enum InventoryAdjustQuantitiesUserErrorCode {
   ItemNotStockedAtLocation = 'ITEM_NOT_STOCKED_AT_LOCATION',
   /** All changes must have the same ledger document URI or, in the case of adjusting available, no ledger document URI. */
   MaxOneLedgerDocument = 'MAX_ONE_LEDGER_DOCUMENT',
-  /** The specified inventory item is not allowed to be adjusted via API. */
+  /** The specified inventory item is not allowed to be adjusted via API. Example: if the inventory item is a parent bundle. */
   NonMutableInventoryItem = 'NON_MUTABLE_INVENTORY_ITEM'
 }
 
@@ -17352,7 +17660,7 @@ export type InventoryLevelEdge = {
 export type InventoryLevelInput = {
   /** The available quantity of an inventory item at a location. */
   availableQuantity: Scalars['Int']['input'];
-  /** The ID of a location. */
+  /** The ID of a location associated with the inventory level. */
   locationId: Scalars['ID']['input'];
 };
 
@@ -17422,7 +17730,7 @@ export enum InventoryMoveQuantitiesUserErrorCode {
   MaximumLedgerDocumentUris = 'MAXIMUM_LEDGER_DOCUMENT_URIS',
   /** The quantities couldn't be moved. Try again. */
   MoveQuantitiesFailed = 'MOVE_QUANTITIES_FAILED',
-  /** The specified inventory item is not allowed to be adjusted via API. */
+  /** The specified inventory item is not allowed to be adjusted via API. Example: if the inventory item is a parent bundle. */
   NonMutableInventoryItem = 'NON_MUTABLE_INVENTORY_ITEM',
   /** The quantity names for each change can't be the same. */
   SameQuantityName = 'SAME_QUANTITY_NAME'
@@ -17558,7 +17866,7 @@ export enum InventorySetOnHandQuantitiesUserErrorCode {
   InvalidReferenceDocument = 'INVALID_REFERENCE_DOCUMENT',
   /** The inventory item is not stocked at the location. */
   ItemNotStockedAtLocation = 'ITEM_NOT_STOCKED_AT_LOCATION',
-  /** The specified inventory item is not allowed to be adjusted via API. */
+  /** The specified inventory item is not allowed to be adjusted via API. Example: if the inventory item is a parent bundle. */
   NonMutableInventoryItem = 'NON_MUTABLE_INVENTORY_ITEM',
   /** The on-hand quantities couldn't be set. Try again. */
   SetOnHandQuantitiesFailed = 'SET_ON_HAND_QUANTITIES_FAILED'
@@ -19232,6 +19540,10 @@ export type Market = HasMetafieldDefinitions & HasMetafields & Node & {
    * The market’s price list, which specifies a percentage-based price adjustment as well as
    * fixed price overrides for specific variants.
    *
+   * Markets with multiple catalogs can have multiple price lists. To query which price lists are connected to
+   * a market, please query for price lists through the catalogs connection.
+   *
+   * @deprecated Use `catalogs` instead.
    */
   priceList?: Maybe<PriceList>;
   /**
@@ -20383,7 +20695,7 @@ export type MarketingActivityUpdatePayload = {
   userErrors: Array<UserError>;
 };
 
-/** An error that occurs during the execution of a Shopify Marketing mutation. */
+/** An error that occurs during the execution of marketing activity and engagement mutations. */
 export type MarketingActivityUserError = DisplayableError & {
   __typename?: 'MarketingActivityUserError';
   /** The error code. */
@@ -20396,8 +20708,54 @@ export type MarketingActivityUserError = DisplayableError & {
 
 /** Possible error codes that can be returned by `MarketingActivityUserError`. */
 export enum MarketingActivityUserErrorCode {
+  /** The marketing activity must be an external activity. */
+  ActivityNotExternal = 'ACTIVITY_NOT_EXTERNAL',
+  /** This activity has child activities and thus cannot be deleted. Child activities must be deleted before a parent activity. */
+  CannotDeleteActivityWithChildEvents = 'CANNOT_DELETE_ACTIVITY_WITH_CHILD_EVENTS',
+  /** The activity's tactic can not be updated from STOREFRONT_APP. */
+  CannotUpdateTacticIfOriginallyStorefrontApp = 'CANNOT_UPDATE_TACTIC_IF_ORIGINALLY_STOREFRONT_APP',
+  /** The activity's tactic can not be updated to STOREFRONT_APP. This type of tactic can only be specified when creating a new activity. */
+  CannotUpdateTacticToStorefrontApp = 'CANNOT_UPDATE_TACTIC_TO_STOREFRONT_APP',
+  /** All currency codes provided in the input need to match. */
+  CurrencyCodeMismatchInput = 'CURRENCY_CODE_MISMATCH_INPUT',
+  /** A mutation can not be ran because a job to delete all external activities has been enqueued, which happens either from calling the marketingActivitiesDeleteAllExternal mutation or as a result of an app uninstall. */
+  DeleteJobEnqueued = 'DELETE_JOB_ENQUEUED',
+  /** The job to delete all external activities failed to enqueue. */
+  DeleteJobFailedToEnqueue = 'DELETE_JOB_FAILED_TO_ENQUEUE',
+  /** The channel handle value cannot be modified. */
+  ImmutableChannelHandle = 'IMMUTABLE_CHANNEL_HANDLE',
+  /** The hierarchy level cannot be modified. */
+  ImmutableHierarchyLevel = 'IMMUTABLE_HIERARCHY_LEVEL',
+  /** The parent activity cannot be modified. */
+  ImmutableParentId = 'IMMUTABLE_PARENT_ID',
+  /** The URL parameter value cannot be modified. */
+  ImmutableUrlParameter = 'IMMUTABLE_URL_PARAMETER',
+  /** The UTM parameters cannot be modified. */
+  ImmutableUtmParameters = 'IMMUTABLE_UTM_PARAMETERS',
   /** The input value is invalid. */
   Invalid = 'INVALID',
+  /** The channel handle is not recognized. */
+  InvalidChannelHandle = 'INVALID_CHANNEL_HANDLE',
+  /** Either the marketing activity ID or remote ID must be provided for the activity to be deleted. */
+  InvalidDeleteActivityExternalArguments = 'INVALID_DELETE_ACTIVITY_EXTERNAL_ARGUMENTS',
+  /** Either the channel_handle or delete_engagements_for_all_channels must be provided when deleting a marketing engagement. */
+  InvalidDeleteEngagementsArguments = 'INVALID_DELETE_ENGAGEMENTS_ARGUMENTS',
+  /** Either the marketing activity ID, remote ID, or UTM must be provided. */
+  InvalidMarketingActivityExternalArguments = 'INVALID_MARKETING_ACTIVITY_EXTERNAL_ARGUMENTS',
+  /** For activity level engagement, either the marketing activity ID or remote ID must be provided. For channel level engagement, the channel handle must be provided. */
+  InvalidMarketingEngagementArguments = 'INVALID_MARKETING_ENGAGEMENT_ARGUMENTS',
+  /** No identifier found. For activity level engagement, either the marketing activity ID or remote ID must be provided. For channel level engagement, the channel handle must be provided. */
+  InvalidMarketingEngagementArgumentMissing = 'INVALID_MARKETING_ENGAGEMENT_ARGUMENT_MISSING',
+  /** The remote ID does not correspond to an existing activity. */
+  InvalidRemoteId = 'INVALID_REMOTE_ID',
+  /** The currency codes provided need to match the referenced marketing activity's currency code. */
+  MarketingActivityCurrencyCodeMismatch = 'MARKETING_ACTIVITY_CURRENCY_CODE_MISMATCH',
+  /** Marketing activity does not exist. */
+  MarketingActivityDoesNotExist = 'MARKETING_ACTIVITY_DOES_NOT_EXIST',
+  /** Marketing activity is not valid, the associated marketing event does not exist. */
+  MarketingEventDoesNotExist = 'MARKETING_EVENT_DOES_NOT_EXIST',
+  /** Non-hierarchical marketing activities must have UTM parameters or a URL parameter value. */
+  NonHierarchialRequiresUtmUrlParameter = 'NON_HIERARCHIAL_REQUIRES_UTM_URL_PARAMETER',
   /** The input value is already taken. */
   Taken = 'TAKEN'
 }
@@ -20616,7 +20974,7 @@ export enum MarketingEventSortKeys {
   StartedAt = 'STARTED_AT'
 }
 
-/** The available types of marketing event. */
+/** The available types of tactics for a marketing activity. */
 export enum MarketingTactic {
   /** An abandoned cart recovery email. */
   AbandonedCart = 'ABANDONED_CART',
@@ -20624,7 +20982,10 @@ export enum MarketingTactic {
   Ad = 'AD',
   /** An affiliate link. */
   Affiliate = 'AFFILIATE',
-  /** A direct visit to the online store. */
+  /**
+   * A direct visit to the online store.
+   * @deprecated `DIRECT` is deprecated. Use `LINK` instead.
+   */
   Direct = 'DIRECT',
   /**
    * A display ad.
@@ -21851,7 +22212,7 @@ export type MetafieldReferenceEdge = {
  * Types of resources that may use metafields to reference other resources.
  *
  */
-export type MetafieldReferencer = AppInstallation | Collection | Customer | DeliveryCustomization | DiscountAutomaticNode | DiscountCodeNode | DiscountNode | DraftOrder | FulfillmentOrder | Location | Market | Metaobject | OnlineStoreArticle | OnlineStoreBlog | OnlineStorePage | Order | PaymentCustomization | Product | ProductVariant | Shop;
+export type MetafieldReferencer = AppInstallation | Collection | Company | CompanyLocation | Customer | DeliveryCustomization | DiscountAutomaticNode | DiscountCodeNode | DiscountNode | DraftOrder | FulfillmentOrder | Location | Market | Metaobject | OnlineStoreArticle | OnlineStoreBlog | OnlineStorePage | Order | PaymentCustomization | Product | ProductVariant | Shop;
 
 /**
  * Defines a relation between two resources via a reference metafield.
@@ -23274,6 +23635,13 @@ export type Mutation = {
    * [stagedUploadsCreate mutation](https://shopify.dev/api/admin-graphql/latest/mutations/stageduploadscreate).
    * These files are added to the [Files page](https://shopify.com/admin/settings/files) in Shopify admin.
    *
+   * Files are processed asynchronously. Some data is not available until processing is completed.
+   * Check [fileStatus](https://shopify.dev/api/admin-graphql/latest/interfaces/File#field-file-filestatus)
+   * to know when the files are READY or FAILED. See the [FileStatus](https://shopify.dev/api/admin-graphql/latest/enums/filestatus)
+   * for the complete set of possible fileStatus values.
+   *
+   * To get a list of all files, use the [files query](https://shopify.dev/api/admin-graphql/latest/queries/files).
+   *
    */
   fileCreate?: Maybe<FileCreatePayload>;
   /** Deletes existing file assets that were uploaded to Shopify. */
@@ -23584,7 +23952,7 @@ export type Mutation = {
    *
    */
   metaobjectUpsert?: Maybe<MetaobjectUpsertPayload>;
-  /** Captures payment for an authorized transaction on an order. An order can only be captured if it has a successful authorization transaction. Capturing an order will claim the money reserved by the authorization. orderCapture can be used to capture multiple times as long as the OrderTransaction is multicapturable. To capture a partial payment, the included `amount` value should be less than the total order amount. Multicapture is available only to stores on a Shopify Plus plan. */
+  /** Captures payment for an authorized transaction on an order. An order can only be captured if it has a successful authorization transaction. Capturing an order will claim the money reserved by the authorization. orderCapture can be used to capture multiple times as long as the OrderTransaction is multi-capturable. To capture a partial payment, the included `amount` value should be less than the total order amount. Multi-capture is available only to stores on a Shopify Plus plan. */
   orderCapture?: Maybe<OrderCapturePayload>;
   /**
    * Closes an open order.
@@ -23648,7 +24016,7 @@ export type Mutation = {
   paymentTermsDelete?: Maybe<PaymentTermsDeletePayload>;
   /** Update payment terms on an order. To update payment terms on a draft order, use a draft order mutation and include the request with the `DraftOrderInput`. */
   paymentTermsUpdate?: Maybe<PaymentTermsUpdatePayload>;
-  /** Creates a price list. You can use the `priceListCreate` mutation to create a new price list for a country. This enables you to sell your products with international pricing. */
+  /** Creates a price list. You can use the `priceListCreate` mutation to create a new price list and associate it with a catalog. This enables you to sell your products with contextual pricing. */
   priceListCreate?: Maybe<PriceListCreatePayload>;
   /** Deletes a price list. For example, you can delete a price list so that it no longer applies for products in the associated market. */
   priceListDelete?: Maybe<PriceListDeletePayload>;
@@ -23731,6 +24099,8 @@ export type Mutation = {
   /**
    * Creates a product.
    *
+   * For versions `2024-01` and older:
+   *
    * If you need to create a product with many
    * [variants](https://shopify.dev/api/admin-graphql/latest/input-objects/ProductVariantInput)
    * that are active at several
@@ -23758,8 +24128,8 @@ export type Mutation = {
    * 3. Use the [inventoryBulkToggleActivation](https://shopify.dev/api/admin-graphql/latest/mutations/inventoryBulkToggleActivation) mutation
    * on each [inventory item](https://shopify.dev/api/admin-graphql/latest/objects/InventoryItem) to activate it at the appropriate locations.
    *
-   * 4. After activating the variants at the locations, adjust inventory quantities at each location using the
-   * [inventoryBulkAdjustQuantityAtLocation](https://shopify.dev/api/admin-graphql/latest/mutations/inventoryBulkAdjustQuantityAtLocation) mutation.
+   * 4. After activating the variants at the locations, adjust inventory quantities for the inventory items using the
+   * [inventoryAdjustQuantities](https://shopify.dev/api/admin-graphql/latest/mutations/inventoryAdjustQuantities) mutation.
    *
    */
   productCreate?: Maybe<ProductCreatePayload>;
@@ -23853,10 +24223,16 @@ export type Mutation = {
    */
   productUnpublish?: Maybe<ProductUnpublishPayload>;
   /**
-   * Updates a product. If you update a product and only include some variants in the update,
-   * then any variants not included will be deleted. To safely manage variants without the risk of
+   * Updates a product.
+   *
+   * For versions `2024-01` and older:
+   * If you update a product and only include some variants in the update,
+   * then any variants not included will be deleted.
+   *
+   * To safely manage variants without the risk of
    * deleting excluded variants, use
    * [productVariantsBulkUpdate](https://shopify.dev/api/admin-graphql/latest/mutations/productvariantsbulkupdate).
+   *
    * If you want to update a single variant, then use
    * [productVariantUpdate](https://shopify.dev/api/admin-graphql/latest/mutations/productvariantupdate).
    *
@@ -25385,7 +25761,6 @@ export type MutationFulfillmentOrderSubmitFulfillmentRequestArgs = {
   id: Scalars['ID']['input'];
   message?: InputMaybe<Scalars['String']['input']>;
   notifyCustomer?: InputMaybe<Scalars['Boolean']['input']>;
-  shippingMethod?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -27062,7 +27437,7 @@ export type OnlineStoreBlogTranslationsArgs = {
   marketId?: InputMaybe<Scalars['ID']['input']>;
 };
 
-/** A custom page on the Online Store. */
+/** A page on the Online Store. */
 export type OnlineStorePage = HasPublishedTranslations & Navigable & Node & {
   __typename?: 'OnlineStorePage';
   /**
@@ -27077,7 +27452,7 @@ export type OnlineStorePage = HasPublishedTranslations & Navigable & Node & {
 };
 
 
-/** A custom page on the Online Store. */
+/** A page on the Online Store. */
 export type OnlineStorePageTranslationsArgs = {
   locale: Scalars['String']['input'];
   marketId?: InputMaybe<Scalars['ID']['input']>;
@@ -30088,7 +30463,7 @@ export type PriceListParentUpdateInput = {
 
 /**
  * Represents information about pricing for a product variant
- *         as defined on a price list, such as the price, compare at price, and origin type. You can use a PriceListPrice to specify a fixed price for a specific product variant.
+ *         as defined on a price list, such as the price, compare at price, and origin type. You can use a `PriceListPrice` to specify a fixed price for a specific product variant. For examples, refer to [PriceListFixedPricesAdd](https://shopify.dev/api/admin-graphql/latest/mutations/priceListFixedPricesAdd) and [PriceList](https://shopify.dev/api/admin-graphql/latest/queries/priceList#section-examples).
  */
 export type PriceListPrice = {
   __typename?: 'PriceListPrice';
@@ -30145,7 +30520,7 @@ export type PriceListPriceInput = {
 };
 
 /**
- * Represents the origin of a price, either fixed (defined on the price list) or relative (calculated using a price list adjustment configuration).
+ * Represents the origin of a price, either fixed (defined on the price list) or relative (calculated using a price list adjustment configuration). For examples, refer to [PriceList](https://shopify.dev/api/admin-graphql/latest/queries/priceList#section-examples).
  *
  */
 export enum PriceListPriceOriginType {
@@ -31445,7 +31820,10 @@ export type Product = HasMetafieldDefinitions & HasMetafields & HasPublishedTran
    *
    */
   privateMetafields: PrivateMetafieldConnection;
-  /** The product category specified by the merchant. */
+  /**
+   * The product category specified by the merchant.
+   * @deprecated Deprecated in API version 2024-04. Use `category` instead.
+   */
   productCategory?: Maybe<ProductCategory>;
   /**
    * A list of the channels where the product is published.
@@ -31876,6 +32254,8 @@ export type ProductConnection = {
 /**
  * The price of a product in a specific country.
  * Prices vary between countries.
+ * Refer to [Product](https://shopify.dev/docs/api/admin-graphql/latest/queries/product?example=Get+the+price+range+for+a+product+for+buyers+from+Canada)
+ * for more information on how to use this object.
  *
  */
 export type ProductContextualPricing = {
@@ -32270,10 +32650,6 @@ export type ProductInput = {
   id?: InputMaybe<Scalars['ID']['input']>;
   /** The metafields to associate with this product. */
   metafields?: InputMaybe<Array<MetafieldInput>>;
-  /** List of custom product options (maximum of 3 per product). */
-  options?: InputMaybe<Array<Scalars['String']['input']>>;
-  /** The product category in the Shopify product taxonomy. */
-  productCategory?: InputMaybe<ProductCategoryInput>;
   /** The product type specified by the merchant. */
   productType?: InputMaybe<Scalars['String']['input']>;
   /**
@@ -32286,8 +32662,6 @@ export type ProductInput = {
   requiresSellingPlan?: InputMaybe<Scalars['Boolean']['input']>;
   /** The SEO information associated with the product. */
   seo?: InputMaybe<SeoInput>;
-  /** The standardized product type in the Shopify product taxonomy. */
-  standardizedProductType?: InputMaybe<StandardizedProductTypeInput>;
   /** The status of the product. */
   status?: InputMaybe<ProductStatus>;
   /** A comma separated list of tags that have been added to the product. */
@@ -32296,11 +32670,6 @@ export type ProductInput = {
   templateSuffix?: InputMaybe<Scalars['String']['input']>;
   /** The title of the product. */
   title?: InputMaybe<Scalars['String']['input']>;
-  /**
-   * A list of variants associated with the product.
-   *
-   */
-  variants?: InputMaybe<Array<ProductVariantInput>>;
   /** The name of the product's vendor. */
   vendor?: InputMaybe<Scalars['String']['input']>;
 };
@@ -32691,7 +33060,12 @@ export type ProductVariant = HasMetafieldDefinitions & HasMetafields & HasPublis
    *
    */
   fulfillmentService?: Maybe<FulfillmentService>;
-  /** Whether changes to the fulfillment service for the product variant are allowed. */
+  /**
+   * Whether changes to the fulfillment service for the product variant are allowed.
+   * @deprecated The [relationship between a product variant and a fulfillment service was changed in the `2022-07` API version](/changelog/fulfillment-service-sku-sharing). A [ProductVariant](/api/admin-graphql/latest/objects/ProductVariant) can be stocked by multiple fulfillment services.
+   * As a result, the fulfillment_service is no longer directly editable on a ProductVariant and this field is no longer applicable.
+   *
+   */
   fulfillmentServiceEditable: EditableProperty;
   /**
    * The Harmonized System Code (or HS Tariff Code) for the variant.
@@ -32806,11 +33180,15 @@ export type ProductVariant = HasMetafieldDefinitions & HasMetafields & HasPublis
    *
    */
   updatedAt: Scalars['DateTime']['output'];
-  /** The weight of the product variant in the unit system specified with weight_unit. */
+  /**
+   * The weight of the product variant in the unit system specified with weight_unit.
+   * @deprecated Use InventoryItem.measurement.weight instead
+   */
   weight?: Maybe<Scalars['Float']['output']>;
   /**
    * The unit of measurement that applies to the product variant's weight. If you don't specify a value for weight_unit, then the shop's default unit of measurement is applied. Valid values: `g`, `kg`, `oz`, `lb`.
    *
+   * @deprecated Use InventoryItem.measurement.weight instead
    */
   weightUnit: WeightUnit;
 };
@@ -33072,8 +33450,6 @@ export type ProductVariantInput = {
   barcode?: InputMaybe<Scalars['String']['input']>;
   /** The compare-at price of the variant. */
   compareAtPrice?: InputMaybe<Scalars['Money']['input']>;
-  /** The Harmonized System code (or HS Tariff code) for the variant. */
-  harmonizedSystemCode?: InputMaybe<Scalars['String']['input']>;
   /** Specifies the product variant to update or create a new variant if absent. */
   id?: InputMaybe<Scalars['ID']['input']>;
   /** The inventory item associated with the variant. Used for unit cost. */
@@ -33106,18 +33482,12 @@ export type ProductVariantInput = {
    *
    */
   requiresComponents?: InputMaybe<Scalars['Boolean']['input']>;
-  /** Whether the variant requires shipping. */
-  requiresShipping?: InputMaybe<Scalars['Boolean']['input']>;
   /** The SKU for the variant. Case-sensitive string. */
   sku?: InputMaybe<Scalars['String']['input']>;
   /** The tax code associated with the variant. */
   taxCode?: InputMaybe<Scalars['String']['input']>;
   /** Whether the variant is taxable. */
   taxable?: InputMaybe<Scalars['Boolean']['input']>;
-  /** The weight of the variant. */
-  weight?: InputMaybe<Scalars['Float']['input']>;
-  /** The unit of weight that's used to measure the variant. */
-  weightUnit?: InputMaybe<WeightUnit>;
 };
 
 /** The valid values for the method of inventory tracking for a product variant. */
@@ -33424,8 +33794,6 @@ export type ProductVariantsBulkInput = {
   barcode?: InputMaybe<Scalars['String']['input']>;
   /** The compare-at price of the variant. */
   compareAtPrice?: InputMaybe<Scalars['Money']['input']>;
-  /** The Harmonized System code (or HS Tariff code) for the variant. */
-  harmonizedSystemCode?: InputMaybe<Scalars['String']['input']>;
   /** Specifies the product variant to update or delete. */
   id?: InputMaybe<Scalars['ID']['input']>;
   /** The inventory item associated with the variant, used for unit cost. */
@@ -33445,22 +33813,14 @@ export type ProductVariantsBulkInput = {
   mediaSrc?: InputMaybe<Array<Scalars['String']['input']>>;
   /** The additional customizable information about the product variant. */
   metafields?: InputMaybe<Array<MetafieldInput>>;
-  /** The custom properties that a shop owner uses to define product variants. */
-  options?: InputMaybe<Array<Scalars['String']['input']>>;
   /** The price of the variant. */
   price?: InputMaybe<Scalars['Money']['input']>;
-  /** Whether the variant requires shipping. */
-  requiresShipping?: InputMaybe<Scalars['Boolean']['input']>;
   /** The SKU for the variant. */
   sku?: InputMaybe<Scalars['String']['input']>;
   /** The tax code associated with the variant. */
   taxCode?: InputMaybe<Scalars['String']['input']>;
   /** Whether the variant is taxable. */
   taxable?: InputMaybe<Scalars['Boolean']['input']>;
-  /** The weight of the variant. */
-  weight?: InputMaybe<Scalars['Float']['input']>;
-  /** The unit of weight that's used to measure the variant. */
-  weightUnit?: InputMaybe<WeightUnit>;
 };
 
 /** Return type for `productVariantsBulkReorder` mutation. */
@@ -39715,6 +40075,19 @@ export enum ShippingDiscountClass {
   Shipping = 'SHIPPING'
 }
 
+/** The optional shipping label for this fulfillment. */
+export type ShippingLabel = Node & {
+  __typename?: 'ShippingLabel';
+  /** Indicates whether the label is cancellable or not. */
+  cancellable: Scalars['Boolean']['output'];
+  /** A globally-unique ID. */
+  id: Scalars['ID']['output'];
+  /** The location of the shipping origin. This will be null when the shipping origin is unknown. */
+  location?: Maybe<Location>;
+  /** Indicates whether the label was printed or not. */
+  printed: Scalars['Boolean']['output'];
+};
+
 /** Represents the shipping details that the customer chose for their order. */
 export type ShippingLine = {
   __typename?: 'ShippingLine';
@@ -39737,11 +40110,14 @@ export type ShippingLine = {
   discountAllocations: Array<DiscountAllocation>;
   /**
    * The pre-tax shipping price with discounts applied.
+   * As of API version 2024-07, this will be calculated including cart level discounts, such as the free shipping discount.
+   *
    * @deprecated Use `discountedPriceSet` instead.
    */
   discountedPrice: MoneyV2;
   /**
    * The shipping price after applying discounts. If the parent order.taxesIncluded field is true, then this price includes taxes. If not, it's the pre-tax price.
+   * As of API version 2024-07, this will be calculated including cart level discounts, such as the free shipping discount.
    *
    */
   discountedPriceSet: MoneyBag;
@@ -39803,7 +40179,13 @@ export type ShippingLineEdge = {
   node: ShippingLine;
 };
 
-/** The input fields for specifying the shipping details for the order. */
+/**
+ * The input fields for specifying the shipping details for the draft order.
+ *
+ * > Note:
+ * > A custom shipping line includes a title and price with `shippingRateHandle` set to `nil`. A shipping line with a carrier-provided shipping rate (currently set via the Shopify admin) includes the shipping rate handle.
+ *
+ */
 export type ShippingLineInput = {
   /** Price of the shipping rate. */
   price?: InputMaybe<Scalars['Money']['input']>;
@@ -39942,7 +40324,10 @@ export type Shop = HasMetafields & HasPublishedTranslations & Node & {
   __typename?: 'Shop';
   /** A list of the shop's active alert messages that appear in the Shopify admin. */
   alerts: Array<ShopAlert>;
-  /** A list of the shop's product categories. Limit: 1000 product categories. */
+  /**
+   * A list of the shop's product categories. Limit: 1000 product categories.
+   * @deprecated Deprecated in API version 2024-07. Use `all_product_categories_list` instead.
+   */
   allProductCategories: Array<ProductCategory>;
   /**
    * The token required to query the shop's reports or dashboards.
@@ -40740,7 +41125,7 @@ export type ShopUploadedImagesByIdsArgs = {
   imageIds: Array<Scalars['ID']['input']>;
 };
 
-/** The shop's billing address. */
+/** An address for a shop. */
 export type ShopAddress = Node & {
   __typename?: 'ShopAddress';
   /** The first line of the address. Typically the street address or PO Box number. */
@@ -40826,7 +41211,7 @@ export type ShopAddress = Node & {
 };
 
 
-/** The shop's billing address. */
+/** An address for a shop. */
 export type ShopAddressFormattedArgs = {
   withCompany?: InputMaybe<Scalars['Boolean']['input']>;
 };
@@ -45169,7 +45554,7 @@ export enum TranslatableResourceType {
   OnlineStoreTheme = 'ONLINE_STORE_THEME',
   /** A packing slip template. Translatable fields: `body`. */
   PackingSlipTemplate = 'PACKING_SLIP_TEMPLATE',
-  /** A payment gateway. Translatable fields: `name`. */
+  /** A payment gateway. Translatable fields: `name`, `message`, `before_payment_instructions`. */
   PaymentGateway = 'PAYMENT_GATEWAY',
   /** An online store product. Translatable fields: `title`, `body_html`, `handle`, `product_type`, `meta_title`, `meta_description`. */
   Product = 'PRODUCT',
@@ -45178,7 +45563,10 @@ export enum TranslatableResourceType {
    *         Translatable fields: `name`.
    */
   ProductOption = 'PRODUCT_OPTION',
-  /** An online store product variant. Translatable fields: `option1`, `option2`, `option3`. */
+  /**
+   * An online store product variant. Translatable fields: `option1`, `option2`, `option3`.
+   * @deprecated `PRODUCT_VARIANT` is deprecated, it is no longer a translatable resource type. Use `PRODUCT_OPTION_VALUE` instead.
+   */
   ProductVariant = 'PRODUCT_VARIANT',
   /** A selling plan. Translatable fields:`name`, `option1`, `option2`, `option3`, `description`. */
   SellingPlan = 'SELLING_PLAN',
@@ -46470,7 +46858,7 @@ export type AddTagsMutationVariables = Exact<{
 }>;
 
 
-export type AddTagsMutation = { __typename?: 'Mutation', tagsAdd?: { __typename?: 'TagsAddPayload', node?: { __typename?: 'AbandonedCheckout', id: string } | { __typename?: 'Abandonment', id: string } | { __typename?: 'AddAllProductsOperation', id: string } | { __typename?: 'AdditionalFee', id: string } | { __typename?: 'App', id: string } | { __typename?: 'AppCatalog', id: string } | { __typename?: 'AppCredit', id: string } | { __typename?: 'AppInstallation', id: string } | { __typename?: 'AppPurchaseOneTime', id: string } | { __typename?: 'AppRevenueAttributionRecord', id: string } | { __typename?: 'AppSubscription', id: string } | { __typename?: 'AppUsageRecord', id: string } | { __typename?: 'BasicEvent', id: string } | { __typename?: 'BulkOperation', id: string } | { __typename?: 'CalculatedOrder', id: string } | { __typename?: 'CartTransform', id: string } | { __typename?: 'CatalogCsvOperation', id: string } | { __typename?: 'Channel', id: string } | { __typename?: 'ChannelDefinition', id: string } | { __typename?: 'ChannelInformation', id: string } | { __typename?: 'CheckoutProfile', id: string } | { __typename?: 'Collection', id: string } | { __typename?: 'CommentEvent', id: string } | { __typename?: 'Company', id: string } | { __typename?: 'CompanyAddress', id: string } | { __typename?: 'CompanyContact', id: string } | { __typename?: 'CompanyContactRole', id: string } | { __typename?: 'CompanyContactRoleAssignment', id: string } | { __typename?: 'CompanyLocation', id: string } | { __typename?: 'CompanyLocationCatalog', id: string } | { __typename?: 'Customer', id: string } | { __typename?: 'CustomerPaymentMethod', id: string } | { __typename?: 'CustomerSegmentMembersQuery', id: string } | { __typename?: 'CustomerVisit', id: string } | { __typename?: 'DeliveryCarrierService', id: string } | { __typename?: 'DeliveryCondition', id: string } | { __typename?: 'DeliveryCountry', id: string } | { __typename?: 'DeliveryCustomization', id: string } | { __typename?: 'DeliveryLocationGroup', id: string } | { __typename?: 'DeliveryMethod', id: string } | { __typename?: 'DeliveryMethodDefinition', id: string } | { __typename?: 'DeliveryParticipant', id: string } | { __typename?: 'DeliveryProfile', id: string } | { __typename?: 'DeliveryProfileItem', id: string } | { __typename?: 'DeliveryProvince', id: string } | { __typename?: 'DeliveryRateDefinition', id: string } | { __typename?: 'DeliveryZone', id: string } | { __typename?: 'DiscountAutomaticBxgy', id: string } | { __typename?: 'DiscountAutomaticNode', id: string } | { __typename?: 'DiscountCodeNode', id: string } | { __typename?: 'DiscountNode', id: string } | { __typename?: 'DiscountRedeemCodeBulkCreation', id: string } | { __typename?: 'Domain', id: string } | { __typename?: 'DraftOrder', id: string } | { __typename?: 'DraftOrderLineItem', id: string } | { __typename?: 'DraftOrderTag', id: string } | { __typename?: 'Duty', id: string } | { __typename?: 'ExchangeV2', id: string } | { __typename?: 'ExternalVideo', id: string } | { __typename?: 'Fulfillment', id: string } | { __typename?: 'FulfillmentEvent', id: string } | { __typename?: 'FulfillmentLineItem', id: string } | { __typename?: 'FulfillmentOrder', id: string } | { __typename?: 'FulfillmentOrderDestination', id: string } | { __typename?: 'FulfillmentOrderLineItem', id: string } | { __typename?: 'FulfillmentOrderMerchantRequest', id: string } | { __typename?: 'GenericFile', id: string } | { __typename?: 'GiftCard', id: string } | { __typename?: 'InventoryAdjustmentGroup', id: string } | { __typename?: 'InventoryItem', id: string } | { __typename?: 'InventoryLevel', id: string } | { __typename?: 'LineItem', id: string } | { __typename?: 'LineItemMutable', id: string } | { __typename?: 'Location', id: string } | { __typename?: 'MailingAddress', id: string } | { __typename?: 'Market', id: string } | { __typename?: 'MarketCatalog', id: string } | { __typename?: 'MarketRegionCountry', id: string } | { __typename?: 'MarketWebPresence', id: string } | { __typename?: 'MarketingActivity', id: string } | { __typename?: 'MarketingEvent', id: string } | { __typename?: 'MediaImage', id: string } | { __typename?: 'Metafield', id: string } | { __typename?: 'MetafieldDefinition', id: string } | { __typename?: 'MetafieldStorefrontVisibility', id: string } | { __typename?: 'Metaobject', id: string } | { __typename?: 'MetaobjectDefinition', id: string } | { __typename?: 'Model3d', id: string } | { __typename?: 'OnlineStoreArticle', id: string } | { __typename?: 'OnlineStoreBlog', id: string } | { __typename?: 'OnlineStorePage', id: string } | { __typename?: 'Order', id: string } | { __typename?: 'OrderDisputeSummary', id: string } | { __typename?: 'OrderTransaction', id: string } | { __typename?: 'PaymentCustomization', id: string } | { __typename?: 'PaymentMandate', id: string } | { __typename?: 'PaymentSchedule', id: string } | { __typename?: 'PaymentTerms', id: string } | { __typename?: 'PaymentTermsTemplate', id: string } | { __typename?: 'PriceList', id: string } | { __typename?: 'PriceRule', id: string } | { __typename?: 'PriceRuleDiscountCode', id: string } | { __typename?: 'PrivateMetafield', id: string } | { __typename?: 'Product', id: string } | { __typename?: 'ProductFeed', id: string } | { __typename?: 'ProductOption', id: string } | { __typename?: 'ProductTaxonomyNode', id: string } | { __typename?: 'ProductVariant', id: string } | { __typename?: 'ProductVariantComponent', id: string } | { __typename?: 'Publication', id: string } | { __typename?: 'PublicationResourceOperation', id: string } | { __typename?: 'Refund', id: string } | { __typename?: 'Return', id: string } | { __typename?: 'ReturnLineItem', id: string } | { __typename?: 'ReturnableFulfillment', id: string } | { __typename?: 'ReverseDelivery', id: string } | { __typename?: 'ReverseDeliveryLineItem', id: string } | { __typename?: 'ReverseFulfillmentOrder', id: string } | { __typename?: 'ReverseFulfillmentOrderDisposition', id: string } | { __typename?: 'ReverseFulfillmentOrderLineItem', id: string } | { __typename?: 'SaleAdditionalFee', id: string } | { __typename?: 'SavedSearch', id: string } | { __typename?: 'ScriptTag', id: string } | { __typename?: 'Segment', id: string } | { __typename?: 'SellingPlan', id: string } | { __typename?: 'SellingPlanGroup', id: string } | { __typename?: 'ServerPixel', id: string } | { __typename?: 'Shop', id: string } | { __typename?: 'ShopAddress', id: string } | { __typename?: 'ShopPolicy', id: string } | { __typename?: 'ShopifyPaymentsAccount', id: string } | { __typename?: 'ShopifyPaymentsBankAccount', id: string } | { __typename?: 'ShopifyPaymentsDispute', id: string } | { __typename?: 'ShopifyPaymentsDisputeEvidence', id: string } | { __typename?: 'ShopifyPaymentsDisputeFileUpload', id: string } | { __typename?: 'ShopifyPaymentsDisputeFulfillment', id: string } | { __typename?: 'ShopifyPaymentsPayout', id: string } | { __typename?: 'ShopifyPaymentsVerification', id: string } | { __typename?: 'StaffMember', id: string } | { __typename?: 'StandardMetafieldDefinitionTemplate', id: string } | { __typename?: 'StorefrontAccessToken', id: string } | { __typename?: 'SubscriptionBillingAttempt', id: string } | { __typename?: 'SubscriptionContract', id: string } | { __typename?: 'SubscriptionDraft', id: string } | { __typename?: 'TenderTransaction', id: string } | { __typename?: 'TransactionFee', id: string } | { __typename?: 'UrlRedirect', id: string } | { __typename?: 'UrlRedirectImport', id: string } | { __typename?: 'Video', id: string } | { __typename?: 'WebPixel', id: string } | { __typename?: 'WebhookSubscription', id: string } | null, userErrors: Array<{ __typename?: 'UserError', field?: Array<string> | null, message: string }> } | null };
+export type AddTagsMutation = { __typename?: 'Mutation', tagsAdd?: { __typename?: 'TagsAddPayload', node?: { __typename?: 'AbandonedCheckout', id: string } | { __typename?: 'Abandonment', id: string } | { __typename?: 'AddAllProductsOperation', id: string } | { __typename?: 'AdditionalFee', id: string } | { __typename?: 'App', id: string } | { __typename?: 'AppCatalog', id: string } | { __typename?: 'AppCredit', id: string } | { __typename?: 'AppInstallation', id: string } | { __typename?: 'AppPurchaseOneTime', id: string } | { __typename?: 'AppRevenueAttributionRecord', id: string } | { __typename?: 'AppSubscription', id: string } | { __typename?: 'AppUsageRecord', id: string } | { __typename?: 'BasicEvent', id: string } | { __typename?: 'BulkOperation', id: string } | { __typename?: 'CalculatedOrder', id: string } | { __typename?: 'CartTransform', id: string } | { __typename?: 'CatalogCsvOperation', id: string } | { __typename?: 'Channel', id: string } | { __typename?: 'ChannelDefinition', id: string } | { __typename?: 'ChannelInformation', id: string } | { __typename?: 'CheckoutProfile', id: string } | { __typename?: 'Collection', id: string } | { __typename?: 'CommentEvent', id: string } | { __typename?: 'Company', id: string } | { __typename?: 'CompanyAddress', id: string } | { __typename?: 'CompanyContact', id: string } | { __typename?: 'CompanyContactRole', id: string } | { __typename?: 'CompanyContactRoleAssignment', id: string } | { __typename?: 'CompanyLocation', id: string } | { __typename?: 'CompanyLocationCatalog', id: string } | { __typename?: 'Customer', id: string } | { __typename?: 'CustomerPaymentMethod', id: string } | { __typename?: 'CustomerSegmentMembersQuery', id: string } | { __typename?: 'CustomerVisit', id: string } | { __typename?: 'DeliveryCarrierService', id: string } | { __typename?: 'DeliveryCondition', id: string } | { __typename?: 'DeliveryCountry', id: string } | { __typename?: 'DeliveryCustomization', id: string } | { __typename?: 'DeliveryLocationGroup', id: string } | { __typename?: 'DeliveryMethod', id: string } | { __typename?: 'DeliveryMethodDefinition', id: string } | { __typename?: 'DeliveryParticipant', id: string } | { __typename?: 'DeliveryProfile', id: string } | { __typename?: 'DeliveryProfileItem', id: string } | { __typename?: 'DeliveryProvince', id: string } | { __typename?: 'DeliveryRateDefinition', id: string } | { __typename?: 'DeliveryZone', id: string } | { __typename?: 'DiscountAutomaticBxgy', id: string } | { __typename?: 'DiscountAutomaticNode', id: string } | { __typename?: 'DiscountCodeNode', id: string } | { __typename?: 'DiscountNode', id: string } | { __typename?: 'DiscountRedeemCodeBulkCreation', id: string } | { __typename?: 'Domain', id: string } | { __typename?: 'DraftOrder', id: string } | { __typename?: 'DraftOrderLineItem', id: string } | { __typename?: 'DraftOrderTag', id: string } | { __typename?: 'Duty', id: string } | { __typename?: 'ExchangeV2', id: string } | { __typename?: 'ExternalVideo', id: string } | { __typename?: 'Fulfillment', id: string } | { __typename?: 'FulfillmentEvent', id: string } | { __typename?: 'FulfillmentLineItem', id: string } | { __typename?: 'FulfillmentOrder', id: string } | { __typename?: 'FulfillmentOrderDestination', id: string } | { __typename?: 'FulfillmentOrderLineItem', id: string } | { __typename?: 'FulfillmentOrderMerchantRequest', id: string } | { __typename?: 'GenericFile', id: string } | { __typename?: 'GiftCard', id: string } | { __typename?: 'InventoryAdjustmentGroup', id: string } | { __typename?: 'InventoryItem', id: string } | { __typename?: 'InventoryLevel', id: string } | { __typename?: 'LineItem', id: string } | { __typename?: 'LineItemMutable', id: string } | { __typename?: 'Location', id: string } | { __typename?: 'MailingAddress', id: string } | { __typename?: 'Market', id: string } | { __typename?: 'MarketCatalog', id: string } | { __typename?: 'MarketRegionCountry', id: string } | { __typename?: 'MarketWebPresence', id: string } | { __typename?: 'MarketingActivity', id: string } | { __typename?: 'MarketingEvent', id: string } | { __typename?: 'MediaImage', id: string } | { __typename?: 'Metafield', id: string } | { __typename?: 'MetafieldDefinition', id: string } | { __typename?: 'MetafieldStorefrontVisibility', id: string } | { __typename?: 'Metaobject', id: string } | { __typename?: 'MetaobjectDefinition', id: string } | { __typename?: 'Model3d', id: string } | { __typename?: 'OnlineStoreArticle', id: string } | { __typename?: 'OnlineStoreBlog', id: string } | { __typename?: 'OnlineStorePage', id: string } | { __typename?: 'Order', id: string } | { __typename?: 'OrderDisputeSummary', id: string } | { __typename?: 'OrderTransaction', id: string } | { __typename?: 'PaymentCustomization', id: string } | { __typename?: 'PaymentMandate', id: string } | { __typename?: 'PaymentSchedule', id: string } | { __typename?: 'PaymentTerms', id: string } | { __typename?: 'PaymentTermsTemplate', id: string } | { __typename?: 'PriceList', id: string } | { __typename?: 'PriceRule', id: string } | { __typename?: 'PriceRuleDiscountCode', id: string } | { __typename?: 'PrivateMetafield', id: string } | { __typename?: 'Product', id: string } | { __typename?: 'ProductFeed', id: string } | { __typename?: 'ProductOption', id: string } | { __typename?: 'ProductTaxonomyNode', id: string } | { __typename?: 'ProductVariant', id: string } | { __typename?: 'ProductVariantComponent', id: string } | { __typename?: 'Publication', id: string } | { __typename?: 'PublicationResourceOperation', id: string } | { __typename?: 'Refund', id: string } | { __typename?: 'Return', id: string } | { __typename?: 'ReturnLineItem', id: string } | { __typename?: 'ReturnableFulfillment', id: string } | { __typename?: 'ReverseDelivery', id: string } | { __typename?: 'ReverseDeliveryLineItem', id: string } | { __typename?: 'ReverseFulfillmentOrder', id: string } | { __typename?: 'ReverseFulfillmentOrderDisposition', id: string } | { __typename?: 'ReverseFulfillmentOrderLineItem', id: string } | { __typename?: 'SaleAdditionalFee', id: string } | { __typename?: 'SavedSearch', id: string } | { __typename?: 'ScriptTag', id: string } | { __typename?: 'Segment', id: string } | { __typename?: 'SellingPlan', id: string } | { __typename?: 'SellingPlanGroup', id: string } | { __typename?: 'ServerPixel', id: string } | { __typename?: 'ShippingLabel', id: string } | { __typename?: 'Shop', id: string } | { __typename?: 'ShopAddress', id: string } | { __typename?: 'ShopPolicy', id: string } | { __typename?: 'ShopifyPaymentsAccount', id: string } | { __typename?: 'ShopifyPaymentsBankAccount', id: string } | { __typename?: 'ShopifyPaymentsDispute', id: string } | { __typename?: 'ShopifyPaymentsDisputeEvidence', id: string } | { __typename?: 'ShopifyPaymentsDisputeFileUpload', id: string } | { __typename?: 'ShopifyPaymentsDisputeFulfillment', id: string } | { __typename?: 'ShopifyPaymentsPayout', id: string } | { __typename?: 'ShopifyPaymentsVerification', id: string } | { __typename?: 'StaffMember', id: string } | { __typename?: 'StandardMetafieldDefinitionTemplate', id: string } | { __typename?: 'StorefrontAccessToken', id: string } | { __typename?: 'SubscriptionBillingAttempt', id: string } | { __typename?: 'SubscriptionContract', id: string } | { __typename?: 'SubscriptionDraft', id: string } | { __typename?: 'TenderTransaction', id: string } | { __typename?: 'TransactionFee', id: string } | { __typename?: 'UrlRedirect', id: string } | { __typename?: 'UrlRedirectImport', id: string } | { __typename?: 'Video', id: string } | { __typename?: 'WebPixel', id: string } | { __typename?: 'WebhookSubscription', id: string } | null, userErrors: Array<{ __typename?: 'UserError', field?: Array<string> | null, message: string }> } | null };
 
 export type GetOrderCustomAttributesQueryVariables = Exact<{
   id: Scalars['ID']['input'];

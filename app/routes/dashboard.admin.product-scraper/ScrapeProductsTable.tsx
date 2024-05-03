@@ -2,6 +2,7 @@ import { Listbox, Transition } from "@headlessui/react"
 import { ChevronDownIcon } from "@heroicons/react/20/solid"
 import { CheckIcon, XMarkIcon } from "@heroicons/react/24/solid"
 import { Link } from "@remix-run/react"
+
 import type { RowSelectionState } from "@tanstack/react-table"
 import {
   useReactTable,
@@ -14,10 +15,11 @@ import { Fragment, useState } from "react"
 
 import { Button, Checkbox } from "~/components/common"
 import { Spinner } from "~/components/loading"
+import { Currency } from "~/config/consts"
 import { useScrapeProducts } from "~/utils/hooks"
 import { formatPrice } from "~/utils/money"
 import { round } from "~/utils/number"
-import { ScrapedFields, type ScrapeProductsTableRow } from "~/utils/scraper"
+import { type ScrapeProductsTableRow } from "~/utils/scraper"
 
 declare module "@tanstack/react-table" {
   interface TableMeta<TData> {
@@ -205,38 +207,33 @@ export default function ScrapeProductsTable({
     delay: scrapingDelay && scrapingDelay * 1000, // Convert to ms
     mode: scrapingMode?.value || "sequential",
     onSuccess: (payload, index) => {
-      const { cached, duration, errors, fields } = payload
+      const { _meta, amount, currency, image, store, title } = payload
       const row = data[index]
 
       if (!row) throw new Error("Row not found")
 
-      const hasError = errors.length > 0
-      const filteredFields = Object.keys(fields)
-        .filter((key) => !errors.includes(key))
-        .reduce((obj, key) => {
-          // @ts-expect-error Key is a string, should be part of ScrapedFields
-          obj[key] = fields[key]
-          return obj
-        }, {} as Partial<ScrapedFields>)
+      const hasError = _meta.errors.length > 0
 
       table.options.meta?.updateData({
         ...row,
-        ...filteredFields,
+        amount: amount || row.amount,
+        currency: (currency as Currency | null) || row.currency,
         hasError,
+        image: image || row.image,
+        store: store || row.store,
+        title: title || row.title,
       })
 
       if (hasError) {
         enqueueSnackbar(`Fetched product ${row.id} with errors`, {
-          description: `In ${round(duration / 1000)}s. Errors: ${errors.join(
+          description: `In ${round(_meta.duration / 1000)}s. Errors: ${_meta.errors.join(
             ", ",
           )}`,
           variant: "warning",
         })
       } else {
         enqueueSnackbar(`Fetched product ${row.id} successfully `, {
-          description: cached
-            ? "Recovered from cache"
-            : `In ${round(duration / 1000)}s`,
+          description:`In ${round(_meta.duration / 1000)}s on ${new Date(_meta.timestamp).toLocaleString()}`,
           variant: "success",
         })
       }
@@ -248,6 +245,7 @@ export default function ScrapeProductsTable({
 
   async function handleScrape() {
     const indexes = Object.keys(rowSelection)
+    console.log(indexes)
     await scrape(indexes.map((index) => Number(index)))
   }
 
