@@ -20,18 +20,14 @@ declare global {
   var __registeredQueues: Record<string, RegisteredQueue> | undefined
 }
 
-const registeredQueues =
-  global.__registeredQueues || (global.__registeredQueues = {})
+const registeredQueues = global.__registeredQueues || (global.__registeredQueues = {})
 
 const connection = new Redis(REDIS_JOBS_URL, {
   enableReadyCheck: false,
   maxRetriesPerRequest: null,
 })
 
-export function createQueue<Payload>(
-  name: string,
-  handler: Processor<Payload>,
-): Queue<Payload> {
+export function createQueue<Payload>(name: string, handler: Processor<Payload>): Queue<Payload> {
   const registeredQueue = registeredQueues[name]
 
   if (registeredQueue) {
@@ -49,9 +45,7 @@ export function createQueue<Payload>(
 
   // Handle job failures
   worker.on("failed", async (job, err) => {
-    const queueUrl = buildUrl(
-      `dashboard/admin/bullboard/queue/${name}?status=failed`,
-    )
+    const queueUrl = buildUrl(`dashboard/admin/bullboard/queue/${name}?status=failed`)
 
     // Log the error
     logger.error(err.message, { error: err, job: job?.name, queue: name })
@@ -61,9 +55,9 @@ export function createQueue<Payload>(
       blocks: [
         {
           text: {
-            text: `${
-              isProduction ? ":rotating_light:" : "(Development)"
-            } Job *${job?.name}* failed on queue *${name}*: ${queueUrl}`,
+            text: `${isProduction ? ":rotating_light:" : "(Development)"} Job *${
+              job?.name
+            }* failed on queue *${name}*: ${queueUrl}`,
             type: "mrkdwn",
           },
           type: "section",

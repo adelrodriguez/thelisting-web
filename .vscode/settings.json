@@ -12,21 +12,14 @@
   "[prisma]": {
     "editor.defaultFormatter": "Prisma.prisma"
   },
-  "eslint.validate": [
-    "javascript",
-    "javascriptreact",
-    "typescript",
-    "typescriptreact"
-  ],
+  "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
   "[sql]": {
     "editor.defaultFormatter": "mtxr.sqltools"
   },
   "[xml]": {
     "editor.defaultFormatter": "redhat.vscode-xml"
   },
-  "cSpell.words": [
-    "alegra"
-  ],
+  "cSpell.words": ["alegra"],
   "[ignore]": {
     "editor.defaultFormatter": "foxundermoon.shell-format"
   },
@@ -34,13 +27,8 @@
     "editor.defaultFormatter": "foxundermoon.shell-format"
   },
   "explorer.sortOrder": "default",
-  "tailwindCSS.experimental.classRegex": [
-    [
-      "clsx\\(([^)]*)\\)",
-      "(?:'|\"|`)([^']*)(?:'|\"|`)"
-    ]
-  ],
+  "tailwindCSS.experimental.classRegex": [["clsx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]],
   "[typescriptreact]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "biomejs.biome"
   }
 }

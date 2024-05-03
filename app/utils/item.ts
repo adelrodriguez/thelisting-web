@@ -1,6 +1,6 @@
 import type { Item } from "@prisma/client"
 import { flattenConnection } from "@shopify/hydrogen-react"
-import Redis from "ioredis"
+import type Redis from "ioredis"
 import { z } from "zod"
 
 import { ONE_DAY } from "~/config/consts"
@@ -12,10 +12,7 @@ import { getProduct } from "~/utils/shopify.server"
  * This functions sorts the given list of items by stock. Items that are being
  * sold more are listed first. If an item is out of stock, it is listed last.
  */
-export function sortByQuantity<T extends Pick<Item, "quantity" | "stock">>(
-  itemA: T,
-  itemB: T,
-) {
+export function sortByQuantity<T extends Pick<Item, "quantity" | "stock">>(itemA: T, itemB: T) {
   const itemASold = itemA.quantity - itemA.stock
   const itemBSold = itemB.quantity - itemB.stock
 
@@ -40,9 +37,7 @@ export async function getItemWithData(
 ): Promise<(Item & { data: ItemWithData }) | null> {
   if (!item.commerceId) return null
 
-  const cachedString = await cache.get(
-    generateKey("shopify:product", item.commerceId),
-  )
+  const cachedString = await cache.get(generateKey("shopify:product", item.commerceId))
 
   if (cachedString) {
     const cachedResult = ItemWithDataSchema.safeParse(JSON.parse(cachedString))

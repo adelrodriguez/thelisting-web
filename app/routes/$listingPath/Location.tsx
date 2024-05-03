@@ -1,11 +1,6 @@
 import type { LocationProperties } from "~/utils/ribbons"
 
-export default function Location({
-  address,
-  caption,
-  height,
-  zoom,
-}: LocationProperties) {
+export default function Location({ address, caption, height, zoom }: LocationProperties) {
   return (
     <div className="flex-center w-full p-4 md:p-8" style={{ height }}>
       <iframe

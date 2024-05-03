@@ -1,10 +1,7 @@
-import { User } from "@prisma/client"
-import { ReactNode, createContext, useContext } from "react"
+import type { User } from "@prisma/client"
+import { type ReactNode, createContext, useContext } from "react"
 
-type LoggedInUser = Pick<
-  User,
-  "firstName" | "lastName" | "id" | "email" | "phone" | "role"
->
+type LoggedInUser = Pick<User, "firstName" | "lastName" | "id" | "email" | "phone" | "role">
 
 const UserContext = createContext<LoggedInUser | undefined>(undefined)
 

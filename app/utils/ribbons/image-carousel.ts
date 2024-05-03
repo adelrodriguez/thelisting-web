@@ -4,10 +4,7 @@ import { z } from "zod"
 import { RibbonBase } from "./base"
 
 export const ImageCarouselProperties = z.object({
-  duration: z.coerce
-    .number()
-    .int()
-    .positive("Duration must be at least 1 second"),
+  duration: z.coerce.number().int().positive("Duration must be at least 1 second"),
   height: z.coerce.number().min(0).optional(),
   images: z
     .array(z.string())

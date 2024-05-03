@@ -13,9 +13,7 @@ export type QueueData = {
 export const processor: Processor<QueueData> = async (job) => {
   const order = await getOrder(getShopifyId(job.data.orderId, "Order"))
 
-  const { listing_sku: listingSku } = transformCustomAttributes(
-    order.customAttributes,
-  )
+  const { listing_sku: listingSku } = transformCustomAttributes(order.customAttributes)
 
   if (!listingSku) {
     throw new GenericError({

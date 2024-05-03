@@ -1,5 +1,5 @@
 import { Outlet } from "@remix-run/react"
-import { RouteHandle } from "@remix-run/react/dist/routeModules"
+import type { RouteHandle } from "@remix-run/react/dist/routeModules"
 import { route } from "routes-gen"
 
 export const handle: RouteHandle = {

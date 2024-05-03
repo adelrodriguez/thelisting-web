@@ -15,8 +15,7 @@ export default function CartItem({
   quantity,
   sku,
 }: Pick<Item, "id" | "quantity" | "sku"> & { commerceId: string }) {
-  const { listingPath } =
-    useParams<RouteParams["/:listingPath/registry/cart"]>()
+  const { listingPath } = useParams<RouteParams["/:listingPath/registry/cart"]>()
   const { data, isError, isPending } = useProduct(commerceId)
   const cart = useCart()
   const { t } = useTranslation("registry")
@@ -39,11 +38,7 @@ export default function CartItem({
   return (
     <>
       <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-        <img
-          alt={title}
-          className="h-full w-full object-cover object-center"
-          src={imageUrl}
-        />
+        <img alt={title} className="h-full w-full object-cover object-center" src={imageUrl} />
       </div>
 
       <div className="ml-4 flex flex-1 flex-col">
@@ -59,9 +54,7 @@ export default function CartItem({
                 {title}
               </Link>
             </h3>
-            <p className="ml-4">
-              {formatPrice(price / exchangeRate, currency)}
-            </p>
+            <p className="ml-4">{formatPrice(price / exchangeRate, currency)}</p>
           </div>
         </div>
         <div className="flex flex-1 items-end justify-between text-sm">

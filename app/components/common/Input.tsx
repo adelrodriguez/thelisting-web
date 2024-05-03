@@ -82,13 +82,10 @@ function Input(
         />
         {trailing && (
           <div
-            className={clsx(
-              "pointer-events-none absolute inset-y-0 right-0 flex items-center",
-              {
-                "pr-10": error,
-                "pr-3": !error,
-              },
-            )}
+            className={clsx("pointer-events-none absolute inset-y-0 right-0 flex items-center", {
+              "pr-10": error,
+              "pr-3": !error,
+            })}
           >
             <span className="text-gray-500 sm:text-sm">{trailing}</span>
           </div>
@@ -96,10 +93,7 @@ function Input(
 
         {error && (
           <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-            <ExclamationCircleIcon
-              aria-hidden="true"
-              className="h-5 w-5 text-red-500"
-            />
+            <ExclamationCircleIcon aria-hidden="true" className="h-5 w-5 text-red-500" />
           </div>
         )}
       </div>

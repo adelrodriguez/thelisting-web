@@ -12,7 +12,7 @@ import { Form, Input, ListRadioGroup, SubmitButton } from "~/components/form"
 import { isUserAdmin } from "~/utils/auth.server"
 import { notFound } from "~/utils/http"
 import type { RouteHandle } from "~/utils/remix"
-import { getFullName, UserSchema } from "~/utils/user"
+import { UserSchema, getFullName } from "~/utils/user"
 
 const validator = withZod(UserSchema)
 

@@ -2,30 +2,30 @@ import type { Listing } from "@prisma/client"
 import request from "graphql-request"
 
 import type { CustomAttribute } from "~/config/consts"
-import { PRODUCT_METAFIELDS, CUSTOM_ATTRIBUTES } from "~/config/consts"
+import { CUSTOM_ATTRIBUTES, PRODUCT_METAFIELDS } from "~/config/consts"
 import { SHOPIFY_SHIPPING_ITEM_1_ID } from "~/config/env.server"
 import {
-  shopifyAdminAPIHeaders,
   shopifyAdminAPIEndpoint,
+  shopifyAdminAPIHeaders,
   shopifyStorefrontAPIEndpoint,
   shopifyStorefrontAPIHeaders,
 } from "~/config/vars.server"
 import logger from "~/helpers/logger.server"
 import {
-  getOrderCustomAttributesQuery,
-  getProductsByTagQuery,
-  createProductMutation,
-  publishToCurrentChannelMutation,
-  createCollectionMutation,
+  MediaContentType,
   addProductsToCollectionMutation,
   addTagsMutation,
-  removeProductsFromCollectionMutation,
-  getOrderQuery,
+  createCollectionMutation,
   createProductMediaMutation,
-  MediaContentType,
+  createProductMutation,
   getCollectionQuery,
-  getProductWithMetafieldsQuery,
+  getOrderCustomAttributesQuery,
+  getOrderQuery,
   getProductQuery,
+  getProductWithMetafieldsQuery,
+  getProductsByTagQuery,
+  publishToCurrentChannelMutation,
+  removeProductsFromCollectionMutation,
 } from "~/services/shopify/admin"
 import { createCheckoutMutation } from "~/services/shopify/storefront"
 import type { CartItem } from "~/utils/cart"
@@ -244,10 +244,7 @@ export async function createProduct({
       logger.error("Unable to media for product", {
         userErrors: productCreateMedia?.mediaUserErrors,
       })
-      throw new ShopifyError(
-        "Unable to create product media",
-        "product_media_create_error",
-      )
+      throw new ShopifyError("Unable to create product media", "product_media_create_error")
     }
   }
 
@@ -269,10 +266,7 @@ export async function getProductWithMetafields(id: string) {
       code: "product_with_metafields_get_error",
       id,
     })
-    throw new ShopifyError(
-      "Unable to get product",
-      "product_with_metafields_get_error",
-    )
+    throw new ShopifyError("Unable to get product", "product_with_metafields_get_error")
   }
 
   return product
@@ -302,14 +296,10 @@ export async function publishToCurrentChannel(id: string) {
   )
 
   if (!publishablePublishToCurrentChannel?.publishable) {
-    throw new ShopifyError(
-      "Unable to publish product to current channel",
-      "product_publish_error",
-    )
+    throw new ShopifyError("Unable to publish product to current channel", "product_publish_error")
   }
 
-  return publishablePublishToCurrentChannel.publishable
-    .publishedOnCurrentPublication
+  return publishablePublishToCurrentChannel.publishable.publishedOnCurrentPublication
 }
 
 export async function createCollection({ sku }: { sku: number }) {
@@ -325,19 +315,13 @@ export async function createCollection({ sku }: { sku: number }) {
   )
 
   if (!collectionCreate?.collection) {
-    throw new ShopifyError(
-      "Unable to create collection",
-      "collection_create_error",
-    )
+    throw new ShopifyError("Unable to create collection", "collection_create_error")
   }
 
   return collectionCreate.collection
 }
 
-export async function addProductsToCollection(
-  collectionId: string,
-  productIds: string[],
-) {
+export async function addProductsToCollection(collectionId: string, productIds: string[]) {
   const { collectionAddProducts } = await request(
     shopifyAdminAPIEndpoint,
     addProductsToCollectionMutation,
@@ -361,10 +345,7 @@ export async function addProductsToCollection(
   return collectionAddProducts.collection
 }
 
-export async function removeProductsFromCollection(
-  collectionId: string,
-  productIds: string[],
-) {
+export async function removeProductsFromCollection(collectionId: string, productIds: string[]) {
   const { collectionRemoveProducts } = await request(
     shopifyAdminAPIEndpoint,
     removeProductsFromCollectionMutation,

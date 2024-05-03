@@ -31,7 +31,7 @@ export default class JanieAndJack extends BaseScraper {
 
         const images = srcset.split(", ").map((image) => {
           const parts = image.split(" ")
-          const size = parseFloat(parts[1] || "0")
+          const size = Number.parseFloat(parts[1] || "0")
 
           return { size, url: parts[0] }
         })
@@ -45,9 +45,7 @@ export default class JanieAndJack extends BaseScraper {
 
   public get currency(): Currency | Promise<Currency | null> {
     return this.page
-      .$eval("meta[itemprop='priceCurrency']", (element) =>
-        element.getAttribute("content"),
-      )
+      .$eval("meta[itemprop='priceCurrency']", (element) => element.getAttribute("content"))
       .then(cleanCurrency)
       .catch((err) => this.logError(err.message))
   }

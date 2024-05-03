@@ -53,10 +53,8 @@ export const SHIPPING_FEE = 300 // 300 DOP
 export const SHIPPING_METHOD = "Gestión y Entrega"
 
 // Public assets
-export const THE_LISTING_LOGO_BLACK =
-  "/assets/images/the-listing-logo-black.png"
-export const THE_LISTING_LOGO_WHITE =
-  "/assets/images/the-listing-logo-white.png"
+export const THE_LISTING_LOGO_BLACK = "/assets/images/the-listing-logo-black.png"
+export const THE_LISTING_LOGO_WHITE = "/assets/images/the-listing-logo-white.png"
 
 // Shopify Custom Attributes
 export const CUSTOM_ATTRIBUTES = {
@@ -65,8 +63,7 @@ export const CUSTOM_ATTRIBUTES = {
   NoteId: "note_id",
   SessionCartsKey: "session_carts_key", // Used to identify the cart in Redis
 } as const
-export type CustomAttribute =
-  (typeof CUSTOM_ATTRIBUTES)[keyof typeof CUSTOM_ATTRIBUTES]
+export type CustomAttribute = (typeof CUSTOM_ATTRIBUTES)[keyof typeof CUSTOM_ATTRIBUTES]
 
 export const PRODUCT_METAFIELDS = {
   OriginalCurrency: "original_product_currency",
@@ -75,16 +72,14 @@ export const PRODUCT_METAFIELDS = {
   OriginalTitle: "original_product_title",
   OriginalUrl: "original_product_url",
 } as const
-export type ProductMetafield =
-  (typeof PRODUCT_METAFIELDS)[keyof typeof PRODUCT_METAFIELDS]
+export type ProductMetafield = (typeof PRODUCT_METAFIELDS)[keyof typeof PRODUCT_METAFIELDS]
 
 export const CLOUDFLARE_IMAGES_ACCOUNT_HASH = "wHwwAqNxbuESOwdHNE6NsQ"
 
 export const QUEUE_NAMES = {
   AddItemToListing: "ADD_ITEM_TO_LISTING",
   AddTagsToOrder: "ADD_TAGS_TO_ORDER",
-  AutomatedAbandonedCheckoutsNotification:
-    "AUTOMATED_ABANDONED_CHECKOUTS_NOTIFICATION",
+  AutomatedAbandonedCheckoutsNotification: "AUTOMATED_ABANDONED_CHECKOUTS_NOTIFICATION",
   ClearCart: "CLEAR_CART",
   CreateInvoice: "CREATE_INVOICE",
   CreateItemPurchase: "CREATE_ITEM_PURCHASE",

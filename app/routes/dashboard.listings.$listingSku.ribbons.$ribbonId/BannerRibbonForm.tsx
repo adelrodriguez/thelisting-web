@@ -1,14 +1,8 @@
-import { Ribbon, RibbonType } from "@prisma/client"
-import { SerializeFrom } from "@remix-run/node"
+import { type Ribbon, RibbonType } from "@prisma/client"
+import type { SerializeFrom } from "@remix-run/node"
 import { withZod } from "@remix-validated-form/with-zod"
 
-import {
-  Autocomplete,
-  Form,
-  ImageInput,
-  Input,
-  Select,
-} from "~/components/form"
+import { Autocomplete, Form, ImageInput, Input, Select } from "~/components/form"
 import { BannerRibbon } from "~/utils/ribbons"
 
 const validator = withZod(BannerRibbon)

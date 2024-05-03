@@ -86,10 +86,7 @@ export default function DashboardListingPage() {
         <div className="flex-1">
           <div className="relative rounded-md shadow-sm">
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-              <MagnifyingGlassIcon
-                aria-hidden="true"
-                className="h-5 w-5 text-slate-400"
-              />
+              <MagnifyingGlassIcon aria-hidden="true" className="h-5 w-5 text-slate-400" />
             </div>
             <input
               className="block w-full rounded-md border-0 py-1.5 pl-10 text-slate-900 ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
@@ -127,10 +124,7 @@ export default function DashboardListingPage() {
         <div className="flex-1">
           <div className="relative rounded-md shadow-sm">
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-              <MagnifyingGlassIcon
-                aria-hidden="true"
-                className="h-5 w-5 text-slate-400"
-              />
+              <MagnifyingGlassIcon aria-hidden="true" className="h-5 w-5 text-slate-400" />
             </div>
             <input
               className="block w-full rounded-md border-0 py-1.5 pl-10 text-slate-900 ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
@@ -159,10 +153,7 @@ export default function DashboardListingPage() {
             key={listing.id}
             owner={listing.owner}
             path={listing.path}
-            purchaseTotal={listing.purchases.reduce(
-              (acc, purchase) => acc + purchase.total,
-              0,
-            )}
+            purchaseTotal={listing.purchases.reduce((acc, purchase) => acc + purchase.total, 0)}
             sku={listing.sku}
             status={listing.status}
             title={listing.title}

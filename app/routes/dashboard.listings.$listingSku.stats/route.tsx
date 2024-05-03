@@ -34,39 +34,38 @@ export async function loader({ context, params }: LoaderFunctionArgs) {
     throw notFound({ message: "Listing not found" })
   }
 
-  const [purchaseAggregates, largestPurchase, lastPurchase, itemAggregates] =
-    await Promise.all([
-      db.purchase.aggregate({
-        _avg: { cost: true, total: true },
-        _count: true,
-        _sum: { cost: true, total: true },
-        where: {
-          listingId: listing.id,
-          paid: true,
-        },
-      }),
-      db.purchase.findFirst({
-        orderBy: { total: "desc" },
-        where: {
-          listingId: listing.id,
-          paid: true,
-        },
-      }),
-      db.purchase.findFirst({
-        orderBy: { createdAt: "desc" },
-        where: {
-          listingId: listing.id,
-          paid: true,
-        },
-      }),
-      db.item.aggregate({
-        _count: true,
-        _sum: { quantity: true, stock: true },
-        where: {
-          listingId: listing.id,
-        },
-      }),
-    ])
+  const [purchaseAggregates, largestPurchase, lastPurchase, itemAggregates] = await Promise.all([
+    db.purchase.aggregate({
+      _avg: { cost: true, total: true },
+      _count: true,
+      _sum: { cost: true, total: true },
+      where: {
+        listingId: listing.id,
+        paid: true,
+      },
+    }),
+    db.purchase.findFirst({
+      orderBy: { total: "desc" },
+      where: {
+        listingId: listing.id,
+        paid: true,
+      },
+    }),
+    db.purchase.findFirst({
+      orderBy: { createdAt: "desc" },
+      where: {
+        listingId: listing.id,
+        paid: true,
+      },
+    }),
+    db.item.aggregate({
+      _count: true,
+      _sum: { quantity: true, stock: true },
+      where: {
+        listingId: listing.id,
+      },
+    }),
+  ])
 
   return json([
     {
@@ -95,9 +94,7 @@ export async function loader({ context, params }: LoaderFunctionArgs) {
         },
         {
           label: "Last Purchase",
-          value: lastPurchase?.createdAt
-            ? format(lastPurchase?.createdAt, "MMM d, yyyy")
-            : "N/A",
+          value: lastPurchase?.createdAt ? format(lastPurchase?.createdAt, "MMM d, yyyy") : "N/A",
         },
       ],
       title: "Purchases",
@@ -143,11 +140,9 @@ export async function loader({ context, params }: LoaderFunctionArgs) {
         },
         {
           label: "Shipping Charges",
-          value: currency(purchaseAggregates._count)
-            .multiply(SHIPPING_FEE)
-            .format({
-              symbol: getPriceSymbol(),
-            }),
+          value: currency(purchaseAggregates._count).multiply(SHIPPING_FEE).format({
+            symbol: getPriceSymbol(),
+          }),
         },
         {
           label: "Estimated Profit",
@@ -170,18 +165,14 @@ export default function DashboardListingStatsPage() {
     <div className="mt-8 space-y-6">
       {data.map((item) => (
         <section key={item.title}>
-          <h3 className="text-lg font-medium leading-6 text-gray-900">
-            {item.title}
-          </h3>
+          <h3 className="text-lg font-medium leading-6 text-gray-900">{item.title}</h3>
           <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
             {item.data.map((stat) => (
               <div
                 className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6"
                 key={stat.label}
               >
-                <dt className="truncate text-sm font-medium text-gray-500">
-                  {stat.label}
-                </dt>
+                <dt className="truncate text-sm font-medium text-gray-500">{stat.label}</dt>
                 <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
                   {stat.value}
                 </dd>

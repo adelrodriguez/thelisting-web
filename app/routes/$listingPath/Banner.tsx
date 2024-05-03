@@ -1,7 +1,7 @@
 import { Link } from "@remix-run/react"
 import clsx from "clsx"
 import { useInView } from "framer-motion"
-import { ElementRef, useRef } from "react"
+import { type ElementRef, useRef } from "react"
 import { useTranslation } from "react-i18next"
 import { route } from "routes-gen"
 
@@ -36,11 +36,7 @@ export default function Banner({
       >
         {decorationImage && (
           <div className="h-32 lg:h-40">
-            <img
-              alt=""
-              className="h-full w-full object-contain"
-              src={decorationImage}
-            />
+            <img alt="" className="h-full w-full object-contain" src={decorationImage} />
           </div>
         )}
         <h1

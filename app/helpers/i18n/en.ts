@@ -1,4 +1,4 @@
-import { I18nBase } from "~/helpers/i18n/base"
+import type { I18nBase } from "~/helpers/i18n/base"
 
 const en: I18nBase = {
   common: {
@@ -35,8 +35,7 @@ const en: I18nBase = {
       enter_email: "Enter your email",
       magic_link_error:
         "We cannot find an account with that email. Please, contact the administrator to create an account.",
-      magic_link_sent:
-        "We have sent you a magic link to your email. Please check your inbox.",
+      magic_link_sent: "We have sent you a magic link to your email. Please check your inbox.",
       welcome: "Welcome to The Listing.",
     },
   },
@@ -119,8 +118,7 @@ const en: I18nBase = {
         length: "The message must be between 1 and 500 characters",
       },
       placeholder: "Write your message here...",
-      subtitle:
-        "Your message will be sent to the recipient when the order is processed",
+      subtitle: "Your message will be sent to the recipient when the order is processed",
       title: "Add a personalized message to your gift",
     },
     out_of_stock: "Gifted ✨",
@@ -131,12 +129,10 @@ const en: I18nBase = {
       remove: "Remove",
     },
     shipping_and_handling: "Handling and Delivery",
-    shipping_note:
-      "The value of the items will be sent to the owners of the list.",
+    shipping_note: "The value of the items will be sent to the owners of the list.",
   },
   review: {
-    description:
-      "Here you can see the gifts you've received and the messages left for you.",
+    description: "Here you can see the gifts you've received and the messages left for you.",
     empty: "You have not received any gifts yet.",
     gifted_by: "Gifted by",
     gifted_on: "Gifted on",

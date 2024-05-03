@@ -80,10 +80,7 @@ export default function PageRibbons({
         <div className="relative flex justify-center">
           <Link preventScrollReset relative="route" to="new">
             <button className="inline-flex items-center gap-x-1.5 rounded-full bg-white px-3 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-              <PlusIcon
-                aria-hidden="true"
-                className="-ml-1 -mr-0.5 h-5 w-5 text-gray-400"
-              />
+              <PlusIcon aria-hidden="true" className="-ml-1 -mr-0.5 h-5 w-5 text-gray-400" />
               Add new ribbon
             </button>
           </Link>

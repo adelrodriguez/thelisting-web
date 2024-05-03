@@ -3,14 +3,7 @@ import { useFormContext } from "remix-validated-form"
 import { z } from "zod"
 
 import { Alert, Dropzone } from "~/components/common"
-import {
-  Form,
-  ImageInput,
-  Input,
-  InputWithAddOn,
-  SubmitButton,
-  TextArea,
-} from "~/components/form"
+import { Form, ImageInput, Input, InputWithAddOn, SubmitButton, TextArea } from "~/components/form"
 import { REDIRECT_URL } from "~/config/consts"
 import { useCSVParser } from "~/utils/hooks"
 
@@ -59,17 +52,9 @@ export default function BabyShowerInvitationV1Form() {
       validator={validator}
     >
       <InputWithAddOn addOn={REDIRECT_URL + "/"} label="Path" name="path" />
-      <Input
-        description="The name of the baby (e.g. José)"
-        label="Baby Name"
-        name="babyName"
-      />
+      <Input description="The name of the baby (e.g. José)" label="Baby Name" name="babyName" />
       <Input description="The date of the event" label="Date" name="date" />
-      <Input
-        description="Where the event takes place"
-        label="Place"
-        name="place"
-      />
+      <Input description="Where the event takes place" label="Place" name="place" />
       <TextArea description="A custom message" label="Message" name="message" />
       <ImageInput
         description="The image to attach to the message"
@@ -132,12 +117,7 @@ export default function BabyShowerInvitationV1Form() {
             type="hidden"
             value={row.phoneNumber}
           />
-          <Input
-            label="Name"
-            name={`recipients[${index}].name`}
-            type="hidden"
-            value={row.name}
-          />
+          <Input label="Name" name={`recipients[${index}].name`} type="hidden" value={row.name} />
         </div>
       ))}
 

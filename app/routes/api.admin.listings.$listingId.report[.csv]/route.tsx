@@ -20,10 +20,7 @@ export async function loader({ context, params }: LoaderFunctionArgs) {
   const data = (
     await Promise.all(
       items.map(async (item) => {
-        const numberPurchased = item.itemPurchases.reduce(
-          (acc, curr) => acc + curr.quantity,
-          0,
-        )
+        const numberPurchased = item.itemPurchases.reduce((acc, curr) => acc + curr.quantity, 0)
 
         if (numberPurchased === 0) return null
 
@@ -31,10 +28,7 @@ export async function loader({ context, params }: LoaderFunctionArgs) {
 
         const product = await getProductWithMetafields(item.commerceId)
         const price = Number(flattenConnection(product.variants)[0]?.price)
-        const cost = Number(
-          flattenConnection(product.variants)[0]?.inventoryItem.unitCost
-            ?.amount,
-        )
+        const cost = Number(flattenConnection(product.variants)[0]?.inventoryItem.unitCost?.amount)
         const url = flattenConnection(product.metafields).find(
           (field) => field.key === PRODUCT_METAFIELDS.OriginalUrl,
         )?.value

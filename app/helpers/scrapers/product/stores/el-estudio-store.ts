@@ -1,6 +1,6 @@
 import { CURRENCIES } from "~/config/consts"
 import { BaseScraper } from "~/helpers/scrapers/product/base.server"
-import { cleanText, cleanAmount } from "~/utils/scraper"
+import { cleanAmount, cleanText } from "~/utils/scraper"
 
 export default class ElEstudioStore extends BaseScraper {
   static domain = "elestudiostore.com"

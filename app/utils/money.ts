@@ -3,9 +3,7 @@ import { z } from "zod"
 
 import { CURRENCIES } from "~/config/consts"
 
-export const CurrencySchema = z
-  .enum([CURRENCIES.DOP, CURRENCIES.USD])
-  .catch(CURRENCIES.DOP)
+export const CurrencySchema = z.enum([CURRENCIES.DOP, CURRENCIES.USD]).catch(CURRENCIES.DOP)
 
 export function formatPrice(price: number, currencyCode?: string): string {
   return currency(price, {
@@ -27,23 +25,14 @@ export function getPriceSymbol(currencyCode?: string): string {
   }
 }
 
-export function calculatePriceWithMargin(
-  price: number,
-  margin: number,
-): number {
+export function calculatePriceWithMargin(price: number, margin: number): number {
   return currency(price).divide((100 - margin) / 100).value
 }
 
-export function calculatePriceMinusMargin(
-  price: number,
-  margin: number,
-): number {
+export function calculatePriceMinusMargin(price: number, margin: number): number {
   return currency(price).multiply((100 - margin) / 100).value
 }
 
-export function multiplyPriceByExchangeRate(
-  price: number,
-  exchangeRate: number,
-): number {
+export function multiplyPriceByExchangeRate(price: number, exchangeRate: number): number {
   return currency(price).multiply(exchangeRate).value
 }

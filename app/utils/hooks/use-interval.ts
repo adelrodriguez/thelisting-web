@@ -2,10 +2,7 @@ import { useEffect, useRef } from "react"
 
 import useIsomorphicLayoutEffect from "./use-isomorphic-layout-effect"
 
-export default function useInterval(
-  callback: () => void,
-  delay: number | null,
-) {
+export default function useInterval(callback: () => void, delay: number | null) {
   const savedCallback = useRef(callback)
   const savedId = useRef<NodeJS.Timeout>()
 

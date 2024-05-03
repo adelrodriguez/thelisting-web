@@ -1,4 +1,4 @@
-import { Listing } from "@prisma/client"
+import type { Listing } from "@prisma/client"
 import { useSubmit } from "@remix-run/react"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import currency from "currency.js"
@@ -46,9 +46,7 @@ export function CartProvider({
   const { data } = useQuery({
     initialData: createDefaultCart(listing.id),
     queryFn: async () => {
-      const res = await fetch(
-        "/api/cart?" + new URLSearchParams({ listingId: listing.id }),
-      )
+      const res = await fetch("/api/cart?" + new URLSearchParams({ listingId: listing.id }))
       const data = (await res.json()) as { cart: string }
       const cart = SuperJSON.parse<BaseCart>(data.cart)
 
@@ -76,14 +74,7 @@ export function CartProvider({
     },
   })
 
-  function addItemToCart({
-    commerceId,
-    id,
-    price,
-    quantity,
-    sku,
-    variantId,
-  }: CartItem) {
+  function addItemToCart({ commerceId, id, price, quantity, sku, variantId }: CartItem) {
     const newItems = new Map(data.items)
 
     newItems.set(id, {

@@ -4,21 +4,10 @@ import { ReasonPhrases, StatusCodes } from "http-status-codes"
 import { z } from "zod"
 
 import { ONE_SECOND } from "~/config/consts"
-import {
-  MarkPurchaseAsPaidQueue,
-  SaveOrderCustomerQueue,
-} from "~/helpers/queues"
+import { MarkPurchaseAsPaidQueue, SaveOrderCustomerQueue } from "~/helpers/queues"
 import Sentry from "~/services/sentry"
-import {
-  badRequest,
-  internalServerError,
-  notAllowed,
-  unauthorized,
-} from "~/utils/http"
-import {
-  getShopifyWebhookHeaders,
-  parseOrderPaymentWebhookPayload,
-} from "~/utils/shopify"
+import { badRequest, internalServerError, notAllowed, unauthorized } from "~/utils/http"
+import { getShopifyWebhookHeaders, parseOrderPaymentWebhookPayload } from "~/utils/shopify"
 import { checkWebhookLog, verifyWebhook } from "~/utils/webhook.server"
 
 export function loader() {
@@ -43,13 +32,7 @@ export async function action({ context, request }: ActionFunctionArgs) {
   const { event, webhookId } = getShopifyWebhookHeaders(headers)
   logger.info(`Received ${event} webhook`, { webhookId })
 
-  const received = await checkWebhookLog(
-    db,
-    webhookId,
-    event,
-    "Shopify",
-    jsonBody,
-  )
+  const received = await checkWebhookLog(db, webhookId, event, "Shopify", jsonBody)
 
   if (received) {
     logger.info("Webhook already received. Ignoring...", { webhookId })

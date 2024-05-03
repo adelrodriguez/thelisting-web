@@ -1,7 +1,7 @@
 import { DocumentArrowDownIcon } from "@heroicons/react/24/outline"
 import clsx from "clsx"
 import type { ComponentType } from "react"
-import { useDropzone, type Accept } from "react-dropzone"
+import { type Accept, useDropzone } from "react-dropzone"
 
 export default function Dropzone({
   Icon = DocumentArrowDownIcon,

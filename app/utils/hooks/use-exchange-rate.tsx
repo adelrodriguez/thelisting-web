@@ -19,8 +19,7 @@ Context.displayName = "ExchangeRate"
 // TODO(adelrodriguez): Add initial currency to prevent flash of content
 export function ExchangeRateProvider({ children }: { children: ReactNode }) {
   const [searchParams, setSearchParams] = useSearchParams()
-  const currency =
-    (searchParams.get("currency") as Currency | null) ?? CURRENCIES.DOP
+  const currency = (searchParams.get("currency") as Currency | null) ?? CURRENCIES.DOP
 
   const { data } = useQuery({
     queryFn: async () => {
@@ -66,9 +65,7 @@ export default function useExchangeRate() {
   const context = useContext(Context)
 
   if (context === undefined) {
-    throw new Error(
-      "useExchangeRate must be used within a ExchangeRateProvider",
-    )
+    throw new Error("useExchangeRate must be used within a ExchangeRateProvider")
   }
 
   return context

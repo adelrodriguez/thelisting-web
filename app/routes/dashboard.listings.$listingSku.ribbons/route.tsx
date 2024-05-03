@@ -19,13 +19,7 @@ import { z } from "zod"
 import { zx } from "zodix"
 
 import { Button } from "~/components/common"
-import {
-  Autocomplete,
-  Form,
-  Input,
-  SubmitButton,
-  Switch,
-} from "~/components/form"
+import { Autocomplete, Form, Input, SubmitButton, Switch } from "~/components/form"
 import { getFontList } from "~/utils/font"
 import { badRequest } from "~/utils/http"
 import { ListingThemeSchema } from "~/utils/listing"
@@ -51,10 +45,7 @@ export async function loader({ context, params }: LoaderFunctionArgs) {
   const cache = context.cache
   const env = context.env
 
-  const { listingSku } = zx.parseParams(
-    params,
-    z.object({ listingSku: z.coerce.number() }),
-  )
+  const { listingSku } = zx.parseParams(params, z.object({ listingSku: z.coerce.number() }))
 
   const [listing, fonts] = await Promise.all([
     db.listing.findUniqueOrThrow({
@@ -66,11 +57,7 @@ export async function loader({ context, params }: LoaderFunctionArgs) {
       where: { sku: listingSku },
     }),
 
-    getFontList(
-      cache,
-      env.GOOGLE_WEB_FONTS_URL,
-      env.GOOGLE_WEB_FONTS_DEVELOPER_API_KEY,
-    ),
+    getFontList(cache, env.GOOGLE_WEB_FONTS_URL, env.GOOGLE_WEB_FONTS_DEVELOPER_API_KEY),
   ])
 
   const theme = ListingThemeSchema.parse(listing.theme)
@@ -84,10 +71,7 @@ export async function loader({ context, params }: LoaderFunctionArgs) {
 
 export async function action({ context, params, request }: ActionFunctionArgs) {
   const db = context.db
-  const result = zx.parseParamsSafe(
-    params,
-    z.object({ listingSku: z.coerce.number() }),
-  )
+  const result = zx.parseParamsSafe(params, z.object({ listingSku: z.coerce.number() }))
 
   if (!result.success) {
     throw badRequest({ message: result.error.message })

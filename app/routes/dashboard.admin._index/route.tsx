@@ -1,9 +1,4 @@
-import {
-  AcademicCapIcon,
-  PhoneIcon,
-  PhotoIcon,
-  GiftIcon,
-} from "@heroicons/react/24/outline"
+import { AcademicCapIcon, GiftIcon, PhoneIcon, PhotoIcon } from "@heroicons/react/24/outline"
 import { QueueListIcon, UserGroupIcon } from "@heroicons/react/24/solid"
 import { Link } from "@remix-run/react"
 import clsx from "clsx"
@@ -29,8 +24,7 @@ const tools = [
     title: "Scrape Images",
   },
   {
-    description:
-      "Send a pre-defined template message to multiple phone numbers.",
+    description: "Send a pre-defined template message to multiple phone numbers.",
     href: "./whatsapp-broadcast",
     icon: PhoneIcon,
     iconBackground: "bg-purple-50",
@@ -70,14 +64,10 @@ export default function AdminToolsPage() {
       {tools.map((tool, toolIdx) => (
         <div
           className={clsx(
-            toolIdx === 0
-              ? "rounded-tl-lg rounded-tr-lg sm:rounded-tr-none"
-              : "",
+            toolIdx === 0 ? "rounded-tl-lg rounded-tr-lg sm:rounded-tr-none" : "",
             toolIdx === 1 ? "sm:rounded-tr-lg" : "",
             toolIdx === tools.length - 2 ? "sm:rounded-bl-lg" : "",
-            toolIdx === tools.length - 1
-              ? "rounded-bl-lg rounded-br-lg sm:rounded-bl-none"
-              : "",
+            toolIdx === tools.length - 1 ? "rounded-bl-lg rounded-br-lg sm:rounded-bl-none" : "",
             "group relative bg-white p-6 focus-within:ring-2 focus-within:ring-inset focus-within:ring-gray-500",
           )}
           key={tool.href}

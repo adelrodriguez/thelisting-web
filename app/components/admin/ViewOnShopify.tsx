@@ -25,8 +25,7 @@ export default function ViewOnShopify({ gid }: { gid: string }) {
         window.env.shopifyStore
       }/${resource?.toLowerCase()}s/${id}`}
     >
-      View on Shopify{" "}
-      <ArrowTopRightOnSquareIcon className="inline-block h-4 w-4" />
+      View on Shopify <ArrowTopRightOnSquareIcon className="inline-block h-4 w-4" />
     </Link>
   )
 }

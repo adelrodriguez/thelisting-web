@@ -31,10 +31,7 @@ export async function loader({ context, params, request }: LoaderFunctionArgs) {
   const cache = context.cache
 
   try {
-    const { listingPath } = zx.parseParams(
-      params,
-      z.object({ listingPath: z.string() }),
-    )
+    const { listingPath } = zx.parseParams(params, z.object({ listingPath: z.string() }))
 
     const { id: listingId } = await db.listing.findFirstOrThrow({
       where: { path: listingPath },
@@ -83,10 +80,7 @@ export async function action({ context, params, request }: ActionFunctionArgs) {
 
   const t = await i18n.getFixedT(request, "registry")
 
-  const { listingPath } = zx.parseParams(
-    params,
-    z.object({ listingPath: z.string() }),
-  )
+  const { listingPath } = zx.parseParams(params, z.object({ listingPath: z.string() }))
 
   const serverValidator = withZod(
     z.object({
@@ -202,30 +196,19 @@ export default function Page() {
                               onClick={close}
                               type="button"
                             >
-                              <span className="sr-only">
-                                {t("common:cancel")}
-                              </span>
-                              <XMarkIcon
-                                aria-hidden="true"
-                                className="h-6 w-6"
-                              />
+                              <span className="sr-only">{t("common:cancel")}</span>
+                              <XMarkIcon aria-hidden="true" className="h-6 w-6" />
                             </button>
                           </div>
                         </div>
                         <div className="mt-1">
-                          <p className="text-sm text-gray-300">
-                            {t("registry:note.subtitle")}
-                          </p>
+                          <p className="text-sm text-gray-300">{t("registry:note.subtitle")}</p>
                         </div>
                       </div>
                       <div className="flex flex-1 flex-col justify-between">
                         <div className="divide-y divide-gray-200 px-4 sm:px-6">
                           <div className="space-y-6 pb-5 pt-6">
-                            <input
-                              defaultValue={note?.id || ""}
-                              name="id"
-                              type="hidden"
-                            />
+                            <input defaultValue={note?.id || ""} name="id" type="hidden" />
                             <TextArea
                               defaultValue={note?.text || ""}
                               label="Nota"

@@ -144,9 +144,7 @@ export async function loader({ context }: LoaderFunctionArgs) {
         },
         {
           label: "Last Purchase",
-          value: lastPurchase?.createdAt
-            ? format(lastPurchase?.createdAt, "MMM d, yyyy")
-            : "N/A",
+          value: lastPurchase?.createdAt ? format(lastPurchase?.createdAt, "MMM d, yyyy") : "N/A",
         },
         {
           label: "Last Purchase Listing",
@@ -179,11 +177,9 @@ export async function loader({ context }: LoaderFunctionArgs) {
         },
         {
           label: "Shipping Charges",
-          value: currency(purchaseAggregatesLast30Days._count)
-            .multiply(SHIPPING_FEE)
-            .format({
-              symbol: getPriceSymbol(),
-            }),
+          value: currency(purchaseAggregatesLast30Days._count).multiply(SHIPPING_FEE).format({
+            symbol: getPriceSymbol(),
+          }),
         },
         {
           label: "Estimated Profit",
@@ -255,11 +251,9 @@ export async function loader({ context }: LoaderFunctionArgs) {
         },
         {
           label: "Shipping Charges",
-          value: currency(purchaseAggregatesAllTime._count)
-            .multiply(SHIPPING_FEE)
-            .format({
-              symbol: getPriceSymbol(),
-            }),
+          value: currency(purchaseAggregatesAllTime._count).multiply(SHIPPING_FEE).format({
+            symbol: getPriceSymbol(),
+          }),
         },
         {
           label: "Estimated Profit",
@@ -289,18 +283,14 @@ export default function DashboardIndexPage() {
     <div className="space-y-6">
       {data.map((item) => (
         <section key={item.title}>
-          <h3 className="text-lg font-medium leading-6 text-gray-900">
-            {item.title}
-          </h3>
+          <h3 className="text-lg font-medium leading-6 text-gray-900">{item.title}</h3>
           <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
             {item.data.map((stat) => (
               <div
                 className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6"
                 key={stat.label}
               >
-                <dt className="truncate text-sm font-medium text-gray-500">
-                  {stat.label}
-                </dt>
+                <dt className="truncate text-sm font-medium text-gray-500">{stat.label}</dt>
                 <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
                   {stat.value}
                 </dd>

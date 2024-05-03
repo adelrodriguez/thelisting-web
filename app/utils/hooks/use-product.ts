@@ -15,8 +15,7 @@ export default function useProduct(id: string) {
           id,
         },
         {
-          "X-Shopify-Storefront-Access-Token":
-            window.env.shopifyStorefrontAccessToken,
+          "X-Shopify-Storefront-Access-Token": window.env.shopifyStorefrontAccessToken,
         },
       ),
     queryKey: ["products", id],

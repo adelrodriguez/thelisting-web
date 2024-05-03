@@ -1,9 +1,6 @@
 import { z } from "zod"
 
-import {
-  CLOUDFLARE_ACCOUNT_ID,
-  CLOUDFLARE_IMAGES_API_TOKEN,
-} from "~/config/env.server"
+import { CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_IMAGES_API_TOKEN } from "~/config/env.server"
 import logger from "~/helpers/logger.server"
 import Sentry from "~/services/sentry"
 
@@ -29,10 +26,7 @@ const UploadImageToCloudflareResponseSchema = z.object({
   success: z.boolean(),
 })
 
-export async function uploadImageToCloudflare(
-  data: AsyncIterable<Uint8Array>,
-  imageName?: string,
-) {
+export async function uploadImageToCloudflare(data: AsyncIterable<Uint8Array>, imageName?: string) {
   const chunks = []
 
   for await (const chunk of data) {

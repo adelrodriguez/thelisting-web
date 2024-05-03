@@ -13,8 +13,7 @@ export default function useLocalization(): UseQueryResult<GetLocalizationQuery> 
         getLocalizationQuery,
         {},
         {
-          "X-Shopify-Storefront-Access-Token":
-            window.env.shopifyStorefrontAccessToken,
+          "X-Shopify-Storefront-Access-Token": window.env.shopifyStorefrontAccessToken,
         },
       ),
     queryKey: ["localization"],

@@ -1,4 +1,4 @@
-import { I18nBase } from "~/helpers/i18n/base"
+import type { I18nBase } from "~/helpers/i18n/base"
 
 const es: I18nBase = {
   common: {
@@ -73,8 +73,7 @@ const es: I18nBase = {
         description: "Además de tu lista de regalos, te ofrecemos:",
         list: [
           {
-            description:
-              "Recibe notificaciones por WhatsApp cuando te realicen un regalo.",
+            description: "Recibe notificaciones por WhatsApp cuando te realicen un regalo.",
             title: "Notificaciones en tiempo real",
           },
           {
@@ -104,8 +103,7 @@ const es: I18nBase = {
         title: "Todo lo que deseas, en una sola lista",
       },
       highlight: {
-        description:
-          "No importa cual sea la ocasión, tenemos la lista para ti.",
+        description: "No importa cual sea la ocasión, tenemos la lista para ti.",
         features: [
           {
             description:
@@ -167,8 +165,7 @@ const es: I18nBase = {
         length: "El mensaje debe tener entre 1 y 500 caracteres",
       },
       placeholder: "Escribe tu mensaje aquí...",
-      subtitle:
-        "Tu mensaje sera enviado al destinatario cuando la orden sea procesada",
+      subtitle: "Tu mensaje sera enviado al destinatario cuando la orden sea procesada",
       title: "Añade un mensaje personalizado a tu regalo",
     },
     out_of_stock: "Regalado ✨",
@@ -179,12 +176,10 @@ const es: I18nBase = {
       remove: "Eliminar",
     },
     shipping_and_handling: "Gestión y entrega",
-    shipping_note:
-      "El valor de los artículos se enviará a los dueños de la lista.",
+    shipping_note: "El valor de los artículos se enviará a los dueños de la lista.",
   },
   review: {
-    description:
-      "Aquí puedes ver los regalos que has recibido y los mensajes que te han dejado.",
+    description: "Aquí puedes ver los regalos que has recibido y los mensajes que te han dejado.",
     empty: "Todavía no has recibido ningún regalo.",
     gifted_by: "Regalado por",
     gifted_on: "Regalado el",

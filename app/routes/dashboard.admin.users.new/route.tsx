@@ -49,9 +49,7 @@ export default function CreateListingsPage() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
       <div className="sm:text-center">
-        <p className="text-base font-semibold uppercase tracking-wide text-gray-600">
-          Users
-        </p>
+        <p className="text-base font-semibold uppercase tracking-wide text-gray-600">Users</p>
         <h2 className="mt-2 text-3xl font-extrabold leading-8 tracking-tight text-gray-900 sm:text-4xl">
           Create a new user
         </h2>

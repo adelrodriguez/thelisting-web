@@ -51,16 +51,11 @@ export default function Features() {
               <div className="relative pl-16" key={feature.title}>
                 <dt className="text-base font-semibold leading-7 text-gray-900">
                   <div className="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-lg bg-slate-600">
-                    <feature.icon
-                      aria-hidden="true"
-                      className="h-6 w-6 text-white"
-                    />
+                    <feature.icon aria-hidden="true" className="h-6 w-6 text-white" />
                   </div>
                   {t(feature.title)}
                 </dt>
-                <dd className="mt-2 text-base leading-7 text-gray-600">
-                  {t(feature.description)}
-                </dd>
+                <dd className="mt-2 text-base leading-7 text-gray-600">{t(feature.description)}</dd>
               </div>
             ))}
           </dl>

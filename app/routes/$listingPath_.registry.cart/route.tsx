@@ -19,7 +19,7 @@ import { Spinner } from "~/components/loading"
 import { calculateShipping, calculateSubtotal } from "~/utils/cart"
 import { useCart, useDialogPage, useExchangeRate } from "~/utils/hooks"
 import { formatPrice } from "~/utils/money"
-import { RouteHandle } from "~/utils/remix"
+import type { RouteHandle } from "~/utils/remix"
 
 import CartItem from "./CartItem"
 
@@ -107,9 +107,7 @@ export default function Page() {
                       <dl className="space-y-2 text-sm font-medium text-gray-500">
                         <div className="flex justify-between">
                           <dt>{t("common:subtotal")}</dt>
-                          <dd>
-                            {formatPrice(subtotal / exchangeRate, currency)}
-                          </dd>
+                          <dd>{formatPrice(subtotal / exchangeRate, currency)}</dd>
                         </div>
 
                         <div className="flex justify-between">
@@ -119,9 +117,7 @@ export default function Page() {
                               <InformationCircleIcon className="ml-0.5 h-4 w-4" />
                             </Tooltip>
                           </dt>
-                          <dd>
-                            {formatPrice(shipping / exchangeRate, currency)}
-                          </dd>
+                          <dd>{formatPrice(shipping / exchangeRate, currency)}</dd>
                         </div>
 
                         <div className="flex items-center justify-between  text-gray-900">
@@ -136,27 +132,19 @@ export default function Page() {
                           preventScrollReset
                           relative="route"
                           to={{
-                            pathname: route(
-                              "/:listingPath/registry/cart/note",
-                              {
-                                listingPath: listing.path,
-                              },
-                            ),
+                            pathname: route("/:listingPath/registry/cart/note", {
+                              listingPath: listing.path,
+                            }),
                             search: location.search,
                           }}
                         >
-                          {cart.noteId
-                            ? t("registry:note.added")
-                            : t("registry:note.add")}
+                          {cart.noteId ? t("registry:note.added") : t("registry:note.add")}
                         </Link>
                       </div>
                       <div className="mt-6">
                         <Button
                           className="w-full"
-                          disabled={
-                            cart.items.size === 0 ||
-                            navigation.state === "submitting"
-                          }
+                          disabled={cart.items.size === 0 || navigation.state === "submitting"}
                           onClick={() => {
                             if (cart.noteId) {
                               cart.checkout()

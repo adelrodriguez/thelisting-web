@@ -3,12 +3,9 @@ import type { Redis } from "ioredis"
 import { z } from "zod"
 
 import { ONE_WEEK, REDIS_KEYS } from "~/config/consts"
-import {
-  GOOGLE_WEB_FONTS_DEVELOPER_API_KEY,
-  GOOGLE_WEB_FONTS_URL,
-} from "~/config/env.server"
+import { GOOGLE_WEB_FONTS_DEVELOPER_API_KEY, GOOGLE_WEB_FONTS_URL } from "~/config/env.server"
 import { generateKey } from "~/utils/redis"
-import { Nullish } from "~/utils/type"
+import type { Nullish } from "~/utils/type"
 
 const FontSchema = z.object({
   family: z.string(),
@@ -17,8 +14,7 @@ const FontSchema = z.object({
 type Font = z.infer<typeof FontSchema>
 
 export function generateGoogleFontsUrl(fonts: Nullish<Font>[]): string | null {
-  const families: { [key: string]: true | { wght: number[]; ital: number[] } } =
-    {}
+  const families: { [key: string]: true | { wght: number[]; ital: number[] } } = {}
 
   // This is some ugly code, but it works. Blame the weird shape needed by
   // constructURL.
@@ -52,11 +48,11 @@ export function generateGoogleFontsUrl(fonts: Nullish<Font>[]): string | null {
       const [weight, italic] = variant.split("i")
 
       if (italic && weight) {
-        fontFamily.ital.push(parseInt(weight))
+        fontFamily.ital.push(Number.parseInt(weight))
 
         continue
       } else if (weight) {
-        fontFamily.wght.push(parseInt(weight))
+        fontFamily.wght.push(Number.parseInt(weight))
       }
     }
   }
@@ -95,19 +91,12 @@ export async function getFontList(
     .parse(data)
 
   // Expire in 1 week
-  await cache.set(
-    REDIS_KEYS.GoogleFonts,
-    JSON.stringify(fonts),
-    "EX",
-    ONE_WEEK.inSeconds,
-  )
+  await cache.set(REDIS_KEYS.GoogleFonts, JSON.stringify(fonts), "EX", ONE_WEEK.inSeconds)
 
-  const mset = fonts
-    .map((font) => [
-      REDIS_KEYS.GoogleFonts + ":" + font.family,
-      JSON.stringify(font),
-    ])
-    .flat()
+  const mset = fonts.flatMap((font) => [
+    REDIS_KEYS.GoogleFonts + ":" + font.family,
+    JSON.stringify(font),
+  ])
 
   await cache.mset(mset)
 
@@ -115,9 +104,7 @@ export async function getFontList(
 }
 
 export async function getFont(cache: Redis, family: string): Promise<Font> {
-  const cachedFont = await cache.get(
-    generateKey(REDIS_KEYS.GoogleFonts, family),
-  )
+  const cachedFont = await cache.get(generateKey(REDIS_KEYS.GoogleFonts, family))
 
   if (cachedFont) {
     return FontSchema.parse(JSON.parse(cachedFont))

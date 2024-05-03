@@ -1,7 +1,7 @@
 import { ExclamationCircleIcon } from "@heroicons/react/20/solid"
 import clsx from "clsx"
 import type { ComponentPropsWithoutRef } from "react"
-import { useRef, useEffect } from "react"
+import { useEffect, useRef } from "react"
 import { useField } from "remix-validated-form"
 
 type SelectOption = {
@@ -39,15 +39,10 @@ export default function Select<T extends SelectOption>({
   return (
     <div className={className}>
       <div className="flex justify-between">
-        <label
-          className="block text-sm font-medium leading-6 text-gray-900"
-          htmlFor={name}
-        >
+        <label className="block text-sm font-medium leading-6 text-gray-900" htmlFor={name}>
           {label}
         </label>
-        {required && (
-          <span className="text-sm leading-6 text-gray-500">Required</span>
-        )}
+        {required && <span className="text-sm leading-6 text-gray-500">Required</span>}
       </div>
       <div className="relative">
         <select
@@ -62,29 +57,16 @@ export default function Select<T extends SelectOption>({
           )}
         >
           {options.map((option) => (
-            <option
-              disabled={option.disabled}
-              key={`${option.value}`}
-              value={option.value}
-            >
+            <option disabled={option.disabled} key={`${option.value}`} value={option.value}>
               {option.label}
             </option>
           ))}
         </select>
         <div className="pointer-events-none invisible absolute right-7 top-0 flex h-9 items-center peer-invalid:visible">
-          <ExclamationCircleIcon
-            aria-hidden="true"
-            className="h-5 w-5 text-red-500"
-          />
+          <ExclamationCircleIcon aria-hidden="true" className="h-5 w-5 text-red-500" />
         </div>
-        {description && (
-          <p className="text-sm text-gray-500 peer-invalid:hidden">
-            {description}
-          </p>
-        )}
-        <p className="hidden text-sm text-red-600 peer-invalid:block">
-          {error}
-        </p>
+        {description && <p className="text-sm text-gray-500 peer-invalid:hidden">{description}</p>}
+        <p className="hidden text-sm text-red-600 peer-invalid:block">{error}</p>
       </div>
     </div>
   )

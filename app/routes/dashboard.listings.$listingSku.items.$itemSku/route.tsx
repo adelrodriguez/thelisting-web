@@ -1,13 +1,9 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
-import { useLoaderData, Outlet, Link, Form } from "@remix-run/react"
+import { Form, Link, Outlet, useLoaderData } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
 import { useSnackbar } from "notistack"
-import {
-  ValidatedForm,
-  setFormDefaults,
-  validationError,
-} from "remix-validated-form"
+import { ValidatedForm, setFormDefaults, validationError } from "remix-validated-form"
 import { route } from "routes-gen"
 import { z } from "zod"
 import { zx } from "zodix"
@@ -120,9 +116,7 @@ export default function DashboardListingItemDetailPage() {
       <div>
         <div className="overflow-hidden rounded-lg bg-white shadow">
           <div className="px-4 py-5 sm:p-6">
-            <h3 className="text-lg font-medium leading-6 text-gray-900">
-              Product Information
-            </h3>
+            <h3 className="text-lg font-medium leading-6 text-gray-900">Product Information</h3>
             <p className="mt-1 text-sm text-gray-500">
               This is the product information available on Shopify.
             </p>
@@ -151,18 +145,14 @@ export default function DashboardListingItemDetailPage() {
           </div>
         </div>
         <div className="mt-4">
-          <h3 className="text-lg font-medium leading-6 text-gray-900">
-            Purchases
-          </h3>
+          <h3 className="text-lg font-medium leading-6 text-gray-900">Purchases</h3>
           <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
             {stats.map((s) => (
               <div
                 className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6"
                 key={s.name}
               >
-                <dt className="truncate text-sm font-medium text-gray-500">
-                  {s.name}
-                </dt>
+                <dt className="truncate text-sm font-medium text-gray-500">{s.name}</dt>
                 <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
                   {s.stat}
                 </dd>
@@ -173,9 +163,7 @@ export default function DashboardListingItemDetailPage() {
       </div>
 
       <div className="w-full max-w-xl pt-8 sm:pt-0">
-        <h3 className="text-lg font-medium leading-6 text-gray-900">
-          Item Information
-        </h3>
+        <h3 className="text-lg font-medium leading-6 text-gray-900">Item Information</h3>
         <ValidatedForm
           className="flex flex-col gap-y-6 pt-4"
           id="edit-item"
@@ -193,13 +181,7 @@ export default function DashboardListingItemDetailPage() {
             label="Description"
             name="description"
           />
-          <Input
-            label="Quantity"
-            min={0}
-            name="quantity"
-            step="1"
-            type="number"
-          />
+          <Input label="Quantity" min={0} name="quantity" step="1" type="number" />
           <Input label="Stock" min={0} name="stock" step="1" type="number" />
           <div className="flex justify-end gap-x-4">
             {itemPurchaseCount === 0 && (

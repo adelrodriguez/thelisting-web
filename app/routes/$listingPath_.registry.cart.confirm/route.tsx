@@ -3,7 +3,7 @@ import { TagIcon } from "@heroicons/react/24/outline"
 import { useNavigate, useNavigation, useParams } from "@remix-run/react"
 import { Fragment, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { RouteParams, route } from "routes-gen"
+import { type RouteParams, route } from "routes-gen"
 
 import { Button } from "~/components/common"
 import { Spinner } from "~/components/loading"
@@ -21,8 +21,7 @@ export default function Page() {
   const { t } = useTranslation("registry")
   const confirmButtonRef = useRef(null)
   const [open, isOpen] = useState(true)
-  const { listingPath } =
-    useParams<RouteParams["/:listingPath/registry/cart/confirm"]>()
+  const { listingPath } = useParams<RouteParams["/:listingPath/registry/cart/confirm"]>()
   const isSubmitting = navigation.state === "submitting"
 
   if (!listingPath) return null
@@ -36,9 +35,7 @@ export default function Page() {
         onClose={() => isOpen(false)}
       >
         <Transition.Child
-          afterLeave={() =>
-            navigate(route("/:listingPath/registry/cart", { listingPath }))
-          }
+          afterLeave={() => navigate(route("/:listingPath/registry/cart", { listingPath }))}
           as={Fragment}
           enter="ease-out duration-300"
           enterFrom="opacity-0"
@@ -64,10 +61,7 @@ export default function Page() {
               <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
                 <div>
                   <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-rose-100">
-                    <TagIcon
-                      aria-hidden="true"
-                      className="h-6 w-6 text-rose-600"
-                    />
+                    <TagIcon aria-hidden="true" className="h-6 w-6 text-rose-600" />
                   </div>
                   <div className="mt-3 text-center sm:mt-5">
                     <Dialog.Title
@@ -77,9 +71,7 @@ export default function Page() {
                       {t("add_note_reminder.title")}
                     </Dialog.Title>
                     <div className="mt-2">
-                      <p className="text-sm text-slate-500">
-                        {t("add_note_reminder.description")}
-                      </p>
+                      <p className="text-sm text-slate-500">{t("add_note_reminder.description")}</p>
                     </div>
                   </div>
                 </div>
@@ -102,11 +94,7 @@ export default function Page() {
                   >
                     {t("add_note_reminder.confirm")}
                   </Button>
-                  <Button
-                    disabled={isSubmitting}
-                    onClick={() => cart.checkout()}
-                    type="button"
-                  >
+                  <Button disabled={isSubmitting} onClick={() => cart.checkout()} type="button">
                     {isSubmitting ? (
                       <>
                         <Spinner className="h-5 w-5 text-slate-900" />

@@ -20,9 +20,7 @@ export default function Email({
   magicLink: string
   user: User
 }) {
-  const baseUrl = `http://${
-    RAILWAY_STATIC_URL ? RAILWAY_STATIC_URL : "localhost:3000"
-  }`
+  const baseUrl = `http://${RAILWAY_STATIC_URL ? RAILWAY_STATIC_URL : "localhost:3000"}`
 
   return (
     <Html>

@@ -1,8 +1,4 @@
-import {
-  QueryFunctionContext,
-  useQueries,
-  useQueryClient,
-} from "@tanstack/react-query"
+import { type QueryFunctionContext, useQueries, useQueryClient } from "@tanstack/react-query"
 import { route } from "routes-gen"
 
 const QUERY_KEY = "scrape-product"
@@ -34,10 +30,7 @@ export default function useScrapeProducts<T extends { url: string }>(
     queries: options.data.map((item, index) => ({
       enabled: false,
       queryFn: async ({ signal }: { signal: Signal }) => {
-        const response = await fetch(
-          route("/api/scraper/product") + `?url=${item.url}`,
-          { signal },
-        )
+        const response = await fetch(route("/api/scraper/product") + `?url=${item.url}`, { signal })
         const json = await response.json()
 
         const product = json as ScrapedProduct

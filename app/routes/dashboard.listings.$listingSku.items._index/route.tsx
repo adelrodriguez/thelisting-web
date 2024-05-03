@@ -20,7 +20,7 @@ import { ViewOnShopify } from "~/components/admin"
 import { Button } from "~/components/common"
 import { useProduct } from "~/utils/hooks"
 import type { RouteHandle } from "~/utils/remix"
-import { ArrayElement } from "~/utils/type"
+import type { ArrayElement } from "~/utils/type"
 
 export const handle: RouteHandle<{ listingSku: string }> = {
   crumb: ({ params }) => ({
@@ -53,8 +53,7 @@ export async function loader({ context, params }: LoaderFunctionArgs) {
   return json({ items })
 }
 
-const columnHelper =
-  createColumnHelper<ArrayElement<SerializeFrom<typeof loader>["items"]>>()
+const columnHelper = createColumnHelper<ArrayElement<SerializeFrom<typeof loader>["items"]>>()
 
 const columns = [
   columnHelper.accessor("sku", {
@@ -116,13 +115,10 @@ const columns = [
               <Menu.Item>
                 <Link
                   className="block px-3 py-1 text-sm leading-6 text-red-500 ui-active:bg-red-50"
-                  to={route(
-                    "/dashboard/listings/:listingSku/items/:itemSku/delete",
-                    {
-                      itemSku: item.sku,
-                      listingSku: `${item.listing.sku}`,
-                    },
-                  )}
+                  to={route("/dashboard/listings/:listingSku/items/:itemSku/delete", {
+                    itemSku: item.sku,
+                    listingSku: `${item.listing.sku}`,
+                  })}
                 >
                   Delete
                 </Link>
@@ -165,10 +161,7 @@ export default function DashboardListingItemsPage() {
                           key={header.id}
                           scope="col"
                         >
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
+                          {flexRender(header.column.columnDef.header, header.getContext())}
                         </th>
                       ))}
                     </tr>
@@ -182,10 +175,7 @@ export default function DashboardListingItemsPage() {
                           className="max-w-sm overflow-hidden text-ellipsis whitespace-nowrap px-3 py-4 text-sm text-gray-500"
                           key={cell.id}
                         >
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext(),
-                          )}
+                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
                         </td>
                       ))}
                     </tr>
@@ -227,10 +217,7 @@ function TitleCell({
   }
 
   return (
-    <Link
-      className="text-gray-600 hover:text-gray-900 hover:underline"
-      to={`./${sku}`}
-    >
+    <Link className="text-gray-600 hover:text-gray-900 hover:underline" to={`./${sku}`}>
       {data.title}
     </Link>
   )

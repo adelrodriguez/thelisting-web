@@ -1,4 +1,4 @@
-import { SerializeFrom } from "@remix-run/node"
+import type { SerializeFrom } from "@remix-run/node"
 
 /**
  * Used to define the handle for a route.

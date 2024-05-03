@@ -1,5 +1,5 @@
 import { Disclosure } from "@headlessui/react"
-import { GiftIcon, CurrencyDollarIcon } from "@heroicons/react/24/solid"
+import { CurrencyDollarIcon, GiftIcon } from "@heroicons/react/24/solid"
 import { ListingStatus } from "@prisma/client"
 import type { LoaderFunctionArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
@@ -14,7 +14,7 @@ import { zx } from "zodix"
 import { Button } from "~/components/common"
 import { OrderItem } from "~/components/registry"
 import { formatPrice, getPriceSymbol } from "~/utils/money"
-import { RouteHandle } from "~/utils/remix"
+import type { RouteHandle } from "~/utils/remix"
 
 export const handle: RouteHandle = {
   id: "listing-review",
@@ -66,10 +66,7 @@ export async function loader({ context, params, request }: LoaderFunctionArgs) {
     )
   }
 
-  const totalPurchased = listing.purchases.reduce(
-    (total, purchase) => total + purchase.cost,
-    0,
-  )
+  const totalPurchased = listing.purchases.reduce((total, purchase) => total + purchase.cost, 0)
   const itemsPurchased = listing.purchases.reduce(
     (total, purchase) => total + purchase.itemPurchases.length,
     0,
@@ -82,9 +79,7 @@ export async function loader({ context, params, request }: LoaderFunctionArgs) {
       {
         icon: "currency",
         name: t("total_gifted"),
-        stat: currency(totalPurchased)
-          .format({ symbol: getPriceSymbol() })
-          .toString(),
+        stat: currency(totalPurchased).format({ symbol: getPriceSymbol() }).toString(),
       },
     ],
   })
@@ -111,9 +106,7 @@ export default function ListingReviewPage() {
                 <h1 className="font-heading text-3xl font-extrabold tracking-tight text-gray-900 sm:text-5xl">
                   {listing.title}
                 </h1>
-                <p className="text-md mt-2 font-body text-gray-500">
-                  {t("review:description")}
-                </p>
+                <p className="text-md mt-2 font-body text-gray-500">{t("review:description")}</p>
               </div>
 
               <section className="mt-5 px-5">
@@ -125,22 +118,14 @@ export default function ListingReviewPage() {
                     >
                       <div className="h-fit w-fit rounded-md bg-slate-500 p-3">
                         {item.icon === "currency" && (
-                          <CurrencyDollarIcon
-                            aria-hidden="true"
-                            className="h-6 w-6 text-white"
-                          />
+                          <CurrencyDollarIcon aria-hidden="true" className="h-6 w-6 text-white" />
                         )}
                         {item.icon === "gift" && (
-                          <GiftIcon
-                            aria-hidden="true"
-                            className="h-6 w-6 text-white"
-                          />
+                          <GiftIcon aria-hidden="true" className="h-6 w-6 text-white" />
                         )}
                       </div>
                       <div className="ml-4">
-                        <dt className="truncate text-sm font-medium text-gray-500">
-                          {item.name}
-                        </dt>
+                        <dt className="truncate text-sm font-medium text-gray-500">{item.name}</dt>
                         <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
                           {item.stat}
                         </dd>
@@ -199,17 +184,9 @@ export default function ListingReviewPage() {
                               </div>
                             </dl>
 
-                            <Disclosure.Button
-                              as="div"
-                              className="mt-4 w-full sm:mt-0 sm:w-auto"
-                            >
-                              <Button
-                                className="w-full sm:w-auto"
-                                variant="secondary"
-                              >
-                                {open
-                                  ? t("common:close")
-                                  : t("review:view_details")}
+                            <Disclosure.Button as="div" className="mt-4 w-full sm:mt-0 sm:w-auto">
+                              <Button className="w-full sm:w-auto" variant="secondary">
+                                {open ? t("common:close") : t("review:view_details")}
                               </Button>
                             </Disclosure.Button>
                           </div>
@@ -219,14 +196,9 @@ export default function ListingReviewPage() {
                             <h4 className="sr-only">Items</h4>
                             <ul className="ui-open:divide-y ui-open:divide-gray-200">
                               {purchase.itemPurchases.map((itemPurchase) => (
-                                <li
-                                  className="text-medium p-4 sm:p-6"
-                                  key={itemPurchase.itemId}
-                                >
+                                <li className="text-medium p-4 sm:p-6" key={itemPurchase.itemId}>
                                   <OrderItem
-                                    commerceId={
-                                      itemPurchase.item.commerceId as string
-                                    }
+                                    commerceId={itemPurchase.item.commerceId as string}
                                     cost={itemPurchase.cost}
                                     quantity={itemPurchase.quantity}
                                   />
@@ -242,9 +214,7 @@ export default function ListingReviewPage() {
                                   })}
                                 </div>
                                 <blockquote>
-                                  <p className="mt-1 text-sm text-gray-500">
-                                    {purchase.note.text}
-                                  </p>
+                                  <p className="mt-1 text-sm text-gray-500">{purchase.note.text}</p>
                                 </blockquote>
                               </div>
                             )}

@@ -9,9 +9,7 @@ export default class IlumelScraper extends BaseScraper {
 
   public get title(): Promise<string | null> {
     return this.page
-      .$eval("meta[property='og:title']", (element) =>
-        element.getAttribute("content"),
-      )
+      .$eval("meta[property='og:title']", (element) => element.getAttribute("content"))
       .catch((err) => this.logError("title: " + err.message))
   }
 }

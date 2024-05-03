@@ -1,5 +1,5 @@
-import { Ribbon, RibbonType } from "@prisma/client"
-import { SerializeFrom } from "@remix-run/node"
+import { type Ribbon, RibbonType } from "@prisma/client"
+import type { SerializeFrom } from "@remix-run/node"
 import { withZod } from "@remix-validated-form/with-zod"
 import { format, startOfToday } from "date-fns"
 

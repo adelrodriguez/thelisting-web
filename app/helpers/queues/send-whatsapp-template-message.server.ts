@@ -1,4 +1,4 @@
-import { Processor } from "bullmq"
+import type { Processor } from "bullmq"
 
 import { QUEUE_NAMES } from "~/config/consts"
 import { isDevelopment } from "~/config/vars"
@@ -7,7 +7,7 @@ import Sentry from "~/services/sentry"
 import whatsapp from "~/services/whatsapp/client.server"
 import { WHATSAPP_MESSAGE_TEMPLATES } from "~/services/whatsapp/types"
 import {
-  TemplateToParametersMap,
+  type TemplateToParametersMap,
   generateBabyShowerGuestNotificationComponents,
   generateBabyShowerInvitationV1Components,
   generateGiftPurchaseNotificationComponents,

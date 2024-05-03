@@ -94,15 +94,13 @@ export default function AdminToolsProductScraperPage() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
       <div className="lg:text-center">
-        <p className="text-base font-semibold uppercase tracking-wide text-teal-600">
-          Admin Tools
-        </p>
+        <p className="text-base font-semibold uppercase tracking-wide text-teal-600">Admin Tools</p>
         <h2 className="mt-2 text-3xl font-extrabold leading-8 tracking-tight text-gray-900 sm:text-4xl">
           Scrape Products
         </h2>
         <p className="mt-4 max-w-2xl text-xl text-gray-500 lg:mx-auto">
-          Import a CSV file with URLs to scrape product from, and export the
-          results to a CSV file or to your Shopify store.
+          Import a CSV file with URLs to scrape product from, and export the results to a CSV file
+          or to your Shopify store.
         </p>
       </div>
       <div className="mt-8">

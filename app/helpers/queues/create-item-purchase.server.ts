@@ -46,9 +46,7 @@ export const processor: Processor<QueueData> = async (job) => {
   })
 
   await job.log(
-    `Updated item ${item.id} availability: ${item.stock} → ${
-      item.stock - job.data.item.quantity
-    })`,
+    `Updated item ${item.id} availability: ${item.stock} → ${item.stock - job.data.item.quantity})`,
   )
 
   await job.log("Finished processing item purchase")

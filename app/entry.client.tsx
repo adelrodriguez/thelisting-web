@@ -2,7 +2,7 @@ import { RemixBrowser, useLocation, useMatches } from "@remix-run/react"
 import * as Sentry from "@sentry/remix"
 import i18next from "i18next"
 import LanguageDetector from "i18next-browser-languagedetector"
-import { startTransition, StrictMode, useEffect } from "react"
+import { StrictMode, startTransition, useEffect } from "react"
 import { hydrateRoot } from "react-dom/client"
 import { I18nextProvider, initReactI18next } from "react-i18next"
 import { getInitialNamespaces } from "remix-i18next"
@@ -14,11 +14,7 @@ Sentry.init({
   environment: window.env.environment,
   integrations: [
     new Sentry.BrowserTracing({
-      routingInstrumentation: Sentry.remixRouterInstrumentation(
-        useEffect,
-        useLocation,
-        useMatches,
-      ),
+      routingInstrumentation: Sentry.remixRouterInstrumentation(useEffect, useLocation, useMatches),
     }),
     new Sentry.Replay(),
   ],

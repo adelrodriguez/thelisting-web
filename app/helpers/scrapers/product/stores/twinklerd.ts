@@ -1,6 +1,6 @@
 import { CURRENCIES } from "~/config/consts"
 import { BaseScraper } from "~/helpers/scrapers/product/base.server"
-import { cleanText, cleanAmount } from "~/utils/scraper"
+import { cleanAmount, cleanText } from "~/utils/scraper"
 
 export default class TwinkleRDScraper extends BaseScraper {
   static domain = "twinkledr.com"
@@ -18,9 +18,7 @@ export default class TwinkleRDScraper extends BaseScraper {
 
   public get description(): Promise<string | null> {
     return this.page
-      .$eval("meta[property='og:description']", (element) =>
-        element.getAttribute("content"),
-      )
+      .$eval("meta[property='og:description']", (element) => element.getAttribute("content"))
       .then(cleanText)
       .catch((err) => this.logError(err.message))
   }

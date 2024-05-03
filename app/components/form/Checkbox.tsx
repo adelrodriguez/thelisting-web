@@ -24,9 +24,7 @@ export default function Checkbox({
             {...getInputProps({
               ...props,
               id: name,
-              ...(description
-                ? { "aria-describedby": `${name}-description` }
-                : {}),
+              ...(description ? { "aria-describedby": `${name}-description` } : {}),
             })}
             className="h-4 w-4 rounded border-gray-300 text-gray-600 focus:ring-slate-600"
             defaultChecked={defaultValue}

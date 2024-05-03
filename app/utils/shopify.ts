@@ -11,9 +11,7 @@ export const OrderPaymentWebhookPayloadSchema = z.object({
   id: z.number(),
   number: z.number(),
 })
-export type OrderPaymentWebhookPayload = z.infer<
-  typeof OrderPaymentWebhookPayloadSchema
->
+export type OrderPaymentWebhookPayload = z.infer<typeof OrderPaymentWebhookPayloadSchema>
 export function parseOrderPaymentWebhookPayload(body: unknown) {
   return OrderPaymentWebhookPayloadSchema.parse(body)
 }
@@ -22,9 +20,7 @@ export const OrderCreationWebhookPayloadSchema = z.object({
   id: z.number(),
   number: z.number(),
 })
-export type OrderCreationWebhookPayload = z.infer<
-  typeof OrderCreationWebhookPayloadSchema
->
+export type OrderCreationWebhookPayload = z.infer<typeof OrderCreationWebhookPayloadSchema>
 export function parseOrderCreationWebhookPayload(body: unknown) {
   return OrderCreationWebhookPayloadSchema.parse(body)
 }
@@ -40,9 +36,7 @@ export const CheckoutUpdateWebhookPayloadSchema = z.object({
   email: z.preprocess(undefinedToNull, z.string().nullable()),
   id: z.number(),
 })
-export type CheckoutUpdateWebhookPayload = z.infer<
-  typeof CheckoutUpdateWebhookPayloadSchema
->
+export type CheckoutUpdateWebhookPayload = z.infer<typeof CheckoutUpdateWebhookPayloadSchema>
 export function parseCheckoutUpdateWebhookPayload(body: unknown) {
   return CheckoutUpdateWebhookPayloadSchema.parse(body)
 }

@@ -1,4 +1,4 @@
-import { type I18nBase } from "~/helpers/i18n"
+import type { I18nBase } from "~/helpers/i18n"
 
 declare module "i18next" {
   interface CustomTypeOptions {

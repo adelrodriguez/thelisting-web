@@ -70,9 +70,6 @@ export const SendMessageErrorSchema = z.object({
   }),
 })
 
-export const SendMessageResultSchema = z.union([
-  SendMessageSuccessSchema,
-  SendMessageErrorSchema,
-])
+export const SendMessageResultSchema = z.union([SendMessageSuccessSchema, SendMessageErrorSchema])
 
 export type SendMessageResult = z.infer<typeof SendMessageResultSchema>

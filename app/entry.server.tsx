@@ -1,3 +1,4 @@
+import { PassThrough } from "stream"
 import type { EntryContext, LoaderFunctionArgs } from "@remix-run/node"
 import { createReadableStreamFromReadable } from "@remix-run/node"
 import { RemixServer } from "@remix-run/react"
@@ -6,7 +7,6 @@ import { createInstance } from "i18next"
 import isbot from "isbot"
 import { renderToPipeableStream } from "react-dom/server"
 import { I18nextProvider, initReactI18next } from "react-i18next"
-import { PassThrough } from "stream"
 
 import { NODE_ENV, SENTRY_DSN } from "~/config/env.server"
 import db from "~/helpers/db.server"
@@ -21,9 +21,7 @@ export default async function handleRequest(
   responseHeaders: Headers,
   remixContext: EntryContext,
 ) {
-  const callbackName = isbot(request.headers.get("user-agent"))
-    ? "onAllReady"
-    : "onShellReady"
+  const callbackName = isbot(request.headers.get("user-agent")) ? "onAllReady" : "onShellReady"
 
   const instance = createInstance()
   const lng = await i18next.getLocale(request)
@@ -75,10 +73,7 @@ export default async function handleRequest(
   })
 }
 
-export function handleError(
-  error: unknown,
-  { context, params, request }: LoaderFunctionArgs,
-) {
+export function handleError(error: unknown, { context, params, request }: LoaderFunctionArgs) {
   void Sentry.captureRemixServerException(error, "remix.server", request)
 
   if (error instanceof Error) {

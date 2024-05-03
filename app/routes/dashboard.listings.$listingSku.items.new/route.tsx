@@ -4,7 +4,7 @@ import { useParams } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
 import { useSnackbar } from "notistack"
 import { validationError } from "remix-validated-form"
-import { RouteParams, route } from "routes-gen"
+import { type RouteParams, route } from "routes-gen"
 import { z } from "zod"
 import { zx } from "zodix"
 
@@ -71,8 +71,7 @@ export async function action({ context, params, request }: ActionFunctionArgs) {
 
 export default function CreateListingsPage() {
   const { enqueueSnackbar } = useSnackbar()
-  const { listingSku } =
-    useParams<RouteParams["/dashboard/listings/:listingSku/items/new"]>()
+  const { listingSku } = useParams<RouteParams["/dashboard/listings/:listingSku/items/new"]>()
 
   return (
     <Form

@@ -24,9 +24,7 @@ export default class IkeaScraper extends BaseScraper {
 
   public get image(): Promise<string | null> {
     return this.page
-      .$eval("div.slideItem.active", (element) =>
-        element.getAttribute("data-url"),
-      )
+      .$eval("div.slideItem.active", (element) => element.getAttribute("data-url"))
       .catch((err) => this.logError("image: " + err.message))
   }
 }

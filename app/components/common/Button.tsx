@@ -1,6 +1,6 @@
 import clsx from "clsx"
 import { forwardRef } from "react"
-import type { ReactNode, Ref, ComponentPropsWithRef } from "react"
+import type { ComponentPropsWithRef, ReactNode, Ref } from "react"
 
 function Button(
   {
@@ -36,8 +36,7 @@ function Button(
             variant === "secondary",
           "border-transparent bg-red-50 text-red-600 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2":
             variant === "danger",
-          "border-transparent bg-slate-600 text-white hover:bg-slate-700":
-            variant === "primary",
+          "border-transparent bg-slate-600 text-white hover:bg-slate-700": variant === "primary",
         },
         { "cursor-not-allowed opacity-50": disabled },
         className,

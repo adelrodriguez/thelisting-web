@@ -62,7 +62,4 @@ export const processor: Processor = async (job) => {
   }
 }
 
-export default createQueue(
-  QUEUE_NAMES.AutomatedAbandonedCheckoutsNotification,
-  processor,
-)
+export default createQueue(QUEUE_NAMES.AutomatedAbandonedCheckoutsNotification, processor)

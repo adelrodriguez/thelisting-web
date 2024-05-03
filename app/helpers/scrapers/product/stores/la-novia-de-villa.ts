@@ -11,9 +11,7 @@ export default class LaNoviaDeVilla extends BaseScraper {
 
   public get title(): Promise<string | null> {
     return this.page
-      .$eval('meta[property="og:title"]', (element) =>
-        element.getAttribute("content"),
-      )
+      .$eval('meta[property="og:title"]', (element) => element.getAttribute("content"))
       .then((title) => cleanText(title).replace(" - La Novia de Villa", ""))
       .catch((err) => this.logError("title: " + err.message))
   }

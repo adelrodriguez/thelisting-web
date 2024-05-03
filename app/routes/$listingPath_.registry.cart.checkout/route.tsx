@@ -1,10 +1,6 @@
-import { redirect, json } from "@remix-run/node"
+import { json, redirect } from "@remix-run/node"
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node"
-import {
-  isRouteErrorResponse,
-  useNavigate,
-  useRouteError,
-} from "@remix-run/react"
+import { isRouteErrorResponse, useNavigate, useRouteError } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
 import { route } from "routes-gen"
 import { z } from "zod"
@@ -20,10 +16,7 @@ import { badRequest, internalServerError, notFound } from "~/utils/http"
 import { createCheckout } from "~/utils/shopify.server"
 
 export function loader({ params }: LoaderFunctionArgs) {
-  const { listingPath } = zx.parseParams(
-    params,
-    z.object({ listingPath: z.string() }),
-  )
+  const { listingPath } = zx.parseParams(params, z.object({ listingPath: z.string() }))
 
   return redirect(
     route("/:listingPath/registry/cart", {
@@ -47,10 +40,7 @@ const validator = withZod(
   }),
 )
 
-export async function action({
-  context,
-  request,
-}: ActionFunctionArgs): Promise<Response> {
+export async function action({ context, request }: ActionFunctionArgs): Promise<Response> {
   const db = context.db
   const logger = context.logger
 
@@ -63,8 +53,7 @@ export async function action({
     })
 
     throw badRequest({
-      message:
-        "There was an error preparing your checkout. Please reload the page and try again.",
+      message: "There was an error preparing your checkout. Please reload the page and try again.",
       title: "Oops!",
     })
   }
@@ -72,9 +61,7 @@ export async function action({
   const { cartItems, listingId, noteId, sku } = result.data
 
   // Check that all items are available, in case someone messed with the cart
-  const hasStock = await Promise.all(
-    cartItems.map((item) => checkStock(db, item)),
-  )
+  const hasStock = await Promise.all(cartItems.map((item) => checkStock(db, item)))
 
   if (hasStock.some((isAvailable) => !isAvailable)) {
     throw json({
@@ -89,8 +76,7 @@ export async function action({
 
   if (!cartsKey) {
     throw badRequest({
-      message:
-        "There was an error preparing your checkout. Please contact support.",
+      message: "There was an error preparing your checkout. Please contact support.",
       title: "Oops!",
     })
   }
@@ -133,8 +119,7 @@ export async function action({
     logger.error(error)
 
     throw internalServerError({
-      message:
-        "There was an error creating your order. Please try again later.",
+      message: "There was an error creating your order. Please try again later.",
       title: "We're sorry",
     })
   }

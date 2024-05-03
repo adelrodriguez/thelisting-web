@@ -1,17 +1,9 @@
 import { Dialog, Transition } from "@headlessui/react"
-import {
-  Square2StackIcon,
-  TrashIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline"
+import { Square2StackIcon, TrashIcon, XMarkIcon } from "@heroicons/react/24/outline"
 import { RibbonType } from "@prisma/client"
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node"
 import { json, redirect } from "@remix-run/node"
-import {
-  useActionData,
-  useLoaderData,
-  Form as RemixForm,
-} from "@remix-run/react"
+import { Form as RemixForm, useActionData, useLoaderData } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
 import { Fragment, useEffect } from "react"
 import { route } from "routes-gen"
@@ -92,9 +84,7 @@ export async function action({ context, params, request }: ActionFunctionArgs) {
         where: { id: ribbonId },
       })
 
-      return redirect(
-        route("/dashboard/listings/:listingSku/ribbons", { listingSku }),
-      )
+      return redirect(route("/dashboard/listings/:listingSku/ribbons", { listingSku }))
     }
 
     case "duplicate": {
@@ -217,9 +207,7 @@ export default function DashboardListingRibbonsEditPage() {
             >
               <Dialog.Panel className="relative flex w-full transform flex-col gap-y-4 overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:max-w-xl sm:p-6">
                 <Dialog.Title as="div" className="flex justify-between">
-                  <h3 className="text-lg font-medium leading-6 text-gray-900">
-                    Edit Ribbon
-                  </h3>
+                  <h3 className="text-lg font-medium leading-6 text-gray-900">Edit Ribbon</h3>
                   <div className="flex items-center gap-x-4">
                     <RemixForm className="flex items-center" method="POST">
                       <input name="subaction" type="hidden" value="delete" />
@@ -242,11 +230,7 @@ export default function DashboardListingRibbonsEditPage() {
                 </Dialog.Title>
 
                 {ribbon.type === RibbonType.Banner && (
-                  <BannerRibbonForm
-                    fontFamilies={fontFamilies}
-                    formId={formId}
-                    ribbon={ribbon}
-                  />
+                  <BannerRibbonForm fontFamilies={fontFamilies} formId={formId} ribbon={ribbon} />
                 )}
                 {ribbon.type === RibbonType.Countdown && (
                   <CountdownRibbonForm formId={formId} ribbon={ribbon} />
@@ -272,11 +256,7 @@ export default function DashboardListingRibbonsEditPage() {
                 {ribbon.type === RibbonType.Text && (
                   <TextRibbonForm formId={formId} ribbon={ribbon} />
                 )}
-                <SubmitButton
-                  className=""
-                  formId={formId}
-                  loadingText="Updating..."
-                >
+                <SubmitButton className="" formId={formId} loadingText="Updating...">
                   Update
                 </SubmitButton>
               </Dialog.Panel>

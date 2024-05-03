@@ -1,4 +1,4 @@
-import { EmbeddedProperties } from "~/utils/ribbons/embedded"
+import type { EmbeddedProperties } from "~/utils/ribbons/embedded"
 
 import useTheme from "./ThemeProvider"
 
@@ -15,13 +15,7 @@ export default function Embedded({ height, title, url }: EmbeddedProperties) {
           {title}
         </h3>
       )}
-      <iframe
-        className="w-full"
-        loading="lazy"
-        src={url}
-        style={{ height }}
-        title={title}
-      />
+      <iframe className="w-full" loading="lazy" src={url} style={{ height }} title={title} />
     </div>
   )
 }

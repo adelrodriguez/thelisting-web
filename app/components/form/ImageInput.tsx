@@ -1,7 +1,7 @@
-import { PhotoIcon, FolderOpenIcon, XMarkIcon } from "@heroicons/react/20/solid"
+import { FolderOpenIcon, PhotoIcon, XMarkIcon } from "@heroicons/react/20/solid"
 import { CameraIcon } from "@heroicons/react/24/solid"
 import clsx from "clsx"
-import { useEffect, useRef, useState, type ComponentProps } from "react"
+import { type ComponentProps, useEffect, useRef, useState } from "react"
 import { useControlField, useField } from "remix-validated-form"
 
 import { ImagePicker } from "~/components/common"
@@ -43,15 +43,10 @@ export default function ImageInput({
       />
       <div className={clsx("flex flex-col gap-y-1", className)}>
         <div className="flex justify-between">
-          <label
-            className="block text-sm font-medium leading-6 text-gray-900"
-            htmlFor={name}
-          >
+          <label className="block text-sm font-medium leading-6 text-gray-900" htmlFor={name}>
             {label}
           </label>
-          {required && (
-            <span className="text-sm leading-6 text-gray-500">Required</span>
-          )}
+          {required && <span className="text-sm leading-6 text-gray-500">Required</span>}
         </div>
 
         <button
@@ -69,10 +64,7 @@ export default function ImageInput({
               src={value}
             />
           ) : (
-            <CameraIcon
-              aria-hidden="true"
-              className="h-20 w-20 text-gray-400"
-            />
+            <CameraIcon aria-hidden="true" className="h-20 w-20 text-gray-400" />
           )}
         </button>
         <div className="group my-1 flex rounded-md shadow-sm">
@@ -80,10 +72,7 @@ export default function ImageInput({
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
               <PhotoIcon
                 aria-hidden="true"
-                className={clsx(
-                  "h-5 w-5",
-                  error ? "text-red-400" : "text-gray-400",
-                )}
+                className={clsx("h-5 w-5", error ? "text-red-400" : "text-gray-400")}
               />
             </div>
             <input
@@ -92,8 +81,7 @@ export default function ImageInput({
                 "focus:ring-2 focus:ring-inset",
                 "sm:text-sm sm:leading-6",
                 {
-                  "placeholder-gray-400 ring-gray-300 focus:ring-slate-600":
-                    !error,
+                  "placeholder-gray-400 ring-gray-300 focus:ring-slate-600": !error,
                   "pr-10 text-red-900 placeholder-red-300 ring-red-300 focus:outline-none focus:ring-red-500":
                     error,
                 },
@@ -121,18 +109,12 @@ export default function ImageInput({
           >
             {value ? (
               <>
-                <XMarkIcon
-                  aria-hidden="true"
-                  className="h-5 w-5 text-gray-400"
-                />
+                <XMarkIcon aria-hidden="true" className="h-5 w-5 text-gray-400" />
                 Remove
               </>
             ) : (
               <>
-                <FolderOpenIcon
-                  aria-hidden="true"
-                  className="h-5 w-5 text-gray-400"
-                />
+                <FolderOpenIcon aria-hidden="true" className="h-5 w-5 text-gray-400" />
                 Select
               </>
             )}

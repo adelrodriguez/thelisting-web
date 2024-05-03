@@ -71,9 +71,7 @@ export default function AdminToolsUserManagementPage() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
       <div className="sm:text-center">
-        <p className="text-base font-semibold uppercase tracking-wide text-teal-600">
-          Admin Tools
-        </p>
+        <p className="text-base font-semibold uppercase tracking-wide text-teal-600">Admin Tools</p>
         <h2 className="mt-2 text-3xl font-extrabold leading-8 tracking-tight text-gray-900 sm:text-4xl">
           User Management
         </h2>
@@ -109,10 +107,7 @@ export default function AdminToolsUserManagementPage() {
                           key={header.id}
                           scope="col"
                         >
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
+                          {flexRender(header.column.columnDef.header, header.getContext())}
                         </th>
                       ))}
                     </tr>
@@ -135,10 +130,7 @@ export default function AdminToolsUserManagementPage() {
                           className="max-w-[500px] overflow-hidden text-ellipsis whitespace-nowrap px-3 py-4 text-sm text-gray-500"
                           key={cell.id}
                         >
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext(),
-                          )}
+                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
                         </td>
                       ))}
                     </tr>

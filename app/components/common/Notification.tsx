@@ -6,7 +6,7 @@ import {
   InformationCircleIcon,
 } from "@heroicons/react/24/outline"
 import type { CustomContentProps } from "notistack"
-import { useSnackbar, SnackbarContent } from "notistack"
+import { SnackbarContent, useSnackbar } from "notistack"
 import type { Ref } from "react"
 import { forwardRef } from "react"
 
@@ -28,12 +28,7 @@ declare module "notistack" {
 }
 
 function Notification(
-  {
-    description,
-    id,
-    message,
-    variant,
-  }: { description?: string } & CustomContentProps,
+  { description, id, message, variant }: { description?: string } & CustomContentProps,
   ref: Ref<HTMLDivElement>,
 ) {
   const { closeSnackbar } = useSnackbar()
@@ -45,28 +40,16 @@ function Notification(
           <div className="flex items-start">
             <div className="flex-shrink-0">
               {variant === "success" && (
-                <CheckCircleIcon
-                  aria-hidden="true"
-                  className="h-6 w-6 text-green-400"
-                />
+                <CheckCircleIcon aria-hidden="true" className="h-6 w-6 text-green-400" />
               )}
               {variant === "warning" && (
-                <ExclamationCircleIcon
-                  aria-hidden="true"
-                  className="h-6 w-6 text-yellow-400"
-                />
+                <ExclamationCircleIcon aria-hidden="true" className="h-6 w-6 text-yellow-400" />
               )}
               {variant === "error" && (
-                <ExclamationTriangleIcon
-                  aria-hidden="true"
-                  className="h-6 w-6 text-red-400"
-                />
+                <ExclamationTriangleIcon aria-hidden="true" className="h-6 w-6 text-red-400" />
               )}
               {variant === "info" && (
-                <InformationCircleIcon
-                  aria-hidden="true"
-                  className="h-6 w-6 text-blue-400"
-                />
+                <InformationCircleIcon aria-hidden="true" className="h-6 w-6 text-blue-400" />
               )}
             </div>
             <div className="ml-3 w-0 flex-1 pt-0.5">

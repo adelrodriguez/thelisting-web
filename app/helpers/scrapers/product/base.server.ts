@@ -4,7 +4,7 @@ import type { Logger } from "winston"
 
 import type { Currency } from "~/config/consts"
 import { CurrencySchema } from "~/utils/money"
-import { ScrapedProduct, cleanAmount, cleanText } from "~/utils/scraper"
+import { type ScrapedProduct, cleanAmount, cleanText } from "~/utils/scraper"
 
 export type ScraperConfig = {
   url: URL
@@ -30,9 +30,7 @@ export interface ScraperInterface {
 
 // TODO: Create error handler for all the functions to avoid WET
 export default function createScraperFactory(config: ScraperConfig) {
-  return function (ctor: ScraperConstructor): ScraperInterface {
-    return new ctor(config)
-  }
+  return (ctor: ScraperConstructor): ScraperInterface => new ctor(config)
 }
 
 export class BaseScraper implements ScraperInterface {
@@ -65,26 +63,20 @@ export class BaseScraper implements ScraperInterface {
 
   public get description(): Promise<string | null> {
     return this.page
-      .$eval("meta[name=description]", (element) =>
-        element.getAttribute("content"),
-      )
+      .$eval("meta[name=description]", (element) => element.getAttribute("content"))
       .then(cleanText)
       .catch((err) => this.logError(err.message))
   }
 
   public get image(): Promise<string | null> {
     return this.page
-      .$eval("meta[property='og:image']", (element) =>
-        element.getAttribute("content"),
-      )
+      .$eval("meta[property='og:image']", (element) => element.getAttribute("content"))
       .catch((err) => this.logError(err.message))
   }
 
   public get amount(): Promise<number | null> {
     return this.page
-      .$eval("meta[property='product:price:amount']", (element) =>
-        element.getAttribute("content"),
-      )
+      .$eval("meta[property='product:price:amount']", (element) => element.getAttribute("content"))
       .then(cleanAmount)
       .catch((err) => this.logError(err.message))
   }

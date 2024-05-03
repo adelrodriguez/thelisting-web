@@ -11,14 +11,7 @@ import { useEffect } from "react"
 import { route } from "routes-gen"
 import { z } from "zod"
 
-import {
-  Autocomplete,
-  Form,
-  Input,
-  InputWithAddOn,
-  Select,
-  SubmitButton,
-} from "~/components/form"
+import { Autocomplete, Form, Input, InputWithAddOn, Select, SubmitButton } from "~/components/form"
 import auth from "~/helpers/auth.server"
 import { CreateListingCommerceEntityQueue } from "~/helpers/queues"
 import { unauthorized } from "~/utils/http"
@@ -42,10 +35,7 @@ export const handle: RouteHandle = {
 
 const clientValidator = withZod(
   z.object({
-    eventDate: ListingEventDateSchema.min(
-      startOfTomorrow(),
-      "Event date must be in the future",
-    ),
+    eventDate: ListingEventDateSchema.min(startOfTomorrow(), "Event date must be in the future"),
     ownerId: ListingOwnerSchema,
     path: ListingPathSchema,
     title: ListingTitleSchema,
@@ -57,8 +47,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
   const { db } = context
   const user = await auth.isAuthenticated(request)
 
-  if (!user)
-    throw unauthorized({ message: "You must be logged in to create a listing" })
+  if (!user) throw unauthorized({ message: "You must be logged in to create a listing" })
 
   const users = await db.user.findMany({
     orderBy: { firstName: "asc" },
@@ -148,9 +137,7 @@ export default function CreateListingsPage() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
       <div className="sm:text-center">
-        <p className="text-base font-semibold uppercase tracking-wide text-gray-600">
-          Listings
-        </p>
+        <p className="text-base font-semibold uppercase tracking-wide text-gray-600">Listings</p>
         <h2 className="mt-2 text-3xl font-extrabold leading-8 tracking-tight text-gray-900 sm:text-4xl">
           Create a new listing
         </h2>

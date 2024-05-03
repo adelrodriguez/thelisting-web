@@ -25,11 +25,7 @@ export default class SirenaScraper extends BaseScraper {
       .then((element) => cleanText(element))
       .then(
         (element) =>
-          element &&
-          element.replace(
-            "Ver términos de servicio y condiciones de la garantía",
-            "",
-          ),
+          element && element.replace("Ver términos de servicio y condiciones de la garantía", ""),
       )
       .catch((err) => this.logError("description: " + err.message))
   }

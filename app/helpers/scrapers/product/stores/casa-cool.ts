@@ -2,7 +2,7 @@ import { z } from "zod"
 
 import { BaseScraper } from "~/helpers/scrapers/product/base.server"
 import { CurrencySchema } from "~/utils/money"
-import { cleanText, cleanAmount } from "~/utils/scraper"
+import { cleanAmount, cleanText } from "~/utils/scraper"
 
 const applicationSchema = z.object({
   offers: z.object({
@@ -28,10 +28,7 @@ export default class CasaCool extends BaseScraper {
 
   public get amount(): Promise<number | null> {
     return this.page
-      .$eval(
-        'script[type="application/ld+json"]',
-        (element) => element.textContent,
-      )
+      .$eval('script[type="application/ld+json"]', (element) => element.textContent)
       .then((content) => z.string().parse(content))
       .then((content) => applicationSchema.parse(JSON.parse(content)))
       .then((content) => (content ? content.offers.price : null))
@@ -41,10 +38,7 @@ export default class CasaCool extends BaseScraper {
 
   public get currency() {
     return this.page
-      .$eval(
-        'script[type="application/ld+json"]',
-        (element) => element.textContent,
-      )
+      .$eval('script[type="application/ld+json"]', (element) => element.textContent)
       .then((content) => z.string().parse(content))
       .then((content) => applicationSchema.parse(JSON.parse(content)))
       .then((content) => (content ? content.offers.priceCurrency : null))

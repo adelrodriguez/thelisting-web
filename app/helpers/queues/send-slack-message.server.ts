@@ -1,5 +1,5 @@
-import { ChatPostMessageArguments } from "@slack/web-api"
-import { Processor } from "bullmq"
+import type { ChatPostMessageArguments } from "@slack/web-api"
+import type { Processor } from "bullmq"
 
 import { QUEUE_NAMES } from "~/config/consts"
 import { createQueue } from "~/helpers/queue.server"

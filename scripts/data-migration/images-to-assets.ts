@@ -1,16 +1,12 @@
-/* eslint-disable no-console */
-import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3"
-import { PrismaClient, StorageService } from "@prisma/client"
 import fs from "node:fs"
 import path from "node:path"
 import { pipeline } from "node:stream/promises"
+/* eslint-disable no-console */
+import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3"
+import { PrismaClient, StorageService } from "@prisma/client"
 import { v4 as uuid } from "uuid"
 
-import {
-  STORAGE_ACCESS_KEY,
-  STORAGE_BUCKET,
-  STORAGE_SECRET,
-} from "~/config/env.server"
+import { STORAGE_ACCESS_KEY, STORAGE_BUCKET, STORAGE_SECRET } from "~/config/env.server"
 import { CLOUDFLARE_R2_ENDPOINT } from "~/config/vars"
 import { generateAssetUrl } from "~/utils/asset.server"
 
@@ -82,29 +78,24 @@ async function main() {
       },
     })
 
-    const [listingsWithCoverImages, listingsWithThankYouImages] =
-      await Promise.all([
-        prisma.listing.findMany({
-          where: {
-            coverImage: image.id,
-          },
-        }),
-        prisma.listing.findMany({
-          where: {
-            thankYouImage: image.id,
-          },
-        }),
-      ])
+    const [listingsWithCoverImages, listingsWithThankYouImages] = await Promise.all([
+      prisma.listing.findMany({
+        where: {
+          coverImage: image.id,
+        },
+      }),
+      prisma.listing.findMany({
+        where: {
+          thankYouImage: image.id,
+        },
+      }),
+    ])
 
     await Promise.all([
       // Update the listings that have the image as a cover image
       prisma.listing.updateMany({
         data: {
-          coverImage: generateAssetUrl(
-            asset.service,
-            asset.ownerId,
-            asset.filename,
-          ),
+          coverImage: generateAssetUrl(asset.service, asset.ownerId, asset.filename),
         },
         where: {
           id: {
@@ -116,11 +107,7 @@ async function main() {
       // Update the listing that have the image as a thank you image
       prisma.listing.updateMany({
         data: {
-          thankYouImage: generateAssetUrl(
-            asset.service,
-            asset.ownerId,
-            asset.filename,
-          ),
+          thankYouImage: generateAssetUrl(asset.service, asset.ownerId, asset.filename),
         },
         where: {
           id: {

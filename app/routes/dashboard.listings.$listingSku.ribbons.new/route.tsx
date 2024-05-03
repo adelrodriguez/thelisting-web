@@ -9,7 +9,7 @@ import { route } from "routes-gen"
 import { z } from "zod"
 import { zx } from "zodix"
 
-import { SubmitButton, ListRadioGroup } from "~/components/form"
+import { ListRadioGroup, SubmitButton } from "~/components/form"
 import { useDialogPage } from "~/utils/hooks"
 import { RibbonType as RibbonTypeSchema } from "~/utils/ribbons"
 
@@ -90,10 +90,7 @@ export default function DashboardListingRibbonsEditPage() {
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
               <Dialog.Panel className="relative w-full transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:max-w-lg sm:p-6">
-                <Dialog.Title
-                  as="h3"
-                  className="text-lg font-medium leading-6 text-gray-900"
-                >
+                <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-gray-900">
                   Add a new ribbon
                 </Dialog.Title>
 

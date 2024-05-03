@@ -25,11 +25,7 @@ export default function RegistryItem({
   const isAvailable = stock > 0
 
   return (
-    <Link
-      className="group text-center font-body"
-      preventScrollReset
-      to={sku + location.search}
-    >
+    <Link className="group text-center font-body" preventScrollReset to={sku + location.search}>
       <div className="relative">
         <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-sm xl:aspect-h-8 xl:aspect-w-7 sm:rounded-md">
           <img

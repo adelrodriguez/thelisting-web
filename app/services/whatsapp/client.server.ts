@@ -3,12 +3,12 @@ import {
   META_GRAPH_API_VERSION,
   WHATSAPP_PHONE_NUMBER_ID,
 } from "~/config/env.server"
-import { TemplateToComponentsMap } from "~/utils/whatsapp"
+import type { TemplateToComponentsMap } from "~/utils/whatsapp"
 
 import {
-  SendMessageResult,
+  type SendMessageResult,
   SendMessageResultSchema,
-  WhatsAppMessageTemplate,
+  type WhatsAppMessageTemplate,
 } from "./types"
 
 class WhatsApp {

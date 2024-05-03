@@ -1,9 +1,9 @@
 import {
-  BodyComponent,
-  ButtonComponent,
-  HeaderComponent,
-  ImageParameter,
-  TextParameter,
+  type BodyComponent,
+  type ButtonComponent,
+  type HeaderComponent,
+  type ImageParameter,
+  type TextParameter,
   WHATSAPP_MESSAGE_TEMPLATES,
 } from "~/services/whatsapp/types"
 
@@ -197,9 +197,7 @@ export function generateWeddingGuestNotificationComponents({
 
 export type BabyShowerInvitationV1Components = [
   HeaderComponent<[ImageParameter]>,
-  BodyComponent<
-    [TextParameter, TextParameter, TextParameter, TextParameter, TextParameter]
-  >,
+  BodyComponent<[TextParameter, TextParameter, TextParameter, TextParameter, TextParameter]>,
   ButtonComponent,
 ]
 
@@ -273,9 +271,7 @@ export function generateBabyShowerInvitationV1Components({
 
 export type WeddingInvitationV1Components = [
   HeaderComponent<[ImageParameter]>,
-  BodyComponent<
-    [TextParameter, TextParameter, TextParameter, TextParameter, TextParameter]
-  >,
+  BodyComponent<[TextParameter, TextParameter, TextParameter, TextParameter, TextParameter]>,
   ButtonComponent,
 ]
 

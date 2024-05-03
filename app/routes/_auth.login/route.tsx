@@ -1,12 +1,7 @@
 import { Transition } from "@headlessui/react"
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node"
-import { redirect, json } from "@remix-run/node"
-import {
-  Form,
-  useLoaderData,
-  useNavigate,
-  useNavigation,
-} from "@remix-run/react"
+import { json, redirect } from "@remix-run/node"
+import { Form, useLoaderData, useNavigate, useNavigation } from "@remix-run/react"
 import { ReasonPhrases, StatusCodes } from "http-status-codes"
 import { useTranslation } from "react-i18next"
 import { route } from "routes-gen"
@@ -18,17 +13,14 @@ import { Alert, Button } from "~/components/common"
 import { Spinner } from "~/components/loading"
 import auth from "~/helpers/auth.server"
 import sessionStorage from "~/helpers/session.server"
-import { RouteHandle } from "~/utils/remix"
+import type { RouteHandle } from "~/utils/remix"
 
 export const handle: RouteHandle = {
   id: "login",
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const { success } = zx.parseQuery(
-    request,
-    z.object({ success: zx.BoolAsString.optional() }),
-  )
+  const { success } = zx.parseQuery(request, z.object({ success: zx.BoolAsString.optional() }))
 
   await auth.isAuthenticated(request, { successRedirect: route("/dashboard") })
   const session = await sessionStorage.getSession(request.headers.get("Cookie"))
@@ -44,10 +36,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export async function action({ request }: ActionFunctionArgs) {
-  const result = await parseFormSafe(
-    request,
-    z.object({ email: z.string().email() }),
-  )
+  const result = await parseFormSafe(request, z.object({ email: z.string().email() }))
 
   if (!result.success) {
     return redirect("/login?error", {
@@ -94,10 +83,7 @@ export default function LoginPage() {
             leaveTo="opacity-0"
             show={show && success}
           >
-            <Alert
-              onClose={() => navigate("/login", { replace: true })}
-              type="success"
-            >
+            <Alert onClose={() => navigate("/login", { replace: true })} type="success">
               {t("login.magic_link_sent")}
             </Alert>
           </Transition>
@@ -110,10 +96,7 @@ export default function LoginPage() {
             leaveTo="opacity-0"
             show={show && !success}
           >
-            <Alert
-              onClose={() => navigate("/login", { replace: true })}
-              type="error"
-            >
+            <Alert onClose={() => navigate("/login", { replace: true })} type="error">
               {t("login.magic_link_sent")}
             </Alert>
           </Transition>

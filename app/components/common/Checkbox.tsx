@@ -1,5 +1,5 @@
 import type { ComponentPropsWithoutRef } from "react"
-import { useRef, useEffect } from "react"
+import { useEffect, useRef } from "react"
 
 export default function Checkbox({
   indeterminate,

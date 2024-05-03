@@ -3,9 +3,7 @@ import { useControlField, useField } from "remix-validated-form"
 
 import { ListRadioGroup } from "~/components/common"
 
-type FormListRadioGroupOption = ComponentProps<
-  typeof ListRadioGroup
->["value"] & { value: string }
+type FormListRadioGroupOption = ComponentProps<typeof ListRadioGroup>["value"] & { value: string }
 
 /**
  * This component should only be used within a Form component.

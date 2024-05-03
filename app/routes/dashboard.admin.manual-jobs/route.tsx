@@ -2,7 +2,7 @@ import type { ActionFunctionArgs } from "@remix-run/node"
 import { withZod } from "@remix-validated-form/with-zod"
 import { z } from "zod"
 
-import { TextArea, SubmitButton, Form, Select } from "~/components/form"
+import { Form, Select, SubmitButton, TextArea } from "~/components/form"
 import { QUEUE_NAMES } from "~/config/consts"
 import { unprocessableEntity } from "~/utils/http"
 

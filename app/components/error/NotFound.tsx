@@ -33,15 +33,11 @@ export default function NotFound({
                   </a>
                 </div>
                 <div className="my-auto flex-shrink-0 py-16 sm:py-32">
-                  <p className="font-body text-base font-semibold text-gray-600">
-                    {status}
-                  </p>
+                  <p className="font-body text-base font-semibold text-gray-600">{status}</p>
                   <h1 className="mt-2 font-heading text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl">
                     {data.title}
                   </h1>
-                  <p className="mt-2 font-body text-base text-gray-500">
-                    {data.message}
-                  </p>
+                  <p className="mt-2 font-body text-base text-gray-500">{data.message}</p>
                   <div className="mt-6">
                     <Link
                       className="text-base font-medium text-gray-600 hover:text-gray-500"

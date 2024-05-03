@@ -70,12 +70,7 @@ export default function Page() {
 
   return (
     <Transition.Root appear as={Fragment} show={open}>
-      <Dialog
-        as="div"
-        className="relative z-10"
-        initialFocus={cancelButtonRef}
-        onClose={close}
-      >
+      <Dialog as="div" className="relative z-10" initialFocus={cancelButtonRef} onClose={close}>
         <Transition.Child
           afterLeave={leave}
           as={Fragment}
@@ -104,10 +99,7 @@ export default function Page() {
               <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
                 <div className="sm:flex sm:items-start">
                   <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                    <ExclamationTriangleIcon
-                      aria-hidden="true"
-                      className="h-6 w-6 text-red-600"
-                    />
+                    <ExclamationTriangleIcon aria-hidden="true" className="h-6 w-6 text-red-600" />
                   </div>
                   <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
                     <Dialog.Title
@@ -118,8 +110,8 @@ export default function Page() {
                     </Dialog.Title>
                     <div className="mt-2">
                       <p className="text-sm text-gray-500">
-                        Are you sure you want to delete the item your account?
-                        It will also be removed from any collections on Shopify.
+                        Are you sure you want to delete the item your account? It will also be
+                        removed from any collections on Shopify.
                       </p>
                     </div>
                   </div>
@@ -136,12 +128,7 @@ export default function Page() {
                     </Button>
                   </Form>
 
-                  <Button
-                    onClick={close}
-                    ref={cancelButtonRef}
-                    type="button"
-                    variant="secondary"
-                  >
+                  <Button onClick={close} ref={cancelButtonRef} type="button" variant="secondary">
                     Cancel
                   </Button>
                 </div>

@@ -12,9 +12,7 @@ export const RegistryShowcaseProperties = z.object({
   subtitle: z.string().optional(),
   title: z.string().optional(),
 })
-export type RegistryShowcaseProperties = z.infer<
-  typeof RegistryShowcaseProperties
->
+export type RegistryShowcaseProperties = z.infer<typeof RegistryShowcaseProperties>
 
 export const RegistryShowcaseRibbon = RibbonBase.extend({
   properties: RegistryShowcaseProperties,

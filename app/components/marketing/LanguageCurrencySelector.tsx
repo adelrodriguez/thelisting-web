@@ -1,7 +1,7 @@
 import { useSearchParams } from "@remix-run/react"
 import i18next from "i18next"
 import posthog from "posthog-js"
-import { type ChangeEvent } from "react"
+import type { ChangeEvent } from "react"
 import { useTranslation } from "react-i18next"
 
 import { Select } from "~/components/common"

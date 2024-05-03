@@ -1,15 +1,12 @@
+import crypto from "node:crypto"
 import type { Listing } from "@prisma/client"
 import type { Processor } from "bullmq"
-import crypto from "node:crypto"
 
 import { QUEUE_NAMES } from "~/config/consts"
 import db from "~/helpers/db.server"
 import { createQueue } from "~/helpers/queue.server"
-import {
-  calculatePriceWithMargin,
-  multiplyPriceByExchangeRate,
-} from "~/utils/money"
-import { ScrapeProductsTableRow } from "~/utils/scraper"
+import { calculatePriceWithMargin, multiplyPriceByExchangeRate } from "~/utils/money"
+import type { ScrapeProductsTableRow } from "~/utils/scraper"
 import {
   addProductsToCollection,
   createProduct,

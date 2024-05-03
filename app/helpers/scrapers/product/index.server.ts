@@ -24,9 +24,7 @@ export default async function createScraper({
     {},
   )
 
-  const scraper = Object.keys(scrapers).find(
-    (storeDomain) => storeDomain === domain,
-  )
+  const scraper = Object.keys(scrapers).find((storeDomain) => storeDomain === domain)
 
   const storeScraper = scraper
     ? // If store is not found, use default scraper

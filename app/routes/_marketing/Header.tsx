@@ -27,12 +27,7 @@ export default function Header() {
       <nav aria-label="Global" className="flex items-center justify-between">
         <div className="flex lg:flex-1">
           <div className="hidden items-center lg:flex">
-            <div
-              className={clsx(
-                "space-x-2",
-                isIndex ? "text-white" : "text-gray-700",
-              )}
-            >
+            <div className={clsx("space-x-2", isIndex ? "text-white" : "text-gray-700")}>
               {navigationItems.map((item) => (
                 <Link
                   className={clsx(
@@ -61,10 +56,7 @@ export default function Header() {
             <Bars3Icon aria-hidden="true" className="h-6 w-6" />
           </button>
         </div>
-        <Link
-          className="absolute left-1/2 top-4 z-10 -translate-x-1/2 transform"
-          to="/"
-        >
+        <Link className="absolute left-1/2 top-4 z-10 -translate-x-1/2 transform" to="/">
           <img
             alt="The Listing"
             className="h-10 xl:h-12"
@@ -72,10 +64,7 @@ export default function Header() {
           />
         </Link>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-          <Link
-            className="bg-transparent text-base font-semibold leading-6 text-white"
-            to="/login"
-          >
+          <Link className="bg-transparent text-base font-semibold leading-6 text-white" to="/login">
             {t("common:login")} <span aria-hidden="true">&rarr;</span>
           </Link>
         </div>
@@ -83,15 +72,8 @@ export default function Header() {
       <Dialog as="div" onClose={setMobileMenuOpen} open={mobileMenuOpen}>
         <Dialog.Panel className="fixed inset-0 z-10 overflow-y-auto bg-white px-6 py-6 lg:hidden">
           <div className="flex items-center justify-end">
-            <Link
-              className="absolute left-1/2 top-4 z-10 -translate-x-1/2 transform"
-              to="/"
-            >
-              <img
-                alt="The Listing"
-                className="h-10"
-                src={THE_LISTING_LOGO_BLACK}
-              />
+            <Link className="absolute left-1/2 top-4 z-10 -translate-x-1/2 transform" to="/">
+              <img alt="The Listing" className="h-10" src={THE_LISTING_LOGO_BLACK} />
             </Link>
 
             <button

@@ -3,10 +3,7 @@ import type { Processor } from "bullmq"
 import { QUEUE_NAMES } from "~/config/consts"
 import db from "~/helpers/db.server"
 import { createQueue } from "~/helpers/queue.server"
-import {
-  createCollection,
-  publishToCurrentChannel,
-} from "~/utils/shopify.server"
+import { createCollection, publishToCurrentChannel } from "~/utils/shopify.server"
 
 export type QueueData = {
   listingId: string

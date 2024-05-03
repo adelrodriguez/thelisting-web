@@ -26,12 +26,7 @@ import {
 } from "~/components/form"
 import { FORBIDDEN_PATHS } from "~/config/consts"
 import auth from "~/helpers/auth.server"
-import {
-  forbidden,
-  notFound,
-  unauthorized,
-  unprocessableEntity,
-} from "~/utils/http"
+import { forbidden, notFound, unauthorized, unprocessableEntity } from "~/utils/http"
 import {
   ListingCoverImageSchema,
   ListingEventDateSchema,
@@ -111,10 +106,7 @@ export async function action({ context, params, request }: ActionFunctionArgs) {
     })
   }
 
-  const { listingSku } = zx.parseParams(
-    params,
-    z.object({ listingSku: z.coerce.number() }),
-  )
+  const { listingSku } = zx.parseParams(params, z.object({ listingSku: z.coerce.number() }))
 
   const listing = await db.listing.findUniqueOrThrow({
     where: { sku: listingSku },

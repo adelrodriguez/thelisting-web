@@ -13,11 +13,11 @@ import type {
   SendInvoiceResponse,
 } from "~/utils/alegra"
 import {
+  parseCreateContactResponse,
   parseCreateInvoiceResponse,
+  parseGetContactResponse,
   parseGetCurrencyResponse,
   parseSendInvoiceResponse,
-  parseGetContactResponse,
-  parseCreateContactResponse,
 } from "~/utils/alegra"
 import { AlegraError } from "~/utils/error"
 
@@ -29,10 +29,7 @@ export class Alegra {
     this.baseUrl = "https://app.alegra.com/api/v1"
     this.headers = new Headers({
       Authorization:
-        "Basic " +
-        Buffer.from(ALEGRA_API_USERNAME + ":" + ALEGRA_API_TOKEN).toString(
-          "base64",
-        ),
+        "Basic " + Buffer.from(ALEGRA_API_USERNAME + ":" + ALEGRA_API_TOKEN).toString("base64"),
       "Content-Type": "application/json",
     })
   }
@@ -58,9 +55,7 @@ export class Alegra {
 
   public get contacts() {
     return {
-      create: async (
-        request: CreateContactRequest,
-      ): Promise<CreateContactResponse> => {
+      create: async (request: CreateContactRequest): Promise<CreateContactResponse> => {
         try {
           const response = await this.postRequest("contacts", request)
           const data = await response.json()
@@ -69,10 +64,7 @@ export class Alegra {
 
           return parseCreateContactResponse(data)
         } catch (error) {
-          throw new AlegraError(
-            (error as Error).message,
-            "create_contact_error",
-          )
+          throw new AlegraError((error as Error).message, "create_contact_error")
         }
       },
       get: async (request: GetContactRequest): Promise<GetContactResponse> => {
@@ -92,9 +84,7 @@ export class Alegra {
 
   public get currencies() {
     return {
-      get: async (
-        request: GetCurrencyRequest,
-      ): Promise<GetCurrencyResponse> => {
+      get: async (request: GetCurrencyRequest): Promise<GetCurrencyResponse> => {
         // Alegra doesn't support the Dominican Peso, so we need to hardcode
         if (request.code === "DOP") {
           return {
@@ -122,9 +112,7 @@ export class Alegra {
 
   public get invoices() {
     return {
-      create: async (
-        request: CreateInvoiceRequest,
-      ): Promise<CreateInvoiceResponse> => {
+      create: async (request: CreateInvoiceRequest): Promise<CreateInvoiceResponse> => {
         try {
           const response = await this.postRequest("invoices", request)
           const data = await response.json()
@@ -133,20 +121,12 @@ export class Alegra {
 
           return parseCreateInvoiceResponse(data)
         } catch (error) {
-          throw new AlegraError(
-            (error as Error).message,
-            "create_invoice_error",
-          )
+          throw new AlegraError((error as Error).message, "create_invoice_error")
         }
       },
-      send: async (
-        request: SendInvoiceRequest,
-      ): Promise<SendInvoiceResponse> => {
+      send: async (request: SendInvoiceRequest): Promise<SendInvoiceResponse> => {
         try {
-          const response = await this.postRequest(
-            `invoices/${request.id}/email`,
-            request,
-          )
+          const response = await this.postRequest(`invoices/${request.id}/email`, request)
           const data = await response.json()
 
           logger.info("invoices.send response", { data })

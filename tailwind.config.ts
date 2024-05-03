@@ -7,12 +7,7 @@ import defaultTheme from "tailwindcss/defaultTheme"
 
 export default {
   content: ["./app/**/*.{js,ts,jsx,tsx}"],
-  plugins: [
-    AspectRatioPlugin,
-    FormsPlugin,
-    HeadlessUIPlugin({ prefix: "ui" }),
-    TypographyPlugin,
-  ],
+  plugins: [AspectRatioPlugin, FormsPlugin, HeadlessUIPlugin({ prefix: "ui" }), TypographyPlugin],
   theme: {
     extend: {
       fontFamily: {

@@ -36,19 +36,15 @@ export const processor: Processor<QueueData> = async (job) => {
   const items = flattenConnection(order.lineItems)
     .filter(
       (lineItem) =>
-        flattenConnection(lineItem.product?.variants)[0]?.id !==
-        SHOPIFY_SHIPPING_ITEM_1_ID,
+        flattenConnection(lineItem.product?.variants)[0]?.id !== SHOPIFY_SHIPPING_ITEM_1_ID,
     )
     .map((lineItem) => ({
       commerceId: lineItem.product!.id,
-      cost: parseFloat(
-        flattenConnection(lineItem.product?.variants)[0]?.inventoryItem.unitCost
-          ?.amount || 0,
+      cost: Number.parseFloat(
+        flattenConnection(lineItem.product?.variants)[0]?.inventoryItem.unitCost?.amount || 0,
       ),
       quantity: lineItem.quantity,
-      total: parseFloat(
-        flattenConnection(lineItem.product?.variants)[0]!.price,
-      ),
+      total: Number.parseFloat(flattenConnection(lineItem.product?.variants)[0]!.price),
     }))
 
   if (!order.customer?.email) {
@@ -71,7 +67,7 @@ export const processor: Processor<QueueData> = async (job) => {
       cost: items.reduce((acc, item) => acc + item.cost * item.quantity, 0),
       customerId: customer.id,
       listingId,
-      total: parseFloat(order.totalPriceSet.shopMoney.amount),
+      total: Number.parseFloat(order.totalPriceSet.shopMoney.amount),
     },
   })
 

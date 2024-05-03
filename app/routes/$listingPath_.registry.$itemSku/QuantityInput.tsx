@@ -1,4 +1,4 @@
-import { PlusIcon, MinusIcon } from "@heroicons/react/20/solid"
+import { MinusIcon, PlusIcon } from "@heroicons/react/20/solid"
 import clsx from "clsx"
 import { useTranslation } from "react-i18next"
 

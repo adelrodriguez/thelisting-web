@@ -24,11 +24,7 @@ export default function Text({
     <div className="flex w-full flex-col items-center gap-y-4 px-6 md:px-8">
       {decorationImage && (
         <div className="h-32 lg:h-40">
-          <img
-            alt=""
-            className="h-full w-full object-contain"
-            src={decorationImage}
-          />
+          <img alt="" className="h-full w-full object-contain" src={decorationImage} />
         </div>
       )}
       {title && (
@@ -40,10 +36,7 @@ export default function Text({
         </h3>
       )}
       <p
-        className={clsx(
-          "whitespace-pre-wrap font-light leading-7",
-          textAlignment,
-        )}
+        className={clsx("whitespace-pre-wrap font-light leading-7", textAlignment)}
         style={{ fontFamily: theme.fonts?.body }}
       >
         {collapsed ? body.slice(0, characterCount) + "..." : body}

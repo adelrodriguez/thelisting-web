@@ -5,7 +5,7 @@ import useEmblaCarousel from "embla-carousel-react"
 import { useTranslation } from "react-i18next"
 import { route } from "routes-gen"
 
-import { RegistryShowcaseProperties } from "~/utils/ribbons"
+import type { RegistryShowcaseProperties } from "~/utils/ribbons"
 
 import useTheme from "./ThemeProvider"
 
@@ -25,20 +25,14 @@ export default function RegistryShowcase({
 } & RegistryShowcaseProperties) {
   const { theme } = useTheme()
   const { t } = useTranslation("listing", { useSuspense: true })
-  const [emblaRef] = useEmblaCarousel({ loop: true }, [
-    Autoscroll({ speed: 1, startDelay: 0 }),
-  ])
+  const [emblaRef] = useEmblaCarousel({ loop: true }, [Autoscroll({ speed: 1, startDelay: 0 })])
 
   return (
     <>
       <div className="relative z-10 flex h-screen w-full flex-col items-center justify-center gap-y-7">
         {decorationImage && (
           <div className="h-32 lg:h-40">
-            <img
-              alt=""
-              className="h-full w-full object-contain"
-              src={decorationImage}
-            />
+            <img alt="" className="h-full w-full object-contain" src={decorationImage} />
           </div>
         )}
         <h2

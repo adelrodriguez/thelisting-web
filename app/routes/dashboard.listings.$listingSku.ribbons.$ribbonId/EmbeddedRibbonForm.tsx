@@ -1,5 +1,5 @@
-import { Ribbon, RibbonType } from "@prisma/client"
-import { SerializeFrom } from "@remix-run/node"
+import { type Ribbon, RibbonType } from "@prisma/client"
+import type { SerializeFrom } from "@remix-run/node"
 import { withZod } from "@remix-validated-form/with-zod"
 
 import { Form, Input } from "~/components/form"
@@ -41,16 +41,8 @@ export default function EmbeddedRibbonForm({
         name="name"
       />
 
-      <Input
-        description="The title of the embed"
-        label="Title"
-        name="properties.title"
-      />
-      <Input
-        description="The URL for the iframe"
-        label="URL"
-        name="properties.url"
-      />
+      <Input description="The title of the embed" label="Title" name="properties.title" />
+      <Input description="The URL for the iframe" label="URL" name="properties.url" />
       <Input
         description="The height of the ribbon"
         label="Height"

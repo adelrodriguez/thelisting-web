@@ -113,10 +113,7 @@ export default function Page() {
                         src={listing.coverImage}
                       />
                     ) : (
-                      <PhotoIcon
-                        aria-hidden="true"
-                        className="h-6 w-6 text-white"
-                      />
+                      <PhotoIcon aria-hidden="true" className="h-6 w-6 text-white" />
                     )}
                   </div>
                   <div className="ml-4 flex flex-auto flex-col justify-center">
@@ -148,12 +145,8 @@ export default function Page() {
               name="exclamation-circle"
               type="outline"
             />
-            <p className="mt-4 font-semibold text-gray-900">
-              {t("search.no_results.title")}
-            </p>
-            <p className="mt-2 text-gray-500">
-              {t("search.no_results.subtitle")}
-            </p>
+            <p className="mt-4 font-semibold text-gray-900">{t("search.no_results.title")}</p>
+            <p className="mt-2 text-gray-500">{t("search.no_results.subtitle")}</p>
           </div>
         )}
       </Combobox>

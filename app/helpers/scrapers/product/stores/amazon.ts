@@ -22,9 +22,7 @@ export default class AmazonScraper extends BaseScraper {
 
   public get image(): Promise<string | null> {
     return this.page
-      .$eval("li.image.item.selected img.a-dynamic-image", (element) =>
-        element.getAttribute("src"),
-      )
+      .$eval("li.image.item.selected img.a-dynamic-image", (element) => element.getAttribute("src"))
       .catch((err) => this.logError("image: " + err.message))
   }
 

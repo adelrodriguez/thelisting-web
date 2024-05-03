@@ -33887,7 +33887,7 @@ export enum ProductVariantsBulkUpdateUserErrorCode {
   NegativePriceValue = 'NEGATIVE_PRICE_VALUE',
   /** Inventory quantities cannot be provided during update. */
   NoInventoryQuantitesDuringUpdate = 'NO_INVENTORY_QUANTITES_DURING_UPDATE',
-  /** Inventory quantities cannot be updated with variants API. */
+  /** Inventory quantities can only be provided during create. To update inventory for existing variants, use inventoryAdjustQuantities. */
   NoInventoryQuantitiesOnVariantsUpdate = 'NO_INVENTORY_QUANTITIES_ON_VARIANTS_UPDATE',
   /** Variant options are more than the product options. */
   OptionValuesForNumberOfUnknownOptions = 'OPTION_VALUES_FOR_NUMBER_OF_UNKNOWN_OPTIONS',

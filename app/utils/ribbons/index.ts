@@ -1,4 +1,4 @@
-import { Ribbon, RibbonType } from "@prisma/client"
+import { type Ribbon, RibbonType } from "@prisma/client"
 import { z } from "zod"
 
 import { BannerRibbon } from "./banner"

@@ -13,12 +13,9 @@ export type QueueData = {
 }
 
 export const processor: Processor<QueueData> = async (job) => {
-  const customAttributes = await getOrderCustomAttributes(
-    getShopifyId(job.data.orderId, "Order"),
-  )
+  const customAttributes = await getOrderCustomAttributes(getShopifyId(job.data.orderId, "Order"))
 
-  const { listing_id: listingId, session_carts_key: cartsKey } =
-    customAttributes
+  const { listing_id: listingId, session_carts_key: cartsKey } = customAttributes
 
   if (!cartsKey) {
     throw new GenericError({

@@ -15,9 +15,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
   try {
     if (!orderId) throw new Error("No order id found in request")
 
-    const customAttributes = await getOrderCustomAttributes(
-      getShopifyId(orderId, "Order"),
-    )
+    const customAttributes = await getOrderCustomAttributes(getShopifyId(orderId, "Order"))
     const listingId = customAttributes[CUSTOM_ATTRIBUTES.ListingId]
 
     if (!listingId) {

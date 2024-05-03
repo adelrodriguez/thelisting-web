@@ -1,8 +1,8 @@
 import clsx from "clsx"
 import { useInView } from "framer-motion"
-import { useRef, type ReactNode, ElementRef, useEffect } from "react"
+import { type ElementRef, type ReactNode, useEffect, useRef } from "react"
 
-import { RibbonBase } from "~/utils/ribbons"
+import type { RibbonBase } from "~/utils/ribbons"
 
 export default function SectionWrapper({
   children,

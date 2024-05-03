@@ -24,9 +24,7 @@ export const processor: Processor<QueueData> = async (job) => {
     where: { commerceId: order.id },
   })
 
-  const { listing_id: listingId } = transformCustomAttributes(
-    order.customAttributes,
-  )
+  const { listing_id: listingId } = transformCustomAttributes(order.customAttributes)
 
   if (!listingId) {
     throw new Error("Missing custom attribute 'listingId' on order")
@@ -52,8 +50,7 @@ export const processor: Processor<QueueData> = async (job) => {
   const gift = flattenConnection(order.lineItems)
     .filter(
       (lineItem) =>
-        flattenConnection(lineItem.product?.variants)[0]?.id !==
-        SHOPIFY_SHIPPING_ITEM_1_ID,
+        flattenConnection(lineItem.product?.variants)[0]?.id !== SHOPIFY_SHIPPING_ITEM_1_ID,
     )
     .map((lineItem) => lineItem.product?.title)
     .join(", ")

@@ -1,9 +1,6 @@
 import { Menu, Transition } from "@headlessui/react"
-import {
-  ArrowTopRightOnSquareIcon,
-  EllipsisHorizontalIcon,
-} from "@heroicons/react/20/solid"
-import { Listing, ListingStatus, User } from "@prisma/client"
+import { ArrowTopRightOnSquareIcon, EllipsisHorizontalIcon } from "@heroicons/react/20/solid"
+import { type Listing, ListingStatus, type User } from "@prisma/client"
 import { Link } from "@remix-run/react"
 import clsx from "clsx"
 import { format } from "date-fns"
@@ -58,15 +55,11 @@ export default function ListingCard({
             />
           ) : (
             <span className="inline-flex h-12 w-12 items-center justify-center rounded-lg bg-gray-500 ring-1 ring-gray-900/10">
-              <span className="text-sm font-medium leading-none text-white">
-                {title[0]}
-              </span>
+              <span className="text-sm font-medium leading-none text-white">{title[0]}</span>
             </span>
           )}
           <Link className="flex flex-col" to={`${sku}/details/edit`}>
-            <h3 className="text-sm font-medium leading-6 text-gray-900">
-              {title}
-            </h3>
+            <h3 className="text-sm font-medium leading-6 text-gray-900">{title}</h3>
             <span className="text-xs text-gray-500">{sku}</span>
           </Link>
 
@@ -145,9 +138,7 @@ export default function ListingCard({
                     target="_blank"
                     to={
                       commerceId
-                        ? generateShopifyAdminUrl(
-                            `collections/${getShopifyIdNumber(commerceId)}`,
-                          )
+                        ? generateShopifyAdminUrl(`collections/${getShopifyIdNumber(commerceId)}`)
                         : "#"
                     }
                   >
@@ -163,17 +154,13 @@ export default function ListingCard({
           <div className="flex justify-between gap-x-4 py-3">
             <dt className="text-gray-500">Event Date</dt>
             <dd className="text-gray-700">
-              <time dateTime={eventDate.toISOString()}>
-                {format(eventDate, "MMM d, yyyy")}
-              </time>
+              <time dateTime={eventDate.toISOString()}>{format(eventDate, "MMM d, yyyy")}</time>
             </dd>
           </div>
           <div className="flex justify-between gap-x-4 py-3">
             <dt className="text-gray-500">Purchases</dt>
             <dd className="flex items-start gap-x-2">
-              <div className="font-medium text-gray-900">
-                {formatPrice(purchaseTotal)}
-              </div>
+              <div className="font-medium text-gray-900">{formatPrice(purchaseTotal)}</div>
               <div
                 className={clsx(
                   statuses[status],

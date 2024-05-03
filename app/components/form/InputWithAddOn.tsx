@@ -31,15 +31,10 @@ export default function InputWithAddOn({
   return (
     <div className={className}>
       <div className="flex justify-between">
-        <label
-          className="block text-sm font-medium leading-6 text-gray-900"
-          htmlFor={name}
-        >
+        <label className="block text-sm font-medium leading-6 text-gray-900" htmlFor={name}>
           {label}
         </label>
-        {required && (
-          <span className="text-sm leading-6 text-gray-500">Required</span>
-        )}
+        {required && <span className="text-sm leading-6 text-gray-500">Required</span>}
       </div>
       <div className="relative w-full">
         <div
@@ -47,8 +42,7 @@ export default function InputWithAddOn({
             "my-1 flex w-full rounded-md bg-white shadow-sm ring-1 ring-inset ",
             "focus-within:ring-2 focus-within:ring-inset",
             {
-              "ring-red-300 focus-within:ring-red-500 focus:outline-none":
-                error,
+              "ring-red-300 focus-within:ring-red-500 focus:outline-none": error,
               "ring-slate-300 focus-within:ring-slate-500": !error,
             },
           )}
@@ -62,9 +56,7 @@ export default function InputWithAddOn({
               id: name,
               ref: $input,
               type,
-              ...(description
-                ? { "aria-describedby": `${name}-description` }
-                : {}),
+              ...(description ? { "aria-describedby": `${name}-description` } : {}),
             })}
             className={clsx(
               "peer block w-full flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 shadow-sm",
@@ -76,10 +68,7 @@ export default function InputWithAddOn({
             )}
           />
           <div className="pointer-events-none invisible absolute right-0 top-0 flex h-9 items-center pr-3 peer-invalid:visible">
-            <ExclamationCircleIcon
-              aria-hidden="true"
-              className="h-5 w-5 text-red-500"
-            />
+            <ExclamationCircleIcon aria-hidden="true" className="h-5 w-5 text-red-500" />
           </div>
         </div>
         {description && (

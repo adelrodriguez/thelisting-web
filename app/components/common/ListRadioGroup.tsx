@@ -51,10 +51,8 @@ export default function ListRadioGroup<T extends ListRadioOption>({
                 "border-red-300": error,
                 "rounded-bl-md rounded-br-md": optionIdx === options.length - 1,
                 "rounded-tl-md rounded-tr-md": optionIdx === 0,
-                "ui-checked:z-10 ui-checked:border-gray-300 ui-checked:bg-gray-50":
-                  !error,
-                "ui-checked:z-10 ui-checked:border-red-300 ui-checked:bg-red-50":
-                  error,
+                "ui-checked:z-10 ui-checked:border-gray-300 ui-checked:bg-gray-50": !error,
+                "ui-checked:z-10 ui-checked:border-red-300 ui-checked:bg-red-50": error,
               },
             )}
             key={option.label}

@@ -53,44 +53,29 @@ function Select<T extends SelectOption>(
       >
         <select
           {...props}
-          className={clsx(
-            "block",
-            "w-full",
-            "shadow-sm",
-            "sm:text-sm",
-            "rounded-md",
-            {
-              "border-gray-300": !error,
-              "border-gray-300 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500":
-                disabled,
-              "border-red-300": error,
-              "focus:border-gray-500 focus:ring-gray-500": !error,
-              "focus:border-red-500 focus:outline-none focus:ring-red-500":
-                error,
-              "pr-10": error,
-              "text-red-900 placeholder-red-300": error,
-            },
-          )}
+          className={clsx("block", "w-full", "shadow-sm", "sm:text-sm", "rounded-md", {
+            "border-gray-300": !error,
+            "border-gray-300 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500":
+              disabled,
+            "border-red-300": error,
+            "focus:border-gray-500 focus:ring-gray-500": !error,
+            "focus:border-red-500 focus:outline-none focus:ring-red-500": error,
+            "pr-10": error,
+            "text-red-900 placeholder-red-300": error,
+          })}
           id={id}
           name={name}
           ref={ref}
         >
           {options.map((option) => (
-            <option
-              disabled={option.disabled}
-              key={`${option.value}`}
-              value={option.value}
-            >
+            <option disabled={option.disabled} key={`${option.value}`} value={option.value}>
               {option.label}
             </option>
           ))}
         </select>
         {error && (
           <div className="pointer-events-none absolute inset-y-0 right-4 flex items-center pr-3">
-            <ExclamationCircleIcon
-              aria-hidden="true"
-              className="h-5 w-5 text-red-500"
-            />
+            <ExclamationCircleIcon aria-hidden="true" className="h-5 w-5 text-red-500" />
           </div>
         )}
       </div>

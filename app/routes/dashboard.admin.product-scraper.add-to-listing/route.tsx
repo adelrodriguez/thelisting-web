@@ -1,7 +1,7 @@
 import { Dialog, Transition } from "@headlessui/react"
 import { XMarkIcon } from "@heroicons/react/24/outline"
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node"
-import { redirect, json } from "@remix-run/node"
+import { json, redirect } from "@remix-run/node"
 import { useLoaderData } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
 import { useQuery } from "@tanstack/react-query"
@@ -134,8 +134,7 @@ export default function AddToListingPage() {
                     method="POST"
                     onSubmit={() => {
                       enqueueSnackbar("Items are being added to the listing", {
-                        description:
-                          "Process will be running in the background",
+                        description: "Process will be running in the background",
                         variant: "success",
                       })
                     }}
@@ -154,10 +153,7 @@ export default function AddToListingPage() {
                               type="button"
                             >
                               <span className="sr-only">Close panel</span>
-                              <XMarkIcon
-                                aria-hidden="true"
-                                className="h-6 w-6"
-                              />
+                              <XMarkIcon aria-hidden="true" className="h-6 w-6" />
                             </button>
                           </div>
                         </div>
@@ -214,18 +210,14 @@ export default function AddToListingPage() {
                           </div>
                         ))}
                         <Alert type="info">
-                          You will be adding{" "}
-                          <span className="font-bold">{products.length}</span>{" "}
+                          You will be adding <span className="font-bold">{products.length}</span>{" "}
                           items to the listing &ldquo;
                           <span className="font-bold">{listing?.title}</span>
-                          &rdquo; with a margin of{" "}
-                          <span className="font-bold">{`${margin}%`}</span>.
+                          &rdquo; with a margin of <span className="font-bold">{`${margin}%`}</span>
+                          .
                         </Alert>
                         {Object.keys(fieldErrors).length > 0 && (
-                          <Alert
-                            title="Please fix the errors in the form"
-                            type="error"
-                          >
+                          <Alert title="Please fix the errors in the form" type="error">
                             <pre className="whitespace-pre-wrap text-wrap break-words">
                               {JSON.stringify(fieldErrors)}
                             </pre>
@@ -237,9 +229,7 @@ export default function AddToListingPage() {
                       <Button onClick={close} variant="secondary">
                         Cancel
                       </Button>
-                      <SubmitButton loadingText="Adding items...">
-                        Submit
-                      </SubmitButton>
+                      <SubmitButton loadingText="Adding items...">Submit</SubmitButton>
                     </div>
                   </Form>
                 </Dialog.Panel>

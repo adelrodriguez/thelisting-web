@@ -1,16 +1,10 @@
-import { Ribbon, RibbonType } from "@prisma/client"
-import { SerializeFrom } from "@remix-run/node"
+import { type Ribbon, RibbonType } from "@prisma/client"
+import type { SerializeFrom } from "@remix-run/node"
 import { withZod } from "@remix-validated-form/with-zod"
 import { useState } from "react"
 
 import { Form } from "~/components/form"
-import {
-  Checkbox,
-  ImageInput,
-  Input,
-  Select,
-  TextArea,
-} from "~/components/form"
+import { Checkbox, ImageInput, Input, Select, TextArea } from "~/components/form"
 import { TextRibbon } from "~/utils/ribbons"
 
 const validator = withZod(TextRibbon)
@@ -31,9 +25,7 @@ export default function TextRibbonForm({
   }
 
   const [hasUrl, setHasUrl] = useState(defaultValues?.properties.hasUrl)
-  const [isCollapsible, setIsCollapsible] = useState(
-    defaultValues?.properties.isCollapsible,
-  )
+  const [isCollapsible, setIsCollapsible] = useState(defaultValues?.properties.isCollapsible)
 
   return (
     <Form

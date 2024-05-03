@@ -1,9 +1,5 @@
 import { Bars3Icon } from "@heroicons/react/24/solid"
-import type {
-  HeadersFunction,
-  LoaderFunctionArgs,
-  MetaFunction,
-} from "@remix-run/node"
+import type { HeadersFunction, LoaderFunctionArgs, MetaFunction } from "@remix-run/node"
 import { defer } from "@remix-run/node"
 import { Await, Outlet, useLoaderData } from "@remix-run/react"
 import * as Sentry from "@sentry/remix"
@@ -93,11 +89,7 @@ export default function ListingPage() {
             src={THE_LISTING_LOGO_BLACK}
           />
           <div className="absolute right-0 top-0 flex h-16 w-16 items-center justify-center p-3 lg:h-20 lg:p-4">
-            <button
-              className=""
-              onClick={() => setMenuOpen(true)}
-              type="button"
-            >
+            <button className="" onClick={() => setMenuOpen(true)} type="button">
               <span className="sr-only">Open main menu</span>
               <Bars3Icon aria-hidden="true" className="h-6 w-6" />
             </button>

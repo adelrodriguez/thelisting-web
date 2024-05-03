@@ -21,10 +21,7 @@ export default function FormInput({
   label: string
   description?: string
   trailing?: string
-} & Omit<
-  ComponentPropsWithoutRef<"input">,
-  "name" | "defaultValue" | "defaultChecked"
->) {
+} & Omit<ComponentPropsWithoutRef<"input">, "name" | "defaultValue" | "defaultChecked">) {
   const { error, getInputProps } = useField(name)
   const $input = useRef<HTMLInputElement>(null)
 
@@ -35,15 +32,10 @@ export default function FormInput({
   return (
     <div className={className}>
       <div className="flex justify-between">
-        <label
-          className="block text-sm font-medium leading-6 text-gray-900"
-          htmlFor={name}
-        >
+        <label className="block text-sm font-medium leading-6 text-gray-900" htmlFor={name}>
           {label}
         </label>
-        {required && (
-          <span className="text-sm leading-6 text-gray-500">Required</span>
-        )}
+        {required && <span className="text-sm leading-6 text-gray-500">Required</span>}
       </div>
       <div className="relative">
         <input
@@ -52,9 +44,7 @@ export default function FormInput({
             id: name,
             ref: $input,
             type,
-            ...(description
-              ? { "aria-describedby": `${name}-description` }
-              : {}),
+            ...(description ? { "aria-describedby": `${name}-description` } : {}),
           })}
           className={clsx(
             "peer my-1 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-slate-300",
@@ -75,22 +65,14 @@ export default function FormInput({
           </div>
         )}
         <div className="pointer-events-none invisible absolute right-0 top-0 flex h-9 items-center pr-3 peer-invalid:visible">
-          <ExclamationCircleIcon
-            aria-hidden="true"
-            className="h-5 w-5 text-red-500"
-          />
+          <ExclamationCircleIcon aria-hidden="true" className="h-5 w-5 text-red-500" />
         </div>
         {description && (
-          <p
-            className="text-sm text-gray-500 peer-invalid:hidden"
-            id={`${name}-description`}
-          >
+          <p className="text-sm text-gray-500 peer-invalid:hidden" id={`${name}-description`}>
             {description}
           </p>
         )}
-        <p className="hidden text-sm text-red-600 peer-invalid:block">
-          {error}
-        </p>
+        <p className="hidden text-sm text-red-600 peer-invalid:block">{error}</p>
       </div>
     </div>
   )

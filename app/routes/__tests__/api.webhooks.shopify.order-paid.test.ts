@@ -1,5 +1,5 @@
 // TODO(adelrodriguez): Fix this test
-export {}
+export type {}
 // import { generateMock } from "@anatine/zod-mock"
 // import { afterEach, expect, test, vi } from "vitest"
 

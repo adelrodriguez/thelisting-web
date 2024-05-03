@@ -1,8 +1,4 @@
-import {
-  GiftIcon,
-  PaintBrushIcon,
-  SparklesIcon,
-} from "@heroicons/react/20/solid"
+import { GiftIcon, PaintBrushIcon, SparklesIcon } from "@heroicons/react/20/solid"
 import { useTranslation } from "react-i18next"
 
 const features = [

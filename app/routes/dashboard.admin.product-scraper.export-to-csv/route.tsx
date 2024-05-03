@@ -6,10 +6,7 @@ import { ValidatedForm } from "remix-validated-form"
 import { z } from "zod"
 
 import { Input, SubmitButton } from "~/components/form"
-import {
-  HEADERS,
-  useScrapedProducts,
-} from "~/routes/dashboard.admin.product-scraper/route"
+import { HEADERS, useScrapedProducts } from "~/routes/dashboard.admin.product-scraper/route"
 import { downloadAsCSVFile } from "~/utils/csv"
 import { useDialogPage } from "~/utils/hooks"
 
@@ -71,17 +68,10 @@ export default function ExportCSVPage() {
                   validator={validator}
                 >
                   <div className="mt-2">
-                    <Input
-                      label="Filename"
-                      name="filename"
-                      placeholder="my-csv-file.csv"
-                    />
+                    <Input label="Filename" name="filename" placeholder="my-csv-file.csv" />
                   </div>
                   <div className="mt-4 sm:mt-5">
-                    <SubmitButton
-                      className="w-full"
-                      loadingText="Downloading..."
-                    >
+                    <SubmitButton className="w-full" loadingText="Downloading...">
                       Download
                     </SubmitButton>
                   </div>

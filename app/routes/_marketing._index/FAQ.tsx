@@ -25,28 +25,18 @@ export default function FAQ() {
                   <>
                     <dt>
                       <Disclosure.Button className="flex w-full items-start justify-between text-left text-gray-900">
-                        <span className="text-base font-semibold leading-7">
-                          {faq.question}
-                        </span>
+                        <span className="text-base font-semibold leading-7">{faq.question}</span>
                         <span className="ml-6 flex h-7 items-center">
                           {open ? (
-                            <MinusSmallIcon
-                              aria-hidden="true"
-                              className="h-6 w-6"
-                            />
+                            <MinusSmallIcon aria-hidden="true" className="h-6 w-6" />
                           ) : (
-                            <PlusSmallIcon
-                              aria-hidden="true"
-                              className="h-6 w-6"
-                            />
+                            <PlusSmallIcon aria-hidden="true" className="h-6 w-6" />
                           )}
                         </span>
                       </Disclosure.Button>
                     </dt>
                     <Disclosure.Panel as="dd" className="mt-2 pr-12">
-                      <p className="text-base leading-7 text-gray-600">
-                        {faq.answer}
-                      </p>
+                      <p className="text-base leading-7 text-gray-600">{faq.answer}</p>
                     </Disclosure.Panel>
                   </>
                 )}

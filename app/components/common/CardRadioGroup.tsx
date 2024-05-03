@@ -36,10 +36,7 @@ export default function CardRadioGroup({
           >
             <span className="flex flex-1">
               <span className="flex flex-col">
-                <RadioGroup.Label
-                  as="span"
-                  className="block text-sm font-medium text-gray-900"
-                >
+                <RadioGroup.Label as="span" className="block text-sm font-medium text-gray-900">
                   {option.title}
                 </RadioGroup.Label>
                 <RadioGroup.Description

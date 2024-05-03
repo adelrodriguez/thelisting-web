@@ -5,10 +5,7 @@ import { beforeEach, expect, test, vi } from "vitest"
 
 import db from "~/helpers/__mocks__/db.server"
 import { Alegra } from "~/services/alegra.server"
-import {
-  CreateContactResponseSchema,
-  GetContactResponseSchema,
-} from "~/utils/alegra"
+import { CreateContactResponseSchema, GetContactResponseSchema } from "~/utils/alegra"
 
 import type { QueueData } from "../save-order-customer.server"
 import queue, { processor } from "../save-order-customer.server"
@@ -44,12 +41,8 @@ beforeEach(() => {
 })
 
 test("calls the POST /contacts endpoint", async () => {
-  const mockCreate = vi.fn(() =>
-    Promise.resolve(generateMock(CreateContactResponseSchema)),
-  )
-  const mockGet = vi.fn(() =>
-    Promise.resolve(generateMock(GetContactResponseSchema)),
-  )
+  const mockCreate = vi.fn(() => Promise.resolve(generateMock(CreateContactResponseSchema)))
+  const mockGet = vi.fn(() => Promise.resolve(generateMock(GetContactResponseSchema)))
 
   vi.spyOn(Alegra.prototype, "contacts", "get").mockImplementation(() => ({
     create: mockCreate,
@@ -63,12 +56,8 @@ test("calls the POST /contacts endpoint", async () => {
 })
 
 test("calls the GET /contacts/:id endpoint if the contact already exists", async () => {
-  const mockCreate = vi.fn(() =>
-    Promise.resolve(generateMock(CreateContactResponseSchema)),
-  )
-  const mockGet = vi.fn(() =>
-    Promise.resolve(generateMock(GetContactResponseSchema)),
-  )
+  const mockCreate = vi.fn(() => Promise.resolve(generateMock(CreateContactResponseSchema)))
+  const mockGet = vi.fn(() => Promise.resolve(generateMock(GetContactResponseSchema)))
 
   db.customer.findUnique.mockResolvedValue({
     alegraId: faker.datatype.uuid(),

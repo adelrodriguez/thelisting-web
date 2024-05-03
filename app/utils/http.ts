@@ -26,10 +26,7 @@ export function permanentRedirect(location: string) {
 /**
  * 400 Bad Request
  */
-export function badRequest({
-  message = "The request was invalid.",
-  title = "Bad Request",
-} = {}) {
+export function badRequest({ message = "The request was invalid.", title = "Bad Request" } = {}) {
   return json(
     { message, title },
     { status: StatusCodes.BAD_REQUEST, statusText: ReasonPhrases.BAD_REQUEST },

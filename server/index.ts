@@ -1,17 +1,13 @@
+import * as fs from "node:fs"
+import * as path from "node:path"
+import * as url from "node:url"
 import { createRequestHandler } from "@remix-run/express"
 import type { ServerBuild } from "@remix-run/node"
 import { broadcastDevReady, installGlobals } from "@remix-run/node"
 import compression from "compression"
 import type { RequestHandler } from "express"
-import express, {
-  type NextFunction,
-  type Request,
-  type Response,
-} from "express"
+import express, { type NextFunction, type Request, type Response } from "express"
 import morgan from "morgan"
-import * as fs from "node:fs"
-import * as path from "node:path"
-import * as url from "node:url"
 import sourceMapSupport from "source-map-support"
 
 import env from "~/config/env.server"
@@ -53,10 +49,7 @@ async function run() {
   app.use(...bullboard)
 
   // Remix fingerprints its assets so we can cache forever
-  app.use(
-    "/build",
-    express.static("public/build", { immutable: true, maxAge: "1y" }),
-  )
+  app.use("/build", express.static("public/build", { immutable: true, maxAge: "1y" }))
 
   // Everything else (like favicon.ico) is cached for an hour. You may want to
   // be more aggressive with this caching.
@@ -103,9 +96,7 @@ async function run() {
     return import(BUILD_URL + "?t=" + stat.mtimeMs)
   }
 
-  async function createDevRequestHandler(
-    initialBuild: ServerBuild,
-  ): Promise<RequestHandler> {
+  async function createDevRequestHandler(initialBuild: ServerBuild): Promise<RequestHandler> {
     let build = initialBuild
 
     async function handleServerUpdate() {

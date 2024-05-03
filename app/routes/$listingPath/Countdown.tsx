@@ -49,10 +49,7 @@ export default function Countdown({ eventDatetime }: CountdownProperties) {
         .filter((key) => key !== "years")
         .map((key) => (
           <div className="flex flex-col items-center" key={key}>
-            <div
-              className="text-4xl lg:text-5xl"
-              style={{ fontFamily: theme.fonts?.heading }}
-            >
+            <div className="text-4xl lg:text-5xl" style={{ fontFamily: theme.fonts?.heading }}>
               {remaining[key as keyof typeof remaining]}
             </div>
             <div className="pt-1 font-body text-sm">{capitalize(key)}</div>

@@ -1,9 +1,9 @@
 import {
+  CheckCircleIcon,
+  ExclamationTriangleIcon,
+  InformationCircleIcon,
   XCircleIcon,
   XMarkIcon,
-  CheckCircleIcon,
-  InformationCircleIcon,
-  ExclamationTriangleIcon,
 } from "@heroicons/react/20/solid"
 import clsx from "clsx"
 import type { ReactNode } from "react"
@@ -15,26 +15,11 @@ function getIcon(type: AlertType) {
     case "error":
       return <XCircleIcon aria-hidden="true" className="h-5 w-5 text-red-400" />
     case "success":
-      return (
-        <CheckCircleIcon
-          aria-hidden="true"
-          className="h-5 w-5 text-green-400"
-        />
-      )
+      return <CheckCircleIcon aria-hidden="true" className="h-5 w-5 text-green-400" />
     case "info":
-      return (
-        <InformationCircleIcon
-          aria-hidden="true"
-          className="h-5 w-5 text-blue-400"
-        />
-      )
+      return <InformationCircleIcon aria-hidden="true" className="h-5 w-5 text-blue-400" />
     case "warning":
-      return (
-        <ExclamationTriangleIcon
-          aria-hidden="true"
-          className="h-5 w-5 text-yellow-400"
-        />
-      )
+      return <ExclamationTriangleIcon aria-hidden="true" className="h-5 w-5 text-yellow-400" />
     default:
       return null
   }

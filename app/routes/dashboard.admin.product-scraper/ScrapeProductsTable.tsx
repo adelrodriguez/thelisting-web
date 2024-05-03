@@ -5,21 +5,21 @@ import { Link } from "@remix-run/react"
 
 import type { RowSelectionState } from "@tanstack/react-table"
 import {
-  useReactTable,
-  getCoreRowModel,
   createColumnHelper,
   flexRender,
+  getCoreRowModel,
+  useReactTable,
 } from "@tanstack/react-table"
 import { useSnackbar } from "notistack"
 import { Fragment, useState } from "react"
 
 import { Button, Checkbox } from "~/components/common"
 import { Spinner } from "~/components/loading"
-import { Currency } from "~/config/consts"
+import type { Currency } from "~/config/consts"
 import { useScrapeProducts } from "~/utils/hooks"
 import { formatPrice } from "~/utils/money"
 import { round } from "~/utils/number"
-import { type ScrapeProductsTableRow } from "~/utils/scraper"
+import type { ScrapeProductsTableRow } from "~/utils/scraper"
 
 declare module "@tanstack/react-table" {
   interface TableMeta<TData> {
@@ -83,12 +83,7 @@ const columns = [
       if (!value) return null
 
       return (
-        <Link
-          className="hover:underline"
-          rel="noreferrer"
-          target="_blank"
-          to={value}
-        >
+        <Link className="hover:underline" rel="noreferrer" target="_blank" to={value}>
           {value}
         </Link>
       )
@@ -111,12 +106,7 @@ const columns = [
       if (!value) return null
 
       return (
-        <Link
-          className="hover:underline"
-          rel="noreferrer"
-          target="_blank"
-          to={value}
-        >
+        <Link className="hover:underline" rel="noreferrer" target="_blank" to={value}>
           {value}
         </Link>
       )
@@ -143,8 +133,7 @@ const columns = [
 
 const scrapingModes = [
   {
-    description:
-      "Scrape products one by one, for sites that block parallel requests (like Amazon)",
+    description: "Scrape products one by one, for sites that block parallel requests (like Amazon)",
     title: "Sequential Scrape",
     value: "sequential",
   },
@@ -171,9 +160,7 @@ export default function ScrapeProductsTable({
 }) {
   const [data, setData] = useState<ScrapeProductsTableRow[]>(initialData)
   const [scrapingMode, setScrapingMode] = useState(scrapingModes[0])
-  const [scrapingDelay, setScrapingDelay] = useState<number | undefined>(
-    undefined,
-  )
+  const [scrapingDelay, setScrapingDelay] = useState<number | undefined>(undefined)
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
   const { enqueueSnackbar } = useSnackbar()
 
@@ -226,14 +213,14 @@ export default function ScrapeProductsTable({
 
       if (hasError) {
         enqueueSnackbar(`Fetched product ${row.id} with errors`, {
-          description: `In ${round(_meta.duration / 1000)}s. Errors: ${_meta.errors.join(
-            ", ",
-          )}`,
+          description: `In ${round(_meta.duration / 1000)}s. Errors: ${_meta.errors.join(", ")}`,
           variant: "warning",
         })
       } else {
         enqueueSnackbar(`Fetched product ${row.id} successfully `, {
-          description:`In ${round(_meta.duration / 1000)}s on ${new Date(_meta.timestamp).toLocaleString()}`,
+          description: `In ${round(_meta.duration / 1000)}s on ${new Date(
+            _meta.timestamp,
+          ).toLocaleString()}`,
           variant: "success",
         })
       }
@@ -255,26 +242,17 @@ export default function ScrapeProductsTable({
         <div className="sm:flex sm:items-end">
           <div className="sm:flex-auto">
             <h3 className="text-lg text-gray-700">
-              Products to scrape:{" "}
-              <span className="font-bold">{selected.length}</span> selected
+              Products to scrape: <span className="font-bold">{selected.length}</span> selected
             </h3>
           </div>
 
           <div className="mt-4 flex gap-4 sm:ml-16 sm:mt-0 sm:flex-none">
             {selected.length > 0 && (
               <>
-                <Button
-                  onClick={() => onAddToListing(selected)}
-                  size="sm"
-                  type="button"
-                >
+                <Button onClick={() => onAddToListing(selected)} size="sm" type="button">
                   Add To Listing
                 </Button>
-                <Button
-                  onClick={() => onExport(selected)}
-                  size="sm"
-                  type="button"
-                >
+                <Button onClick={() => onExport(selected)} size="sm" type="button">
                   Export to CSV
                 </Button>
               </>
@@ -284,9 +262,7 @@ export default function ScrapeProductsTable({
               <Listbox onChange={setScrapingMode} value={scrapingMode}>
                 {({ open }) => (
                   <>
-                    <Listbox.Label className="sr-only">
-                      Scraping Mode
-                    </Listbox.Label>
+                    <Listbox.Label className="sr-only">Scraping Mode</Listbox.Label>
                     <div className="relative">
                       <div className="inline-flex divide-x divide-slate-700 rounded-md shadow-sm">
                         <button
@@ -306,10 +282,7 @@ export default function ScrapeProductsTable({
                         </button>
                         <Listbox.Button className="inline-flex items-center rounded-l-none rounded-r-md bg-slate-600 p-2 hover:bg-slate-700 focus:outline-none">
                           <span className="sr-only">Change scraping mode</span>
-                          <ChevronDownIcon
-                            aria-hidden="true"
-                            className="h-5 w-5 text-white"
-                          />
+                          <ChevronDownIcon aria-hidden="true" className="h-5 w-5 text-white" />
                         </Listbox.Button>
                       </div>
 
@@ -334,10 +307,7 @@ export default function ScrapeProductsTable({
                                     {option.title}
                                   </p>
                                   <span className="hidden text-slate-600 ui-selected:block ui-active:text-white">
-                                    <CheckIcon
-                                      aria-hidden="true"
-                                      className="h-5 w-5"
-                                    />
+                                    <CheckIcon aria-hidden="true" className="h-5 w-5" />
                                   </span>
                                 </div>
                                 <p className="mt-2 text-gray-500 ui-active:text-slate-200">
@@ -371,9 +341,7 @@ export default function ScrapeProductsTable({
                     id="delay"
                     min="0"
                     name="price"
-                    onChange={(event) =>
-                      setScrapingDelay(Number(event.target.value))
-                    }
+                    onChange={(event) => setScrapingDelay(Number(event.target.value))}
                     placeholder="0.00"
                     type="number"
                   />
@@ -399,10 +367,7 @@ export default function ScrapeProductsTable({
                             key={header.id}
                             scope="col"
                           >
-                            {flexRender(
-                              header.column.columnDef.header,
-                              header.getContext(),
-                            )}
+                            {flexRender(header.column.columnDef.header, header.getContext())}
                           </th>
                         ))}
                       </tr>
@@ -416,10 +381,7 @@ export default function ScrapeProductsTable({
                             className="max-w-[500px] overflow-hidden text-ellipsis whitespace-nowrap px-3 py-4 text-sm text-gray-500"
                             key={cell.id}
                           >
-                            {flexRender(
-                              cell.column.columnDef.cell,
-                              cell.getContext(),
-                            )}
+                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
                           </td>
                         ))}
                       </tr>

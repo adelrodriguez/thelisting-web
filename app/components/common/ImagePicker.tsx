@@ -3,7 +3,7 @@ import { PhotoIcon } from "@heroicons/react/24/outline"
 import { useFetcher } from "@remix-run/react"
 import { useQuery } from "@tanstack/react-query"
 import type { FormEvent } from "react"
-import { Fragment, useState, useEffect } from "react"
+import { Fragment, useEffect, useState } from "react"
 import { route } from "routes-gen"
 
 import { Button, Dropzone, Input } from "~/components/common"
@@ -29,9 +29,7 @@ export default function ImagePicker({
   const user = useUser()
   const { data, isError, isPending, refetch } = useQuery({
     queryFn: async () => {
-      const res = await fetch(
-        route("/api/users/:userId/images", { userId: user.id }),
-      )
+      const res = await fetch(route("/api/users/:userId/images", { userId: user.id }))
 
       const data = await res.json()
 
@@ -88,18 +86,10 @@ export default function ImagePicker({
                 {isPending && <div>Loading...</div>}
                 {isError && <div>Error</div>}
                 {data && step === "choose" && (
-                  <ImageGallery
-                    images={data}
-                    onSelect={onSelect}
-                    onUpload={handleUpload}
-                  />
+                  <ImageGallery images={data} onSelect={onSelect} onUpload={handleUpload} />
                 )}
                 {step === "upload" && file && (
-                  <ImageSubmit
-                    file={file}
-                    onCancel={handleSubmitCancel}
-                    onSubmit={onSubmit}
-                  />
+                  <ImageSubmit file={file} onCancel={handleSubmitCancel} onSubmit={onSubmit} />
                 )}
               </Dialog.Panel>
             </Transition.Child>
@@ -158,9 +148,7 @@ function ImageGallery({
                     onClick={() => setSelected(image)}
                     type="button"
                   >
-                    <span className="sr-only">
-                      View details for {image.name}
-                    </span>
+                    <span className="sr-only">View details for {image.name}</span>
                   </button>
                 </div>
                 <p className="pointer-events-none mt-2 block truncate text-sm font-medium text-gray-900">
@@ -232,29 +220,15 @@ function ImageSubmit({
       </div>
 
       <div className="h-full">
-        <fetcher.Form
-          className="flex h-full flex-col gap-y-4 px-3 py-6"
-          onSubmit={handleSubmit}
-        >
+        <fetcher.Form className="flex h-full flex-col gap-y-4 px-3 py-6" onSubmit={handleSubmit}>
           <div className="flex flex-1 items-center justify-center">
-            <img
-              alt=""
-              className="max-h-96 w-auto"
-              src={URL.createObjectURL(file)}
-            />
+            <img alt="" className="max-h-96 w-auto" src={URL.createObjectURL(file)} />
           </div>
-          <Input
-            defaultValue={file.name}
-            minLength={3}
-            name="name"
-            placeholder={file.name}
-          />
+          <Input defaultValue={file.name} minLength={3} name="name" placeholder={file.name} />
 
           <div className="flex flex-row-reverse justify-start gap-x-2">
             <Button disabled={fetcher.state === "submitting"} type="submit">
-              {fetcher.state === "submitting" && (
-                <Spinner className="mr-3 h-5 w-5" />
-              )}
+              {fetcher.state === "submitting" && <Spinner className="mr-3 h-5 w-5" />}
               {fetcher.state === "submitting" ? "Uploading..." : "Upload"}
             </Button>
             <Button

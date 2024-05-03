@@ -107,19 +107,14 @@ export default function ListingThankYouPage() {
             <p className="mt-2 font-headline text-4xl font-bold text-gray-900 sm:text-5xl">
               {t("thank_you:thank_you", { name: order.customer?.firstName })}
             </p>
-            <p className="mt-4 font-body text-base text-gray-500">
-              {t("thank_you:confirmation")}
-            </p>
+            <p className="mt-4 font-body text-base text-gray-500">{t("thank_you:confirmation")}</p>
 
             <ul className="mt-6 divide-y divide-gray-200 border-t border-gray-200 text-sm font-medium text-gray-500">
               {order.lineItems.nodes.map(
                 (lineItem) =>
                   lineItem.product?.id && (
                     <li className="py-6" key={lineItem.product.id}>
-                      <OrderItem
-                        commerceId={lineItem.product.id}
-                        quantity={lineItem.quantity}
-                      />
+                      <OrderItem commerceId={lineItem.product.id} quantity={lineItem.quantity} />
                     </li>
                   ),
               )}
@@ -127,24 +122,18 @@ export default function ListingThankYouPage() {
 
             <div className="flex items-center justify-between border-t border-gray-200 pt-6 text-gray-900">
               <dt className="text-base">{t("common:total")}</dt>
-              <dd className="text-base">
-                {formatPrice(total.amount, total.currencyCode)}
-              </dd>
+              <dd className="text-base">{formatPrice(total.amount, total.currencyCode)}</dd>
             </div>
 
             <div className="mt-16 text-sm text-gray-600">
-              <dt className="font-medium text-gray-900">
-                {t("thank_you:billing_address")}
-              </dt>
+              <dt className="font-medium text-gray-900">{t("thank_you:billing_address")}</dt>
               <dd className="mt-2">
                 <address className="not-italic">
                   <span className="block">{order.customer?.displayName}</span>
+                  <span className="block">{order.billingAddress?.address1}</span>
                   <span className="block">
-                    {order.billingAddress?.address1}
-                  </span>
-                  <span className="block">
-                    {order.billingAddress?.city},{" "}
-                    {order.billingAddress?.country} {order.billingAddress?.zip}
+                    {order.billingAddress?.city}, {order.billingAddress?.country}{" "}
+                    {order.billingAddress?.zip}
                   </span>
                 </address>
               </dd>

@@ -7,30 +7,18 @@ import { useState } from "react"
 import { ONE_SECOND } from "~/config/consts"
 import type { ImageCarouselProperties } from "~/utils/ribbons"
 
-export default function ImageCarousel({
-  duration,
-  height,
-  images,
-}: ImageCarouselProperties) {
+export default function ImageCarousel({ duration, height, images }: ImageCarouselProperties) {
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [
     Autoplay({ delay: duration * ONE_SECOND.inMilliseconds }),
   ])
 
   return (
-    <div
-      className="relative h-full w-full overflow-hidden"
-      ref={emblaRef}
-      style={{ height }}
-    >
+    <div className="relative h-full w-full overflow-hidden" ref={emblaRef} style={{ height }}>
       <div className="flex h-full">
         {images.map((image) => (
           <div className="min-w-0 shrink-0 grow-0 basis-full" key={image}>
-            <img
-              alt=""
-              className="absolute h-full w-full rounded-md object-cover"
-              src={image}
-            />
+            <img alt="" className="absolute h-full w-full rounded-md object-cover" src={image} />
           </div>
         ))}
       </div>

@@ -1,4 +1,4 @@
-import { chromium, type Browser } from "playwright"
+import { type Browser, chromium } from "playwright"
 
 import { ONE_MINUTE } from "~/config/consts"
 import logger from "~/helpers/logger.server"
@@ -9,16 +9,11 @@ let browser: Browser | null = null
 let lastActiveTime: number
 let inactivityCheckInterval: NodeJS.Timeout | null = null
 
-export async function getBrowserInstance(
-  BROWSERLESS_URL: string,
-  BROWSERLESS_TOKEN: string,
-) {
+export async function getBrowserInstance(BROWSERLESS_URL: string, BROWSERLESS_TOKEN: string) {
   if (!browser || !browser.isConnected()) {
     logger.info("Creating new browser instance")
 
-    browser = await chromium.connectOverCDP(
-      `${BROWSERLESS_URL}?token=${BROWSERLESS_TOKEN}`,
-    )
+    browser = await chromium.connectOverCDP(`${BROWSERLESS_URL}?token=${BROWSERLESS_TOKEN}`)
     startInactivityCheck()
   }
 

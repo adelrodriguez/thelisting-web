@@ -1,26 +1,22 @@
-import type {
-  LinksFunction,
-  LoaderFunctionArgs,
-  MetaFunction,
-} from "@remix-run/node"
+import type { LinksFunction, LoaderFunctionArgs, MetaFunction } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import {
-  useLoaderData,
   Links,
   LiveReload,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
-  useRouteError,
   isRouteErrorResponse,
+  useLoaderData,
   useLocation,
+  useRouteError,
 } from "@remix-run/react"
 import { captureRemixErrorBoundaryError, withSentry } from "@sentry/remix"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 import posthog from "posthog-js"
-import { useEffect, type ComponentProps } from "react"
+import { type ComponentProps, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 
 import { NotFound } from "~/components/error"
@@ -48,12 +44,7 @@ export function ErrorBoundary() {
 
   if (!isRouteErrorResponse(error)) {
     if (isProduction) {
-      return (
-        <NotFound
-          data={{ message: "Not found", title: "Not found" }}
-          status={500}
-        />
-      )
+      return <NotFound data={{ message: "Not found", title: "Not found" }} status={500} />
     }
 
     return (

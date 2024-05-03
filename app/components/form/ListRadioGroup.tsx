@@ -29,15 +29,10 @@ export default function ListRadioGroup<T extends ListRadioOption>({
   return (
     <RadioGroup {...getInputProps()}>
       <RadioGroup.Label className="flex justify-between">
-        <label
-          className="block text-sm font-medium leading-6 text-gray-900"
-          htmlFor={name}
-        >
+        <label className="block text-sm font-medium leading-6 text-gray-900" htmlFor={name}>
           {label}
         </label>
-        {required && (
-          <span className="text-sm leading-6 text-gray-500">Required</span>
-        )}
+        {required && <span className="text-sm leading-6 text-gray-500">Required</span>}
       </RadioGroup.Label>
 
       <div className="mt-1 -space-y-px rounded-md bg-white">
@@ -81,9 +76,7 @@ export default function ListRadioGroup<T extends ListRadioOption>({
           </RadioGroup.Option>
         ))}
       </div>
-      {description && (
-        <p className="mt-2 text-sm text-gray-500">{description}</p>
-      )}
+      {description && <p className="mt-2 text-sm text-gray-500">{description}</p>}
     </RadioGroup>
   )
 }

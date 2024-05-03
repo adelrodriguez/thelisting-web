@@ -17,9 +17,7 @@ export default function RibbonsPreview({
   dependencyString: string
   path: string
 }) {
-  const [previewSize, setPreviewSize] = useState<"mobile" | "desktop">(
-    "desktop",
-  )
+  const [previewSize, setPreviewSize] = useState<"mobile" | "desktop">("desktop")
   const [containerWidth, setContainerWidth] = useState(0)
   const containerRef = useRef<HTMLDivElement>(null)
   const ref = useRef<HTMLIFrameElement>(null)
@@ -53,10 +51,7 @@ export default function RibbonsPreview({
   return (
     <>
       <div className="mx-auto border border-gray-300" ref={containerRef}>
-        <div
-          className="overflow-hidden"
-          style={{ height: PREVIEW_HEIGHT, width: containerWidth }}
-        >
+        <div className="overflow-hidden" style={{ height: PREVIEW_HEIGHT, width: containerWidth }}>
           <iframe
             className={clsx({
               "h-full w-full": previewSize === "mobile",
@@ -80,19 +75,14 @@ export default function RibbonsPreview({
             className={clsx(
               "relative inline-flex items-center rounded-l-md px-3 py-2 text-sm font-semibold ring-1 ring-inset ring-gray-300",
               "focus:z-10",
-              previewSize === "mobile"
-                ? "bg-gray-600"
-                : "bg-white hover:bg-gray-50",
+              previewSize === "mobile" ? "bg-gray-600" : "bg-white hover:bg-gray-50",
             )}
             disabled={previewSize === "mobile"}
             onClick={() => setPreviewSize("mobile")}
             type="button"
           >
             <DevicePhoneMobileIcon
-              className={clsx(
-                "h-5 w-5",
-                previewSize === "mobile" ? "text-white" : "text-gray-700",
-              )}
+              className={clsx("h-5 w-5", previewSize === "mobile" ? "text-white" : "text-gray-700")}
             />
           </button>
 
@@ -100,9 +90,7 @@ export default function RibbonsPreview({
             className={clsx(
               "relative -ml-px inline-flex items-center rounded-r-md  px-3 py-2 text-sm font-semibold ring-1 ring-inset ring-gray-300",
               "focus:z-10",
-              previewSize === "desktop"
-                ? "bg-gray-600"
-                : "bg-white hover:bg-gray-50",
+              previewSize === "desktop" ? "bg-gray-600" : "bg-white hover:bg-gray-50",
             )}
             disabled={previewSize === "desktop"}
             onClick={() => setPreviewSize("desktop")}

@@ -71,24 +71,21 @@ export default function AdminToolsScrapeImagesPage() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
       <div className="sm:text-center">
-        <p className="text-base font-semibold uppercase tracking-wide text-teal-600">
-          Admin Tools
-        </p>
+        <p className="text-base font-semibold uppercase tracking-wide text-teal-600">Admin Tools</p>
         <h2 className="mt-2 text-3xl font-extrabold leading-8 tracking-tight text-gray-900 sm:text-4xl">
           Scrape Images
         </h2>
         <p className="mt-4 max-w-2xl text-xl text-gray-500 sm:mx-auto">
-          Import a CSV file with filenames and URLs to scrape images from, and
-          the results will be downloaded to your computer.
+          Import a CSV file with filenames and URLs to scrape images from, and the results will be
+          downloaded to your computer.
         </p>
       </div>
       <div className="mt-8">
         {result?.data ? (
           <>
             <p className="max-w-2xl text-lg text-gray-500 lg:mx-auto">
-              You have{" "}
-              <span className="font-bold text-black">{result.data.length}</span>{" "}
-              images available to download
+              You have <span className="font-bold text-black">{result.data.length}</span> images
+              available to download
             </p>
             <Button className="mt-4" onClick={handleDownloadImages} size="xl">
               Download

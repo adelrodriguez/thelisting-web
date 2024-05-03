@@ -1,6 +1,6 @@
 import { Switch } from "@headlessui/react"
 import clsx from "clsx"
-import { type ComponentProps } from "react"
+import type { ComponentProps } from "react"
 import { useControlField } from "remix-validated-form"
 
 import type { Input } from "~/components/form"
@@ -8,11 +8,7 @@ import type { Input } from "~/components/form"
 /**
  * This component should only be used within a Form component.
  */
-export default function FormSwitch({
-  description,
-  label,
-  name,
-}: ComponentProps<typeof Input>) {
+export default function FormSwitch({ description, label, name }: ComponentProps<typeof Input>) {
   const [value, setValue] = useControlField<boolean>(name)
 
   return (
@@ -35,11 +31,7 @@ export default function FormSwitch({
         />
       </Switch>
       <span className="ml-3 flex flex-grow flex-col">
-        <Switch.Label
-          as="span"
-          className="text-sm font-medium leading-6 text-gray-900"
-          passive
-        >
+        <Switch.Label as="span" className="text-sm font-medium leading-6 text-gray-900" passive>
           {label}
         </Switch.Label>
         {description && (

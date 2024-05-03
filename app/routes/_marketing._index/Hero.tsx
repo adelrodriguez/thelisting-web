@@ -35,10 +35,7 @@ export default function Hero() {
                 {t("landing.hero.cta")}{" "}
               </Link>
 
-              <Link
-                className="text-base font-semibold leading-7 text-white "
-                to={route("/search")}
-              >
+              <Link className="text-base font-semibold leading-7 text-white " to={route("/search")}>
                 {t("landing.hero.find")} <span aria-hidden="true">→</span>
               </Link>
             </div>

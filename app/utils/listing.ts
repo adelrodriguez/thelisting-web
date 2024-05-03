@@ -15,20 +15,13 @@ export const ListingTitleSchema = z.string().min(3, "Please enter a title")
 export const ListingSubtitleSchema = z.string().optional()
 
 export const ListingTypeSchema = z.enum(
-  [
-    ListingType.BabyShower,
-    ListingType.Wedding,
-    ListingType.Birthday,
-    ListingType.Other,
-  ],
+  [ListingType.BabyShower, ListingType.Wedding, ListingType.Birthday, ListingType.Other],
   {
     errorMap: () => ({ message: "Please select a type of event" }),
   },
 )
 
-export const ListingOwnerSchema = z
-  .string()
-  .uuid({ message: "Please select a valid user" })
+export const ListingOwnerSchema = z.string().uuid({ message: "Please select a valid user" })
 
 export const ListingStatusSchema = z.enum(
   [ListingStatus.Draft, ListingStatus.Published, ListingStatus.Closed],

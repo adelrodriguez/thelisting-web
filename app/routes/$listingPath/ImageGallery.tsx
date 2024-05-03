@@ -1,9 +1,6 @@
 import type { ImageGalleryProperties } from "~/utils/ribbons"
 
-export default function ImageGallery({
-  groupSize,
-  images,
-}: ImageGalleryProperties) {
+export default function ImageGallery({ groupSize, images }: ImageGalleryProperties) {
   const groupedImages = images.reduce((acc: string[][], image, index) => {
     if (index % groupSize === 0) {
       acc.push([])
@@ -30,11 +27,7 @@ export default function ImageGallery({
         <div className="flex flex-col gap-2" key={`group${index}`}>
           {images.map((image, index) => (
             <div key={`image${index}`}>
-              <img
-                alt=""
-                className="h-auto max-w-full rounded-md shadow-inner"
-                src={image}
-              />
+              <img alt="" className="h-auto max-w-full rounded-md shadow-inner" src={image} />
             </div>
           ))}
         </div>

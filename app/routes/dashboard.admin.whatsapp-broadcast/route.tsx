@@ -53,8 +53,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   switch (template) {
     case WHATSAPP_MESSAGE_TEMPLATES.BabyShowerGuestNotification: {
-      const result =
-        await BabyShowerGuestNotificationValidator.validate(formData)
+      const result = await BabyShowerGuestNotificationValidator.validate(formData)
 
       if (result.error) {
         return unprocessableEntity({
@@ -226,9 +225,7 @@ export default function WhatsAppBroadcastPage() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
       <div className="sm:text-center">
-        <p className="text-base font-semibold uppercase tracking-wide text-teal-600">
-          Admin Tools
-        </p>
+        <p className="text-base font-semibold uppercase tracking-wide text-teal-600">Admin Tools</p>
         <h2 className="mt-2 text-3xl font-extrabold leading-8 tracking-tight text-gray-900 sm:text-4xl">
           WhatsApp Broadcast
         </h2>
@@ -276,16 +273,13 @@ export default function WhatsAppBroadcastPage() {
         {template === WHATSAPP_MESSAGE_TEMPLATES.WeddingGuestNotification && (
           <WeddingGuestNotificationForm />
         )}
-        {template ===
-          WHATSAPP_MESSAGE_TEMPLATES.BabyShowerGuestNotification && (
+        {template === WHATSAPP_MESSAGE_TEMPLATES.BabyShowerGuestNotification && (
           <BabyShowerGuestNotificationForm />
         )}
         {template === WHATSAPP_MESSAGE_TEMPLATES.BabyShowerInvitationV1 && (
           <BabyShowerInvitationV1Form />
         )}
-        {template === WHATSAPP_MESSAGE_TEMPLATES.WeddingInvitationV1 && (
-          <WeddingInvitationV1Form />
-        )}
+        {template === WHATSAPP_MESSAGE_TEMPLATES.WeddingInvitationV1 && <WeddingInvitationV1Form />}
       </div>
     </div>
   )

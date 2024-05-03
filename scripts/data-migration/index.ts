@@ -1,6 +1,5 @@
-/* eslint-disable no-console */
-import { Command } from "commander"
 import { spawn } from "node:child_process"
+import { Command } from "commander"
 
 const program = new Command()
 
@@ -11,7 +10,7 @@ program
 
 const script = program.args[0]
 
-const child = spawn("ts-node", ["./scripts/data-migration/" + script])
+const child = spawn("ts-node", [`./scripts/data-migration/${script}`])
 
 child.stdout.setEncoding("utf8")
 child.stdout.on("data", (data) => {
@@ -27,6 +26,6 @@ child.on("error", (error) => {
   console.error("Failed to start subprocess.", error)
 })
 
-child.on("close", function (code) {
-  console.log("closing code: " + code)
+child.on("close", (code) => {
+  console.log(`closing code: ${code}`)
 })

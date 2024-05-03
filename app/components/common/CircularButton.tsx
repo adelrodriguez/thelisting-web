@@ -1,5 +1,5 @@
 import clsx from "clsx"
-import { ComponentPropsWithoutRef, ReactNode } from "react"
+import type { ComponentPropsWithoutRef, ReactNode } from "react"
 
 export default function CircularButton({
   children,

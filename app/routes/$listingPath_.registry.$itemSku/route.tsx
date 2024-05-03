@@ -1,7 +1,7 @@
 import { Dialog, Transition } from "@headlessui/react"
 import { XMarkIcon } from "@heroicons/react/24/outline"
 import type { LoaderFunctionArgs } from "@remix-run/node"
-import { redirect, json } from "@remix-run/node"
+import { json, redirect } from "@remix-run/node"
 import { useLoaderData } from "@remix-run/react"
 import posthog from "posthog-js"
 import { Fragment, useState } from "react"
@@ -122,11 +122,7 @@ export default function Page() {
                   <div className="grid w-full grid-cols-1 items-start gap-x-6 gap-y-8 sm:grid-cols-12 lg:gap-x-8">
                     <div className="sm:col-span-4 lg:col-span-5 ">
                       <div className="aspect-h-1 aspect-w-1 overflow-hidden rounded-sm bg-gray-100 sm:rounded-md">
-                        <img
-                          alt={title}
-                          className="object-cover object-center"
-                          src={imageUrl}
-                        />
+                        <img alt={title} className="object-cover object-center" src={imageUrl} />
                       </div>
                     </div>
                     <div className="sm:col-span-8 lg:col-span-7">
@@ -134,10 +130,7 @@ export default function Page() {
                         {title}
                       </h2>
 
-                      <section
-                        aria-labelledby="information-heading"
-                        className="mt-3"
-                      >
+                      <section aria-labelledby="information-heading" className="mt-3">
                         <h3 className="sr-only" id="information-heading">
                           {t("item.title")}
                         </h3>
@@ -149,9 +142,7 @@ export default function Page() {
                         <div className="mt-6">
                           <h4 className="sr-only">{t("item.description")}</h4>
 
-                          <p className="text-sm text-gray-700">
-                            {item.description}
-                          </p>
+                          <p className="text-sm text-gray-700">{item.description}</p>
 
                           <div className="mt-6">
                             <label className="mb-2 block w-full text-sm font-semibold text-gray-700">
@@ -172,9 +163,7 @@ export default function Page() {
                         onClick={handleAddToCart}
                         size="lg"
                       >
-                        {item.stock === 0
-                          ? t("out_of_stock")
-                          : t("add_to_cart")}
+                        {item.stock === 0 ? t("out_of_stock") : t("add_to_cart")}
                       </Button>
                     </div>
                   </div>

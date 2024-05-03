@@ -132,19 +132,11 @@ export default function RibbonCard({
           </div>
           <div className="flex flex-1 items-center justify-between truncate rounded-r-md border-b border-r border-t border-gray-200 bg-white">
             <div className="flex-1 truncate px-4 py-2 text-sm">
-              <h3 className="font-medium text-gray-900 hover:text-gray-600">
-                {name}
-              </h3>
+              <h3 className="font-medium text-gray-900 hover:text-gray-600">{name}</h3>
               <p className="text-gray-500">{type}</p>
             </div>
-            <div
-              className="flex flex-shrink-0 pr-2 hover:cursor-grab"
-              ref={drag}
-            >
-              <EllipsisVerticalIcon
-                aria-hidden="true"
-                className="-mr-3 h-5 w-auto"
-              />
+            <div className="flex flex-shrink-0 pr-2 hover:cursor-grab" ref={drag}>
+              <EllipsisVerticalIcon aria-hidden="true" className="-mr-3 h-5 w-auto" />
               <EllipsisVerticalIcon aria-hidden="true" className="h-5 w-auto" />
             </div>
           </div>

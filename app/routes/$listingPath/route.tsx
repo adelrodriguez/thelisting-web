@@ -4,16 +4,12 @@ import { defer } from "@remix-run/node"
 import { Await, Link, useLoaderData, useParams } from "@remix-run/react"
 import clsx from "clsx"
 import { AnimatePresence, motion } from "framer-motion"
-import { ReactNode, Suspense, useState } from "react"
+import { type ReactNode, Suspense, useState } from "react"
 import type { RouteParams } from "routes-gen"
 import { z } from "zod"
 import { zx } from "zodix"
 
-import {
-  HOMEPAGE_URL,
-  THE_LISTING_LOGO_BLACK,
-  THE_LISTING_LOGO_WHITE,
-} from "~/config/consts"
+import { HOMEPAGE_URL, THE_LISTING_LOGO_BLACK, THE_LISTING_LOGO_WHITE } from "~/config/consts"
 import auth from "~/helpers/auth.server"
 import { generateGoogleFontsUrl, getFont } from "~/utils/font"
 import { notFound, temporaryRedirect, unauthorized } from "~/utils/http"
@@ -84,17 +80,15 @@ export async function loader({ context, params, request }: LoaderFunctionArgs) {
     theme.fonts?.heading ? getFont(cache, theme.fonts.heading) : null,
     theme.fonts?.body ? getFont(cache, theme.fonts.body) : null,
   ])
-  const fonts = await Promise.all(
-    ribbonFonts.map((font) => getFont(cache, font)),
-  )
+  const fonts = await Promise.all(ribbonFonts.map((font) => getFont(cache, font)))
 
   const items = await db.item.findMany({
     where: { commerceId: { not: null }, listingId: listing.id },
   })
 
-  const itemsPromise = Promise.all(
-    items.map((item) => getItemWithData(cache, item)),
-  ).then((items) => items.filter(Boolean))
+  const itemsPromise = Promise.all(items.map((item) => getItemWithData(cache, item))).then(
+    (items) => items.filter(Boolean),
+  )
 
   const fontsUrl = generateGoogleFontsUrl([headingFont, bodyFont, ...fonts])
 
@@ -123,9 +117,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
           url: "https://tally.so/widgets/embed.js",
         },
       },
-      ...(data.fontsUrl
-        ? [{ href: data.fontsUrl, rel: "stylesheet", tagName: "link" }]
-        : []),
+      ...(data.fontsUrl ? [{ href: data.fontsUrl, rel: "stylesheet", tagName: "link" }] : []),
     ]
   } catch (error) {
     return []
@@ -195,11 +187,7 @@ export default function ListingPage() {
                 if (!listingPath) return null
 
                 return (
-                  <SectionWrapper
-                    {...props}
-                    className="h-screen"
-                    key={ribbon.id}
-                  >
+                  <SectionWrapper {...props} className="h-screen" key={ribbon.id}>
                     <Banner {...result.data.properties} path={listingPath} />
                   </SectionWrapper>
                 )
@@ -291,11 +279,7 @@ export default function ListingPage() {
                 alt="The Listing"
                 className="mx-auto h-10 w-full object-contain"
                 loading="eager"
-                src={
-                  theme.darkLogo
-                    ? THE_LISTING_LOGO_BLACK
-                    : THE_LISTING_LOGO_WHITE
-                }
+                src={theme.darkLogo ? THE_LISTING_LOGO_BLACK : THE_LISTING_LOGO_WHITE}
               />
             </Link>
           </footer>

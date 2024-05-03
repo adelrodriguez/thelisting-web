@@ -1,11 +1,11 @@
 import { Disclosure, Menu, Transition } from "@headlessui/react"
 import {
   Bars3Icon,
+  BellIcon,
   HomeIcon,
   UsersIcon,
-  XMarkIcon,
   WrenchIcon,
-  BellIcon,
+  XMarkIcon,
 } from "@heroicons/react/24/outline"
 import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node"
 import { json } from "@remix-run/node"
@@ -83,11 +83,7 @@ export default function DashboardLayout() {
                 <div className="flex h-16 items-center justify-between">
                   <div className="flex items-center">
                     <div className="flex-shrink-0">
-                      <Logo
-                        className="h-8 w-8 fill-white"
-                        height={32}
-                        width={32}
-                      />
+                      <Logo className="h-8 w-8 fill-white" height={32} width={32} />
                     </div>
                     <div className="hidden md:block">
                       <div className="ml-10 flex items-baseline space-x-4">
@@ -97,8 +93,7 @@ export default function DashboardLayout() {
                               clsx(
                                 {
                                   "bg-gray-700 text-white": isActive,
-                                  "text-white hover:bg-gray-500 hover:bg-opacity-75":
-                                    !isActive,
+                                  "text-white hover:bg-gray-500 hover:bg-opacity-75": !isActive,
                                 },
                                 "rounded-md px-3 py-2 text-sm font-medium",
                               )
@@ -171,15 +166,9 @@ export default function DashboardLayout() {
                     <Disclosure.Button className="inline-flex items-center justify-center rounded-md bg-gray-600 p-2 text-gray-200 hover:bg-gray-500 hover:bg-opacity-75 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-600">
                       <span className="sr-only">Open main menu</span>
                       {open ? (
-                        <XMarkIcon
-                          aria-hidden="true"
-                          className="block h-6 w-6"
-                        />
+                        <XMarkIcon aria-hidden="true" className="block h-6 w-6" />
                       ) : (
-                        <Bars3Icon
-                          aria-hidden="true"
-                          className="block h-6 w-6"
-                        />
+                        <Bars3Icon aria-hidden="true" className="block h-6 w-6" />
                       )}
                     </Disclosure.Button>
                   </div>
@@ -189,22 +178,14 @@ export default function DashboardLayout() {
               <Disclosure.Panel className="md:hidden">
                 <div className="px-2 pb-3 pt-2 sm:px-3">
                   {navigation.map((item) => (
-                    <NavLink
-                      end={item.href === route("/dashboard")}
-                      key={item.name}
-                      to={item.href}
-                    >
+                    <NavLink end={item.href === route("/dashboard")} key={item.name} to={item.href}>
                       {({ isActive }) => (
                         <Disclosure.Button
                           aria-current={isActive ? "page" : undefined}
-                          className={clsx(
-                            "my-2 block rounded-md px-3 py-2 text-base font-medium",
-                            {
-                              "bg-gray-700 text-white": isActive,
-                              "text-white hover:bg-gray-500 hover:bg-opacity-75":
-                                !isActive,
-                            },
-                          )}
+                          className={clsx("my-2 block rounded-md px-3 py-2 text-base font-medium", {
+                            "bg-gray-700 text-white": isActive,
+                            "text-white hover:bg-gray-500 hover:bg-opacity-75": !isActive,
+                          })}
                         >
                           {item.name}
                         </Disclosure.Button>
@@ -226,9 +207,7 @@ export default function DashboardLayout() {
                       <div className="text-base font-medium text-white">
                         {user.firstName} {user.lastName}
                       </div>
-                      <div className="text-sm font-medium text-gray-300">
-                        {user.email}
-                      </div>
+                      <div className="text-sm font-medium text-gray-300">{user.email}</div>
                     </div>
                     <button
                       className="ml-auto flex-shrink-0 rounded-full bg-gray-600 p-1 text-gray-200 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-600"

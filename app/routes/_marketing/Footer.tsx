@@ -75,21 +75,10 @@ export default function Footer() {
         <div className="pb-8 md:grid md:grid-cols-2 lg:grid-cols-4 lg:gap-8">
           <div className="mt-12 flex items-center justify-center md:mt-0">
             <div className="flex flex-col items-center justify-center gap-y-1 text-center">
-              <img
-                alt=""
-                className="mb-4 h-16 object-contain"
-                src={THE_LISTING_LOGO_WHITE}
-              />
-              <p className="text-xs text-gray-300">
-                Calle 11 #12, Sector Julieta
-              </p>
-              <p className="text-xs text-gray-300">
-                Santo Domingo, República Dominicana
-              </p>
-              <Link
-                className="text-xs text-gray-300"
-                to="mailto:hola@thelisting.do"
-              >
+              <img alt="" className="mb-4 h-16 object-contain" src={THE_LISTING_LOGO_WHITE} />
+              <p className="text-xs text-gray-300">Calle 11 #12, Sector Julieta</p>
+              <p className="text-xs text-gray-300">Santo Domingo, República Dominicana</p>
+              <Link className="text-xs text-gray-300" to="mailto:hola@thelisting.do">
                 hola@thelisting.do
               </Link>
               <Link className="text-xs text-gray-300" to="tel:18093304425">
@@ -140,10 +129,7 @@ export default function Footer() {
             <ul className="mt-4 space-y-4">
               {navigation.legal.map((item) => (
                 <li key={item.key}>
-                  <Link
-                    className="text-base text-gray-300 hover:text-white"
-                    to={item.href}
-                  >
+                  <Link className="text-base text-gray-300 hover:text-white" to={item.href}>
                     {t(item.key)}
                   </Link>
                 </li>
@@ -151,9 +137,7 @@ export default function Footer() {
             </ul>
           </div>
           <div className="mt-12 sm:max-w-xs lg:mt-0">
-            <h3 className="text-base font-medium text-white">
-              {t("common:language_currency")}
-            </h3>
+            <h3 className="text-base font-medium text-white">{t("common:language_currency")}</h3>
             <LanguageCurrencySelector />
           </div>
         </div>
@@ -161,11 +145,7 @@ export default function Footer() {
         <div className="mt-8 border-t border-slate-700 pt-8 md:flex md:items-center md:justify-between">
           <div className="flex space-x-6 md:order-2">
             {navigation.social.map((item) => (
-              <Link
-                className="text-gray-400 hover:text-gray-300"
-                key={item.name}
-                to={item.href}
-              >
+              <Link className="text-gray-400 hover:text-gray-300" key={item.name} to={item.href}>
                 <span className="sr-only">{item.name}</span>
                 <item.icon aria-hidden="true" className="h-6 w-6" />
               </Link>
