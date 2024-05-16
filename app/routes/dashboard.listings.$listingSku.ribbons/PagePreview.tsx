@@ -57,7 +57,7 @@ export default function RibbonsPreview({
               "h-full w-full": previewSize === "mobile",
               "origin-[0_0] scale-[25%]": previewSize === "desktop",
             })}
-            src={`/${path}/page`}
+            src={`/${path}`}
             title="preview"
             {...(previewSize === "desktop" && {
               style: {
