@@ -92,7 +92,7 @@
     "isbot": "3.7.1",
     "lodash": "4.17.21",
     "morgan": "1.10.0",
-    "nanoid": "3.3.6",
+    "nanoid": "3.3.8",
     "notistack": "3.0.1",
     "papaparse": "5.4.1",
     "playwright": "1.35.1",
